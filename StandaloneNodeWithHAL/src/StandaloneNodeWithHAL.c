@@ -39,16 +39,15 @@ int main(void)
 		RPC_CLOSE_TAG,
 		RPC_GENERATOR_FINISH
 	};
-	GENERATE_XML(buffer,gen_array,custom_str);
+	//GENERATE_XML(buffer,gen_array,custom_str);
+	unsigned int gen_index=0;
+	unsigned int buf_index=0;
+	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
 
-
-	unsigned int index=0;
-	char *str="narf";
-	char *str2="gnarf";
-//	str2buf(&index,buffer,str);
-//	str2buf(&index,buffer,str2);
-	printf("%s",buffer);
-
+//#define GENERATE_XML(BUFFER,BUFFER_INDEX,GEN_ARRAY,CUSTOM_STR_ARR)\
+//	unsigned int __gen_index=0;\
+//	__generateXML(BUFFER,GEN_ARRAY,CUSTOM_STR_ARR,&__gen_index,BUFFER_INDEX);\
+//	printf("%s",buffer);
 	return 0;
 }

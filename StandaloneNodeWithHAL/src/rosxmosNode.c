@@ -51,7 +51,7 @@ void str2buf(unsigned int *index, char* buffer, char* str)
     buffer[*index]='\0';
 }
 
-char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
+char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
 {
 	unsigned int gen_command=gen_array[*gen_index];
 	bool isTag=false;
@@ -62,12 +62,18 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 	{
 		if(gen_command>=RPC_CUSTOM_TEXT)
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("%s\n",custom_string_array[gen_command-RPC_CUSTOM_TEXT]);
+			#endif
+			str2buf(buf_index, message_buffer, custom_string_array[gen_command-RPC_CUSTOM_TEXT]);
 			return 0;
 		}
 		else
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("%s\n", ros_rpc_stdtext[gen_command-200]);
+			#endif
+			str2buf(buf_index, message_buffer, ros_rpc_stdtext[gen_command-200]);
 			return 0;
 		}
 	}
@@ -76,11 +82,17 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 		isTag=true;
 		if(gen_command>=RPC_CUSTOM_TAG)
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("<%s>\n", custom_string_array[gen_command-RPC_CUSTOM_TAG]);
+			#endif
+			str2buf(buf_index, message_buffer,custom_string_array[gen_command-RPC_CUSTOM_TAG]);
 		}
 		else
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("<%s>\n", ros_rpc_tag_strings[gen_command-100]);
+			#endif
+			str2buf(buf_index, message_buffer,ros_rpc_tag_strings[gen_command-100]);
 		}
 	}
 	else if(gen_command==RPC_CLOSE_TAG)
@@ -93,21 +105,27 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 	}
 	else if(gen_command==RPC_XML_DECLARATION)
 	{
+		#if defined(DEBUG_RPC_GEN)
 		printf("<?xml version=\"1.0\"?>\n");
+		#endif
+		str2buf(buf_index, message_buffer,"<?xml version=\"1.0\"?>\n");
 	}
 	else
 	{
-		//TODO ERROR
-		printf("ERROR");
+		#if defined(DEBUG_RPC_GEN)
+			printf("Debug: Error in XML generation!\n");
+		#endif
+			str2buf(buf_index, message_buffer,"XMLRPC Error");
+		return GEN_ERROR;
 	}
 
 	int ret=GEN_RETURN_GO_AHEAD;
 	while(!ret)
 	{
-		ret=__generateXML(message_buffer, gen_array, custom_string_array,gen_index,buf_index);
-		if(ret==GEN_STOP)
+		ret=generateXML(message_buffer, gen_array, custom_string_array,gen_index,buf_index);
+		if(ret==GEN_STOP || ret==GEN_ERROR)
 		{
-			return GEN_STOP;
+			return ret;
 		}
 	}
 	//if current output is a tag end it now
@@ -115,11 +133,17 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 	{
 		if(gen_command>=RPC_CUSTOM_TAG)
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("</%s>\n", custom_string_array[gen_command-RPC_CUSTOM_TAG]);
+			#endif
+			str2buf(buf_index, message_buffer, custom_string_array[gen_command-RPC_CUSTOM_TAG]);
 		}
 		else
 		{
+			#if defined(DEBUG_RPC_GEN)
 			printf("</%s>\n", ros_rpc_tag_strings[gen_command-100]);
+			#endif
+			str2buf(buf_index, message_buffer,ros_rpc_tag_strings[gen_command-100]);
 		}
 	}
 	return 0;

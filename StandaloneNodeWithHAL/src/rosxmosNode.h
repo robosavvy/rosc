@@ -80,9 +80,9 @@ typedef enum
 {
 	GEN_RETURN_GO_AHEAD = 0,
 	GEN_LEVEL_UP,
-	GEN_STOP
+	GEN_STOP,
+	GEN_ERROR
 }ros_rpc_gen_return;
-
 
 /**
  * This function generates a xmlrpc message
@@ -94,7 +94,7 @@ typedef enum
  * @param buf_index The index for the output buffer
  * @return Message length
  */
-char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
 
 /**
  * This function copies a string into a buffer.
@@ -109,12 +109,6 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
  * @param str The <b>terminated</b> string to write into the buffer
  */
 void str2buf(unsigned int *index, char* buffer, char* str);
-
-#define GENERATE_XML(BUFFER,GEN_ARRAY,CUSTOM_STR_ARR)\
-	unsigned int __gen_index=0;\
-    unsigned int __buf_index=0;\
-	__generateXML(BUFFER,GEN_ARRAY,CUSTOM_STR_ARR,&__gen_index,&__buf_index);\
-	BUFFER[__buf_index]='\0';\
 
 
 #endif /* ROSXMOSNODE_H_ */
