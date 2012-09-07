@@ -20,6 +20,8 @@ int main(void)
 			"gnampf",
 			"ddd"
 	};
+
+
 	char buffer[1000];
 	typedef char* mstr;
 	unsigned int gen_array[]=
