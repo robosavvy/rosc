@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
+#include <stdbool.h>
 
 /**
  *	This struct stores the basic ROS node configuration
@@ -28,6 +28,10 @@ typedef struct
 typedef enum
 {
 	RPC_CLOSE_TAG=0, //!< Close current tag
+
+	RPC_GENERATOR_FINISH=1, //!<Stops the generator at any place
+
+
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
@@ -63,8 +67,6 @@ typedef enum
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
 	RPC_CUSTOM_TEXT,
-
-
 
 } ros_rpc_gen_command;
 
@@ -107,6 +109,17 @@ char *ros_rpc_stdtext[20] =//[][X] X must be the length of the longest string + 
 
 
 /**
+ * Return values of the __generateXML function
+ */
+typedef enum
+{
+	GEN_RETURN_GO_AHEAD = 0,
+	GEN_LEVEL_UP,
+	GEN_STOP
+}ros_rpc_gen_return;
+
+
+/**
  * To normal user <b>DO NOT</b> use this function use GENERATE_XML instead!<br/>
  *
  * This function generates a xmlrpc message, see GENERATE_XML for details.
@@ -118,9 +131,10 @@ char *ros_rpc_stdtext[20] =//[][X] X must be the length of the longest string + 
  * @param buf_index The index for the output buffer
  * @return Message length
  */
-char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
+char _generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
 {
 	unsigned int gen_command=gen_array[*gen_index];
+
 	//Increase the index for the generator array
 	(*gen_index)++;
 
@@ -149,7 +163,7 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 		int ret=0;
 		while(!ret)
 		{
-			ret=__generateXML(message_buffer, gen_array, custom_string_array,gen_index,buf_index);
+			ret=_generateXML(message_buffer, gen_array, custom_string_array,gen_index,buf_index);
 		}
 
 		if(gen_command>=RPC_CUSTOM_TAG)
@@ -172,6 +186,78 @@ char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_
 	}
 	return 0;
 }
+
+char __generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
+{
+	unsigned int gen_command=gen_array[*gen_index];
+	bool isTag=false;
+	//Increase the index for the generator array
+	(*gen_index)++;
+
+	if(gen_command/200)//Add Text
+	{
+		if(gen_command>=RPC_CUSTOM_TEXT)
+		{
+			printf("%s\n",custom_string_array[gen_command-RPC_CUSTOM_TEXT]);
+			return 0;
+		}
+		else
+		{
+			printf("%s\n", ros_rpc_stdtext[gen_command-200]);
+			return 0;
+		}
+	}
+	else if(gen_command/100) //Open Tag
+	{
+		isTag=true;
+		if(gen_command>=RPC_CUSTOM_TAG)
+		{
+			printf("<%s>\n", custom_string_array[gen_command-RPC_CUSTOM_TAG]);
+		}
+		else
+		{
+			printf("<%s>\n", ros_rpc_tag_strings[gen_command-100]);
+		}
+	}
+	else if(gen_command==RPC_CLOSE_TAG)
+	{
+		return GEN_LEVEL_UP; //Go up one level (or end if first function)
+	}
+	else if(gen_command==RPC_GENERATOR_FINISH)
+	{
+		return GEN_STOP; //Abort all message generation
+	}
+	else
+	{
+		//TODO ERROR
+		printf("ERROR");
+	}
+
+	int ret=GEN_RETURN_GO_AHEAD;
+	while(!ret)
+	{
+		ret=__generateXML(message_buffer, gen_array, custom_string_array,gen_index,buf_index);
+		if(ret==GEN_STOP)
+		{
+			return GEN_STOP;
+		}
+	}
+
+	//if current output is a tag end it now
+	if(isTag==true)
+	{
+		if(gen_command>=RPC_CUSTOM_TAG)
+		{
+			printf("</%s>\n", custom_string_array[gen_command-RPC_CUSTOM_TAG]);
+		}
+		else
+		{
+			printf("</%s>\n", ros_rpc_tag_strings[gen_command-100]);
+		}
+	}
+	return 0;
+}
+
 
 
 #define GENERATE_XML(BUFFER,GEN_ARRAY,CUSTOM_STR_ARR)\
