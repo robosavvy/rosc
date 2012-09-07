@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "rosxmosNode.h"
-
 int main(void)
 {
 	char *custom_str[7] =
@@ -21,11 +20,11 @@ int main(void)
 			"ddd"
 	};
 
-
 	char buffer[1000];
 	typedef char* mstr;
 	unsigned int gen_array[]=
 	{
+	RPC_XML_DECLARATION,
 		RPC_TAG_METHODCALL,
 			RPC_TAG_METHODNAME,
 				RPC_STDTEXT_HASPARAM,
@@ -41,6 +40,15 @@ int main(void)
 		RPC_GENERATOR_FINISH
 	};
 	GENERATE_XML(buffer,gen_array,custom_str);
+
+
+
+	unsigned int index=0;
+	char *str="narf";
+	char *str2="gnarf";
+//	str2buf(&index,buffer,str);
+//	str2buf(&index,buffer,str2);
+	printf("%s",buffer);
 
 	return 0;
 }
