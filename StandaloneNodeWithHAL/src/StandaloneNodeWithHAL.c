@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "rosxmosNode.h"
+
 int main(void)
 {
 	char *custom_str[7] =
@@ -44,10 +45,7 @@ int main(void)
 	unsigned int buf_index=0;
 	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
+	printf("D: %s",buffer);
 
-//#define GENERATE_XML(BUFFER,BUFFER_INDEX,GEN_ARRAY,CUSTOM_STR_ARR)\
-//	unsigned int __gen_index=0;\
-//	__generateXML(BUFFER,GEN_ARRAY,CUSTOM_STR_ARR,&__gen_index,BUFFER_INDEX);\
-//	printf("%s",buffer);
 	return 0;
 }

@@ -84,17 +84,18 @@ typedef enum
 	GEN_ERROR
 }ros_rpc_gen_return;
 
+
 /**
- * This function generates a xmlrpc message
- * @param[out] message_buffer The output buffer for the message
- * @param[in] gen_array The command array for generating messages.
- * @param[in] custom_string_array The array for custom str
- * ings (topics, params etc.)
- * @param gen_index The index for the gen_array, set to 0 at start, increased by each call of generate_XML
- * @param buf_index The index for the output buffer
- * @return Message length
+ * These are the modes for the str2buf function
  */
-char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+typedef enum
+{
+	S2B_NORMAL=0, //!< This mode does just insert the given string
+	S2B_TAG,	  //!< This mode will insert the string with tag brackets
+	S2B_CTAG	  //!< This mode will insert the string as closing tag
+}str2buf_modes;
+
+
 
 /**
  * This function copies a string into a buffer.
@@ -107,8 +108,29 @@ char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_st
  * @param index The current index
  * @param buffer The buffer to write the string to.
  * @param str The <b>terminated</b> string to write into the buffer
+ * @param mode This specifies the mode, see str2buf_modes enum
  */
-void str2buf(unsigned int *index, char* buffer, char* str);
+void str2buf(unsigned int *index, char* buffer, char* str, char mode);
+
+
+
+void generateClientHeader(unsigned int buffer_index, char* message_buffer, unsigned int message_type, unsigned int user_agent, unsigned int content_type, unsigned int content_length);
+
+
+/**
+ * This function generates a xmlrpc message
+ * @param[out] message_buffer The output buffer for the message
+ * @param[in] gen_array The command array for generating messages.
+ * @param[in] custom_string_array The array for custom str
+ * ings (topics, params etc.)
+ * @param gen_index The index for the gen_array, set to 0 at start, increased by each call of generate_XML
+ * @param buf_index The index for the output buffer
+ * @return Message length
+ */
+char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+
+
+
 
 
 #endif /* ROSXMOSNODE_H_ */
