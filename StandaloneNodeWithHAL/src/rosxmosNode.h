@@ -26,18 +26,20 @@ typedef struct
 /**
  * Command enum for the xmlrpc message generator
  */
+#define RPC_TAG_START 	   100
+#define RPC_STDTEXT_START 150
 typedef enum
 {
 
 	RPC_CLOSE_TAG=0, //!< Close current tag
 
-	RPC_GENERATOR_FINISH=1, //!<Stops the generator at any place
+	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
-	RPC_XML_DECLARATION=50, //!<Places XML Declaration
+	RPC_XML_DECLARATION, //!<Places XML Declaration
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
-	RPC_TAG_ARRAY=100,			//!< place tag <array>
+	RPC_TAG_ARRAY=RPC_TAG_START,//!< place tag <array>
 	RPC_TAG_BOOLEAN,			//!< place tag <boolean>
 	RPC_TAG_DATA,				//!< place tag <data>
 	RPC_TAG_INT,				//!< place tag <int>
@@ -56,7 +58,7 @@ typedef enum
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
     //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
-	RPC_STDTEXT_HASPARAM=200,				//!< place text "hasParam" 				in the current open tag
+	RPC_STDTEXT_HASPARAM=RPC_STDTEXT_START, //!< place text "hasParam" 				in the current open tag
 	RPC_STDTEXT_REGISTERPUBLISHER,			//!< place text "registerPublisher" 	in the current open tag
 	RPC_STDTEXT_REGISTERSUBSCRIBER,			//!< place text "registerSubscriber" 	in the current open tag
 	RPC_STDTEXT_REQUESTTOPIC,				//!< place text "requestTopic" 			in the current open tag
@@ -71,6 +73,41 @@ typedef enum
 	RPC_CUSTOM_TEXT,
 
 } ros_rpc_gen_command;
+
+
+/**
+ * Command enum for the xmlrpc message generator
+ */
+
+#define HTTP_HEADER_DESC_BEGIN 50
+#define HTTP_HEADER_DESC_CUSTOM_BEGIN 100
+#define HTTP_HEADER_VALUE_BEGIN 150
+#define HTTP_HEADER_VALUE_CUSTOM_BEGIN 200
+
+typedef enum
+{
+	HTTP_HEADER_GEN_END=0, //!< This is required on any header generation array end.
+
+
+	HTTP_HEADER_GEN_DESC_SERVER=HTTP_HEADER_DESC_BEGIN,
+	HTTP_HEADER_GEN_DESC_USER_AGENT,
+	HTTP_HEADER_GEN_DESC_DATE,
+	HTTP_HEADER_GEN_DESC_HOST,
+	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
+	HTTP_HEADER_GEN_DESC_CONTENT_LENGTH,
+	HTTP_HEADER_GEN_DESC_ACCEPTED_CODING,
+
+	HTTP_HEADER_GEN_DESC_CUSTOM=HTTP_HEADER_DESC_CUSTOM_BEGIN,
+
+	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1=HTTP_HEADER_VALUE_BEGIN,
+	HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
+	HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB,
+	HTTP_HEADER_GEN_VAL_TEXT_XML,
+	HTTP_HEADER_GEN_VAL_HTTP_1_0,
+	HTTP_HEADER_GEN_VAL_OK,
+
+	HTTP_HEADER_GEN_VAL_CUSTOM=HTTP_HEADER_VALUE_CUSTOM_BEGIN
+}http_head_gen_command;
 
 
 /**
@@ -92,7 +129,9 @@ typedef enum
 {
 	S2B_NORMAL=0, //!< This mode does just insert the given string
 	S2B_TAG,	  //!< This mode will insert the string with tag brackets
-	S2B_CTAG	  //!< This mode will insert the string as closing tag
+	S2B_CTAG,	  //!< This mode will insert the string as closing tag
+	S2B_HTTP_HEAD_FIELD_DESC, //!< This mode adds a : to the string
+	S2B_HTTP_HEAD_FIELD, 	  //!< This mode adds a space infront and a newline at the back of the string
 }str2buf_modes;
 
 
@@ -114,7 +153,11 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode);
 
 
 
-void generateClientHeader(unsigned int buffer_index, char* message_buffer, unsigned int message_type, unsigned int user_agent, unsigned int content_type, unsigned int content_length);
+/**
+ *
+ */
+char generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index);
+
 
 
 /**
@@ -127,7 +170,7 @@ void generateClientHeader(unsigned int buffer_index, char* message_buffer, unsig
  * @param buf_index The index for the output buffer
  * @return Message length
  */
-char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+char generateXML(char* message_buffer, ros_rpc_gen_command* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
 
 
 

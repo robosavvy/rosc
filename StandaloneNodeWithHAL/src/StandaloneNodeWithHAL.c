@@ -23,7 +23,7 @@ int main(void)
 
 	char buffer[1000];
 	typedef char* mstr;
-	unsigned int gen_array[]=
+	ros_rpc_gen_command gen_array[]=
 	{
 	RPC_XML_DECLARATION,
 		RPC_TAG_METHODCALL,
@@ -40,12 +40,26 @@ int main(void)
 		RPC_CLOSE_TAG,
 		RPC_GENERATOR_FINISH
 	};
-	//GENERATE_XML(buffer,gen_array,custom_str);
+
+	http_head_gen_command gen_array2[]=
+	{
+			HTTP_HEADER_GEN_DESC_USER_AGENT,
+			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
+			HTTP_HEADER_GEN_END
+	};
 	unsigned int gen_index=0;
 	unsigned int buf_index=0;
+
+
+
+	generateHeader(buffer,gen_array2,custom_str, buf_index);
 	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
 	printf("D: %s",buffer);
 
 	return 0;
+
+
+
+
 }

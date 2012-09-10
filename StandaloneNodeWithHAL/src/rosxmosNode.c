@@ -37,10 +37,11 @@ char *ros_rpc_stdtext[20] =//[][X] X must be the length of the longest string + 
 };
 
 /**
- * This array contains the strings for generating message headers
- * TODO Note to editors
+ * This array contains the strings for standard fields in the message headers
+ * Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
+ * in the http_head_gen_command enum command block (for numbers>=HTTP_HEADER_DESC_BEGIN)
  */
-char *headertext[22] =//[][X] X must be the length of the longest string + 1 ('\0' string delimiter)
+char *http_header_descriptors[18] =//[][X] X must be the length of the longest string + 1 ('\0' string delimiter)
 {
 		"Server",
 		"User-Agent",
@@ -48,9 +49,19 @@ char *headertext[22] =//[][X] X must be the length of the longest string + 1 ('\
 		"Host",
 		"Content-Type",
 		"Content-length",
+		"Accepted-Encoding"
+};
+
+/**
+ * This array contains the standard value strings for generating message headers
+ * Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
+ * in the http_head_gen_command enum command block (for numbers>=HTTP_HEADER_VALUE_BEGIN)
+ */
+char *http_header_stdtext[22] =//[][X] X must be the length of the longest string + 1 ('\0' string delimiter)
+{
 		"POST / HTTP/1.1",
-		"XMLRPC ROSC-NodeLib",
-		"BaseHTTP/ROSC-NodeLib",
+		"XMLRPC ROSc-NodeLib",
+		"BaseHTTP/ROSc-NodeLib",
 		"text/xml",
 		"HTTP/1.0",
 		"OK"
@@ -61,7 +72,7 @@ char *headertext[22] =//[][X] X must be the length of the longest string + 1 ('\
 
 void str2buf(unsigned int *index, char* buffer, char* str, char mode)
 {
-	if(mode!=S2B_NORMAL)//If tag
+	if(mode==S2B_CTAG || mode == S2B_TAG)//If tag
 	{
 		//Add first bracket
 		buffer[*index]='<';
@@ -73,6 +84,11 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)
 			(*index)++;
 		}
 	}
+	else if(mode==S2B_HTTP_HEAD_FIELD)
+	{
+		buffer[*index]=' ';
+		(*index)++;
+	}
 
 	//process string
     while (*str != '\0')
@@ -82,34 +98,65 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)
         str++;
     }
 
-    if(mode!=S2B_NORMAL)
+    if(mode==S2B_TAG || mode==S2B_CTAG)
     {
     	//Add second bracket
     	buffer[*index]='>';
 		(*index)++;
     }
+    else if(mode==S2B_HTTP_HEAD_FIELD_DESC)
+    {
+    	buffer[*index]=':';
+		(*index)++;
+    }
+    else if(mode==S2B_HTTP_HEAD_FIELD)
+	{
+		buffer[*index]='\n';
+		(*index)++;
+	}
+
 
 	//Add terminator
     buffer[*index]='\0';
 }
 
 
-
-
-
-void generateClientHeader(unsigned int buffer_index, char* message_buffer, unsigned int message_type, unsigned int user_agent, unsigned int content_type, unsigned int content_length)
+char generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index)
 {
+	while(*gen_array != HTTP_HEADER_GEN_END)
+	{
+
+		if((*gen_array)>=225) //Print custom value
+		{
+
+		}
+		else if((*gen_array)>=200) //Print std value
+		{
+
+		}
+		else if((*gen_array)>=75) //Print custom descriptor
+		{
+
+		}
+		else if((*gen_array)>=50) //Print std descriptor
+		{
+
+		}
+
+		gen_array++;
+	}
 
 }
 
-char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
+
+char generateXML(char* message_buffer, ros_rpc_gen_command* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
 {
 	unsigned int gen_command=gen_array[*gen_index];
 	bool isTag=false;
 	//Increase the index for the generator array
 	(*gen_index)++;
 
-	if(gen_command/200)//Add Text
+	if(gen_command/RPC_STDTEXT_START)//Add Text
 	{
 		if(gen_command>=RPC_CUSTOM_TEXT)
 		{
@@ -122,13 +169,13 @@ char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_st
 		else
 		{
 			#if defined(DEBUG_RPC_GEN)
-			printf("%s\n", ros_rpc_stdtext[gen_command-200]);
+			printf("%s\n", ros_rpc_stdtext[gen_command-RPC_STDTEXT_START]);
 			#endif
-			str2buf(buf_index, message_buffer, ros_rpc_stdtext[gen_command-200],S2B_NORMAL);
+			str2buf(buf_index, message_buffer, ros_rpc_stdtext[gen_command-RPC_STDTEXT_START],S2B_NORMAL);
 			return 0;
 		}
 	}
-	else if(gen_command/100) //Open Tag
+	else if(gen_command/RPC_TAG_START) //Open Tag
 	{
 		isTag=true;
 		if(gen_command>=RPC_CUSTOM_TAG)
@@ -141,9 +188,9 @@ char generateXML(char* message_buffer, unsigned int* gen_array, char **custom_st
 		else
 		{
 			#if defined(DEBUG_RPC_GEN)
-			printf("<%s>\n", ros_rpc_tag_strings[gen_command-100]);
+			printf("<%s>\n", ros_rpc_tag_strings[gen_command-RPC_TAG_START]);
 			#endif
-			str2buf(buf_index, message_buffer,ros_rpc_tag_strings[gen_command-100],S2B_TAG);
+			str2buf(buf_index, message_buffer,ros_rpc_tag_strings[gen_command-RPC_TAG_START],S2B_TAG);
 		}
 	}
 	else if(gen_command==RPC_CLOSE_TAG)
