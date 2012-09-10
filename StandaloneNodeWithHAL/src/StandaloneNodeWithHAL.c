@@ -56,7 +56,7 @@ int main(void)
 	unsigned int gen_index=0;
 
 
-	generateHeader(buffer,gen_array2,custom_str, &buf_index);
+	generateHTTPHeader(buffer,gen_array2,custom_str, &buf_index);
 	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
 	printf("%s",buffer);
