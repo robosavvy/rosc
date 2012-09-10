@@ -84,12 +84,6 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)//TODO mode
 			(*index)++;
 		}
 	}
-	else if(mode==S2B_HTTP_HEAD_FIELD)
-	{
-		buffer[*index]=' ';
-		(*index)++;
-	}
-
 	//process string
     while (*str != '\0')
     {
@@ -108,6 +102,8 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)//TODO mode
     {
     	buffer[*index]=':';
 		(*index)++;
+		buffer[*index]=' ';
+		(*index)++;
     }
     else if(mode==S2B_HTTP_HEAD_FIELD)
 	{
@@ -121,12 +117,35 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)//TODO mode
 }
 
 
+void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
+{
+	//count the places
+	unsigned int a=10;
+	while(number/a)a*=10;
+	a/=10;
+	while(a>0)
+	{
+		message_buffer[*buf_index]=(char)(number/a)+48;
+		number%=a;
+		a/=10;
+		(*buf_index)++;
+	}
+	message_buffer[*buf_index]='\0';
+}
+
+
 void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index)
 {
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
-
-		if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value
+		if((*gen_array)>=HTTP_HEADER_VAL_UINT_NUMBER)
+		{
+			unsigned int number=(*gen_array)-HTTP_HEADER_VAL_UINT_NUMBER;
+			int2buf(message_buffer,buf_index,number);
+			message_buffer[*buf_index]='\n';
+			(*buf_index)++;
+		}
+		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value
 		{
 			str2buf(buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_HTTP_HEAD_FIELD);
 		}
@@ -144,6 +163,12 @@ void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char
 		}
 		gen_array++;
 	}
+	//Finish Header with empty line
+	message_buffer[*buf_index]='\n';
+
+	//Terminate
+	(*buf_index)++;
+	message_buffer[*buf_index]='\0';
 }
 
 

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+  <compounddef id="dir_6ab10414849673f7a676763b764b0b32" kind="dir">
+    <compoundname>src/LinuxCOM/</compoundname>
+    <innerfile refid="LinuxCom_8c">LinuxCom.c</innerfile>
+    <innerfile refid="LinuxCom_8h">LinuxCom.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/LinuxCOM/"/>
+  </compounddef>
+</doxygen>

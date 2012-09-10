@@ -1,0 +1,594 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+  <compounddef id="rosxmosNode_8c" kind="file">
+    <compoundname>rosxmosNode.c</compoundname>
+    <includes refid="rosxmosNode_8h" local="yes">rosxmosNode.h</includes>
+    <incdepgraph>
+      <node id="36">
+        <label>stdbool.h</label>
+      </node>
+      <node id="35">
+        <label>string.h</label>
+      </node>
+      <node id="32">
+        <label>src/rosxmosNode.c</label>
+        <link refid="rosxmosNode.c"/>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="33">
+        <label>rosxmosNode.h</label>
+        <link refid="rosxmosNode_8h"/>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* ros_rpc_tag_strings[15]</definition>
+        <argsstring>[15]</argsstring>
+        <name>ros_rpc_tag_strings</name>
+        <initializer> 
+{
+	&quot;array&quot;,
+	&quot;boolean&quot;,
+	&quot;data&quot;,
+	&quot;int&quot;,
+	&quot;methodcall&quot;,
+	&quot;methodname&quot;,
+	&quot;methodresponse&quot;,
+	&quot;param&quot;,
+	&quot;params&quot;,
+	&quot;string&quot;,
+	&quot;value&quot;
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This array contains the strings for standard tags. Note to editors: If you add something here make sure its also available (in the <bold>SAME ORDER</bold>) in the ros_rpc_gen_command enum command block (for numbers&gt;2000) (make it alphabetically ordered, maybe necessary!) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="21" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="8" bodyend="-1"/>
+        <referencedby refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" compoundref="rosxmosNode_8c" startline="149" endline="245">generateXML</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* ros_rpc_stdtext[20]</definition>
+        <argsstring>[20]</argsstring>
+        <name>ros_rpc_stdtext</name>
+        <initializer>
+{
+	&quot;hasParam&quot;,
+	&quot;registerPublisher&quot;,
+	&quot;registerSubscriber&quot;,
+	&quot;requestTopic&quot;,
+	&quot;tcp_keepalive&quot;,
+	&quot;unregisterPublisher&quot;,
+	&quot;unregisterSubscriber&quot;
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This array contains the strings for standard tags. Note to editors: If you add something here make sure its also available (in the <bold>SAME ORDER</bold>) in the ros_rpc_gen_command enum command block (for numbers&gt;4000) (make it alphabetically ordered, maybe necessary!) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="37" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="28" bodyend="-1"/>
+        <referencedby refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" compoundref="rosxmosNode_8c" startline="149" endline="245">generateXML</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* http_header_descriptors[18]</definition>
+        <argsstring>[18]</argsstring>
+        <name>http_header_descriptors</name>
+        <initializer>
+{
+		&quot;Server&quot;,
+		&quot;User-Agent&quot;,
+		&quot;Date&quot;,
+		&quot;Host&quot;,
+		&quot;Content-Type&quot;,
+		&quot;Content-length&quot;,
+		&quot;Accepted-Encoding&quot;
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This array contains the strings for standard fields in the message headers Note to editors: If you add something here make sure its also available (in the <bold>SAME ORDER</bold>) in the http_head_gen_command enum command block (for numbers&gt;=HTTP_HEADER_DESC_BEGIN) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="53" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="44" bodyend="-1"/>
+        <referencedby refid="rosxmosNode_8h_1a86ed96f61050d51f5e134a9c01245244" compoundref="rosxmosNode_8c" startline="124" endline="146">generateHeader</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* http_header_stdtext[22]</definition>
+        <argsstring>[22]</argsstring>
+        <name>http_header_stdtext</name>
+        <initializer>
+{
+		&quot;POST / HTTP/1.1&quot;,
+		&quot;XMLRPC ROSc-NodeLib&quot;,
+		&quot;BaseHTTP/ROSc-NodeLib&quot;,
+		&quot;text/xml&quot;,
+		&quot;HTTP/1.0&quot;,
+		&quot;OK&quot;
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This array contains the standard value strings for generating message headers Note to editors: If you add something here make sure its also available (in the <bold>SAME ORDER</bold>) in the http_head_gen_command enum command block (for numbers&gt;=HTTP_HEADER_VALUE_BEGIN) </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="68" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="60" bodyend="-1"/>
+        <referencedby refid="rosxmosNode_8h_1a86ed96f61050d51f5e134a9c01245244" compoundref="rosxmosNode_8c" startline="124" endline="146">generateHeader</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void str2buf</definition>
+        <argsstring>(unsigned int *index, char *buffer, char *str, char mode)</argsstring>
+        <name>str2buf</name>
+        <param>
+          <type>unsigned int *</type>
+          <declname>index</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buffer</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>str</declname>
+        </param>
+        <param>
+          <type>char</type>
+          <declname>mode</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This function copies a string into a buffer. The starting point inside the string is given with the index pointer, which is also increased. This is used to be able to add multiple strings behind each other in the same buffer. <bold>Be sure your buffer is big enough, there are no checks for the buffer size for increasing performance!</bold></para><para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current index </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buffer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The buffer to write the string to. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>str</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The <bold>terminated</bold> string to write into the buffer </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mode</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>This specifies the mode, see str2buf_modes enum </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="74" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="73" bodyend="121"/>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" compoundref="rosxmosNode_8h" startline="151">S2B_CTAG</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" compoundref="rosxmosNode_8h" startline="153">S2B_HTTP_HEAD_FIELD</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" compoundref="rosxmosNode_8h" startline="152">S2B_HTTP_HEAD_FIELD_DESC</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" compoundref="rosxmosNode_8h" startline="150">S2B_TAG</references>
+        <referencedby refid="rosxmosNode_8h_1a86ed96f61050d51f5e134a9c01245244" compoundref="rosxmosNode_8c" startline="124" endline="146">generateHeader</referencedby>
+        <referencedby refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" compoundref="rosxmosNode_8c" startline="149" endline="245">generateXML</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="rosxmosNode_8c_1a86ed96f61050d51f5e134a9c01245244" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void generateHeader</definition>
+        <argsstring>(char *message_buffer, http_head_gen_command *gen_array, char **custom_string_array, unsigned int *buf_index)</argsstring>
+        <name>generateHeader</name>
+        <param>
+          <type>char *</type>
+          <declname>message_buffer</declname>
+        </param>
+        <param>
+          <type><ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032" kindref="member">http_head_gen_command</ref> *</type>
+          <declname>gen_array</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>custom_string_array</declname>
+        </param>
+        <param>
+          <type>unsigned int *</type>
+          <declname>buf_index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This function can be used to generate headers for a HTTP message. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">message_buffer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The output buffer for the message </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">gen_array</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The command array for generating messages. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">custom_string_array</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array for custom strings </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf_index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index for the output buffer </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Message length </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="125" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="124" bodyend="146"/>
+        <references refid="rosxmosNode_8h_1af56ac3527369756442dce036663ea291" compoundref="rosxmosNode_8h" startline="88">HTTP_HEADER_DESC_BEGIN</references>
+        <references refid="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" compoundref="rosxmosNode_8c" startline="44">http_header_descriptors</references>
+        <references refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a46d08c73d597a564a354b92e0eba84dc" compoundref="rosxmosNode_8h" startline="111">HTTP_HEADER_GEN_DESC_CUSTOM</references>
+        <references refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a7e4520887a08e91e7ee1b963d6b65162" compoundref="rosxmosNode_8h" startline="93">HTTP_HEADER_GEN_END</references>
+        <references refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a0acc08325afeb1de5757c5fc7781fded" compoundref="rosxmosNode_8h" startline="128">HTTP_HEADER_GEN_VAL_CUSTOM</references>
+        <references refid="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" compoundref="rosxmosNode_8c" startline="60">http_header_stdtext</references>
+        <references refid="rosxmosNode_8h_1a6258e503d630195f30fe9a182ef74f21" compoundref="rosxmosNode_8h" startline="89">HTTP_HEADER_VALUE_BEGIN</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" compoundref="rosxmosNode_8h" startline="153">S2B_HTTP_HEAD_FIELD</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" compoundref="rosxmosNode_8h" startline="152">S2B_HTTP_HEAD_FIELD_DESC</references>
+        <references refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" compoundref="rosxmosNode_8c" startline="73" endline="121">str2buf</references>
+        <referencedby refid="StandaloneNodeWithHAL_8c_1a840291bc02cba5474a4cb46a9b9566fe" compoundref="StandaloneNodeWithHAL_8c" startline="15" endline="67">main</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="rosxmosNode_8c_1a92f3ec0a105cfbc76c8c62c1141fdb94" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char</type>
+        <definition>char generateXML</definition>
+        <argsstring>(char *message_buffer, ros_rpc_gen_command *gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)</argsstring>
+        <name>generateXML</name>
+        <param>
+          <type>char *</type>
+          <declname>message_buffer</declname>
+        </param>
+        <param>
+          <type><ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2d" kindref="member">ros_rpc_gen_command</ref> *</type>
+          <declname>gen_array</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>custom_string_array</declname>
+        </param>
+        <param>
+          <type>unsigned int *</type>
+          <declname>gen_index</declname>
+        </param>
+        <param>
+          <type>unsigned int *</type>
+          <declname>buf_index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This function generates a xmlrpc message <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">message_buffer</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The output buffer for the message </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">gen_array</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The command array for generating messages. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">custom_string_array</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The array for custom strings (topics, params etc.) </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gen_index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index for the gen_array, set to 0 at start, increased by each call of generate_XML </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf_index</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The index for the output buffer </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Message length </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" line="150" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c" bodystart="149" bodyend="245"/>
+        <references refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a85027a8e61bdba8c19c9492dec85e7b8" compoundref="rosxmosNode_8h" startline="140">GEN_ERROR</references>
+        <references refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4ac259448014272d6df77129ddee655223" compoundref="rosxmosNode_8h" startline="138">GEN_LEVEL_UP</references>
+        <references refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a4746a9c6f8d4ff607547873a4188743f" compoundref="rosxmosNode_8h" startline="137">GEN_RETURN_GO_AHEAD</references>
+        <references refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a03db331f02db9600a329a3383b6ba2e2" compoundref="rosxmosNode_8h" startline="139">GEN_STOP</references>
+        <references refid="rosxmosNode_8c_1a92f3ec0a105cfbc76c8c62c1141fdb94" compoundref="rosxmosNode_8c" startline="149" endline="245">generateXML</references>
+        <references refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" compoundref="rosxmosNode_8c" startline="28">ros_rpc_stdtext</references>
+        <references refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" compoundref="rosxmosNode_8c" startline="8">ros_rpc_tag_strings</references>
+        <references refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daef5f551cc68bf262fceaa64f931e6a30" compoundref="rosxmosNode_8h" startline="40">RPC_CLOSE_TAG</references>
+        <references refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" compoundref="rosxmosNode_8h" startline="63">RPC_CUSTOM_TAG</references>
+        <references refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da09f540481fb3c85b01a4d94ee73d3fab" compoundref="rosxmosNode_8h" startline="79">RPC_CUSTOM_TEXT</references>
+        <references refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dae20a8b61029ebec75f68ceccd8c0c1fc" compoundref="rosxmosNode_8h" startline="42">RPC_GENERATOR_FINISH</references>
+        <references refid="rosxmosNode_8h_1ab2d3f5ced0c488c351d1ef4510f2c959" compoundref="rosxmosNode_8h" startline="30">RPC_STDTEXT_START</references>
+        <references refid="rosxmosNode_8h_1acaf1e36b0cf391e2fcab7725890d5fd0" compoundref="rosxmosNode_8h" startline="29">RPC_TAG_START</references>
+        <references refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da933cab8f3a6ea7e7e9ff10bcb3d4f29c" compoundref="rosxmosNode_8h" startline="44">RPC_XML_DECLARATION</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" compoundref="rosxmosNode_8h" startline="151">S2B_CTAG</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" compoundref="rosxmosNode_8h" startline="149">S2B_NORMAL</references>
+        <references refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" compoundref="rosxmosNode_8h" startline="150">S2B_TAG</references>
+        <references refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" compoundref="rosxmosNode_8c" startline="73" endline="121">str2buf</references>
+        <referencedby refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" compoundref="rosxmosNode_8c" startline="149" endline="245">generateXML</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rosxmosNode_8h" kindref="compound">rosxmosNode.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kindref="member">ros_rpc_tag_strings</ref>[15]<sp/>=<sp/></highlight><highlight class="comment">//[][X]<sp/>X<sp/>must<sp/>be<sp/>the<sp/>length<sp/>of<sp/>the<sp/>longest<sp/>string<sp/>+<sp/>1<sp/>(&apos;\0&apos;<sp/>string<sp/>delimiter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;array&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;boolean&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;data&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;int&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;methodcall&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;methodname&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;methodresponse&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;param&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;params&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;string&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;value&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" kindref="member">ros_rpc_stdtext</ref>[20]<sp/>=</highlight><highlight class="comment">//[][X]<sp/>X<sp/>must<sp/>be<sp/>the<sp/>length<sp/>of<sp/>the<sp/>longest<sp/>string<sp/>+<sp/>1<sp/>(&apos;\0&apos;<sp/>string<sp/>delimiter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;hasParam&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;registerPublisher&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;registerSubscriber&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;requestTopic&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;tcp_keepalive&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;unregisterPublisher&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;unregisterSubscriber&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" kindref="member">http_header_descriptors</ref>[18]<sp/>=</highlight><highlight class="comment">//[][X]<sp/>X<sp/>must<sp/>be<sp/>the<sp/>length<sp/>of<sp/>the<sp/>longest<sp/>string<sp/>+<sp/>1<sp/>(&apos;\0&apos;<sp/>string<sp/>delimiter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Server&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;User-Agent&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Date&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Host&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Content-Type&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Content-length&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Accepted-Encoding&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" refkind="member"><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" kindref="member">http_header_stdtext</ref>[22]<sp/>=</highlight><highlight class="comment">//[][X]<sp/>X<sp/>must<sp/>be<sp/>the<sp/>length<sp/>of<sp/>the<sp/>longest<sp/>string<sp/>+<sp/>1<sp/>(&apos;\0&apos;<sp/>string<sp/>delimiter)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;POST<sp/>/<sp/>HTTP/1.1&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;XMLRPC<sp/>ROSc-NodeLib&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;BaseHTTP/ROSc-NodeLib&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;text/xml&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;HTTP/1.0&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;OK&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="rosxmosNode_8h_1aaab687c67d3280c66871a1d5621f1804" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*index,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buffer,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>str,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>mode)</highlight><highlight class="comment">//TODO<sp/>mode<sp/>type</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kindref="member" tooltip="This mode will insert the string as closing tag.">S2B_CTAG</ref><sp/>||<sp/>mode<sp/>==<sp/><ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" kindref="member" tooltip="This mode will insert the string with tag brackets.">S2B_TAG</ref>)</highlight><highlight class="comment">//If<sp/>tag</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//Add<sp/>first<sp/>bracket</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;&lt;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kindref="member" tooltip="This mode will insert the string as closing tag.">S2B_CTAG</ref>)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;/&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" kindref="member" tooltip="This mode adds a space infront and a newline at the back of the string.">S2B_HTTP_HEAD_FIELD</ref>)</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;<sp/>&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//process<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(*str<sp/>!=<sp/></highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=*str;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>str++;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" kindref="member" tooltip="This mode will insert the string with tag brackets.">S2B_TAG</ref><sp/>||<sp/>mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kindref="member" tooltip="This mode will insert the string as closing tag.">S2B_CTAG</ref>)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//Add<sp/>second<sp/>bracket</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;&gt;&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" kindref="member" tooltip="This mode adds a : to the string.">S2B_HTTP_HEAD_FIELD_DESC</ref>)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;:&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mode==<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" kindref="member" tooltip="This mode adds a space infront and a newline at the back of the string.">S2B_HTTP_HEAD_FIELD</ref>)</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*index)++;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//Add<sp/>terminator</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>buffer[*index]=</highlight><highlight class="charliteral">&apos;\0&apos;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124" refid="rosxmosNode_8h_1a86ed96f61050d51f5e134a9c01245244" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8c_1a86ed96f61050d51f5e134a9c01245244" kindref="member">generateHeader</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>message_buffer,<sp/><ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032" kindref="member">http_head_gen_command</ref>*<sp/>gen_array,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**custom_string_array,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*buf_index)</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(*gen_array<sp/>!=<sp/><ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a7e4520887a08e91e7ee1b963d6b65162" kindref="member" tooltip="This is required on any header generation array end.">HTTP_HEADER_GEN_END</ref>)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((*gen_array)&gt;=<ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a0acc08325afeb1de5757c5fc7781fded" kindref="member">HTTP_HEADER_GEN_VAL_CUSTOM</ref>)<sp/></highlight><highlight class="comment">//Print<sp/>custom<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,message_buffer,custom_string_array[(*gen_array)-<ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a0acc08325afeb1de5757c5fc7781fded" kindref="member">HTTP_HEADER_GEN_VAL_CUSTOM</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" kindref="member" tooltip="This mode adds a space infront and a newline at the back of the string.">S2B_HTTP_HEAD_FIELD</ref>);</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((*gen_array)&gt;=<ref refid="rosxmosNode_8h_1a6258e503d630195f30fe9a182ef74f21" kindref="member">HTTP_HEADER_VALUE_BEGIN</ref>)<sp/></highlight><highlight class="comment">//Print<sp/>std<sp/>value</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,message_buffer,<ref refid="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" kindref="member">http_header_stdtext</ref>[(*gen_array)-<ref refid="rosxmosNode_8h_1a6258e503d630195f30fe9a182ef74f21" kindref="member">HTTP_HEADER_VALUE_BEGIN</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" kindref="member" tooltip="This mode adds a space infront and a newline at the back of the string.">S2B_HTTP_HEAD_FIELD</ref>);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((*gen_array)&gt;=<ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a46d08c73d597a564a354b92e0eba84dc" kindref="member">HTTP_HEADER_GEN_DESC_CUSTOM</ref>)<sp/></highlight><highlight class="comment">//Print<sp/>custom<sp/>descriptor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,message_buffer,custom_string_array[(*gen_array)-<ref refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a46d08c73d597a564a354b92e0eba84dc" kindref="member">HTTP_HEADER_GEN_DESC_CUSTOM</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" kindref="member" tooltip="This mode adds a : to the string.">S2B_HTTP_HEAD_FIELD_DESC</ref>);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((*gen_array)&gt;=<ref refid="rosxmosNode_8h_1af56ac3527369756442dce036663ea291" kindref="member">HTTP_HEADER_DESC_BEGIN</ref>)<sp/></highlight><highlight class="comment">//Print<sp/>std<sp/>descriptor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,message_buffer,<ref refid="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" kindref="member">http_header_descriptors</ref>[(*gen_array)-<ref refid="rosxmosNode_8h_1af56ac3527369756442dce036663ea291" kindref="member">HTTP_HEADER_DESC_BEGIN</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" kindref="member" tooltip="This mode adds a : to the string.">S2B_HTTP_HEAD_FIELD_DESC</ref>);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gen_array++;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="146"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149" refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8c_1a92f3ec0a105cfbc76c8c62c1141fdb94" kindref="member">generateXML</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>message_buffer,<sp/><ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2d" kindref="member">ros_rpc_gen_command</ref>*<sp/>gen_array,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**custom_string_array,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*gen_index,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*buf_index)</highlight></codeline>
+<codeline lineno="150"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>gen_command=gen_array[*gen_index];</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isTag=</highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//Increase<sp/>the<sp/>index<sp/>for<sp/>the<sp/>generator<sp/>array</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*gen_index)++;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command/<ref refid="rosxmosNode_8h_1ab2d3f5ced0c488c351d1ef4510f2c959" kindref="member">RPC_STDTEXT_START</ref>)</highlight><highlight class="comment">//Add<sp/>Text</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command&gt;=<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da09f540481fb3c85b01a4d94ee73d3fab" kindref="member" tooltip="RPC_CUSTOM_TEXT.">RPC_CUSTOM_TEXT</ref>)</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="161"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s\n&quot;</highlight><highlight class="normal">,custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da09f540481fb3c85b01a4d94ee73d3fab" kindref="member" tooltip="RPC_CUSTOM_TEXT.">RPC_CUSTOM_TEXT</ref>]);</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="163"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,<sp/>custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da09f540481fb3c85b01a4d94ee73d3fab" kindref="member" tooltip="RPC_CUSTOM_TEXT.">RPC_CUSTOM_TEXT</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" kindref="member" tooltip="This mode does just insert the given string.">S2B_NORMAL</ref>);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="169"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" kindref="member">ros_rpc_stdtext</ref>[gen_command-<ref refid="rosxmosNode_8h_1ab2d3f5ced0c488c351d1ef4510f2c959" kindref="member">RPC_STDTEXT_START</ref>]);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="171"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,<sp/><ref refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" kindref="member">ros_rpc_stdtext</ref>[gen_command-<ref refid="rosxmosNode_8h_1ab2d3f5ced0c488c351d1ef4510f2c959" kindref="member">RPC_STDTEXT_START</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" kindref="member" tooltip="This mode does just insert the given string.">S2B_NORMAL</ref>);</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command/<ref refid="rosxmosNode_8h_1acaf1e36b0cf391e2fcab7725890d5fd0" kindref="member">RPC_TAG_START</ref>)<sp/></highlight><highlight class="comment">//Open<sp/>Tag</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isTag=</highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command&gt;=<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>)</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="181"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;%s&gt;\n&quot;</highlight><highlight class="normal">,<sp/>custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>]);</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="183"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" kindref="member" tooltip="This mode will insert the string with tag brackets.">S2B_TAG</ref>);</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="188"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;%s&gt;\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kindref="member">ros_rpc_tag_strings</ref>[gen_command-<ref refid="rosxmosNode_8h_1acaf1e36b0cf391e2fcab7725890d5fd0" kindref="member">RPC_TAG_START</ref>]);</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="190"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,<ref refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kindref="member">ros_rpc_tag_strings</ref>[gen_command-<ref refid="rosxmosNode_8h_1acaf1e36b0cf391e2fcab7725890d5fd0" kindref="member">RPC_TAG_START</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" kindref="member" tooltip="This mode will insert the string with tag brackets.">S2B_TAG</ref>);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command==<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daef5f551cc68bf262fceaa64f931e6a30" kindref="member" tooltip="Close current tag.">RPC_CLOSE_TAG</ref>)</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4ac259448014272d6df77129ddee655223" kindref="member">GEN_LEVEL_UP</ref>;<sp/></highlight><highlight class="comment">//Go<sp/>up<sp/>one<sp/>level<sp/>(or<sp/>end<sp/>if<sp/>first<sp/>function)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command==<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dae20a8b61029ebec75f68ceccd8c0c1fc" kindref="member" tooltip="Stops the generator at any place.">RPC_GENERATOR_FINISH</ref>)</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a03db331f02db9600a329a3383b6ba2e2" kindref="member">GEN_STOP</ref>;<sp/></highlight><highlight class="comment">//Abort<sp/>all<sp/>message<sp/>generation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command==<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da933cab8f3a6ea7e7e9ff10bcb3d4f29c" kindref="member" tooltip="Places XML Declaration.">RPC_XML_DECLARATION</ref>)</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="204"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;?xml<sp/>version=\&quot;1.0\&quot;?&gt;\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="206"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,</highlight><highlight class="stringliteral">&quot;&lt;?xml<sp/>version=\&quot;1.0\&quot;?&gt;&quot;</highlight><highlight class="normal">,<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" kindref="member" tooltip="This mode does just insert the given string.">S2B_NORMAL</ref>);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="211"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Debug:<sp/>Error<sp/>in<sp/>XML<sp/>generation!\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="213"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,</highlight><highlight class="stringliteral">&quot;XMLRPC<sp/>Error&quot;</highlight><highlight class="normal">,<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" kindref="member" tooltip="This mode does just insert the given string.">S2B_NORMAL</ref>);</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a85027a8e61bdba8c19c9492dec85e7b8" kindref="member">GEN_ERROR</ref>;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ret=<ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a4746a9c6f8d4ff607547873a4188743f" kindref="member">GEN_RETURN_GO_AHEAD</ref>;</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(!ret)</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ret=<ref refid="rosxmosNode_8c_1a92f3ec0a105cfbc76c8c62c1141fdb94" kindref="member">generateXML</ref>(message_buffer,<sp/>gen_array,<sp/>custom_string_array,gen_index,buf_index);</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ret==<ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a03db331f02db9600a329a3383b6ba2e2" kindref="member">GEN_STOP</ref><sp/>||<sp/>ret==<ref refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a85027a8e61bdba8c19c9492dec85e7b8" kindref="member">GEN_ERROR</ref>)</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if<sp/>current<sp/>output<sp/>is<sp/>a<sp/>tag<sp/>end<sp/>it<sp/>now</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(isTag==</highlight><highlight class="keyword">true</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(gen_command&gt;=<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>)</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="232"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;/%s&gt;\n&quot;</highlight><highlight class="normal">,<sp/>custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>]);</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="234"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,<sp/>custom_string_array[gen_command-<ref refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kindref="member" tooltip="RPC_CUSTOM_TAG.">RPC_CUSTOM_TAG</ref>],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kindref="member" tooltip="This mode will insert the string as closing tag.">S2B_CTAG</ref>);</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#if<sp/>defined(DEBUG_RPC_GEN)</highlight></codeline>
+<codeline lineno="239"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;&lt;/%s&gt;\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kindref="member">ros_rpc_tag_strings</ref>[gen_command-100]);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="241"><highlight class="preprocessor"></highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kindref="member">str2buf</ref>(buf_index,<sp/>message_buffer,<ref refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kindref="member">ros_rpc_tag_strings</ref>[gen_command-100],<ref refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kindref="member" tooltip="This mode will insert the string as closing tag.">S2B_CTAG</ref>);</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="245"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"></highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.c"/>
+  </compounddef>
+</doxygen>

@@ -28,6 +28,12 @@ typedef struct
  */
 #define RPC_TAG_START 	   100 // Number where the enum values for tags start
 #define RPC_STDTEXT_START 150 // Number where the enum values for texts start
+
+
+
+/**
+ * This enum holds the commands for the rpc XML generator
+ */
 typedef enum
 {
 
@@ -39,22 +45,22 @@ typedef enum
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
-	RPC_TAG_ARRAY=RPC_TAG_START,//!< place tag <array>
-	RPC_TAG_BOOLEAN,			//!< place tag <boolean>
-	RPC_TAG_DATA,				//!< place tag <data>
-	RPC_TAG_INT,				//!< place tag <int>
-	RPC_TAG_METHODCALL,			//!< place tag <methodcall>
-	RPC_TAG_METHODNAME,			//!< place tag <methodname>
-	RPC_TAG_METHODRESPONSE,		//!< place tag <methodresponse>
-	RPC_TAG_PARAM,				//!< place tag <param>
-	RPC_TAG_PARAMS,				//!< place tag <params>
-	RPC_TAG_STRING,				//!< place tag <string>
-	RPC_TAG_VALUE,				//!< place tag <value>
+	RPC_TAG_ARRAY=RPC_TAG_START,//!< place tag array
+	RPC_TAG_BOOLEAN,			//!< place tag boolean
+	RPC_TAG_DATA,				//!< place tag data
+	RPC_TAG_INT,				//!< place tag int
+	RPC_TAG_METHODCALL,			//!< place tag methodcall
+	RPC_TAG_METHODNAME,			//!< place tag methodname
+	RPC_TAG_METHODRESPONSE,		//!< place tag methodresponse
+	RPC_TAG_PARAM,				//!< place tag param
+	RPC_TAG_PARAMS,				//!< place tag params
+	RPC_TAG_STRING,				//!< place tag string
+	RPC_TAG_VALUE,				//!< place tag value
 	/**
 	 * Use this number for selecting custom tag strings where RPC_CUSTOM_TAG is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
-	RPC_CUSTOM_TAG,
+	RPC_CUSTOM_TAG, //!< RPC_CUSTOM_TAG
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
     //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
@@ -70,7 +76,7 @@ typedef enum
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
-	RPC_CUSTOM_TEXT,
+	RPC_CUSTOM_TEXT,//!< RPC_CUSTOM_TEXT
 
 } ros_rpc_gen_command;
 
@@ -117,9 +123,21 @@ typedef enum
 	///@}
 
 	/**
-	 * This specifies to use a text in the custom text array as value
+	 * This command will use a custom text array as value
 	 */
-	HTTP_HEADER_GEN_VAL_CUSTOM
+	HTTP_HEADER_GEN_VAL_CUSTOM,
+
+
+	/**
+	 * This command will add a number to the
+	 * header.
+	 *
+	 * If HTTP_HEADER_UINT_NUMBER + X
+	 * will result in "Content-Length: X", where
+	 * the supplied X can be a unsigned integer.
+	 *
+	 */
+	HTTP_HEADER_VAL_UINT_NUMBER=255
 }http_head_gen_command;
 
 
@@ -182,7 +200,6 @@ void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char
  * @return Message length
  */
 char generateXML(char* message_buffer, ros_rpc_gen_command* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
-
 
 
 

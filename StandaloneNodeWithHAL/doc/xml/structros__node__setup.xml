@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+  <compounddef id="structros__node__setup" kind="struct" prot="public">
+    <compoundname>ros_node_setup</compoundname>
+    <includes refid="rosxmosNode_8h" local="no">rosxmosNode.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structros__node__setup_1acb9f3c1fd42357510b97832bbc17896a" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* ros_node_setup::node_name</definition>
+        <argsstring></argsstring>
+        <name>node_name</name>
+        <briefdescription>
+<para>The name of the node, must be <bold>unique</bold> in whole ROS! </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" line="20" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structros__node__setup_1a8a95e9beff3361bb74a4a30dd3c50ba0" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* ros_node_setup::ros_master_host</definition>
+        <argsstring></argsstring>
+        <name>ros_master_host</name>
+        <briefdescription>
+<para>Hostname of the computer running roscore. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" line="21" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structros__node__setup_1a690ae2d601b53fca47aba50557a6b214" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int ros_node_setup::ros_master_port</definition>
+        <argsstring></argsstring>
+        <name>ros_master_port</name>
+        <briefdescription>
+<para>RPC port of roscore, standard is: 11311. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" line="22" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>This struct stores the basic ROS node configuration </para>    </detaileddescription>
+    <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" line="19" bodyfile="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/rosxmosNode.h" bodystart="18" bodyend="23"/>
+    <listofallmembers>
+      <member refid="structros__node__setup_1acb9f3c1fd42357510b97832bbc17896a" prot="public" virt="non-virtual"><scope>ros_node_setup</scope><name>node_name</name></member>
+      <member refid="structros__node__setup_1a8a95e9beff3361bb74a4a30dd3c50ba0" prot="public" virt="non-virtual"><scope>ros_node_setup</scope><name>ros_master_host</name></member>
+      <member refid="structros__node__setup_1a690ae2d601b53fca47aba50557a6b214" prot="public" virt="non-virtual"><scope>ros_node_setup</scope><name>ros_master_port</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

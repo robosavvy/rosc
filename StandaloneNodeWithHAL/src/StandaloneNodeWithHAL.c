@@ -47,15 +47,17 @@ int main(void)
 			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 			HTTP_HEADER_GEN_DESC_CUSTOM+0,
 			HTTP_HEADER_GEN_VAL_CUSTOM+1,
+			HTTP_HEADER_GEN_DESC_CONTENT_LENGTH,
+			HTTP_HEADER_VAL_UINT_NUMBER+56202,
 			HTTP_HEADER_GEN_END
 	};
-//
-	unsigned int buf_index=0;
 
+	unsigned int buf_index=0;
+	unsigned int gen_index=0;
 
 
 	generateHeader(buffer,gen_array2,custom_str, &buf_index);
-	//generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
+	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
 	printf("%s",buffer);
 

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+  <compounddef id="LinuxCom_8c" kind="file">
+    <compoundname>LinuxCom.c</compoundname>
+    <includes refid="LinuxCom_8h" local="yes">LinuxCom.h</includes>
+    <incdepgraph>
+      <node id="26">
+        <label>src/LinuxCOM/LinuxCom.c</label>
+        <link refid="LinuxCom.c"/>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="27">
+        <label>LinuxCom.h</label>
+        <link refid="LinuxCom_8h"/>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="LinuxCom_8h" kindref="compound">LinuxCom.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/home/choll/Entwicklung/ROS_Standalone/StandaloneNodeWithHAL/src/LinuxCOM/LinuxCom.c"/>
+  </compounddef>
+</doxygen>

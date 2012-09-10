@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.7.6.1">
+  <compound refid="structros__node__setup" kind="struct"><name>ros_node_setup</name>
+    <member refid="structros__node__setup_1acb9f3c1fd42357510b97832bbc17896a" kind="variable"><name>node_name</name></member>
+    <member refid="structros__node__setup_1a8a95e9beff3361bb74a4a30dd3c50ba0" kind="variable"><name>ros_master_host</name></member>
+    <member refid="structros__node__setup_1a690ae2d601b53fca47aba50557a6b214" kind="variable"><name>ros_master_port</name></member>
+  </compound>
+  <compound refid="LinuxCom_8c" kind="file"><name>LinuxCom.c</name>
+  </compound>
+  <compound refid="LinuxCom_8h" kind="file"><name>LinuxCom.h</name>
+  </compound>
+  <compound refid="rosxmosNode_8c" kind="file"><name>rosxmosNode.c</name>
+    <member refid="rosxmosNode_8c_1a188da5b7ac6aa75139951cf4b682a6c7" kind="variable"><name>ros_rpc_tag_strings</name></member>
+    <member refid="rosxmosNode_8c_1acc4fde30490b0b1b277a567f54e7d194" kind="variable"><name>ros_rpc_stdtext</name></member>
+    <member refid="rosxmosNode_8c_1a39234e5e50de26dedf307c79b5f68c23" kind="variable"><name>http_header_descriptors</name></member>
+    <member refid="rosxmosNode_8c_1a50e78bbff7be4bace3ef078654416892" kind="variable"><name>http_header_stdtext</name></member>
+    <member refid="rosxmosNode_8c_1aaab687c67d3280c66871a1d5621f1804" kind="function"><name>str2buf</name></member>
+    <member refid="rosxmosNode_8c_1a86ed96f61050d51f5e134a9c01245244" kind="function"><name>generateHeader</name></member>
+    <member refid="rosxmosNode_8c_1a92f3ec0a105cfbc76c8c62c1141fdb94" kind="function"><name>generateXML</name></member>
+  </compound>
+  <compound refid="rosxmosNode_8h" kind="file"><name>rosxmosNode.h</name>
+    <member refid="rosxmosNode_8h_1acaf1e36b0cf391e2fcab7725890d5fd0" kind="define"><name>RPC_TAG_START</name></member>
+    <member refid="rosxmosNode_8h_1ab2d3f5ced0c488c351d1ef4510f2c959" kind="define"><name>RPC_STDTEXT_START</name></member>
+    <member refid="rosxmosNode_8h_1af56ac3527369756442dce036663ea291" kind="define"><name>HTTP_HEADER_DESC_BEGIN</name></member>
+    <member refid="rosxmosNode_8h_1a6258e503d630195f30fe9a182ef74f21" kind="define"><name>HTTP_HEADER_VALUE_BEGIN</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2d" kind="enum"><name>ros_rpc_gen_command</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daef5f551cc68bf262fceaa64f931e6a30" kind="enumvalue"><name>RPC_CLOSE_TAG</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dae20a8b61029ebec75f68ceccd8c0c1fc" kind="enumvalue"><name>RPC_GENERATOR_FINISH</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da933cab8f3a6ea7e7e9ff10bcb3d4f29c" kind="enumvalue"><name>RPC_XML_DECLARATION</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da6ebe2e3d0432e16c072052962c331ec4" kind="enumvalue"><name>RPC_TAG_ARRAY</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dac35b2e777dace017d271c9276d5c0f13" kind="enumvalue"><name>RPC_TAG_BOOLEAN</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dada8cf02a2104d2095a588bf599d18cde" kind="enumvalue"><name>RPC_TAG_DATA</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da3a2358e50b9720d2f2cb62528a427aca" kind="enumvalue"><name>RPC_TAG_INT</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dab4e22ba4bb0699bbb890171cd5890169" kind="enumvalue"><name>RPC_TAG_METHODCALL</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daeb8c7d0b1584642506175f5aaf3223cf" kind="enumvalue"><name>RPC_TAG_METHODNAME</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dad43d76341b979acb5738391c277c34ff" kind="enumvalue"><name>RPC_TAG_METHODRESPONSE</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da7f6ccf39be1a1ea50c296cf4bad6ed48" kind="enumvalue"><name>RPC_TAG_PARAM</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da1e2b6f59b43553b4b87847c4f436fa33" kind="enumvalue"><name>RPC_TAG_PARAMS</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da58802b7139645a79b9e4b56ce65a2e85" kind="enumvalue"><name>RPC_TAG_STRING</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da6d6d1a035eadcd8b917b7939ad532dce" kind="enumvalue"><name>RPC_TAG_VALUE</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da24057e03f12bca8decd6e71bf3912e43" kind="enumvalue"><name>RPC_CUSTOM_TAG</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dabd84fe95c59b18e127e58762fdcc9fd6" kind="enumvalue"><name>RPC_STDTEXT_HASPARAM</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daec1f16521e1af74811fc4f59bb78f4c5" kind="enumvalue"><name>RPC_STDTEXT_REGISTERPUBLISHER</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daa79775464a5a4865e6b174a953b18a71" kind="enumvalue"><name>RPC_STDTEXT_REGISTERSUBSCRIBER</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daadcb0b88154b540233bf94d742a60536" kind="enumvalue"><name>RPC_STDTEXT_REQUESTTOPIC</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2dacb58d3e2ad58ae166ffa49b2e4b71496" kind="enumvalue"><name>RPC_STDTEXT_TCP_KEEPALIVE</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da43f32c0139fcce36f1021d05c2f08850" kind="enumvalue"><name>RPC_STDTEXT_UNREGISTERPUBLISHER</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2daca500da76335d56f643386af808c3223" kind="enumvalue"><name>RPC_STDTEXT_UNREGISTERSUBSCRIBER</name></member>
+    <member refid="rosxmosNode_8h_1a652789c3083837748e20bf43b8deef2da09f540481fb3c85b01a4d94ee73d3fab" kind="enumvalue"><name>RPC_CUSTOM_TEXT</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032" kind="enum"><name>http_head_gen_command</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a7e4520887a08e91e7ee1b963d6b65162" kind="enumvalue"><name>HTTP_HEADER_GEN_END</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a7be208ea74bd92183d79f246cdf71326" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_SERVER</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a3a40bc89d785e37d9b7e6bbaacfd130d" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_USER_AGENT</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032aca7f434ab654214b7f384744f32cdcf1" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_DATE</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032afe362f0aad66b1733392a19241aa1d23" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_HOST</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032ae37096512b4de5bebaca7abb57e01a13" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_CONTENT_TYPE</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032ab43e2e097b61629d1e904c6b2bbe9186" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_CONTENT_LENGTH</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a5ab3000760c4ed3ce31c0db8ade9546a" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_ACCEPTED_CODING</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a46d08c73d597a564a354b92e0eba84dc" kind="enumvalue"><name>HTTP_HEADER_GEN_DESC_CUSTOM</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032af11244a2082a67538f311c5de8a2da0a" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_POST_HTTP_1_1</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032ae2a7b80d28c0f109a9a12694d22c0244" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032ad5b15db9fa07f4d04b49b57c1d00fa9d" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a709c7ff4c11aa1d160cc032062550a3d" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_TEXT_XML</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032aa983b1b50ebc06de66685585b9cecec5" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_HTTP_1_0</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a5e73887259cc0ccac0c4b8ec90ee2624" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_OK</name></member>
+    <member refid="rosxmosNode_8h_1ab5699e57c5a0cfcb1fe4498e51106032a0acc08325afeb1de5757c5fc7781fded" kind="enumvalue"><name>HTTP_HEADER_GEN_VAL_CUSTOM</name></member>
+    <member refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4" kind="enum"><name>ros_rpc_gen_return</name></member>
+    <member refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a4746a9c6f8d4ff607547873a4188743f" kind="enumvalue"><name>GEN_RETURN_GO_AHEAD</name></member>
+    <member refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4ac259448014272d6df77129ddee655223" kind="enumvalue"><name>GEN_LEVEL_UP</name></member>
+    <member refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a03db331f02db9600a329a3383b6ba2e2" kind="enumvalue"><name>GEN_STOP</name></member>
+    <member refid="rosxmosNode_8h_1a74564e1fe39cf0ac2bf76c97118c4fd4a85027a8e61bdba8c19c9492dec85e7b8" kind="enumvalue"><name>GEN_ERROR</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233" kind="enum"><name>str2buf_modes</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ae4cf0af5af45175a4938cb5e4c4de07d" kind="enumvalue"><name>S2B_NORMAL</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a6003038c3442819c95c6bf89fe703b1f" kind="enumvalue"><name>S2B_TAG</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a8c96fd2308e5bf733d1be2917855da38" kind="enumvalue"><name>S2B_CTAG</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233ac19039227c751576361425f25b699105" kind="enumvalue"><name>S2B_HTTP_HEAD_FIELD_DESC</name></member>
+    <member refid="rosxmosNode_8h_1a899536834ba0b650427b441b24684233a92303c510b3bf4ac46c09da030aaa6e0" kind="enumvalue"><name>S2B_HTTP_HEAD_FIELD</name></member>
+    <member refid="rosxmosNode_8h_1aaab687c67d3280c66871a1d5621f1804" kind="function"><name>str2buf</name></member>
+    <member refid="rosxmosNode_8h_1a86ed96f61050d51f5e134a9c01245244" kind="function"><name>generateHeader</name></member>
+    <member refid="rosxmosNode_8h_1a92f3ec0a105cfbc76c8c62c1141fdb94" kind="function"><name>generateXML</name></member>
+  </compound>
+  <compound refid="StandaloneNodeWithHAL_8c" kind="file"><name>StandaloneNodeWithHAL.c</name>
+    <member refid="StandaloneNodeWithHAL_8c_1a840291bc02cba5474a4cb46a9b9566fe" kind="function"><name>main</name></member>
+  </compound>
+  <compound refid="dir_6ab10414849673f7a676763b764b0b32" kind="dir"><name>src/LinuxCOM/</name>
+  </compound>
+  <compound refid="dir_7f9a9acd781dd499d58adc2793f51be1" kind="dir"><name>src/</name>
+  </compound>
+</doxygenindex>
