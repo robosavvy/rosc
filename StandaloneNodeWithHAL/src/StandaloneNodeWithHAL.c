@@ -45,6 +45,8 @@ int main(void)
 	{
 			HTTP_HEADER_GEN_DESC_USER_AGENT,
 			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
+			HTTP_HEADER_GEN_DESC_CUSTOM+0,
+			HTTP_HEADER_GEN_VAL_CUSTOM+1,
 			HTTP_HEADER_GEN_END
 	};
 	unsigned int gen_index=0;
@@ -52,10 +54,10 @@ int main(void)
 
 
 
-	generateHeader(buffer,gen_array2,custom_str, buf_index);
-	generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
+	generateHeader(buffer,gen_array2,custom_str, &buf_index);
+	//generateXML(buffer, gen_array, custom_str, &gen_index, &buf_index);
 
-	printf("D: %s",buffer);
+	printf("%s",buffer);
 
 	return 0;
 

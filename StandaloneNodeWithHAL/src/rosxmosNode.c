@@ -70,7 +70,7 @@ char *http_header_stdtext[22] =//[][X] X must be the length of the longest strin
 
 
 
-void str2buf(unsigned int *index, char* buffer, char* str, char mode)
+void str2buf(unsigned int *index, char* buffer, char* str, char mode)//TODO mode type
 {
 	if(mode==S2B_CTAG || mode == S2B_TAG)//If tag
 	{
@@ -121,31 +121,29 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode)
 }
 
 
-char generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index)
+void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index)
 {
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
 
-		if((*gen_array)>=225) //Print custom value
+		if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value
 		{
-
+			str2buf(buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_HTTP_HEAD_FIELD);
 		}
-		else if((*gen_array)>=200) //Print std value
+		else if((*gen_array)>=HTTP_HEADER_VALUE_BEGIN) //Print std value
 		{
-
+			str2buf(buf_index,message_buffer,http_header_stdtext[(*gen_array)-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
 		}
-		else if((*gen_array)>=75) //Print custom descriptor
+		else if((*gen_array)>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
 		{
-
+			str2buf(buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
 		}
-		else if((*gen_array)>=50) //Print std descriptor
+		else if((*gen_array)>=HTTP_HEADER_DESC_BEGIN) //Print std descriptor
 		{
-
+			str2buf(buf_index,message_buffer,http_header_descriptors[(*gen_array)-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
 		}
-
 		gen_array++;
 	}
-
 }
 
 

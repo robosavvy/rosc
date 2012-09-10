@@ -26,8 +26,8 @@ typedef struct
 /**
  * Command enum for the xmlrpc message generator
  */
-#define RPC_TAG_START 	   100
-#define RPC_STDTEXT_START 150
+#define RPC_TAG_START 	   100 // Number where the enum values for tags start
+#define RPC_STDTEXT_START 150 // Number where the enum values for texts start
 typedef enum
 {
 
@@ -79,16 +79,17 @@ typedef enum
  * Command enum for the xmlrpc message generator
  */
 
-#define HTTP_HEADER_DESC_BEGIN 50
-#define HTTP_HEADER_DESC_CUSTOM_BEGIN 100
+#define HTTP_HEADER_DESC_BEGIN 50	//Starting number for field descriptions
 #define HTTP_HEADER_VALUE_BEGIN 150
-#define HTTP_HEADER_VALUE_CUSTOM_BEGIN 200
 
 typedef enum
 {
 	HTTP_HEADER_GEN_END=0, //!< This is required on any header generation array end.
 
-
+	///@{
+	/**
+	 * Values specifying most used standard field descriptors
+	 */
 	HTTP_HEADER_GEN_DESC_SERVER=HTTP_HEADER_DESC_BEGIN,
 	HTTP_HEADER_GEN_DESC_USER_AGENT,
 	HTTP_HEADER_GEN_DESC_DATE,
@@ -96,17 +97,29 @@ typedef enum
 	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
 	HTTP_HEADER_GEN_DESC_CONTENT_LENGTH,
 	HTTP_HEADER_GEN_DESC_ACCEPTED_CODING,
+	///@}
 
-	HTTP_HEADER_GEN_DESC_CUSTOM=HTTP_HEADER_DESC_CUSTOM_BEGIN,
+	/**
+	 * This specifies to use a text in the custom text array as descriptor
+	 */
+	HTTP_HEADER_GEN_DESC_CUSTOM,
 
+	///@{
+	/**
+	 * Values specifying most used standard text pieces
+	 */
 	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1=HTTP_HEADER_VALUE_BEGIN,
 	HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_TEXT_XML,
 	HTTP_HEADER_GEN_VAL_HTTP_1_0,
 	HTTP_HEADER_GEN_VAL_OK,
+	///@}
 
-	HTTP_HEADER_GEN_VAL_CUSTOM=HTTP_HEADER_VALUE_CUSTOM_BEGIN
+	/**
+	 * This specifies to use a text in the custom text array as value
+	 */
+	HTTP_HEADER_GEN_VAL_CUSTOM
 }http_head_gen_command;
 
 
@@ -156,7 +169,7 @@ void str2buf(unsigned int *index, char* buffer, char* str, char mode);
 /**
  *
  */
-char generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index);
+void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index);
 
 
 
@@ -164,8 +177,7 @@ char generateHeader(char* message_buffer, http_head_gen_command* gen_array, char
  * This function generates a xmlrpc message
  * @param[out] message_buffer The output buffer for the message
  * @param[in] gen_array The command array for generating messages.
- * @param[in] custom_string_array The array for custom str
- * ings (topics, params etc.)
+ * @param[in] custom_string_array The array for custom strings (topics, params etc.)
  * @param gen_index The index for the gen_array, set to 0 at start, increased by each call of generate_XML
  * @param buf_index The index for the output buffer
  * @return Message length
