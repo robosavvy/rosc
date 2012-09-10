@@ -147,8 +147,6 @@ typedef enum
 	S2B_HTTP_HEAD_FIELD, 	  //!< This mode adds a space infront and a newline at the back of the string
 }str2buf_modes;
 
-
-
 /**
  * This function copies a string into a buffer.
  * The starting point inside the string is given with the index pointer,
@@ -164,14 +162,15 @@ typedef enum
  */
 void str2buf(unsigned int *index, char* buffer, char* str, char mode);
 
-
-
 /**
- *
+ *	This function can be used to generate headers for a HTTP message.
+ * 	@param[out] message_buffer The output buffer for the message
+ * 	@param[in] gen_array The command array for generating messages.
+ * 	@param[in] custom_string_array The array for custom strings
+ * 	@param buf_index The index for the output buffer
+ * 	@return Message length
  */
 void generateHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index);
-
-
 
 /**
  * This function generates a xmlrpc message

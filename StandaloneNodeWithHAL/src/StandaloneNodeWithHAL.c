@@ -49,7 +49,7 @@ int main(void)
 			HTTP_HEADER_GEN_VAL_CUSTOM+1,
 			HTTP_HEADER_GEN_END
 	};
-	unsigned int gen_index=0;
+//
 	unsigned int buf_index=0;
 
 
