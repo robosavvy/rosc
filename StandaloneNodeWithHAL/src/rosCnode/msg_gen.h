@@ -28,29 +28,29 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+#define RPC_TAGS_START 	       4 // Number where the enum values for tags start
+#define RPC_CLOSE_TAG  RPC_CUSTOM_TAG+24 //Value after the generator creates close tags
+#define RPC_STDTEXT_START   104 // Number where the enum values for texts start
+
 /**
- * Command enum for the xmlrpc message generator
+ * This macro advises the generator to print a close tag instead of opening a new one.
+ * \n Example:  ... RPC_CT RPC_TAG_ARRAY, ...
  */
-#define RPC_TAG_START 	   10 // Number where the enum values for tags start
-#define RPC_STDTEXT_START 50 // Number where the enum values for texts start
-
-
+#define RPC_CT RPC_CLOSE_TAG+
 
 /**
  * This enum holds the commands for the rpc XML generator
  */
 typedef enum
 {
-
-
-
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
 	RPC_XML_DECLARATION, //!<Places XML Declaration
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
-	RPC_TAG_ARRAY=RPC_TAG_START,//!< place tag array
+	RPC_TAG_ARRAY=RPC_TAGS_START,//!< place tag array
 	RPC_TAG_BOOLEAN,			//!< place tag boolean
 	RPC_TAG_DATA,				//!< place tag data
 	RPC_TAG_INT,				//!< place tag int
@@ -76,13 +76,12 @@ typedef enum
 	RPC_STDTEXT_TCP_KEEPALIVE,				//!< place text "tcp_keepalive" 		in the current open tag
 	RPC_STDTEXT_UNREGISTERPUBLISHER,		//!< place text "unregisterPublisher" 	in the current open tag
 	RPC_STDTEXT_UNREGISTERSUBSCRIBER,		//!< place text "unregisterSubscriber" 	in the current open tag
-	RPC_CLOSE_TAG=255, //!< Close current tag
+
 	/**
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
 	RPC_CUSTOM_TEXT,//!< RPC_CUSTOM_TEXT
-
 } ros_rpc_gen_command;
 
 
