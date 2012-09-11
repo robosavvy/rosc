@@ -90,7 +90,7 @@ void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
 }
 
 
-void generateHTTPHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index)
+void generateHTTPHeader(char* message_buffer,const http_head_gen_command* gen_array, const char **custom_string_array, unsigned int *buf_index)
 {
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
@@ -128,7 +128,7 @@ void generateHTTPHeader(char* message_buffer, http_head_gen_command* gen_array, 
 }
 
 
-char generateXML(char* message_buffer, ros_rpc_gen_command* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
+char generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index)
 {
 	unsigned int gen_command=gen_array[*gen_index];
 	bool isTag=false;

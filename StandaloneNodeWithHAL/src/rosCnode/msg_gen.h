@@ -193,7 +193,7 @@ void str2buf(unsigned int *index, char* buffer, const char* str, char mode);
  * 	@param buf_index The index for the output buffer
  * 	@return Message length
  */
-void generateHTTPHeader(char* message_buffer, http_head_gen_command* gen_array, char **custom_string_array, unsigned int *buf_index);
+void generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array, unsigned int *buf_index);
 
 /**
  * This function generates a xmlrpc message
@@ -204,7 +204,7 @@ void generateHTTPHeader(char* message_buffer, http_head_gen_command* gen_array, 
  * @param buf_index The index for the output buffer
  * @return Message length
  */
-char generateXML(char* message_buffer, ros_rpc_gen_command* gen_array, char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+char generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
 
 
 
