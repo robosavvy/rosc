@@ -98,40 +98,43 @@ void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
 }
 
 
-void generateHTTPHeader(char* message_buffer,const http_head_gen_command* gen_array, const char **custom_string_array, unsigned int *buf_index)
+int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array)
 {
+	unsigned int buf_index=0;
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
 		if((*gen_array)>=HTTP_HEADER_VAL_UINT_NUMBER)
 		{
 			unsigned int number=(*gen_array)-HTTP_HEADER_VAL_UINT_NUMBER;
-			int2buf(message_buffer,buf_index,number);
-			message_buffer[*buf_index]='\n';
-			(*buf_index)++;
+			int2buf(message_buffer,&buf_index,number);
+			message_buffer[buf_index]='\n';
+			(buf_index)++;
 		}
 		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value
 		{
-			str2buf(buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_HTTP_HEAD_FIELD);
+			str2buf(&buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_HTTP_HEAD_FIELD);
 		}
 		else if((*gen_array)>=HTTP_HEADER_VALUE_BEGIN) //Print std value
 		{
-			str2buf(buf_index,message_buffer,http_header_stdtext[(*gen_array)-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
+			str2buf(&buf_index,message_buffer,http_header_stdtext[(*gen_array)-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
 		}
 		else if((*gen_array)>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
 		{
-			str2buf(buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
+			str2buf(&buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
 		}
 		else if((*gen_array)>=HTTP_HEADER_DESC_BEGIN) //Print std descriptor
 		{
-			str2buf(buf_index,message_buffer,http_header_descriptors[(*gen_array)-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
+			str2buf(&buf_index,message_buffer,http_header_descriptors[(*gen_array)-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
 		}
 		gen_array++;
 	}
 	//Finish Header with empty line
-	message_buffer[*buf_index]='\n';
+	message_buffer[buf_index]='\n';
 
 	//Terminate
-	(*buf_index)++;
+	buf_index++;
+
+	return buf_index;
 }
 
 
@@ -148,6 +151,14 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
 			if((*gen_array)==RPC_XML_DECLARATION)
 			{
 				str2buf(&buf_index, message_buffer,"<?xml version=\"1.0\"?>",S2B_NORMAL);
+			}
+			/*
+			 * UNSIGNED INTEGER
+			 */
+			else if((*gen_array)>=RPC_UINT_NUMBER)
+			{
+				unsigned int number=(*gen_array)-RPC_UINT_NUMBER;
+				int2buf(message_buffer,&buf_index,number);
 			}
 			/*
 			 * TEXT FIELD

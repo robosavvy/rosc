@@ -84,7 +84,12 @@ typedef enum
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
-	RPC_CUSTOM_TEXT,//!< RPC_CUSTOM_TEXT
+	RPC_CUSTOM_TEXT,
+
+	/**
+	 * This command inserts a unsigned integer into the message
+	 */
+	RPC_UINT_NUMBER=RPC_CUSTOM_TEXT+CUSTOM_STRINGS_MAX,
 } ros_rpc_gen_command;
 
 
@@ -192,10 +197,9 @@ void str2buf(unsigned int *index, char* buffer, const char* str, char mode);
  * 	@param[out] message_buffer The output buffer for the message
  * 	@param[in] gen_array The command array for generating messages.
  * 	@param[in] custom_string_array The array for custom strings
- * 	@param buf_index The index for the output buffer
  * 	@return Message length
  */
-void generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array, unsigned int *buf_index);
+int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array);
 
 /**
  * This function generates a xmlrpc message
