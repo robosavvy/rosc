@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "rosxmosNode.h"
+#include "rosCnode/rosCnode.h"
 
 int main(void)
 {
