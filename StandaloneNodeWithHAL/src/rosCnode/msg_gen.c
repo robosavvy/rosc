@@ -24,6 +24,9 @@
 #include "msg_gen.h"
 #include "msg_strings.h"
 
+#if defined(DEBUG_RPC_GEN)
+	#warning DEBUG_RPC_GEN is set, debugging output online, remove in release
+#endif
 
 
 void str2buf(unsigned int *index, char* buffer, const char* str, char mode)//TODO mode type
@@ -69,7 +72,9 @@ void str2buf(unsigned int *index, char* buffer, const char* str, char mode)//TOD
 
 
 	//Add terminator
+	#if defined(DEBUG_RPC_GEN)
     buffer[*index]='\0';
+	#endif
 }
 
 
@@ -86,7 +91,9 @@ void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
 		a/=10;
 		(*buf_index)++;
 	}
+	#if defined(DEBUG_RPC_GEN)
 	message_buffer[*buf_index]='\0';
+	#endif
 }
 
 
@@ -124,7 +131,9 @@ void generateHTTPHeader(char* message_buffer,const http_head_gen_command* gen_ar
 
 	//Terminate
 	(*buf_index)++;
-	message_buffer[*buf_index]='\0';
+	#if defined(DEBUG_RPC_GEN)
+		message_buffer[*buf_index]='\0';
+	#endif
 }
 
 

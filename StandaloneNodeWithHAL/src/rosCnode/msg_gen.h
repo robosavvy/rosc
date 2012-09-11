@@ -31,8 +31,8 @@
 /**
  * Command enum for the xmlrpc message generator
  */
-#define RPC_TAG_START 	   100 // Number where the enum values for tags start
-#define RPC_STDTEXT_START 150 // Number where the enum values for texts start
+#define RPC_TAG_START 	   10 // Number where the enum values for tags start
+#define RPC_STDTEXT_START 50 // Number where the enum values for texts start
 
 
 
@@ -42,7 +42,7 @@
 typedef enum
 {
 
-	RPC_CLOSE_TAG=0, //!< Close current tag
+
 
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
@@ -76,7 +76,7 @@ typedef enum
 	RPC_STDTEXT_TCP_KEEPALIVE,				//!< place text "tcp_keepalive" 		in the current open tag
 	RPC_STDTEXT_UNREGISTERPUBLISHER,		//!< place text "unregisterPublisher" 	in the current open tag
 	RPC_STDTEXT_UNREGISTERSUBSCRIBER,		//!< place text "unregisterSubscriber" 	in the current open tag
-
+	RPC_CLOSE_TAG=255, //!< Close current tag
 	/**
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
@@ -205,6 +205,36 @@ void generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_a
  * @return Message length
  */
 char generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
+
+
+
+
+//Examples//
+/**
+ * 	\example
+ *
+ *
+ *  This example will introduce you in how to generate a message with the functions generateHTTPHeader
+ *  and generateXML.
+ *
+ *	\code
+ 	//Be sure to check the maximum message length on __YOUR__OWN__!
+ 	//There is no check for the maximum length.
+ 	char *message_buffer[500];
+
+	const char *custom_str[] =
+	{
+	 "custom_desc\0",
+	 "custom_val",
+	 "custom_tag",
+	 "custom_text"
+	};
+
+ *	\endcode
+ *
+ */
+
+
 
 
 
