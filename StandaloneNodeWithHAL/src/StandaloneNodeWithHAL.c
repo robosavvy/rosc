@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "rosCnode/msg_strings.h"
 #include "rosCnode/rosCnode.h"
 
 
@@ -24,10 +25,6 @@ int main(void)
 	};
 	char buf_header[150];
 	char buf_xml[850];
-	unsigned int buf_header_index=0;
-	unsigned int buf_xml_index=0;
-	unsigned int xml_gen_index=0;
-
 
 	ros_rpc_gen_command xml_gen_array[]=
 	{
@@ -46,8 +43,7 @@ int main(void)
 		RPC_CT RPC_TAG_METHODCALL,
 		RPC_GENERATOR_FINISH
 	};
-	generateXML(buf_xml, xml_gen_array, custom_str, &xml_gen_index, &buf_xml_index);
-
+	generateXML(buf_xml, xml_gen_array, custom_str);
 
 
 

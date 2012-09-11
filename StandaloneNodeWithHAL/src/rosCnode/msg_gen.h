@@ -29,9 +29,7 @@
 #include <stdbool.h>
 
 
-#define RPC_TAGS_START 	       4 // Number where the enum values for tags start
-#define RPC_CLOSE_TAG  RPC_CUSTOM_TAG+24 //Value after the generator creates close tags
-#define RPC_STDTEXT_START   104 // Number where the enum values for texts start
+#define CUSTOM_STRINGS_MAX 50
 
 /**
  * This macro advises the generator to print a close tag instead of opening a new one.
@@ -50,7 +48,8 @@ typedef enum
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
-	RPC_TAG_ARRAY=RPC_TAGS_START,//!< place tag array
+	RPC_TAGS_START,				//!< Marks the start of the tags
+	RPC_TAG_ARRAY,				//!< place tag array
 	RPC_TAG_BOOLEAN,			//!< place tag boolean
 	RPC_TAG_DATA,				//!< place tag data
 	RPC_TAG_INT,				//!< place tag int
@@ -67,9 +66,13 @@ typedef enum
 	 */
 	RPC_CUSTOM_TAG, //!< RPC_CUSTOM_TAG
 
+
+	RPC_CLOSE_TAG=RPC_CUSTOM_TAG+CUSTOM_STRINGS_MAX,
+
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
     //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
-	RPC_STDTEXT_HASPARAM=RPC_STDTEXT_START, //!< place text "hasParam" 				in the current open tag
+	RPC_STDTEXT_START=RPC_CLOSE_TAG+CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
+	RPC_STDTEXT_HASPARAM, 					//!< place text "hasParam" 				in the current open tag
 	RPC_STDTEXT_REGISTERPUBLISHER,			//!< place text "registerPublisher" 	in the current open tag
 	RPC_STDTEXT_REGISTERSUBSCRIBER,			//!< place text "registerSubscriber" 	in the current open tag
 	RPC_STDTEXT_REQUESTTOPIC,				//!< place text "requestTopic" 			in the current open tag
@@ -203,8 +206,7 @@ void generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_a
  * @param buf_index The index for the output buffer
  * @return Message length
  */
-char generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array, unsigned int *gen_index, unsigned int *buf_index);
-
+int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array);
 
 
 
