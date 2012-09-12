@@ -24,15 +24,7 @@
 #include "msg_gen.h"
 #include "msg_strings.h"
 
-
-
-
-#if defined(DEBUG_RPC_GEN)
-	#warning DEBUG_RPC_GEN is set, debugging output online, remove in release!
-#endif
-
-
-void str2buf(unsigned int *index, char* buffer, const char* str, char mode)//TODO mode type
+void str2buf(unsigned int *index, char* buffer, const char* str, str2buf_modes mode)
 {
 	if(mode==S2B_CTAG || mode == S2B_TAG)//If tag
 	{
@@ -72,10 +64,6 @@ void str2buf(unsigned int *index, char* buffer, const char* str, char mode)//TOD
 		buffer[*index]='\n';
 		(*index)++;
 	}
-	//Add terminator
-	//#if defined(DEBUG_RPC_GEN)
-    buffer[*index]='\0';
-	//#endif
 }
 
 
@@ -92,9 +80,6 @@ void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
 		a/=10;
 		(*buf_index)++;
 	}
-	#if defined(DEBUG_RPC_GEN)
-	message_buffer[*buf_index]='\0';
-	#endif
 }
 
 
@@ -103,16 +88,19 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
 	unsigned int buf_index=0;
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
-		if((*gen_array)>=HTTP_HEADER_VAL_UINT_NUMBER)
+		if((*gen_array) == HTTP_HEADER_CUSTOM_TEXT_END)
+		{
+			message_buffer[buf_index]='\n';
+			buf_index++;
+		}
+		else if((*gen_array)>=HTTP_HEADER_VAL_UINT_NUMBER)
 		{
 			unsigned int number=(*gen_array)-HTTP_HEADER_VAL_UINT_NUMBER;
 			int2buf(message_buffer,&buf_index,number);
-			message_buffer[buf_index]='\n';
-			(buf_index)++;
 		}
-		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value
+		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
 		{
-			str2buf(&buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_HTTP_HEAD_FIELD);
+			str2buf(&buf_index,message_buffer,custom_string_array[(*gen_array)-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_NORMAL);
 		}
 		else if((*gen_array)>=HTTP_HEADER_VALUE_BEGIN) //Print std value
 		{
@@ -130,10 +118,6 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
 	}
 	//Finish Header with empty line
 	message_buffer[buf_index]='\n';
-
-	//Terminate
-	buf_index++;
-
 	return buf_index;
 }
 

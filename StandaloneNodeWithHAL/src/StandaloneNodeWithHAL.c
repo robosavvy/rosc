@@ -57,15 +57,15 @@ int main(void)
 	http_head_gen_command http_gen_array[]=
 	{
 			HTTP_HEADER_GEN_DESC_USER_AGENT,     HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
-			HTTP_HEADER_GEN_DESC_HOST,           HTTP_HEADER_GEN_VAL_CUSTOM+0, HTTP_HEADER_VAL_UINT_NUMBER+11311,
+			HTTP_HEADER_GEN_DESC_HOST,           HTTP_HEADER_GEN_VAL_CUSTOM+0, HTTP_HEADER_VAL_UINT_NUMBER+11311,HTTP_HEADER_CUSTOM_TEXT_END,
 			HTTP_HEADER_GEN_DESC_CONTENT_TYPE,   HTTP_HEADER_GEN_VAL_TEXT_XML,
 			HTTP_HEADER_GEN_DESC_CONTENT_LENGTH, HTTP_HEADER_VAL_UINT_NUMBER+generateXML(buf_xml, xml_gen_array, custom_xml_str),
 			HTTP_HEADER_GEN_END
 	};
 
 
-	generateHTTPHeader(buf_header,http_gen_array,custom_header_str);
 
+	generateHTTPHeader(buf_header,http_gen_array,(const char**)custom_header_str);
 	printf("%s\n",buf_header);
 	printf("%s\n",buf_xml);
 
