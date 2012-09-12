@@ -88,14 +88,14 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
 	unsigned int buf_index=0;
 	while(*gen_array != HTTP_HEADER_GEN_END)
 	{
-		if((*gen_array) == HTTP_HEADER_CUSTOM_TEXT_END)
+		if((*gen_array) == HTTP_HEADER_GEN_CUSTOM_TEXT_END)
 		{
 			message_buffer[buf_index]='\n';
 			buf_index++;
 		}
-		else if((*gen_array)>=HTTP_HEADER_VAL_UINT_NUMBER)
+		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
 		{
-			unsigned int number=(*gen_array)-HTTP_HEADER_VAL_UINT_NUMBER;
+			unsigned int number=(*gen_array)-HTTP_HEADER_GEN_VAL_UINT_NUMBER;
 			int2buf(message_buffer,&buf_index,number);
 		}
 		else if((*gen_array)>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
@@ -189,5 +189,5 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
 			}
 			gen_array++;
 		}
-		return buf_index+1;
+		return buf_index;
 }

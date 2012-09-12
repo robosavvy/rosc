@@ -103,7 +103,7 @@ typedef enum
 typedef enum
 {
 	HTTP_HEADER_GEN_END=0, //!< This is required on any header generation array end.
-	HTTP_HEADER_CUSTOM_TEXT_END, //!< This adds a linefeed after custom values
+	HTTP_HEADER_GEN_CUSTOM_TEXT_END, //!< This adds a linefeed after custom values
 	///@{
 	/**
 	 * Values specifying most used standard field descriptors
@@ -111,7 +111,7 @@ typedef enum
 	 *
 	 */
 	#define HTTP_HEADER_DESC_BEGIN 	HTTP_HEADER_GEN_DESC_SERVER
-	//Define must point to the first enum value in this section
+	//To Editors: Define must point to the first enum value in this section
 	HTTP_HEADER_GEN_DESC_SERVER,
 	HTTP_HEADER_GEN_DESC_USER_AGENT,
 	HTTP_HEADER_GEN_DESC_DATE,
@@ -130,9 +130,11 @@ typedef enum
 	/**
 	 * Values specifying most used standard text pieces
 	 */
-	//Define must point to the first enum value in this section
+	//To Editors: Define must point to the first enum value in this section
 	#define HTTP_HEADER_VALUE_BEGIN HTTP_HEADER_GEN_VAL_POST_HTTP_1_1
-	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1,
+	//To Editors: The value HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX must be assigned
+	//to the first value!!!
+	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1=HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX,
 	HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_TEXT_XML,
@@ -155,7 +157,7 @@ typedef enum
 	 * the supplied X can be a unsigned integer.
 	 *
 	 */
-	HTTP_HEADER_VAL_UINT_NUMBER=HTTP_HEADER_GEN_VAL_CUSTOM+CUSTOM_STRINGS_MAX
+	HTTP_HEADER_GEN_VAL_UINT_NUMBER=HTTP_HEADER_GEN_VAL_CUSTOM+CUSTOM_STRINGS_MAX
 }http_head_gen_command;
 
 
@@ -218,29 +220,14 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
 
 
 
-//Examples//
 /**
- * 	\example
- *
  *
  *  This example will introduce you in how to generate a message with the functions generateHTTPHeader
  *  and generateXML.
  *
- *	\code
- 	//Be sure to check the maximum message length on __YOUR__OWN__!
- 	//There is no check for the maximum length.
- 	char *message_buffer[500];
-
-	const char *custom_str[] =
-	{
-	 "custom_desc\0",
-	 "custom_val",
-	 "custom_tag",
-	 "custom_text"
-	};
-
- *	\endcode
  *
+ *
+ *  \example msg_generation.c
  */
 
 
