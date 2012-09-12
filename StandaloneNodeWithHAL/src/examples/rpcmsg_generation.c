@@ -8,56 +8,58 @@
 int main(void)
 {
 
-	//Custom string arrays for the message and header generator
-	//Arrays can also be non const. To surpress
-	//the warning a type cast should be made when handing
-	//them over to the functions.
-
-	//custom strings (message)
+	//! [Generating arrays for custom strings]
 	const char *custom_msg_str[] =
 	{
 		 "custom_tag",
 		 "custom_text",
 	};
 
-	//custom strings (header)
 	 char *custom_header_str[] =
 	{
 		"http://myHost:",
 		"custom_desc",
 		"custom_val"
 	};
+	//! [Generating arrays for custom strings]
 
-	 //message and header output buffer
+
+
+	//! [Creating the buffers]
 	char buf_header[150];
 	char buf_msg[850];
+	//! [Creating the buffers]
 
-	/*
-	 * For the xml generator array I suggest using the following structure:
-	 *
-	 * Adding the RPC_CT macro infront of a tag creates a closing tag
-	 */
+	//! [Commands for the header generation]
 	ros_rpc_gen_command msg_gen_array[]=
 	{
 	RPC_XML_DECLARATION, 					//<?xml version="1.0" ?>
 
 	RPC_TAG_METHODCALL, 					//<methodcall>
+		//! [Standard Tag and Text]
 		RPC_TAG_METHODNAME, 	  			//<methodname>
 			RPC_STDTEXT_HASPARAM, 			//hasParam
 		RPC_CT RPC_TAG_METHODNAME,			//</methodname>
-		RPC_TAG_PARAMS,   					//<params>
-			RPC_TAG_PARAM,					//<param>
-				RPC_CUSTOM_TAG+0,			//<custom_tag>
-					RPC_CUSTOM_TEXT+1,		//custom_text
-					RPC_UINT_NUMBER+900,    //900
-				RPC_CT RPC_CUSTOM_TAG+0,    //</custom_tag>
+		//! [Standard Tag and Text]
+		RPC_TAG_PARAMS,   				//<params>
+			RPC_TAG_PARAM,				//<param>
+				//! [Custom Tag and Text]
+				RPC_CUSTOM_TAG +0,		//<custom_tag>
+					RPC_CUSTOM_TEXT +1,	//custom_text
+					RPC_UINT_NUMBER +900,   //900
+				RPC_CT RPC_CUSTOM_TAG +0,   	//</custom_tag>
+				//! [Custom Tag and Text]
 			RPC_CT RPC_TAG_PARAM ,			//</param>
 		RPC_CT RPC_TAG_PARAMS,				//</params>
 	RPC_CT RPC_TAG_METHODCALL,				//</param>
 	RPC_GENERATOR_FINISH					//Stop generator
 	};
+	//! [Commands for the header generation]
 
+
+	//![generating XML]
 	unsigned int msglen=generateXML(buf_msg, msg_gen_array, custom_msg_str);
+	//![generating XML]
 
 	/*
 	 * And for the header generator array I suggest using the following structure:
@@ -75,31 +77,33 @@ int main(void)
 	http_head_gen_command http_gen_array[]=
 	{
 		HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
-			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,//XMLRPC ROSc-NodeLib
+			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
 
 		HTTP_HEADER_GEN_DESC_HOST,
-			HTTP_HEADER_GEN_VAL_CUSTOM+0, 		  //"http://myHost:" from custom array position 0
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+11311,//generate string number 11311
-			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 	  //header line end
+			HTTP_HEADER_GEN_VAL_CUSTOM +0, 		   	//"http://myHost:" from custom array position 0
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
+			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 	   	//header line end
 
 		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
 			HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
 
-		HTTP_HEADER_GEN_DESC_CONTENT_LENGTH, 		//Content Length:
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+msglen,	//Length of Message (generated:150)
+		HTTP_HEADER_GEN_DESC_CONTENT_LENGTH, 			//Content Length:
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER +msglen,	//Length of Message (generated:150)
 			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 		//header line end
 
-		HTTP_HEADER_GEN_DESC_CUSTOM+1,				//custom_desc:
-			HTTP_HEADER_GEN_VAL_CUSTOM+2,			//custom_val
+		HTTP_HEADER_GEN_DESC_CUSTOM +1,				//custom_desc:
+			HTTP_HEADER_GEN_VAL_CUSTOM +2,			//custom_val
 			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 		//header line end
 
-		HTTP_HEADER_GEN_END							//Empty Line(Header End)
+		HTTP_HEADER_GEN_END					//Empty Line(Header End)
 	};
 
 	/*
 	 * If the array for the custom strings isn't const add a cast to (const char**)
 	 */
+	//! [Generating the Header]
 	unsigned int headerlen=generateHTTPHeader(buf_header,http_gen_array,(const char**)custom_header_str);
+	//! [Generating the Header]
 
 	//Just to have some output print the buffers to stdout
 	printbuffer(buf_header,headerlen);

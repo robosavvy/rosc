@@ -64,7 +64,7 @@ typedef enum
 	 * Use this number for selecting custom tag strings where RPC_CUSTOM_TAG is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
-	RPC_CUSTOM_TAG, //!< RPC_CUSTOM_TAG
+	RPC_CUSTOM_TAG,
 
 
 	RPC_CLOSE_TAG=RPC_CUSTOM_TAG+CUSTOM_STRINGS_MAX,
@@ -221,17 +221,96 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
 
 
 /**
+ *  @example rpcmsg_generation.c
+ *	This example will show how to generate a RPC messages with the functions generateHTTPHeader
+ *  and generateXML
  *
- *  This example will introduce you in how to generate a message with the functions generateHTTPHeader
- *  and generateXML.
+ *  A RPC message consists of two parts an HTTP Header, telling receiver information about
+ *  the other side and a xml message.
+ *
+ *  For generating such a message there are two functions \ref generateHTTPHeader and \ref generateXML.
+ *
+ *  The most usefull tags or strings needed for interacting with a server are already predefined,
+ *  but sometimes it might be necessary to have additional strings which are inserted into
+ *  the message.
+ *
+ *  For this custom string arrays can be generated, either one for each function or one for both functions.
+ *  In this example we are using seperate arrays:
+ *
+ *  \snippet examples/rpcmsg_generation.c Generating arrays for custom strings
+ *
+ *	As seen here the arrays can be constant arrays or not. But both functions normally require
+ *	const char**, otherwise a compiler warning is generated when compiling the code. To
+ *	surpress the warning my insert a cast like here:
+ *
+ *	\snippet examples/rpcmsg_generation.c Generating the Header
+ *
+ *	For storing the header and the message for later usage, it's necessary to have output buffers:
+ *
+ *	\snippet examples/rpcmsg_generation.c Creating the buffers
+ *
+ *	First of all the XML message has to be generated, because the header generator needs to know it's
+ *	size for the Content-Length parameter.
+ *
+ *	For the header and message generation we use command arrays. Command arrays are integer arrays
+ *	holding specific commands for the generator. They can contain each tag as often as they won't,
+ *	while the string for the tag itself is only stored once. This is necessary because many platforms
+ *	like microcontrollers do not offer much memory, often less than a megabyte.
+ *
+ *	The command sets for the XML generator and Header Generator differ because according to the HTTP
+ *	standard a header field is closed with a line feed and can't be nested, while XML tags are closed
+ *	by a closing tag and allow nesting.
+ *
+ * The next snippet shows the generator commands for the XML generator.
+ * \snippet examples/rpcmsg_generation.c Commands for the header generation
+ *
+ * As you can see it's a array of the type \ref ros_rpc_gen_command which is a enum type and should be
+ * translated to integer.
+ *
+ * The array starts with \ref RPC_XML_DECLARATION, which inserts the string
+ * \verbatim<?xml version="1.0" ?>\endverbatim
+ *
+ * We skip the first open tag \verbatim<methodcall>\endverbatim which is created by \ref RPC_TAG_METHODCALL
+ * and look at the next tag \verbatim<methodname>\endverbatim created by \ref RPC_TAG_METHODNAME
+ * because it's more suitable for the explanation.
+ *
+ * \snippet examples/rpcmsg_generation.c Standard Tag and Text
+ *
+ * As seen RPC_TAG_ commands create a open standard tag. The following command \ref RPC_STDTEXT_HASPARAM,
+ * creates the standard string hasParam. To close a tag it's necessary to call the same command again but
+ * place the \ref RPC_CT macro infront of it. As seen in the last snippet.
+ *
+ * In the next snippet we see the the usage of custom tags and texts and the generation of a string of a number.
+ *  *
+ * \snippet examples/rpcmsg_generation.c Custom Tag and Text
+ *
+ * To create a tag which uses a string out of the custom string array, \ref RPC_CUSTOM_TAG used and added
+ * to a number, the number specifies the string which will be used to created the tag. Closing the
+ * tag works the same like for standard tags by adding a \ref RPC_CT in front of it.
+ *
+ * The \ref RPC_CUSTOM_TEXT command works like the same as the \ref RPC_CUSTOM_TAG command. The
+ * only difference is, that the string is directly inserted into the message without brackets.
+ *
+ * Another feature, executed with command \ref RPC_UINT_NUMBER allows to place different
+ * unsigned integers into the message. The integer to be printed must be added to the command.
+ *
+ * Now we call the generateXML function and store it's return value, which is the message length,
+ * into a variable.
+ *
+ * \snippet examples/rpcmsg_generation.c generating XML
  *
  *
  *
- *  \example msg_generation.c
+ *  \par Output:
+ \verbatim
+ User-Agent: XMLRPC ROSc-NodeLib
+ Host: http://myHost:11311
+ Content-Type: text/xml
+ Content-length: 150
+ custom_desc: custom_val
+
+ <?xml version="1.0"?><methodcall><methodname>hasParam</methodname><params><param><custom_tag>custom_text900</custom_tag></param></params></methodcall>\endverbatim
+ *
  */
-
-
-
-
 
 #endif /* MSG_GEN_H_ */
