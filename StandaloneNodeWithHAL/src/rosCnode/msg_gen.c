@@ -118,6 +118,7 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
 	}
 	//Finish Header with empty line
 	message_buffer[buf_index]='\n';
+	buf_index++;
 	return buf_index;
 }
 
