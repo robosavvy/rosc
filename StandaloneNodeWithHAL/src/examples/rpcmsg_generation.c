@@ -30,7 +30,7 @@ int main(void)
 	char buf_msg[850];
 	//! [Creating the buffers]
 
-	//! [Commands for the header generation]
+	//! [Commands for the XML generation]
 	ros_rpc_gen_command msg_gen_array[]=
 	{
 	RPC_XML_DECLARATION, 					//<?xml version="1.0" ?>
@@ -54,30 +54,21 @@ int main(void)
 	RPC_CT RPC_TAG_METHODCALL,				//</param>
 	RPC_GENERATOR_FINISH					//Stop generator
 	};
-	//! [Commands for the header generation]
+	//! [Commands for the XML generation]
 
 
 	//![generating XML]
 	unsigned int msglen=generateXML(buf_msg, msg_gen_array, custom_msg_str);
 	//![generating XML]
 
-	/*
-	 * And for the header generator array I suggest using the following structure:
-	 * Descriptor
-	 * \t Value,
-	 *
-	 * and for custom values:
-	 * Descriptor,
-	 * \t Custom text or int
-	 * \t Custom text or int
-	 * \t Custom text end
-	 *
-	 * as seen down here
-	 */
+
+	//![Commands for the header generation]
 	http_head_gen_command http_gen_array[]=
 	{
+		//![Standard header descriptor and value]
 		HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
 			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
+		//![Standard header descriptor and value]
 
 		HTTP_HEADER_GEN_DESC_HOST,
 			HTTP_HEADER_GEN_VAL_CUSTOM +0, 		   	//"http://myHost:" from custom array position 0
@@ -91,12 +82,15 @@ int main(void)
 			HTTP_HEADER_GEN_VAL_UINT_NUMBER +msglen,	//Length of Message (generated:150)
 			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 		//header line end
 
+		//![Custom header descriptor and value]
 		HTTP_HEADER_GEN_DESC_CUSTOM +1,				//custom_desc:
 			HTTP_HEADER_GEN_VAL_CUSTOM +2,			//custom_val
 			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 		//header line end
+		//![Custom header descriptor and value]
 
 		HTTP_HEADER_GEN_END					//Empty Line(Header End)
 	};
+	//![Commands for the header generation]
 
 	/*
 	 * If the array for the custom strings isn't const add a cast to (const char**)
@@ -105,9 +99,12 @@ int main(void)
 	unsigned int headerlen=generateHTTPHeader(buf_header,http_gen_array,(const char**)custom_header_str);
 	//! [Generating the Header]
 
+
+
 	//Just to have some output print the buffers to stdout
+	//! [Just Printing]
 	printbuffer(buf_header,headerlen);
 	printbuffer(buf_msg,msglen);
-
+	//! [Just Printing]
 	return 0;
 }

@@ -262,7 +262,7 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
  *	by a closing tag and allow nesting.
  *
  * The next snippet shows the generator commands for the XML generator.
- * \snippet examples/rpcmsg_generation.c Commands for the header generation
+ * \snippet examples/rpcmsg_generation.c Commands for the XML generation
  *
  * As you can see it's a array of the type \ref ros_rpc_gen_command which is a enum type and should be
  * translated to integer.
@@ -299,7 +299,38 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
  *
  * \snippet examples/rpcmsg_generation.c generating XML
  *
+ * As mentioned before, the message length is needed for creating the header,so it can be created now.
  *
+ * The next snippet shows the array of the type \ref http_head_gen_command.
+ * \snippet examples/rpcmsg_generation.c Commands for the header generation
+ *
+ * The usage of the header generation commands is nearly the same as those for XML generation.
+ *
+ * \snippet examples/rpcmsg_generation.c Standard header descriptor and value
+ *
+ * The commands beginning with HTTP_HEADER_GEN_ like  HTTP_HEADER_GEN_DESC_USER_AGENT generate
+ * header descriptors ending with a double point ("User-Agent:"). While commands beginning
+ * HTTP_HEADER_GEN_VAL_ like  HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB create string values
+ * ending with a line feed ("XMLRPC ROSc-NodeLib").
+ *
+ * Custom descriptors and values are created with HTTP_HEADER_GEN_DESC_CUSTOM and
+ * HTTP_HEADER_GEN_VAL_CUSTOM.
+ *
+ * As seen in the next snippet they work the same like their pendants for the XML generator.
+ * But if using a non standard text HTTP_HEADER_GEN_VAL_CUSTOM or the string from integer
+ * command HTTP_HEADER_GEN_VAL_UINT_NUMBER, it's necessary to add a HTTP_HEADER_GEN_CUSTOM_TEXT_END,
+ * to the end for creating a new line.
+ *
+ * \snippet examples/rpcmsg_generation.c Custom header descriptor and value
+ *
+ * To generate the header the function \ref generateHTTPHeader is called and the return value,
+ * which is also the length, stored in another variable.
+ *
+ * \snippet examples/rpcmsg_generation.c Generating the Header
+ *
+ * At the end this examples prints the strings of header and message. Which are not terminated!
+ *
+ * \snippet examples/rpcmsg_generation.c Just Printing
  *
  *  \par Output:
  \verbatim
@@ -311,6 +342,7 @@ int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, cons
 
  <?xml version="1.0"?><methodcall><methodname>hasParam</methodname><params><param><custom_tag>custom_text900</custom_tag></param></params></methodcall>\endverbatim
  *
+ *\par The whole example code:
  */
 
 #endif /* MSG_GEN_H_ */
