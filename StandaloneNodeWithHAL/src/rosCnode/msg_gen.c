@@ -83,7 +83,7 @@ void int2buf(char* message_buffer, unsigned int *buf_index, unsigned int number)
 }
 
 
-int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array)
+unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array)
 {
 	unsigned int buf_index=0;
 	while(*gen_array != HTTP_HEADER_GEN_END)
@@ -124,70 +124,84 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
 
 
 
-int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array)
+unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array)
 {
-	unsigned int gen_index=0, buf_index=0;
-	while(*gen_array != RPC_GENERATOR_FINISH)
+	unsigned int buf_index=0;
+	const char *outstring;
+	int outmode;
+	unsigned int number;
+	int command=*gen_array;
+
+	while(command != RPC_GENERATOR_FINISH)
 	{
-			unsigned int gen_command=gen_array[gen_index];
-			/*
-			 * XML DECLARATION
-			 */
-			if((*gen_array)==RPC_XML_DECLARATION)
-			{
-				str2buf(&buf_index, message_buffer,"<?xml version=\"1.0\"?>",S2B_NORMAL);
-			}
 			/*
 			 * UNSIGNED INTEGER
 			 */
-			else if((*gen_array)>=RPC_UINT_NUMBER)
+			if(command>=RPC_UINT_NUMBER)
 			{
-				unsigned int number=(*gen_array)-RPC_UINT_NUMBER;
-				int2buf(message_buffer,&buf_index,number);
+				number=command-RPC_UINT_NUMBER;
+				outmode=-1;
 			}
 			/*
 			 * TEXT FIELD
 			 */
-			else if((*gen_array)>=RPC_STDTEXT_START-1) //Add text
+			else if(command>=RPC_STDTEXT_START-1) //Add text
 			{
-				if(gen_command>=RPC_CUSTOM_TEXT)
+				if(command>=RPC_CUSTOM_TEXT)
 				{
-					str2buf(&buf_index, message_buffer, custom_string_array[gen_command-RPC_CUSTOM_TEXT],S2B_NORMAL);
+					outstring=custom_string_array[command-RPC_CUSTOM_TEXT];
+					outmode=S2B_NORMAL;
 				}
 				else
 				{
-					str2buf(&buf_index, message_buffer, ros_rpc_stdtext[gen_command-RPC_STDTEXT_START-1],S2B_NORMAL);
+					outstring=ros_rpc_stdtext[command-RPC_STDTEXT_START-1];
+					outmode=S2B_NORMAL;
 				}
 			}
 			/*
 			 * CLOSING TAG
 			 */
-			else if(gen_command>=RPC_CLOSE_TAG)
+			else if(command>=RPC_CLOSE_TAG)
 			{
-				if(gen_command>=RPC_CUSTOM_TAG+RPC_CLOSE_TAG)
+				if(command>=RPC_CUSTOM_TAG+RPC_CLOSE_TAG)
 				{
-					str2buf(&buf_index, message_buffer,custom_string_array[gen_command-RPC_CUSTOM_TAG-RPC_CLOSE_TAG],S2B_CTAG);
+					outstring=custom_string_array[command-RPC_CUSTOM_TAG-RPC_CLOSE_TAG];
+					outmode=S2B_CTAG;
 				}
 				else
 				{
-					str2buf(&buf_index, message_buffer,ros_rpc_tag_strings[gen_command-RPC_TAGS_START-1-RPC_CLOSE_TAG],S2B_CTAG);
+					outstring=ros_rpc_tag_strings[command-RPC_TAGS_START-1-RPC_CLOSE_TAG];
+					outmode=S2B_CTAG;
 				}
 			}
 			/*
 			 * OPENING TAG
 			 */
-			else if(gen_command>=RPC_TAGS_START-1)
+			else if(command>=RPC_TAGS_START-1)
 			{
-				if(gen_command>=RPC_CUSTOM_TAG)
+				if(command>=RPC_CUSTOM_TAG)
 				{
-					str2buf(&buf_index, message_buffer,custom_string_array[gen_command-RPC_CUSTOM_TAG],S2B_TAG);
+					outstring=custom_string_array[command-RPC_CUSTOM_TAG];
+					outmode=S2B_TAG;
 				}
 				else
 				{
-					str2buf(&buf_index, message_buffer,ros_rpc_tag_strings[gen_command-RPC_TAGS_START-1],S2B_TAG);
+					outstring=ros_rpc_tag_strings[command-RPC_TAGS_START-1];
+					outmode=S2B_TAG;
 				}
 			}
+
+			if(outmode<0)
+			{
+				int2buf(message_buffer,&buf_index,number);
+			}
+			else
+			{
+				str2buf(&buf_index, message_buffer,outstring,outmode);
+			}
+
 			gen_array++;
-		}
-		return buf_index;
+			command=*gen_array;
+	}
+	return buf_index;
 }

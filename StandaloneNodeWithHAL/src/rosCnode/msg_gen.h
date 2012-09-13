@@ -170,7 +170,7 @@ typedef enum
 {
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
-	RPC_XML_DECLARATION, //!<Places XML Declaration
+
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
@@ -198,6 +198,7 @@ typedef enum
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
     //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
 	RPC_STDTEXT_START=RPC_CLOSE_TAG +CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
+	RPC_XML_DECLARATION, 					//!< Places XML Declaration
 	RPC_STDTEXT_HASPARAM, 					//!< place text "hasParam" 				in the current open tag
 	RPC_STDTEXT_REGISTERPUBLISHER,			//!< place text "registerPublisher" 	in the current open tag
 	RPC_STDTEXT_REGISTERSUBSCRIBER,			//!< place text "registerSubscriber" 	in the current open tag
@@ -333,7 +334,7 @@ void str2buf(unsigned int *index, char* buffer, const char* str, str2buf_modes m
  * 	@param[in] custom_string_array The array for custom strings
  * 	@return Message length
  */
-int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array);
+unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_array, const char **custom_string_array);
 
 /**
  * This function generates a xmlrpc message
@@ -342,7 +343,7 @@ int generateHTTPHeader(char* message_buffer, const http_head_gen_command* gen_ar
  * @param[in] custom_string_array The array for custom strings (topics, params etc.)
  * @return Message length
  */
-int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array);
+unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_array, const char **custom_string_array);
 
 
 #endif /* MSG_GEN_H_ */

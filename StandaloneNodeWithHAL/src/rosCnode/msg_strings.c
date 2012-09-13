@@ -46,6 +46,7 @@ const char *ros_rpc_tag_strings[] =
  */
 const char *ros_rpc_stdtext[] =
 {
+	"<?xml version=\"1.0\"?>",
 	"hasParam",
 	"registerPublisher",
 	"registerSubscriber",
