@@ -25,18 +25,26 @@
  * Note to editors: If you add something here make sure its also available (in the SAME ORDER)
  * in the ros_rpc_gen_command enum command block (for numbers>2000) (make it alphabetically ordered, maybe necessary!)
  */
-const char *ros_rpc_tag_strings[] =
+const char *ros_xml_tag_strings[] =
 {
-	"array",
+	"array",  //TODO implement commented ...
+	//"body",
 	"boolean",
 	"data",
+	//"fault",
+	//"head",
 	"int",
-	"methodcall",
-	"methodname",
-	"methodresponse",
+	"member",
+	"methodCall",
+	"methodName",
+	"methodResponse",
+	//"p",
+	//"h1",
 	"param",
 	"params",
 	"string",
+	//"struct",
+	//"title",
 	"value"
 };
 
@@ -44,14 +52,15 @@ const char *ros_rpc_tag_strings[] =
  * Note to editors: If you add something here make sure its also available (in the SAME ORDER)
  * in the ros_rpc_gen_command enum command block (for numbers>4000) (make it alphabetically ordered, maybe necessary!)
  */
-const char *ros_rpc_stdtext[] =
+const char *ros_xml_stdtext[] =
 {
 	"<?xml version=\"1.0\"?>",
+	//"Error code "
 	"hasParam",
 	"registerPublisher",
 	"registerSubscriber",
 	"requestTopic",
-	"tcp_keepalive",
+	"/tcp_keepalive",
 	"unregisterPublisher",
 	"unregisterSubscriber"
 };

@@ -21,3 +21,9 @@
  *	File created by Christian Holl on 11.09.2012
  */
 
+#include "msg_parse.h"
+
+bool xml_rpc_parser(char *buffer, unsigned int content_len, parserState* state)
+{
+
+}

@@ -177,7 +177,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_rpc_stdtext[command-RPC_STDTEXT_START-1];
+				outstring=ros_xml_stdtext[command-RPC_STDTEXT_START-1];
 				outmode=S2B_NORMAL;
 			}
 		}
@@ -193,7 +193,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_rpc_tag_strings[command-RPC_TAGS_START-1-RPC_CLOSE_TAG];
+				outstring=ros_xml_tag_strings[command-RPC_TAGS_START-1-RPC_CLOSE_TAG];
 				outmode=S2B_CTAG;
 			}
 		}
@@ -209,7 +209,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_rpc_tag_strings[command-RPC_TAGS_START-1];
+				outstring=ros_xml_tag_strings[command-RPC_TAGS_START-1];
 				outmode=S2B_TAG;
 			}
 		}

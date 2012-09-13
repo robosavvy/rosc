@@ -24,6 +24,32 @@
 #ifndef MSG_PARSE_H_
 #define MSG_PARSE_H_
 
+#include <stdbool.h>
+
+typedef enum
+{
+	begin,
+	header_request,
+	header_field,
+	header_value,
+	xml_tag,
+	xml_value
+}parserState;
+
+typedef struct
+{
+	char tagbuffer[25];
+
+}parserInnerState;
+
+
+
+
+bool xml_rpc_parser(char *buffer, unsigned int content_len, parserState* state, parserInnerState);
+
+
+
+
 
 
 #endif /* MSG_PARSE_H_ */

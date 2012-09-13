@@ -27,12 +27,12 @@
 /**
  * This array contains the strings for standard tags.
  */
-extern const char *ros_rpc_tag_strings[];
+extern const char *ros_xml_tag_strings[];
 
 /**
  * This array contains strings for standard text pieces.
  */
-extern const char *ros_rpc_stdtext[];
+extern const char *ros_xml_stdtext[];
 
 /**
  * This array contains the strings for standard fields in the message headers
