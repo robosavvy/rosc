@@ -51,5 +51,4 @@ bool xml_rpc_parser(char *buffer, unsigned int content_len, parserState* state, 
 
 
 
-
 #endif /* MSG_PARSE_H_ */
