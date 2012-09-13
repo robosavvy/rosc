@@ -1,7 +1,7 @@
 /*
  *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2012
  *
- *  rosCnode.h
+ *  rpcmsg_generation.c
  *
  *  This file is part of ROScNode Library.
  *
