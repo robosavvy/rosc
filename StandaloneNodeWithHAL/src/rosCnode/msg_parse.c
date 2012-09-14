@@ -23,7 +23,52 @@
 
 #include "msg_parse.h"
 
-bool xml_rpc_parser(char *buffer, unsigned int content_len, parserState* state)
+const char *methods[]=
+{
+	"arft"
+	"garf",
+	"narf",
+	"ozlot",
+	"POST"
+};
+
+
+
+
+
+
+
+
+
+unsigned int stringSeek(const char* str, unsigned int len, parserSetup *setup, parserMode mode)
 {
 
+//	parserSetup name;
+//	name.first=0;
+//	name.last=sizeof();
+//
+//
+//
+//	char current=*str;
+//
+//	//Skip white space
+//	while(current==' ')
+//	{
+//		string++;
+//		current=*string;
+//	}
+//
+//	while(current!='\0')
+//	{
+//
+//
+//		string++;
+//		current=*string;
+//	}
+//
+//
+//	return 0;
+
 }
+
+

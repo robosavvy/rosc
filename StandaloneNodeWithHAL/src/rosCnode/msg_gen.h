@@ -170,11 +170,9 @@ typedef enum
 {
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
-
-
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
-	RPC_TAGS_START,				//!< Marks the start of the tags
+	__RPC_TAGS_START,
 	RPC_TAG_ARRAY,				//!< place tag array
 	RPC_TAG_BOOLEAN,			//!< place tag boolean
 	RPC_TAG_DATA,				//!< place tag data
@@ -197,7 +195,7 @@ typedef enum
 
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
     //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
-	RPC_STDTEXT_START=RPC_CLOSE_TAG +CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
+	__RPC_STDTEXT_START=RPC_CLOSE_TAG +CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
 	RPC_XML_DECLARATION, 					//!< Places XML Declaration
 	RPC_STDTEXT_HASPARAM, 					//!< place text "hasParam" 				in the current open tag
 	RPC_STDTEXT_REGISTERPUBLISHER,			//!< place text "registerPublisher" 	in the current open tag
@@ -223,23 +221,18 @@ typedef enum
 /**
  * Command enum for the xmlrpc message generator
  */
-
-	//Starting number for field descriptions
-
-#define HTTP_HEADER_DESC_BEGIN 	HTTP_HEADER_GEN_DESC_SERVER
-#define HTTP_HEADER_VALUE_BEGIN HTTP_HEADER_GEN_VAL_POST_HTTP_1_1
-
 typedef enum
 {
 	HTTP_HEADER_GEN_END=0, //!< This is required on any header generation array end.
 	HTTP_HEADER_GEN_CUSTOM_TEXT_END, //!< This adds a linefeed after custom values
+
+	__HTTP_HEADER_GEN_DESC_START,
 	///@{
 	/**
 	 * Values specifying most used standard field descriptors
-	 *
-	 *
 	 */
-	//To Editors: Define HTTP_HEADER_DESC_BEGIN must point to the first enum value in this section
+	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
+	//in http_header_descriptors (make it alphabetically ordered, maybe necessary!)
 	HTTP_HEADER_GEN_DESC_SERVER,
 	HTTP_HEADER_GEN_DESC_USER_AGENT,
 	HTTP_HEADER_GEN_DESC_DATE,
@@ -252,20 +245,21 @@ typedef enum
 	/**
 	 * This specifies to use a text in the custom text array as descriptor
 	 */
-	HTTP_HEADER_GEN_DESC_CUSTOM,
+	HTTP_HEADER_GEN_DESC_CUSTOM, //!< Marks the start of the custom strings
 
+
+	__HTTP_HEADER_GEN_VAL_START = HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX,
 	///@{
 	/**
 	 * Values specifying most used standard text pieces
 	 */
-	//To Editors: Define HTTP_HEADER_VALUE_BEGIN must point to the first enum value in this section
-	//To Editors: The value HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX must be assigned
-	//to the first value!!!
-	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1 = HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX,
+	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
+	//in http_header_stdtext (make it alphabetically ordered, maybe necessary!)
+	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1,
+	HTTP_HEADER_GEN_VAL_HTTP_1_0,
 	HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB,
 	HTTP_HEADER_GEN_VAL_TEXT_XML,
-	HTTP_HEADER_GEN_VAL_HTTP_1_0,
 	HTTP_HEADER_GEN_VAL_OK,
 	///@}
 

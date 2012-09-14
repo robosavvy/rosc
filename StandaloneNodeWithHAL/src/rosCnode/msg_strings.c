@@ -34,7 +34,7 @@ const char *ros_xml_tag_strings[] =
 	//"fault",
 	//"head",
 	"int",
-	"member",
+	//"member",
 	"methodCall",
 	"methodName",
 	"methodResponse",
@@ -86,11 +86,11 @@ const char *http_header_descriptors[] =
  */
 const char *http_header_stdtext[] =
 {
-		"POST / HTTP/1.1",
+		"POST/HTTP/1.1",
+		"HTTP/1.0",
 		"XMLRPC ROSc-NodeLib",
 		"BaseHTTP/ROSc-NodeLib",
 		"text/xml",
-		"HTTP/1.0",
 		"OK"
 };
 

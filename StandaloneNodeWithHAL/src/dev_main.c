@@ -1,10 +1,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "rosCnode/msg_strings.h"
 #include "rosCnode/rosCnode.h"
 #include "debug/debugutilities.h"
-
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -19,7 +17,32 @@
 
 
 
-int main(void)
+char *members[]=
+{
+	"POST",
+	"POSTE",
+	"POSTH",
+	"ROST",
+	"TOAST",
+};
+
+#define SIZE_STR_PTR_ARRAY(ARRAY)\
+	sizeof(ARRAY)/sizeof(char*)
+
+int main()
+{
+	char * str="ROST TOAST POST";
+	int len=strlen(str);
+
+	unsigned int pos=0;
+	unsigned int max=0;
+	unsigned int min=SIZE_STR_PTR_ARRAY(members);
+	stringSeek(str,len,members,SIZE_STR_PTR_ARRAY(members),&min,&max,&pos);
+
+	return 0;
+}
+
+int main2(void)
 {
 
 	//Custom string arrays for the message and header generator
@@ -184,7 +207,18 @@ int main(void)
 //	    printf("zzzzz!");
 //	    sleep(4);
 
-	   char* teststr="POST / HTTP/1.1\n"
+
+
+
+
+
+
+
+//	exit(0);
+
+
+	   char* teststr=
+			    "             POST / HTTP/1.1\n"
 	    		"User-Agent:askfhasdf\n"
 	    		"Host: sdfd-10: 34534\n"
 	    		"Content-Type: text/xml\n"
@@ -196,7 +230,6 @@ int main(void)
 
 
 
-	   exit(0);
 	   write(sockfd,teststr,strlen(teststr));
 
 	    printf("\n\n:::::::::::RESPONSE:::::::::::::\n\n");

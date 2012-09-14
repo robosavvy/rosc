@@ -109,10 +109,10 @@ unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_comman
 			outstring=custom_string_array[command-HTTP_HEADER_GEN_VAL_CUSTOM];
 			outmode=S2B_NORMAL;
 		}
-		else if(command>=HTTP_HEADER_VALUE_BEGIN) //Print std value
+		else if(command>=__HTTP_HEADER_GEN_VAL_START) //Print std value
 		{
 			//str2buf(&buf_index,message_buffer,http_header_stdtext[command-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
-			outstring=http_header_stdtext[command-HTTP_HEADER_VALUE_BEGIN];
+			outstring=http_header_stdtext[command-__HTTP_HEADER_GEN_VAL_START-1];
 			outmode=S2B_HTTP_HEAD_FIELD;
 		}
 		else if(command>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
@@ -121,10 +121,10 @@ unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_comman
 			outstring=custom_string_array[command-HTTP_HEADER_GEN_DESC_CUSTOM];
 			outmode=S2B_HTTP_HEAD_FIELD_DESC;
 		}
-		else if(command>=HTTP_HEADER_DESC_BEGIN) //Print std descriptor
+		else if(command>=__HTTP_HEADER_GEN_DESC_START) //Print std descriptor
 		{
 			//str2buf(&buf_index,message_buffer,http_header_descriptors[command-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
-			outstring=http_header_descriptors[command-HTTP_HEADER_DESC_BEGIN];
+			outstring=http_header_descriptors[command-__HTTP_HEADER_GEN_DESC_START-1];
 			outmode=S2B_HTTP_HEAD_FIELD_DESC;
 		}
 
@@ -168,7 +168,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 		/*
 		 * TEXT FIELD
 		 */
-		else if(command>=RPC_STDTEXT_START-1) //Add text
+		else if(command>=__RPC_STDTEXT_START-1) //Add text
 		{
 			if(command>=RPC_CUSTOM_TEXT)
 			{
@@ -177,7 +177,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_xml_stdtext[command-RPC_STDTEXT_START-1];
+				outstring=ros_xml_stdtext[command-__RPC_STDTEXT_START-1];
 				outmode=S2B_NORMAL;
 			}
 		}
@@ -193,14 +193,14 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_xml_tag_strings[command-RPC_TAGS_START-1-RPC_CLOSE_TAG];
+				outstring=ros_xml_tag_strings[command-__RPC_TAGS_START-1-RPC_CLOSE_TAG];
 				outmode=S2B_CTAG;
 			}
 		}
 		/*
 		 * OPENING TAG
 		 */
-		else if(command>=RPC_TAGS_START-1)
+		else if(command>=__RPC_TAGS_START-1)
 		{
 			if(command>=RPC_CUSTOM_TAG)
 			{
@@ -209,7 +209,7 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 			}
 			else
 			{
-				outstring=ros_xml_tag_strings[command-RPC_TAGS_START-1];
+				outstring=ros_xml_tag_strings[command-__RPC_TAGS_START-1];
 				outmode=S2B_TAG;
 			}
 		}

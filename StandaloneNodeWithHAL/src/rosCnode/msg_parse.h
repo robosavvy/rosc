@@ -26,29 +26,31 @@
 
 #include <stdbool.h>
 
+#define TAG_BUFFER_SIZE 25
+
+extern const char *methods[];
+
+
 typedef enum
 {
-	begin,
-	header_request,
-	header_field,
-	header_value,
-	xml_tag,
-	xml_value
-}parserState;
+	PARSER_BEGIN,	//!< This initializes the Parser
+	PARSER_CONTINUE,//!< This continues to parse the current string after a find at the last position
+	PARSER_APPEND   //!< This continues the current word on the next string
+}parserMode;
 
 typedef struct
 {
-	char tagbuffer[25];
+	const char** searchstrings;		 //!< The strings which the parser searches for
+	const unsigned int searchstrcnt; 	 //!< The amount of the search strings present in the list
+	const char* seperators;    		 //!< String seperators which end a matching cycle
+	char * wordbuffer;					 //!< The buffer for unknown
+	const int wordlen;					 //!< The length of the word in the current buffer
+	unsigned int first;				 //!< The first word being a possible match in the list
+	unsigned int last;					 //!< The second word being a possible match in the list
+	unsigned int pos;					 //!< The current position in the target string
+}parserSetup;
 
-}parserInnerState;
-
-
-
-
-bool xml_rpc_parser(char *buffer, unsigned int content_len, parserState* state, parserInnerState);
-
-
-
-
+//returns list match number, 0 for stringend, -1 for no match of current wordlist
+unsigned int stringSeek(const char* str, unsigned int len, parserSetup *setup, parserMode mode);
 
 #endif /* MSG_PARSE_H_ */
