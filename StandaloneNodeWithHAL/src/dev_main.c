@@ -17,27 +17,36 @@
 
 
 
-char *members[]=
+int handle(int event)
 {
-	"POST",
-	"POSTE",
-	"POSTH",
-	"ROST",
-	"TOAST",
-};
+	printf("Handler received %i\n", event);
+	return true;
+}
 
-#define SIZE_STR_PTR_ARRAY(ARRAY)\
-	sizeof(ARRAY)/sizeof(char*)
 
 int main()
 {
-	char * str="ROST TOAST POST";
-	int len=strlen(str);
+	   char* str=
+			    "POST / HTTP/1.1\n"
+	    		"User-Agent:askfhasdf\n"
+	    		"Host: sdfd-10: 34534\n"
+	    		"Content-Type: text/xml\n"
+	    		"Content-Length:289\n\n"
 
-	unsigned int pos=0;
-	unsigned int max=0;
-	unsigned int min=SIZE_STR_PTR_ARRAY(members);
-	stringSeek(str,len,members,SIZE_STR_PTR_ARRAY(members),&min,&max,&pos);
+	    		"<?xml version=\"1.0\"?>\n"
+	    		"<methodCall><methodName>registerPublisher</methodName>\n"
+	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
+
+	unsigned int len=strlen(str);
+
+
+
+	//stringParse(str,len, &handle, PARSER_BEGIN);
+
+
+
+
+
 
 	return 0;
 }
@@ -218,7 +227,7 @@ int main2(void)
 
 
 	   char* teststr=
-			    "             POST / HTTP/1.1\n"
+			    "POST / HTTP/1.1\n"
 	    		"User-Agent:askfhasdf\n"
 	    		"Host: sdfd-10: 34534\n"
 	    		"Content-Type: text/xml\n"
