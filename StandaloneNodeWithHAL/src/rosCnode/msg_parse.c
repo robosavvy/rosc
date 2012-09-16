@@ -30,16 +30,6 @@ const char *methods[]=
 };
 
 
-const char *separators[]=
-{
-	"\\ .",		    //!< Message type separators
-	" :\n",		    //!< Header separators
-#ifndef __XML_FULL_SEPERATPORS__
-	" <>",			//!< XML separators (without Attributes)
-#else
-	" <>=\"\'"		//!< Full XML separators
-#endif
-};
 
 
 typedef enum
@@ -117,7 +107,6 @@ unsigned int seekWord( const char** wordptr,
 			}
 		}
 		if(!found)return SEEKWORD_NOT_IN_LIST;
-		printf("POS: %i, %c\n", pos,**wordptr);
 		(*wordptr)++;
 		pos++;
 
@@ -131,7 +120,7 @@ unsigned int seekWord( const char** wordptr,
 
 
 
-unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), parserMode mode)
+unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), bool start)
 {
 //	static const skip_chars_method=" "
 //	static parse_state_message_part part;

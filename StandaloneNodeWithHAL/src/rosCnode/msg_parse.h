@@ -39,6 +39,8 @@
 extern const char *separators[];
 
 
+
+
 unsigned int seekWord(const char** wordptr,
 						 const char** wordlist,
 						 unsigned int wordlist_len,
@@ -46,6 +48,6 @@ unsigned int seekWord(const char** wordptr,
 						 bool start);
 
 //returns list match number, 0 for stringend, -1 for no match of current wordlist
-unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), parserMode mode);
+unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), bool start);
 
 #endif /* MSG_PARSE_H_ */
