@@ -58,7 +58,7 @@ typedef enum
 }seekWordStatus;
 
 
-unsigned int seekWord(const char** wordptr,
+unsigned int seekWord( const char** wordptr,
 						 const char** wordlist,
 						 unsigned int wordlist_len,
 						 const char* separator_list,
@@ -67,7 +67,7 @@ unsigned int seekWord(const char** wordptr,
 	static unsigned int first; //first word of the word list possibilities
 	static unsigned int last;	 //last word of the word list possibilities
 	static unsigned int pos;   //current position inside the word
-	int w;						 //current word in the list
+
 	if(start)
 	{
 		last=wordlist_len;
@@ -75,14 +75,14 @@ unsigned int seekWord(const char** wordptr,
 		pos=0;
 	}
 
-	while(*wordptr!='\0')
+	while((**wordptr)!='\0')
 	{
 
 		//Check if current one is a separator
 		bool isSeparator=false;
-		const char* sep=separator_list;
+		const char *sep=separator_list;
 		char current=**wordptr;
-		while(sep!='\0')
+		while(*sep!='\0')
 		{
 			if(current==*sep)
 			{
@@ -95,11 +95,17 @@ unsigned int seekWord(const char** wordptr,
 
 		//Seek for the current char inside of all strings at pos
 		bool found=false;//found at least one match
+		unsigned int w;
 		for(w=first;w<last;w++)
 		{
-			if(wordlist[w][pos]==current)
+			const char *ptr=*(wordlist+w);
+			char c=*(ptr+pos);
+			if(c==current)
 			{
+
+				if(isSeparator) return w;
 				if(!found)first=w; //If this is the first match increase the first value to it
+				found=true;
 			}
 			else
 			{
@@ -111,8 +117,10 @@ unsigned int seekWord(const char** wordptr,
 			}
 		}
 		if(!found)return SEEKWORD_NOT_IN_LIST;
-
+		printf("POS: %i, %c\n", pos,**wordptr);
+		(*wordptr)++;
 		pos++;
+
 	}
 	return SEEKWORD_STRINGEND;
 }

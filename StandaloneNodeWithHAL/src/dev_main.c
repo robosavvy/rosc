@@ -43,9 +43,27 @@ int main()
 
 	//stringParse(str,len, &handle, PARSER_BEGIN);
 
+	const char *lala[]=
+	{
+			"ass",
+			"dnampf",
+			"gnampf1",
+			"gnampf2",
+			"narf",
+			"sampf"
+	};
 
 
+	const char *buffer="narf";
+	const char *buffer2="";
 
+
+	int ret=seekWord(&buffer,lala,sizeof(lala)/sizeof(char*),"<>\n ",true);
+	printf("Word %i %c \n",ret, *(buffer));
+
+
+	ret=seekWord(&buffer2,lala,sizeof(lala)/sizeof(char*),"<>\n ",false);
+	printf("Word %i %c \n",ret, *(buffer));
 
 
 	return 0;

@@ -39,13 +39,11 @@
 extern const char *separators[];
 
 
-typedef enum
-{
-	PARSER_BEGIN,	//!< This initializes the Parser
-	PARSER_APPEND   //!< This continues the current word on the next string
-}parserMode;
-
-
+unsigned int seekWord(const char** wordptr,
+						 const char** wordlist,
+						 unsigned int wordlist_len,
+						 const char* separator_list,
+						 bool start);
 
 //returns list match number, 0 for stringend, -1 for no match of current wordlist
 unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), parserMode mode);
