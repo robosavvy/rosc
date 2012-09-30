@@ -1,0 +1,34 @@
+#This file is used to generate the msg_strings.h and msg_strings.c
+#The generation is down by the strHCgen.py python script.
+#The first entry is also considered as example:
+
+rpc_xml_tag_strings: # <- This is the variable name for the 
+                     # created string variable 
+                     # and the defines for the enum
+  comment: #Comment what strings the array contains here
+    'strings for standard XMLRPC tags'
+  stringlist: {   #Strings inside the variable 
+                  #If the string can't be used as enum value in C, you 
+                  #can specifiy a replacement for it after a : like 
+                  #shown in the next line
+                  '<?xml version="" ?>': XML_DECLARATION,
+                  array,
+                  body,
+                  boolean,
+                  data,
+                  fault,
+                  h1,
+                  head,
+                  int,
+                  member,
+                  methodCall,
+                  methodName,
+                  methodResponse,
+                  p,
+                  param,
+                  params,
+                  string,
+                  struct,
+                  title,
+                  value
+              }
