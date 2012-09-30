@@ -55,7 +55,7 @@ int main()
 
 
 	const char *buffer="narf";
-	const char *buffer2="";
+	const char *buffer2="\n";
 
 
 	int ret=seekWord(&buffer,lala,sizeof(lala)/sizeof(char*),"<>\n ",true);

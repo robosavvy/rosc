@@ -153,7 +153,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include "msg_strings.h"
 
 #define CUSTOM_STRINGS_MAX 50
 
@@ -173,25 +173,7 @@ typedef enum
 	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
 	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
 	__RPC_TAGS_START,
-	RPC_TAG_ARRAY,
-	RPC_TAG_BODY,
-	RPC_TAG_BOOLEAN,
-	RPC_TAG_DATA,
-	RPC_TAG_FAULT,
-	RPC_TAG_H1,
-	RPC_TAG_HEAD,
-	RPC_TAG_INT,
-	RPC_TAG_MEMBER,
-	RPC_TAG_METHODCALL,
-	RPC_TAG_METHODNAME,
-	RPC_TAG_METHODRESPONSE,
-	RPC_TAG_P,
-	RPC_TAG_PARAM,
-	RPC_TAG_PARAMS,
-	RPC_TAG_STRING,
-	RPC_TAG_STRUCT,
-	RPC_TAG_TITLE,
-	RPC_TAG_VALUE,
+	__RPC_XML_TAG_STRINGS(RPC),
 	/**
 	 * Use this number for selecting custom tag strings where RPC_CUSTOM_TAG is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array

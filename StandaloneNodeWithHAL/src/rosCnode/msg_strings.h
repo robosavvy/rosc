@@ -21,18 +21,54 @@
  *	File created by Christian Holl on 11.09.2012
  */
 
+
 #ifndef MSG_STRINGS_H_
 #define MSG_STRINGS_H_
 
 /**
+ * This are values for inserting tag values into enums of message generators or parsers
+ */
+#define __RPC_XML_TAG_STRINGS(ENUM) 			\
+	ENUM ## _TAG_ARRAY,							\
+	ENUM ## _TAG_BODY,       					\
+	ENUM ## _TAG_BOOLEAN,    					\
+	ENUM ## _TAG_DATA,       					\
+	ENUM ## _TAG_FAULT,      					\
+    ENUM ## _TAG_H1,        					\
+    ENUM ## _TAG_HEAD,       					\
+    ENUM ## _TAG_INT,       					\
+    ENUM ## _TAG_MEMBER,     					\
+    ENUM ## _TAG_METHODCALL,					\
+    ENUM ## _TAG_METHODNAME,					\
+    ENUM ## _TAG_METHODRESPONSE,				\
+    ENUM ## _TAG_P,								\
+    ENUM ## _TAG_PARAM,							\
+    ENUM ## _TAG_PARAMS,						\
+    ENUM ## _TAG_STRING,						\
+    ENUM ## _TAG_STRUCT,						\
+	ENUM ## _TAG_TITLE,							\
+	ENUM ## _TAG_VALUE
+
+#define __RPC_STDTXT(ENUM) 						\
+ 	ENUM ## _STDTXT__XMLDEF  					\
+	ENUM ## _STDTXT__HASPARAM 					\
+	ENUM ## _STDTXT__REGISTERPUBLISHER			\
+	ENUM ## _STDTXT__REGISTERSUBSCRIBER			\
+	ENUM ## _STDTXT__REQUESTTOPIC				\
+	ENUM ## _STDTXT__TCP_KEEPALIVE				\
+	ENUM ## _STDTXT__UNREGISTERPUBLISHER		\
+	ENUM ## _STDTXT__UNREGISTERSUBSCRIBER		\
+
+
+/**
  * This array contains the strings for standard tags.
  */
-extern const char *ros_xml_tag_strings[];
+extern const char *rpc_xml_tag_strings[];
 
 /**
  * This array contains strings for standard text pieces.
  */
-extern const char *ros_xml_stdtext[];
+extern const char *rpc_xml_stdtext[];
 
 /**
  * This array contains the strings for standard fields in the message headers

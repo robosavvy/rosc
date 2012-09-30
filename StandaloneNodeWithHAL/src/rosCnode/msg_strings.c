@@ -21,6 +21,7 @@
  *	File created by Christian Holl on 11.09.2012
  */
 
+#include "msg_strings.h"
 
 
 /*
@@ -34,14 +35,11 @@ const char *separators[]=
 };
 
 
-
-
-
 /*
  * Note to editors: If you add something here make sure its also available (in the SAME ORDER)
  * in the ros_rpc_gen_command enum command block (alphabetically ordered!)
  */
-const char *ros_xml_tag_strings[] =
+const char *rpc_xml_tag_strings[] =
 {
 	"array",
 	"body",
@@ -68,7 +66,7 @@ const char *ros_xml_tag_strings[] =
  * Note to editors: If you add something here make sure its also available (in the SAME ORDER)
  * in the ros_rpc_gen_command enum command block
  */
-const char *ros_xml_stdtext[] =
+const char *rpc_xml_stdtext[] =
 {
 	"<?xml version=\"1.0\"?>",
 	//"Error code "
