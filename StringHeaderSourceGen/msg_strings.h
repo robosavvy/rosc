@@ -25,6 +25,8 @@
  *    File Creator by Christian Holl
  *
  */
+#ifndef MSG_STRINGS_H_
+#define MSG_STRINGS_H_ 
  
  
 /**
@@ -77,3 +79,4 @@ extern const char *rpc_xml_tag_strings[];
 extern const char *rpc_xml_stdtext[];
 
 
+#endif /* MSG_STRINGS_H_ */

@@ -65,8 +65,11 @@ if __name__ == '__main__':
             headerfile.write(' *    File Creator by Christian Holl\n')
             headerfile.write(' *\n')
             headerfile.write(' */\n')
+            headerfile.write('#ifndef MSG_STRINGS_H_\n#define MSG_STRINGS_H_')
             headerfile.write(' \n')
             headerfile.write(' \n')
+            headerfile.write(' \n')
+            
             
             sourcefile.write('/*\n')
             sourcefile.write(' *  WARNING WARNING WARNING WARNING\n')
@@ -77,7 +80,7 @@ if __name__ == '__main__':
             sourcefile.write(' \n')
             sourcefile.write(' \n')
 
-
+            
 
             for item in dataMap:
                 currentVariable=dataMap.get(item,0)
@@ -150,6 +153,7 @@ if __name__ == '__main__':
                 headerfile.write(item)
                 headerfile.write('[];\n\n\n')
                 
-                
+            headerfile.write('#endif /* MSG_STRINGS_H_ */')
+    
 
         
