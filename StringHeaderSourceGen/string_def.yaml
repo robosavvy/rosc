@@ -5,14 +5,17 @@
 rpc_xml_tag_strings: # <- This is the variable name for the 
                      # created string variable 
                      # and the defines for the enum
-  comment: #Comment what strings the array contains here
-    'strings for standard XMLRPC tags'
+                     # DO ONLY USE C CONFORM WRITINGS FOR VARIABLES!!!
+  comment: #Comment what strings the array contains here 
+           #Resulting comment starts with: This array contains the strings for .... 
+    'standard XMLRPC tags'
+  defineShort: #This specifies the short definition infront of the enum values
+    'TAG'
   stringlist: {   #Strings inside the variable 
-                  #If the string can't be used as enum value in C, you 
+                  #If the string contains special chars like ?, write it in ''
+                  #If the string can't be used as enum declaration in C, you 
                   #can specifiy a replacement for it after a : like 
-                  #shown in the next line
-                  '<?xml version="" ?>': XML_DECLARATION,
-                  array,
+                  #shown in the next variable definition                  
                   body,
                   boolean,
                   data,
@@ -30,5 +33,23 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   string,
                   struct,
                   title,
-                  value
+                  value,
+                  array,
               }
+
+rpc_xml_stdtext:
+  comment:
+    'standard XMLRPC text pieces'
+  defineShort:
+    'STDTXT'
+  stringlist: {
+      '<?xml version=\"1.0\"?>': XML_DEF,
+      Error code, 
+      hasParam,
+      registerPublisher,
+      registerSubscriber,
+      requestTopic,
+      '/tcp_keepalive': TCP_KEEPALIVE,
+      unregisterPublisher,
+      unregisterSubscriber,
+  }

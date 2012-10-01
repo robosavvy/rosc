@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 '''
-   Copyright by Synapticon GmbH (www.synapticon.com)  2012
+   Copyright by Synapticon GmbH (www.synapticon.com)  ©2012
    
    This file is part of ROScNode Library
    
@@ -21,20 +23,6 @@
 
 import yaml
 
-def goingDeep(ddd):
-    print "{"
-    for item in ddd:
-
-        print item
-        if(type(ddd.get(item))==type({})):
-            goingDeep(ddd.get(item))
-        else:
-            print(ddd.get(item))
-    print "}"
-
-    
-
-
 if __name__ == '__main__':
 
     
@@ -55,7 +43,7 @@ if __name__ == '__main__':
             headerfile.write(' *    FILE GENERATED AUTOMATICALLY\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')
             headerfile.write(' *\n')
-            headerfile.write(' *  Copyright by Synapticon GmbH (www.synapticon.com)  \xc2 2012\n')
+            headerfile.write(' *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2012\n')
             headerfile.write(' *\n')
             headerfile.write(' *  msg_strings.h\n')
             headerfile.write(' *\n')
@@ -77,20 +65,91 @@ if __name__ == '__main__':
             headerfile.write(' *    File Creator by Christian Holl\n')
             headerfile.write(' *\n')
             headerfile.write(' */\n')
-
+            headerfile.write(' \n')
+            headerfile.write(' \n')
+            
             sourcefile.write('/*\n')
             sourcefile.write(' *  WARNING WARNING WARNING WARNING\n')
             sourcefile.write(' *    FILE GENERATED AUTOMATICALLY\n')
             sourcefile.write(' *  WARNING WARNING WARNING WARNING\n')
             sourcefile.write(' */\n')
+            sourcefile.write('#include "msg_strings.h"')
+            sourcefile.write(' \n')
+            sourcefile.write(' \n')
+
+
 
             for item in dataMap:
                 currentVariable=dataMap.get(item,0)
                 currentComment=currentVariable.get("comment",0)
-                currentStringlist=currentVariable.get("stringlist",0)
-                if(currentVariable==0 or currentComment==0 or currentStringlist ==0):
+                currentStringDict=currentVariable.get("stringlist",0)
+                currentDefineShort=currentVariable.get("defineShort",0)
+                if(currentVariable==0 or 
+                   currentComment==0 or 
+                   currentStringDict==0 or
+                   currentDefineShort==0):
                     print "Error missing specification for variable: ", item
                     exit(1)
+                    
+                    
+                    
+                #String list extraction and sorting
+                currentStringList = currentStringDict.keys()
+                currentStringList.sort()
+                
+                
+                #Inserting comment for define
+                headerfile.write('/**\n')   
+                headerfile.write(' * Macro for inserting ')
+                headerfile.write(currentComment);
+                headerfile.write(' string numbers into any enum');
+                headerfile.write('\n */\n')                     
+                    
+                
+                #Creating the definition for being able to insert it into any enum    
+                headerfile.write('#define __')   
+                headerfile.write(item.upper())
+                headerfile.write('(ENUM) \\\n')
+                
+                #Writing the start of the array to the sourcefile
+                sourcefile.write('const char *')           
+                sourcefile.write(item)
+                sourcefile.write('[]\n')
+                sourcefile.write('{\n\t')
 
+                for str in currentStringList:
+                    headerfile.write("\t ENUM ## _")
+                    headerfile.write(currentDefineShort.upper())
+                    headerfile.write('_')
+                    
+                    sourcefile.write('"')
+                    sourcefile.write(str)
+                    sourcefile.write('"')
+                    
+                    
+                    if(currentStringDict.get(str,0)):
+                        headerfile.write(currentStringDict.get(str,0))
+                    else:
+                        headerfile.write(str.upper())
+                    
+                    if(currentStringList[-1] != str):
+                        headerfile.write(', \\\n')
+                        sourcefile.write(',\n\t');
+                        
+                headerfile.write('\n\n')
+                sourcefile.write('\n}\n\n')
+
+                #Inserting Comment for variable declaration
+                headerfile.write('/**\n')   
+                headerfile.write(' * This array contains the strings for ')
+                headerfile.write(currentComment);
+                headerfile.write('\n */\n')  
+                
+                #Inserting the type declaration
+                headerfile.write('extern const char *')
+                headerfile.write(item)
+                headerfile.write('[];\n\n\n')
+                
+                
 
         
