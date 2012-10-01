@@ -1,4 +1,8 @@
 /*
+ *  WARNING WARNING WARNING WARNING
+ *    FILE GENERATED AUTOMATICALLY
+ *  WARNING WARNING WARNING WARNING
+ *
  *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2012
  *
  *  msg_strings.h
@@ -18,7 +22,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with ROScNode Library. If not, see <http://www.gnu.org/licenses/>.
  *
- *	File created by Christian Holl on 11.09.2012
+ *	File Creator by Christian Holl
  */
 
 
