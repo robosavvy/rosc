@@ -22,21 +22,26 @@
 '''
 import re
 import yaml
+import os
+import ntpath
 
 if __name__ == '__main__':
+    currentFilePath = os.path.realpath(__file__)
+    currentPath, filename = ntpath.split(currentFilePath)
 
+    
     
     print("Generating String header and source file")
     # with open("string_def", mode='br') as file:
         #paimport yaml
         
     #Load and parse string file
-    with open("string_def.yaml", mode='r') as stringDefFile:
+    with open(currentPath + "/string_def.yaml", mode='r') as stringDefFile:
         dataMap = yaml.load(stringDefFile)
 
     #Open header and source for generating them
-    with open("msg_strings.h", mode='w') as headerfile:
-        with open("msg_strings.c", mode='w') as sourcefile:
+    with open(currentPath + "/../src/rosCnode/msg_strings.h", mode='w') as headerfile:
+        with open(currentPath + "/../src/rosCnode/msg_strings.c", mode='w') as sourcefile:
             #Write file headers
             headerfile.write('/*\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')
