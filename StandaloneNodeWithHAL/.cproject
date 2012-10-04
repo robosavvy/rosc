@@ -44,7 +44,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="examples/rpcmsg_generation.c|examples/msg_generation.c|examples/example_msg_generation.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="rosCnode/msg_strings_OLD.h|rosCnode/msg_strings_OLD.c|examples/rpcmsg_generation.c|examples/msg_generation.c|examples/example_msg_generation.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -91,7 +91,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="examples/rpcmsg_generation.c|examples/msg_generation.c|examples/example_msg_generation.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="rosCnode/msg_strings_OLD.h|rosCnode/msg_strings_OLD.c|examples/rpcmsg_generation.c|examples/msg_generation.c|examples/example_msg_generation.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

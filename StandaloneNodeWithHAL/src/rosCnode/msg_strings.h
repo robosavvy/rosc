@@ -22,66 +22,96 @@
  *  You should have received a copy of the GNU General Public License
  *  along with ROScNode Library. If not, see <http://www.gnu.org/licenses/>.
  *
- *	File Creator by Christian Holl
+ *    File Creator by Christian Holl
+ *
  */
-
-
 #ifndef MSG_STRINGS_H_
-#define MSG_STRINGS_H_
-
+#define MSG_STRINGS_H_ 
+ 
+ 
 /**
- * This are values for inserting tag values into enums of message generators or parsers
+ * Macro for inserting some standard values for http headers string numbers into any enum
  */
-#define __RPC_XML_TAG_STRINGS(ENUM) 			\
-	ENUM ## _TAG_ARRAY,							\
-	ENUM ## _TAG_BODY,       					\
-	ENUM ## _TAG_BOOLEAN,    					\
-	ENUM ## _TAG_DATA,       					\
-	ENUM ## _TAG_FAULT,      					\
-    ENUM ## _TAG_H1,        					\
-    ENUM ## _TAG_HEAD,       					\
-    ENUM ## _TAG_INT,       					\
-    ENUM ## _TAG_MEMBER,     					\
-    ENUM ## _TAG_METHODCALL,					\
-    ENUM ## _TAG_METHODNAME,					\
-    ENUM ## _TAG_METHODRESPONSE,				\
-    ENUM ## _TAG_P,								\
-    ENUM ## _TAG_PARAM,							\
-    ENUM ## _TAG_PARAMS,						\
-    ENUM ## _TAG_STRING,						\
-    ENUM ## _TAG_STRUCT,						\
-	ENUM ## _TAG_TITLE,							\
-	ENUM ## _TAG_VALUE
-
-#define __RPC_STDTXT(ENUM) 						\
- 	ENUM ## _STDTXT__XMLDEF  					\
-	ENUM ## _STDTXT__HASPARAM 					\
-	ENUM ## _STDTXT__REGISTERPUBLISHER			\
-	ENUM ## _STDTXT__REGISTERSUBSCRIBER			\
-	ENUM ## _STDTXT__REQUESTTOPIC				\
-	ENUM ## _STDTXT__TCP_KEEPALIVE				\
-	ENUM ## _STDTXT__UNREGISTERPUBLISHER		\
-	ENUM ## _STDTXT__UNREGISTERSUBSCRIBER		\
-
+#define __HTTP_HEADER_STDTEXT(ENUM) \
+	 ENUM ## _VAL_BASEHTTP_ROSC_NODELIB, \
+	 ENUM ## _VAL_HTTP_1_0, \
+	 ENUM ## _VAL_OK, \
+	 ENUM ## _VAL_POST_HTTP_1_1, \
+	 ENUM ## _VAL_XMLRPC ROSC_NODELIB, \
+	 ENUM ## _VAL_TEXT_XML
 
 /**
- * This array contains the strings for standard tags.
+ * This array contains the strings for some standard values for http headers
  */
-extern const char *rpc_xml_tag_strings[];
+extern const char *http_header_stdtext[];
+
 
 /**
- * This array contains strings for standard text pieces.
+ * Macro for inserting standard http header descriptors string numbers into any enum
  */
-extern const char *rpc_xml_stdtext[];
+#define __HTTP_HEADER_DESCRIPTORS(ENUM) \
+	 ENUM ## _DESC_CONTENT_ENCODING, \
+	 ENUM ## _DESC_CONTENT_TYPE, \
+	 ENUM ## _DESC_CONTENT_LENGTH, \
+	 ENUM ## _DESC_DATE, \
+	 ENUM ## _DESC_HOST, \
+	 ENUM ## _DESC_SERVER, \
+	 ENUM ## _DESC_USER_AGENT
 
 /**
- * This array contains the strings for standard fields in the message headers
+ * This array contains the strings for standard http header descriptors
  */
 extern const char *http_header_descriptors[];
 
+
 /**
- * This array contains the standard value strings for generating message headers
+ * Macro for inserting standard XMLRPC tags string numbers into any enum
  */
-extern const char *http_header_stdtext[];
+#define __RPC_XML_TAG_STRINGS(ENUM) \
+	 ENUM ## _TAG_ARRAY, \
+	 ENUM ## _TAG_BODY, \
+	 ENUM ## _TAG_BOOLEAN, \
+	 ENUM ## _TAG_DATA, \
+	 ENUM ## _TAG_FAULT, \
+	 ENUM ## _TAG_H1, \
+	 ENUM ## _TAG_HEAD, \
+	 ENUM ## _TAG_INT, \
+	 ENUM ## _TAG_MEMBER, \
+	 ENUM ## _TAG_METHODCALL, \
+	 ENUM ## _TAG_METHODNAME, \
+	 ENUM ## _TAG_METHODRESPONSE, \
+	 ENUM ## _TAG_P, \
+	 ENUM ## _TAG_PARAM, \
+	 ENUM ## _TAG_PARAMS, \
+	 ENUM ## _TAG_STRING, \
+	 ENUM ## _TAG_STRUCT, \
+	 ENUM ## _TAG_TITLE, \
+	 ENUM ## _TAG_VALUE
+
+/**
+ * This array contains the strings for standard XMLRPC tags
+ */
+extern const char *rpc_xml_tag_strings[];
+
+
+/**
+ * Macro for inserting standard XMLRPC text pieces string numbers into any enum
+ */
+#define __RPC_XML_STDTEXT(ENUM) \
+	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
+	 ENUM ## _STDTXT_XML_DEF, \
+	 ENUM ## _STDTXT_ERROR CODE, \
+	 ENUM ## _STDTXT_HASPARAM, \
+	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
+	 ENUM ## _STDTXT_REQUESTTOPIC, \
+	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER
+
+/**
+ * This array contains the strings for standard XMLRPC text pieces
+ */
+extern const char *rpc_xml_stdtext[];
+
 
 #endif /* MSG_STRINGS_H_ */
