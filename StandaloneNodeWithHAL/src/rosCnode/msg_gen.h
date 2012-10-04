@@ -170,8 +170,7 @@ typedef enum
 {
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
-	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
-	//in ros_rpc_tag_strings (make it alphabetically ordered, maybe necessary!)
+
 	__RPC_TAGS_START,
 	__RPC_XML_TAG_STRINGS(RPC),
 	/**
@@ -183,17 +182,8 @@ typedef enum
 
 	RPC_CLOSE_TAG=RPC_CUSTOM_TAG +CUSTOM_STRINGS_MAX,
 
-	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
-    //in ros_rpc_stdtext (make it alphabetically ordered, maybe necessary!)
 	__RPC_STDTEXT_START=RPC_CLOSE_TAG +CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
-	RPC_XML_DECLARATION, 					//!< Places XML Declaration
-	RPC_STDTEXT_HASPARAM, 					//!< place text "hasParam" 				in the current open tag
-	RPC_STDTEXT_REGISTERPUBLISHER,			//!< place text "registerPublisher" 	in the current open tag
-	RPC_STDTEXT_REGISTERSUBSCRIBER,			//!< place text "registerSubscriber" 	in the current open tag
-	RPC_STDTEXT_REQUESTTOPIC,				//!< place text "requestTopic" 			in the current open tag
-	RPC_STDTEXT_TCP_KEEPALIVE,				//!< place text "tcp_keepalive" 		in the current open tag
-	RPC_STDTEXT_UNREGISTERPUBLISHER,		//!< place text "unregisterPublisher" 	in the current open tag
-	RPC_STDTEXT_UNREGISTERSUBSCRIBER,		//!< place text "unregisterSubscriber" 	in the current open tag
+	__RPC_XML_STDTEXT(RPC),
 
 	/**
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
@@ -217,20 +207,12 @@ typedef enum
 	HTTP_HEADER_GEN_CUSTOM_TEXT_END, //!< This adds a linefeed after custom values
 
 	__HTTP_HEADER_GEN_DESC_START,
-	///@{
+
+
 	/**
 	 * Values specifying most used standard field descriptors
 	 */
-	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
-	//in http_header_descriptors (make it alphabetically ordered, maybe necessary!)
-	HTTP_HEADER_GEN_DESC_SERVER,
-	HTTP_HEADER_GEN_DESC_USER_AGENT,
-	HTTP_HEADER_GEN_DESC_DATE,
-	HTTP_HEADER_GEN_DESC_HOST,
-	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
-	HTTP_HEADER_GEN_DESC_CONTENT_LENGTH,
-	HTTP_HEADER_GEN_DESC_ACCEPTED_CODING,
-	///@}
+	__HTTP_HEADER_DESCRIPTORS(HTTP_HEADER_GEN),
 
 	/**
 	 * This specifies to use a text in the custom text array as descriptor
@@ -239,24 +221,16 @@ typedef enum
 
 
 	__HTTP_HEADER_GEN_VAL_START = HTTP_HEADER_GEN_DESC_CUSTOM+CUSTOM_STRINGS_MAX,
-	///@{
+
 	/**
 	 * Values specifying most used standard text pieces
 	 */
-	//Note to editors: If you add something here make sure its also available (in the <b>SAME ORDER</b>)
-	//in http_header_stdtext (make it alphabetically ordered, maybe necessary!)
-	HTTP_HEADER_GEN_VAL_POST_HTTP_1_1,
-	HTTP_HEADER_GEN_VAL_HTTP_1_0,
-	HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
-	HTTP_HEADER_GEN_VAL_BASEHTTP_ROSC_NODELIB,
-	HTTP_HEADER_GEN_VAL_TEXT_XML,
-	HTTP_HEADER_GEN_VAL_OK,
-	///@}
+	__HTTP_HEADER_STDTEXT(HTTP_HEADER_GEN),
 
 	/**
 	 * This command will use a custom text array as value
 	 */
-	HTTP_HEADER_GEN_VAL_CUSTOM = HTTP_HEADER_GEN_VAL_OK+CUSTOM_STRINGS_MAX,
+	HTTP_HEADER_GEN_VAL_CUSTOM,
 
 
 	/**

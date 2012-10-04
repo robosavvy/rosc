@@ -24,7 +24,7 @@ int handle(int event)
 }
 
 
-int main()
+int main2()
 {
 	   char* str=
 			    "POST / HTTP/1.1\n"
@@ -69,7 +69,7 @@ int main()
 	return 0;
 }
 
-int main2(void)
+int main(void)
 {
 
 	//Custom string arrays for the message and header generator
@@ -112,12 +112,12 @@ int main2(void)
 //	</methodCall>
 	ros_rpc_gen_command msg_gen_array[]=
 	{
-	RPC_XML_DECLARATION,
+	RPC_STDTXT_XML_DEF,
 
 	RPC_TAG_METHODCALL,
 
 		RPC_TAG_METHODNAME,
-			RPC_STDTEXT_HASPARAM,
+			RPC_STDTXT_HASPARAM,
 		RPC_CT RPC_TAG_METHODNAME,
 
 		RPC_TAG_PARAMS,
@@ -130,7 +130,7 @@ int main2(void)
 
 			RPC_TAG_PARAM,
 				RPC_TAG_VALUE,
-					RPC_STDTEXT_HASPARAM,
+					RPC_STDTXT_HASPARAM,
 				RPC_CT RPC_TAG_VALUE,
 			RPC_CT RPC_TAG_PARAM ,
 		RPC_CT RPC_TAG_PARAMS,

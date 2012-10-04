@@ -138,7 +138,7 @@ if __name__ == '__main__':
                     if(currentStringDict.get(strng,0)):
                         headerfile.write(currentStringDict.get(strng,0))
                     else:
-                        headerfile.write(re.sub('[.\-/#\'*+~`´\\?=}{&%$§"!^°|:;,]','_',strng.upper()))
+                        headerfile.write(re.sub('[.\-/#\'*+ ~`´\\?=}{&%$§"!^°|:;,]','_',strng.upper()))
                     
                     if(currentStringList[-1] != strng):
                         headerfile.write(', \\\n')

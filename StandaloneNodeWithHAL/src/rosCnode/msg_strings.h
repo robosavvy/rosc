@@ -37,7 +37,7 @@
 	 ENUM ## _VAL_HTTP_1_0, \
 	 ENUM ## _VAL_OK, \
 	 ENUM ## _VAL_POST_HTTP_1_1, \
-	 ENUM ## _VAL_XMLRPC ROSC_NODELIB, \
+	 ENUM ## _VAL_XMLRPC_ROSC_NODELIB, \
 	 ENUM ## _VAL_TEXT_XML
 
 /**
@@ -50,7 +50,7 @@ extern const char *http_header_stdtext[];
  * Macro for inserting standard http header descriptors string numbers into any enum
  */
 #define __HTTP_HEADER_DESCRIPTORS(ENUM) \
-	 ENUM ## _DESC_CONTENT_ENCODING, \
+	 ENUM ## _DESC_ACCEPTED_ENCODING, \
 	 ENUM ## _DESC_CONTENT_TYPE, \
 	 ENUM ## _DESC_CONTENT_LENGTH, \
 	 ENUM ## _DESC_DATE, \
@@ -100,7 +100,7 @@ extern const char *rpc_xml_tag_strings[];
 #define __RPC_XML_STDTEXT(ENUM) \
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
 	 ENUM ## _STDTXT_XML_DEF, \
-	 ENUM ## _STDTXT_ERROR CODE, \
+	 ENUM ## _STDTXT_ERROR_CODE, \
 	 ENUM ## _STDTXT_HASPARAM, \
 	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
 	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
