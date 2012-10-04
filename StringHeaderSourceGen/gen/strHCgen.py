@@ -125,22 +125,22 @@ if __name__ == '__main__':
                 sourcefile.write('[]\n')
                 sourcefile.write('{\n\t')
 
-                for str in currentStringList:
+                for strng in currentStringList:
                     headerfile.write("\t ENUM ## _")
                     headerfile.write(currentDefineShort.upper())
                     headerfile.write('_')
                     
                     sourcefile.write('"')
-                    sourcefile.write(str)
+                    sourcefile.write(strng)
                     sourcefile.write('"')
                     
                     
-                    if(currentStringDict.get(str,0)):
-                        headerfile.write(currentStringDict.get(str,0))
+                    if(currentStringDict.get(strng,0)):
+                        headerfile.write(currentStringDict.get(strng,0))
                     else:
-                        headerfile.write(re.sub('[.\-/#\'*+~`´\\?=}{&%$§"!^°|:;,]','_',str.upper()))
+                        headerfile.write(re.sub('[.\-/#\'*+~`´\\?=}{&%$§"!^°|:;,]','_',strng.upper()))
                     
-                    if(currentStringList[-1] != str):
+                    if(currentStringList[-1] != strng):
                         headerfile.write(', \\\n')
                         sourcefile.write(',\n\t');
                         
