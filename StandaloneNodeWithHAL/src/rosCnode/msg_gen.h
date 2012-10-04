@@ -172,7 +172,7 @@ typedef enum
 
 
 	__RPC_TAGS_START,
-	__RPC_XML_TAG_STRINGS(RPC),
+	__RPC_XML_TAG_STRINGS(RPC), //!< Places the available tag numbers inside this enum
 	/**
 	 * Use this number for selecting custom tag strings where RPC_CUSTOM_TAG is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
@@ -183,7 +183,7 @@ typedef enum
 	RPC_CLOSE_TAG=RPC_CUSTOM_TAG +CUSTOM_STRINGS_MAX,
 
 	__RPC_STDTEXT_START=RPC_CLOSE_TAG +CUSTOM_STRINGS_MAX,	//!< Marks the start of the standard text strings
-	__RPC_XML_STDTEXT(RPC),
+	__RPC_XML_STDTEXT(RPC), //!< Places the available standard text numbers inside this enum
 
 	/**
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
@@ -212,7 +212,7 @@ typedef enum
 	/**
 	 * Values specifying most used standard field descriptors
 	 */
-	__HTTP_HEADER_DESCRIPTORS(HTTP_HEADER_GEN),
+	__HTTP_HEADER_DESCRIPTORS(HTTP_HEADER_GEN), //!< Places the available standard descriptor numbers inside this enum
 
 	/**
 	 * This specifies to use a text in the custom text array as descriptor
@@ -225,7 +225,7 @@ typedef enum
 	/**
 	 * Values specifying most used standard text pieces
 	 */
-	__HTTP_HEADER_STDTEXT(HTTP_HEADER_GEN),
+	__HTTP_HEADER_STDTEXT(HTTP_HEADER_GEN), //!< Places the available standard value numbers inside this enum
 
 	/**
 	 * This command will use a custom text array as value
