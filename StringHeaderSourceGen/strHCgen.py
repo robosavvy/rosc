@@ -20,7 +20,7 @@
 
    File created by Christian Holl on 11.09.2012
 '''
-
+import re
 import yaml
 
 if __name__ == '__main__':
@@ -133,7 +133,7 @@ if __name__ == '__main__':
                     if(currentStringDict.get(str,0)):
                         headerfile.write(currentStringDict.get(str,0))
                     else:
-                        headerfile.write(str.upper())
+                        headerfile.write(re.sub('[.\-/#\'*+~`´\\?=}{&%$§"!^°|:;,]','_',str.upper()))
                     
                     if(currentStringList[-1] != str):
                         headerfile.write(', \\\n')

@@ -53,3 +53,33 @@ rpc_xml_stdtext:
       unregisterPublisher,
       unregisterSubscriber,
   }
+  
+http_header_descriptors:
+  comment:
+    'standard http header descriptors'
+  defineShort:
+    'DESC'
+  stringlist: {
+        Server,
+        User-Agent: USER_AGENT,
+        Date,
+        Host,
+        Content-Type: CONTENT_TYPE,
+        Content-length: CONTENT_LENGTH,
+        Accepted-Encoding: CONTENT_ENCODING
+  }
+  
+http_header_stdtext:
+  comment:
+    'some standard values for http headers'
+  defineShort:
+    'VAL'
+  stringlist: {
+    'POST/HTTP/1.1',
+    'HTTP/1.0',
+    'XMLRPC ROSc-NodeLib',
+    'BaseHTTP/ROSc-NodeLib',
+    'text/xml',
+    'OK'
+  }
+    
