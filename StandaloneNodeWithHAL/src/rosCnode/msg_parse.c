@@ -121,4 +121,32 @@ int parseStringUInt(const char **buffer, bool goAhead)
 			return PARSE_INT_STR_END;
 }
 
+void skipSpace(const char** buffer)
+{
+	while((**buffer)==' ')
+	{
+		(*buffer)++;
+	}
+}
 
+void skipAllTillSeperators(const char** buffer, char *separator_list)
+{
+	char currentChar=**buffer;
+	bool isSeparator=false;
+	while(currentChar!='\0' && !isSeparator)
+	{
+		const char *sep=separator_list;
+		while(*sep!='\0')
+		{
+			if(currentChar==*sep)
+			{
+				currentChar='\0';
+				isSeparator=true;
+				break;
+			}
+			++sep;
+		}
+		++(*buffer);
+		currentChar=**buffer;
+	}
+}

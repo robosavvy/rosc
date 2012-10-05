@@ -16,13 +16,6 @@
 #include <errno.h>
 
 
-inline void skipSpace(const char** buffer)
-{
-	while((**buffer)==' ')
-	{
-		(*buffer)++;
-	}
-}
 
 
 
@@ -49,9 +42,11 @@ int main()
 
 	unsigned int len=strlen(str);
 
-	const char *buffer="124324243";
+	const char *buffer="asdfs 124324243";
 	const char *buffer2="\n";
 
+
+	skipAllTillSeperators(&buffer," ");
 	printf(".... %i\n",parseStringUInt(&buffer,0));
 	printf(".... %i\n",parseStringUInt(&buffer2,1));
 	/**

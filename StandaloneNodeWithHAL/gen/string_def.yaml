@@ -82,8 +82,9 @@ http_header_stdtext:
     'text/xml',
     'OK'
   }
-  
-http_method_parse_strings:
+
+#Supported Requests
+http_supported_methods:
   comment:
     'supported http method strings'
   defineShort:
@@ -91,9 +92,18 @@ http_method_parse_strings:
   stringlist: {
     'POST'
   }
-  
 
-  
+#Seperators for parsing
+parse_separators:
+  comment:
+    'seperators for parsing different pieces of a XMLRPC message'
+  defineShort:
+    'SEP'
+  stringlist: {
+    '/. \n': METHOD,
+    '\n:': HTTP_HEADER,
+    '</>\n \"=': XML 
+  }
   
   
     

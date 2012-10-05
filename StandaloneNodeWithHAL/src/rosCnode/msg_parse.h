@@ -66,14 +66,29 @@ typedef enum
 int parseStringUInt(const char **buffer, bool goAhead);
 
 /**
- * List for XML and Header separators
- * The first entry contains seperators for HTTP headers and the second for XML.
+ * This function skips spaces inside a string by increasing the pointer as long
+ * as the starting char is no space
+ * @param buffer the pointer to the char pointer
  */
-extern const char *separators[];
+void skipSpace(const char** buffer);
+
+/**
+ * This function will skip all chars till a specified seperator is found.
+ * @param buffer The pointer to the pointer which will be increased
+ * @param seperatorList The list of seperators
+ */
+void skipAllTillSeperators(const char** buffer, char *seperatorList);
 
 
-
-
+/**
+ * This function seeks for a word inside a string list
+ * @param wordptr The pointer to the start pointer of the word (will be increased!)
+ * @param wordlist The list of the known words
+ * @param wordlist_len the length of the string list
+ * @param separator_list the list of seperators which end seeking
+ * @param start If the previous search ended with no seperator and
+ * @return
+ */
 unsigned int seekWord(const char** wordptr,
 						 const char** wordlist,
 						 unsigned int wordlist_len,

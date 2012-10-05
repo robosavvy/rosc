@@ -52,6 +52,23 @@ extern const char *http_header_stdtext[];
 
 
 /**
+ * Length of the string array http_supported_methods
+ */
+#define HTTP_SUPPORTED_METHODS_LEN 	1
+
+/**
+ * Macro for inserting supported http method strings string numbers into any enum
+ */
+#define __HTTP_SUPPORTED_METHODS(ENUM) \
+	 ENUM ## _METHOD_POST
+
+/**
+ * This array contains the strings for supported http method strings
+ */
+extern const char *http_supported_methods[];
+
+
+/**
  * Length of the string array http_header_descriptors
  */
 #define HTTP_HEADER_DESCRIPTORS_LEN 	7
@@ -110,20 +127,22 @@ extern const char *rpc_xml_tag_strings[];
 
 
 /**
- * Length of the string array http_method_parse_strings
+ * Length of the string array parse_separators
  */
-#define HTTP_METHOD_PARSE_STRINGS_LEN 	1
+#define PARSE_SEPARATORS_LEN 	3
 
 /**
- * Macro for inserting supported http method strings string numbers into any enum
+ * Macro for inserting seperators for parsing different pieces of a XMLRPC message string numbers into any enum
  */
-#define __HTTP_METHOD_PARSE_STRINGS(ENUM) \
-	 ENUM ## _METHOD_POST
+#define __PARSE_SEPARATORS(ENUM) \
+	 ENUM ## _SEP_METHOD, \
+	 ENUM ## _SEP_XML, \
+	 ENUM ## _SEP_HTTP_HEADER
 
 /**
- * This array contains the strings for supported http method strings
+ * This array contains the strings for seperators for parsing different pieces of a XMLRPC message
  */
-extern const char *http_method_parse_strings[];
+extern const char *parse_separators[];
 
 
 /**
