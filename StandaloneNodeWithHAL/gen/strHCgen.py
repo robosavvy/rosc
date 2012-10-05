@@ -85,7 +85,9 @@ if __name__ == '__main__':
             sourcefile.write(' \n')
             sourcefile.write(' \n')
 
-            
+
+        
+
 
             for item in dataMap:
                 currentVariable=dataMap.get(item,0)
@@ -99,11 +101,24 @@ if __name__ == '__main__':
                     print "Error missing specification for variable: ", item
                     exit(1)
                     
-                    
-                    
                 #String list extraction and sorting
                 currentStringList = currentStringDict.keys()
                 currentStringList.sort()
+                    
+                #Inserting comment for length definition
+                headerfile.write('/**\n')   
+                headerfile.write(' * Length of the string array ')
+                headerfile.write(item);
+                headerfile.write('\n */\n')     
+                
+                #Inserting length definition
+                headerfile.write('#define ')   
+                headerfile.write(item.upper())
+                headerfile.write('_LEN \t')
+                headerfile.write(str(currentStringList.__len__()))
+                headerfile.write('\n\n');
+                    
+              
                 
                 
                 #Inserting comment for define

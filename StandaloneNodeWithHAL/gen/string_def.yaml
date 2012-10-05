@@ -82,4 +82,18 @@ http_header_stdtext:
     'text/xml',
     'OK'
   }
+  
+http_method_parse_strings:
+  comment:
+    'supported http method strings'
+  defineShort:
+    'METHOD'
+  stringlist: {
+    'POST'
+  }
+  
+
+  
+  
+  
     
