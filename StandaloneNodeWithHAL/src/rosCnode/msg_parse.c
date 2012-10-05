@@ -23,30 +23,6 @@
 
 #include "msg_parse.h"
 
-const char *methods[]=
-{
-		""
-		"HTTP",
-};
-
-
-
-
-typedef enum
-{
-	method,
-	header,
-	xml,
-}parse_state_message_part;
-
-
-typedef enum
-{
-	SEEKWORD_NOT_IN_LIST=-1,
-	SEEKWORD_STRINGEND=-2,
-
-}seekWordStatus;
-
 
 unsigned int seekWord( const char** wordptr,
 						 const char** wordlist,
@@ -114,25 +90,35 @@ unsigned int seekWord( const char** wordptr,
 	return SEEKWORD_STRINGEND;
 }
 
-
-
-
-
-
-
-unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), bool start)
+int parseStringUInt(const char **buffer, bool goAhead)
 {
-//	static const skip_chars_method=" "
-//	static parse_state_message_part part;
-//	static char* current_word[100];
-//	static unsigned int current_word_len;
+	static int cnt;
+	static int value;
+	if(goAhead==false)
+	{
+		cnt=0;
+		value=0;
+	}
+	char currentChar=(**buffer);
+	//Go ahead while the current char is a number
+	while(currentChar>=48 && currentChar<=48+9)
+	{
+		//If this is not the first time multiply by ten
+		if(cnt) value*=10;
+		//Convert the char figure into integer and add it to the value
+		value+=currentChar-48;
 
-
-
-
-
-
-	return 0;
+		//Going ahead with the next char
+		(*buffer)++;
+		currentChar=(**buffer);
+		cnt++;
+	}
+	if(!cnt) return PARSE_INT_NO_NUMBER;
+	else
+		if(currentChar!='\0')
+			return value;
+		else
+			return PARSE_INT_STR_END;
 }
 
 

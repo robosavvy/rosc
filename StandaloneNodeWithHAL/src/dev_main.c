@@ -24,54 +24,7 @@ inline void skipSpace(const char** buffer)
 	}
 }
 
-/**
- * This enum holds the possible error values which can be returned by
- * the function parseStringInt. If the returned value is positive
- * it successfully parsed a number otherwise it should be one of these.
- */
-typedef enum
-{
-	PARSE_INT_STR_END=-100, //!< This means the string ended with a terminator.
-	PARSE_INT_NO_NUMBER  //!< This means the string started without a char specifiying a number
-}parseStringIntStatus_t;
 
-
-/**
- * This function parses a string on in a buffer by increasing a buffer pointer.
- * @param buffer This is the pointer to a string pointer which will be increased.
- * @param goAhead This value is used to go ahead with parsing in another string if the last parse reached a terminator.
- * @return If the number is positive it's a parsed number, if not its a value from parseStringIntStatus_t
- */
-int parseStringUInt(const char **buffer, bool goAhead)
-{
-	static int cnt;
-	static int value;
-	if(goAhead==false)
-	{
-		cnt=0;
-		value=0;
-	}
-	char currentChar=(**buffer);
-	//Go ahead while the current char is a number
-	while(currentChar>=48 && currentChar<=48+9)
-	{
-		//If this is not the first time multiply by ten
-		if(cnt) value*=10;
-		//Convert the char figure into integer and add it to the value
-		value+=currentChar-48;
-
-		//Going ahead with the next char
-		(*buffer)++;
-		currentChar=(**buffer);
-		cnt++;
-	}
-	if(!cnt) return PARSE_INT_NO_NUMBER;
-	else
-		if(currentChar!='\0')
-			return value;
-		else
-			return PARSE_INT_STR_END;
-}
 
 
 bool parseHTTPMethod(const char **buffer)

@@ -28,9 +28,42 @@
 
 #define TAG_BUFFER_SIZE 25
 
+typedef enum
+{
+	method,
+	header,
+	xml,
+}parse_state_message_part;
+
+/**
+ * This enum holds negative return values for the seekWord function.
+ * Every time the output of this function is negative its in that list
+ */
+typedef enum
+{
+	SEEKWORD_NOT_IN_LIST=-100,//!< The parsed word is not in the specified list
+	SEEKWORD_STRINGEND,  //!< The function reached a string terminator
+}seekWordStatus;
+
+/**
+ * This enum holds the possible error values which can be returned by
+ * the function parseStringInt. If the returned value is positive
+ * it successfully parsed a number otherwise it should be one of these.
+ */
+typedef enum
+{
+	PARSE_INT_STR_END=-100, //!< This means the string ended with a terminator.
+	PARSE_INT_NO_NUMBER  //!< This means the string started without a char specifiying a number
+}parseStringIntStatus_t;
 
 
-
+/**
+ * This function parses a string on in a buffer by increasing a buffer pointer.
+ * @param buffer This is the pointer to a string pointer which will be increased.
+ * @param goAhead This value is used to go ahead with parsing in another string if the last parse reached a terminator.
+ * @return If the number is positive it's a parsed number, if not its a value from parseStringIntStatus_t
+ */
+int parseStringUInt(const char **buffer, bool goAhead);
 
 /**
  * List for XML and Header separators
