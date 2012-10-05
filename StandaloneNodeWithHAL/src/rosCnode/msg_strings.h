@@ -30,6 +30,11 @@
  
  
 /**
+ * Length of the string array http_header_stdtext
+ */
+#define HTTP_HEADER_STDTEXT_LEN 	6
+
+/**
  * Macro for inserting some standard values for http headers string numbers into any enum
  */
 #define __HTTP_HEADER_STDTEXT(ENUM) \
@@ -45,6 +50,11 @@
  */
 extern const char *http_header_stdtext[];
 
+
+/**
+ * Length of the string array http_header_descriptors
+ */
+#define HTTP_HEADER_DESCRIPTORS_LEN 	7
 
 /**
  * Macro for inserting standard http header descriptors string numbers into any enum
@@ -63,6 +73,11 @@ extern const char *http_header_stdtext[];
  */
 extern const char *http_header_descriptors[];
 
+
+/**
+ * Length of the string array rpc_xml_tag_strings
+ */
+#define RPC_XML_TAG_STRINGS_LEN 	19
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
@@ -93,6 +108,28 @@ extern const char *http_header_descriptors[];
  */
 extern const char *rpc_xml_tag_strings[];
 
+
+/**
+ * Length of the string array http_method_parse_strings
+ */
+#define HTTP_METHOD_PARSE_STRINGS_LEN 	1
+
+/**
+ * Macro for inserting supported http method strings string numbers into any enum
+ */
+#define __HTTP_METHOD_PARSE_STRINGS(ENUM) \
+	 ENUM ## _METHOD_POST
+
+/**
+ * This array contains the strings for supported http method strings
+ */
+extern const char *http_method_parse_strings[];
+
+
+/**
+ * Length of the string array rpc_xml_stdtext
+ */
+#define RPC_XML_STDTEXT_LEN 	9
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum

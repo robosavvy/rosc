@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "rosCnode/rosCnode.h"
 #include "debug/debugutilities.h"
 
@@ -13,16 +14,133 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#include <arpa/inet.h>
 
 
+inline void skipSpace(const char** buffer)
+{
+	while((**buffer)==' ')
+	{
+		(*buffer)++;
+	}
+}
+
+/**
+ * This enum holds the possible error values which can be returned by
+ * the function parseStringInt. If the returned value is positive
+ * it successfully parsed a number otherwise it should be one of these.
+ */
+typedef enum
+{
+	PARSE_INT_STR_END=-100, //!< This means the string ended with a terminator.
+	PARSE_INT_NO_NUMBER  //!< This means the string started without a char specifiying a number
+}parseStringIntStatus_t;
+
+
+/**
+ * This function parses a string on in a buffer by increasing a buffer pointer.
+ * @param buffer This is the pointer to a string pointer which will be increased.
+ * @param goAhead This value is used to go ahead with parsing in another string if the last parse reached a terminator.
+ * @return If the number is positive it's a parsed number, if not its a value from parseStringIntStatus_t
+ */
+int parseStringUInt(const char **buffer, bool goAhead)
+{
+	static int cnt;
+	static int value;
+	if(goAhead==false)
+	{
+		cnt=0;
+		value=0;
+	}
+	char currentChar=(**buffer);
+	//Go ahead while the current char is a number
+	while(currentChar>=48 && currentChar<=48+9)
+	{
+		//If this is not the first time multiply by ten
+		if(cnt) value*=10;
+		//Convert the char figure into integer and add it to the value
+		value+=currentChar-48;
+
+		//Going ahead with the next char
+		(*buffer)++;
+		currentChar=(**buffer);
+		cnt++;
+	}
+	if(!cnt) return PARSE_INT_NO_NUMBER;
+	else
+		if(currentChar!='\0')
+			return value;
+		else
+			return PARSE_INT_STR_END;
+}
+
+
+bool parseHTTPMethod(const char **buffer)
+{
+
+}
+
+
+
+int main()
+{
+	char* str=
+			    "POST / HTTP/1.1\n"
+	    		"User-Agent:askfhasdf\n"
+	    		"Host: sdfd-10: 34534\n"
+	    		"Content-Type: text/xml\n"
+	    		"Content-Length:289\n\n"
+
+	    		"<?xml version=\"1.0\"?>\n"
+	    		"<methodCall><methodName>registerPublisher</methodName>\n"
+	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
+
+	unsigned int len=strlen(str);
+
+	const char *buffer="124324243";
+	const char *buffer2="\n";
+
+	printf(".... %i\n",parseStringUInt(&buffer,0));
+	printf(".... %i\n",parseStringUInt(&buffer2,1));
+	/**
+	 *
+	 *
+	 *
+	 *
+	 *
+	 */
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 int handle(int event)
 {
 	printf("Handler received %i\n", event);
 	return true;
 }
-
 
 int main2()
 {
@@ -69,7 +187,7 @@ int main2()
 	return 0;
 }
 
-int main(void)
+int main3(void)
 {
 
 	//Custom string arrays for the message and header generator
@@ -279,10 +397,5 @@ int main(void)
 	    {
 	        printf("\n Read error \n");
 	    }
-
-
-
-
-
 	return 0;
 }

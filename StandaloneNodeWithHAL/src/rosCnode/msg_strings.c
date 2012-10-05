@@ -49,6 +49,11 @@ const char *rpc_xml_tag_strings[] =
 	"value"
 };
 
+const char *http_method_parse_strings[] =
+{
+	"POST"
+};
+
 const char *rpc_xml_stdtext[] =
 {
 	"/tcp_keepalive",
