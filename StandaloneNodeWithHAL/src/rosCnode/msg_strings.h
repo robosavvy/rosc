@@ -52,23 +52,6 @@ extern const char *http_header_stdtext[];
 
 
 /**
- * Length of the string array http_supported_methods
- */
-#define HTTP_SUPPORTED_METHODS_LEN 	1
-
-/**
- * Macro for inserting supported http method strings string numbers into any enum
- */
-#define __HTTP_SUPPORTED_METHODS(ENUM) \
-	 ENUM ## _METHOD_POST
-
-/**
- * This array contains the strings for supported http method strings
- */
-extern const char *http_supported_methods[];
-
-
-/**
  * Length of the string array http_header_descriptors
  */
 #define HTTP_HEADER_DESCRIPTORS_LEN 	7
@@ -124,6 +107,24 @@ extern const char *http_header_descriptors[];
  * This array contains the strings for standard XMLRPC tags
  */
 extern const char *rpc_xml_tag_strings[];
+
+
+/**
+ * Length of the string array http_methods
+ */
+#define HTTP_METHODS_LEN 	2
+
+/**
+ * Macro for inserting http method strings string numbers into any enum
+ */
+#define __HTTP_METHODS(ENUM) \
+	 ENUM ## _METHOD_HTTP, \
+	 ENUM ## _METHOD_POST
+
+/**
+ * This array contains the strings for http method strings
+ */
+extern const char *http_methods[];
 
 
 /**

@@ -84,13 +84,14 @@ http_header_stdtext:
   }
 
 #Supported Requests
-http_supported_methods:
+http_methods:
   comment:
-    'supported http method strings'
+    'http method strings'
   defineShort:
     'METHOD'
   stringlist: {
-    'POST'
+    'POST',
+    'HTTP',
   }
 
 #Seperators for parsing

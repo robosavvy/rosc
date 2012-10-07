@@ -25,6 +25,7 @@
 #define MSG_PARSE_H_
 
 #include <stdbool.h>
+#include "msg_strings.h"
 
 #define TAG_BUFFER_SIZE 25
 
@@ -33,7 +34,7 @@ typedef enum
 	method,
 	header,
 	xml,
-}parse_state_message_part;
+}parse_state_message_part_t;
 
 /**
  * This enum holds negative return values for the seekWord function.
@@ -43,7 +44,7 @@ typedef enum
 {
 	SEEKWORD_NOT_IN_LIST=-100,//!< The parsed word is not in the specified list
 	SEEKWORD_STRINGEND,  //!< The function reached a string terminator
-}seekWordStatus;
+}seekWordStatus_t;
 
 /**
  * This enum holds the possible error values which can be returned by
@@ -55,6 +56,11 @@ typedef enum
 	PARSE_INT_STR_END=-100, //!< This means the string ended with a terminator.
 	PARSE_INT_NO_NUMBER  //!< This means the string started without a char specifiying a number
 }parseStringIntStatus_t;
+
+typedef enum
+{
+	__HTTP_METHODS(METHOD)
+}parseMethodStringIDs_t;
 
 
 /**

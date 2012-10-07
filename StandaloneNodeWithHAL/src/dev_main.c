@@ -17,12 +17,180 @@
 
 
 
-
-
-
-bool parseHTTPMethod(const char **buffer)
+typedef enum
 {
+	__PARSE_SEPARATORS(PARSE_METHOD)
+}parseSeparators_t;
 
+typedef enum
+{
+	__HTTP_METHODS(HTTP_METHOD)
+}http_methods_t;
+
+
+inline bool checkforSpecialChr(const char **buffer, char chr)
+{
+	bool res=(**buffer==chr);
+	++(*buffer);
+	return res;
+}
+
+
+
+inline bool parseHTTPMethod(const char **buffer)
+{
+	unsigned int state=0;
+	int param;
+	int result;
+	while(state<=13)
+	{
+		switch(state)
+		{
+		case 3: case 7:
+			param='/';
+			break;
+		case 10:
+			param='.';
+			break;
+		case 13:
+			param='\n';
+			break;
+		case 1:
+			param=METHOD_METHOD_POST;
+			break;
+		case 5:
+			param=METHOD_METHOD_HTTP;
+			break;
+		}
+
+		switch(state)
+		{
+		//Skiping spaces inside the Method string
+		case 0: case 2: case 4: case 6: case 8: case 12:
+			skipSpace(buffer);
+			break;
+		case 3: case 7: case 10: case 13:
+			if(!checkforSpecialChr(buffer,param))
+				return false;
+			break;
+			case 1: case 5:
+				if((seekWord(buffer,http_methods,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],true))!=param)
+					return false;
+				break;
+
+			case 9: case 11:
+				result=parseStringUInt(buffer,0);
+				if(result>=0)
+				{
+					if(state==9 && result!=1)
+							return false;
+				}
+				else
+				{
+					return false;
+				}
+				break;
+			default:
+					return false;
+				break;
+		}
+		state++;
+	}
+
+
+
+	return true;
+}
+
+
+
+inline bool parseHTTPMethod2(const char **buffer)
+{
+	skipSpace(buffer);
+	int result;
+
+	result=seekWord(buffer,http_methods,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],1);
+
+	switch(result)
+	{
+	case HTTP_METHOD_METHOD_POST:
+		printf("POST\n");
+	break;
+	default:
+		printf("Method not supported\n");
+		return false;
+	break;
+	}
+	skipSpace(buffer);
+	if(**buffer!='/')
+	{
+		printf("Header malformed!\n");
+		return false;
+	}
+	else
+	{
+		(*buffer)++;
+	}
+	skipSpace(buffer);
+
+	result=seekWord(buffer,http_methods,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],1);
+	if(result==HTTP_METHOD_METHOD_HTTP)
+		printf("HTTP\n");
+	skipSpace(buffer);
+	if(**buffer!='/')
+	{
+		printf("Header malformed!\n");
+		return false;
+	}
+	else
+	{
+		(*buffer)++;
+	}
+	result=parseStringUInt(buffer,0);
+
+	if(result==1)
+	{
+		printf("HTTP Major Release 1\n");
+	}
+	else
+	{
+		printf("HTTP Release ERROR\n");
+		return 1;
+	}
+	if(**buffer!='.')
+	{
+		printf("Header malformed!\n");
+		return false;
+	}
+	else
+	{
+		(*buffer)++;
+	}
+
+	result=parseStringUInt(buffer,0);
+
+	if(result>0)
+	{
+		printf("HTTP Minor Release: %i",result);
+	}
+	else
+	{
+		printf("HTTP Release ERROR\n");
+		return 1;
+	}
+	skipSpace(buffer);
+
+	if(**buffer!='\n')
+	{
+		printf("Header malformed!\n");
+		return false;
+	}
+	else
+	{
+		(*buffer)++;
+	}
+
+	return true;
 }
 
 
@@ -40,22 +208,10 @@ int main()
 	    		"<methodCall><methodName>registerPublisher</methodName>\n"
 	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
 
-	unsigned int len=strlen(str);
+	printf("gnampf!\n");
+	printf(" narf %i\n",parseHTTPMethod(&str));
+	printf("gnampf!\n");
 
-	const char *buffer="asdfs 124324243";
-	const char *buffer2="\n";
-
-
-	skipAllTillSeperators(&buffer," ");
-	printf(".... %i\n",parseStringUInt(&buffer,0));
-	printf(".... %i\n",parseStringUInt(&buffer2,1));
-	/**
-	 *
-	 *
-	 *
-	 *
-	 *
-	 */
 	return 0;
 }
 

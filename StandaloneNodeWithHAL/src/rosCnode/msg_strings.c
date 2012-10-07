@@ -15,11 +15,6 @@ const char *http_header_stdtext[] =
 	"text/xml"
 };
 
-const char *http_supported_methods[] =
-{
-	"POST"
-};
-
 const char *http_header_descriptors[] =
 {
 	"Accepted-Encoding",
@@ -52,6 +47,12 @@ const char *rpc_xml_tag_strings[] =
 	"struct",
 	"title",
 	"value"
+};
+
+const char *http_methods[] =
+{
+	"HTTP",
+	"POST"
 };
 
 const char *parse_separators[] =
