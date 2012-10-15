@@ -5,6 +5,11 @@
  */
 #include "msg_strings.h" 
  
+const char *rpc_xml_attribute_strings[] =
+{
+	"dummy"
+};
+
 const char *http_header_stdtext[] =
 {
 	"BaseHTTP/ROSc-NodeLib",

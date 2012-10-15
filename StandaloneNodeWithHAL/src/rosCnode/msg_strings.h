@@ -30,6 +30,23 @@
  
  
 /**
+ * Length of the string array rpc_xml_attribute_strings
+ */
+#define RPC_XML_ATTRIBUTE_STRINGS_LEN 	1
+
+/**
+ * Macro for inserting standard attributes for XMLRPC (None available just a "dummy" for the parser) string numbers into any enum
+ */
+#define __RPC_XML_ATTRIBUTE_STRINGS(ENUM) \
+	 ENUM ## _ATTRIBUTE_DUMMY
+
+/**
+ * This array contains the strings for standard attributes for XMLRPC (None available just a "dummy" for the parser)
+ */
+extern const char *rpc_xml_attribute_strings[];
+
+
+/**
  * Length of the string array http_header_stdtext
  */
 #define HTTP_HEADER_STDTEXT_LEN 	6

@@ -37,6 +37,17 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   array,
               }
 
+
+#Known Attributes strings XML
+rpc_xml_attribute_strings:
+  comment: 
+    'standard attributes for XMLRPC (None available just a "dummy" for the parser)'
+  defineShort:
+    'ATTRIBUTE'
+  stringlist: {
+    dummy
+  }
+
 rpc_xml_stdtext:
   comment:
     'standard XMLRPC text pieces'
@@ -53,6 +64,10 @@ rpc_xml_stdtext:
       unregisterPublisher,
       unregisterSubscriber,
   }
+
+
+
+
   
 http_header_descriptors:
   comment:
@@ -83,6 +98,8 @@ http_header_stdtext:
     'OK'
   }
 
+
+
 #Supported Requests
 http_methods:
   comment:
@@ -105,6 +122,5 @@ parse_separators:
     '\n:': HTTP_HEADER,
     '</>\n \"=': XML 
   }
-  
   
     

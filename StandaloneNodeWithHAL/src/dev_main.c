@@ -216,9 +216,50 @@ int main()
 }
 
 
+typedef enum
+{
+	XML_PARSE_EVENT_DOCUMENT_START, //!< Initialize event for result computing function
+
+	__XML_PARSE_EVENT_TAG_OPEN_START,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_OPEN), //!< one of these values will be transmitted if a known tag as found
+	XML_PARSE_EVENT_TAG_OPEN_UNKNOWN, //!< If this is transmitted there is a new open
+
+	__XML_PARSE_EVENT_TAG_CLOSE_START,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_CLOSE), //!< one of these values will be transmitted if a known tag as found
+	XML_PARSE_EVENT_TAG_CLOSE_UNKNOWN,
+
+	__XML_PARSE_EVENT_TAG_EMPTY,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_EMPTY), //!< one of these values will be transmitted if a known tag as found
+	XML_PARSE_EVENT_TAG_EMPTY_UNKNOWN,
 
 
+	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_START,
+	__RPC_XML_ATTRIBUTE_STRINGS(XML_PARSE_EVENT), //!< one of these values will be transmitted if a known attribute ist found
+	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_END,
+	XML_PARSE_EVENT_UNKNOWN_ATTRIBUTE,
 
+
+}parseEvents;
+
+typedef enum
+{
+	/*
+	 * Negative Values reserved for return values for parser function
+	 */
+	XML_PARSE_CON_RETURN_FAILURE=0,
+	XML_PARSE_CON_SKIP_TAG,
+	XML_PARSE_CON_SKIP_ATTRIBUTE,
+}parseControl;
+
+void getParserState(unsigned int parseEvent, const char *buffer, int *parseAction)
+{
+
+}
+
+unsigned int parseXML(const char **buffer)
+{
+
+}
 
 
 
