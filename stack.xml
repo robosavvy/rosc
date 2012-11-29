@@ -1,0 +1,10 @@
+<stack>
+  <description brief="C-Implementation of an Independent ROS Node">
+    This piece of software implements a ROS node for different embedded platforms.
+  </description>
+  <author>Christian Holl</author>
+  <license></license>
+  
+  <review status="unreviewed" notes=""/>
+  <url>https://github.com/cyborg-x1/rosc/wiki</url>
+</stack>
