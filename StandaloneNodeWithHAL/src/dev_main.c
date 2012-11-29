@@ -96,9 +96,6 @@ inline bool parseHTTPMethod(const char **buffer)
 		}
 		state++;
 	}
-
-
-
 	return true;
 }
 
@@ -218,46 +215,103 @@ int main()
 
 typedef enum
 {
+	__XML_PARSE_EVENT_NO_EVENT=0, //! This is just for internal processing and should never occur
+
 	XML_PARSE_EVENT_DOCUMENT_START, //!< Initialize event for result computing function
 
 	__XML_PARSE_EVENT_TAG_OPEN_START,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_OPEN), //!< one of these values will be transmitted if a known tag as found
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_OPEN), //!< one of these values will be transmitted if a known tag is found
 	XML_PARSE_EVENT_TAG_OPEN_UNKNOWN, //!< If this is transmitted there is a new open
 
 	__XML_PARSE_EVENT_TAG_CLOSE_START,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_CLOSE), //!< one of these values will be transmitted if a known tag as found
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_CLOSE), //!< one of these values will be transmitted if a known close tag is found
 	XML_PARSE_EVENT_TAG_CLOSE_UNKNOWN,
 
 	__XML_PARSE_EVENT_TAG_EMPTY,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_EMPTY), //!< one of these values will be transmitted if a known tag as found
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_EMPTY), //!< one of these values will be transmitted if a known empty tag (<tag/>) is found
 	XML_PARSE_EVENT_TAG_EMPTY_UNKNOWN,
-
 
 	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_START,
 	__RPC_XML_ATTRIBUTE_STRINGS(XML_PARSE_EVENT), //!< one of these values will be transmitted if a known attribute ist found
 	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_END,
 	XML_PARSE_EVENT_UNKNOWN_ATTRIBUTE,
 
+	XML_PARSE_EVENT_STRING, //!< This is sent when a string was found inside a tag
+
+
 
 }parseEvents;
 
+
+/**
+ * The positive values given in this enum are the controlling signals for the XML
+ * Parser. Any negative value will stop the parser and return the parsing function+
+ * the negative value.
+ */
 typedef enum
 {
-	/*
-	 * Negative Values reserved for return values for parser function
+	XML_PARSE_ACT_RETURN_GENERAL_FAILURE=0, //!< This will stop the parser and make it return 0
+
+	XML_PARSE_ACT_GO_AHEAD=1, //!< This will advice the parser to go on with parsing
+
+	 /**
+	  * When this is sent to the parser it will skip
+	  * everything which is inside the current tag
+	  * (if this is not called after a tag, it has the
+	  * same effect as GO_AHEAD)
+	  */
+	XML_PARSE_ACT_SKIP_TAG,      //!< XML_PARSE_ACT_SKIP_TAG
+
+	/**
+	 *  When this is sent to the parser it will skip the current attribute
+	 *  (if no attribute was found before, this has the same effect as GO_AHEAD)
 	 */
-	XML_PARSE_CON_RETURN_FAILURE=0,
-	XML_PARSE_CON_SKIP_TAG,
-	XML_PARSE_CON_SKIP_ATTRIBUTE,
-}parseControl;
+	XML_PARSE_ACT_SKIP_ATTRIBUTE,//!< XML_PARSE_ACT_SKIP_ATTRIBUTE
+
+}parserAction;
 
 void getParserState(unsigned int parseEvent, const char *buffer, int *parseAction)
 {
 
 }
 
-unsigned int parseXML(const char **buffer)
+unsigned int parseXML(const char **buffer, void (*parseHandler)(unsigned int parseEvent, const char *buffer, int *parserAction))
 {
+
+	bool parse=true;
+	int event=__XML_PARSE_EVENT_NO_EVENT;
+	int action=XML_PARSE_ACT_GO_AHEAD;
+	char curchr;
+
+	for(;parse;++(*buffer))
+	{
+		curchr=**buffer;
+		if(curchr>0x1F)
+		{
+
+		}
+		else
+		{
+			if(curchr>0x00) //Unusual white space character
+			{
+
+			}
+			else
+			{
+
+			}
+		}
+
+		if(event!=__XML_PARSE_EVENT_NO_EVENT)
+		{
+
+			parseHandler(event, buffer, &action);
+			event=__XML_PARSE_EVENT_NO_EVENT;
+		}
+
+
+
+	}
 
 }
 
