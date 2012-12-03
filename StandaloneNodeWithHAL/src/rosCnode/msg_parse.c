@@ -24,30 +24,30 @@
 #include "msg_parse.h"
 
 
-unsigned int seekWord( const char** wordptr,
-						 const char** wordlist,
-						 unsigned int wordlist_len,
+unsigned int seekString( const char** stringptr,
+						 const char** stringlist,
+						 unsigned int stringlist_len,
 						 const char* separator_list,
 						 bool start)
 {
-	static unsigned int first; //first word of the word list possibilities
-	static unsigned int last;	 //last word of the word list possibilities
-	static unsigned int pos;   //current position inside the word
+	static unsigned int first; //first string of the string list possibilities
+	static unsigned int last;	 //last string of the string list possibilities
+	static unsigned int pos;   //current position inside the string
 
 	if(start)
 	{
-		last=wordlist_len;
+		last=stringlist_len;
 		first=0;
 		pos=0;
 	}
 
-	while((**wordptr)!='\0')
+	while((**stringptr)!='\0')
 	{
 
 		//Check if current one is a separator
 		bool isSeparator=false;
 		const char *sep=separator_list;
-		char current=**wordptr;
+		char current=**stringptr;
 		while(*sep!='\0')
 		{
 			if(current==*sep)
@@ -64,7 +64,7 @@ unsigned int seekWord( const char** wordptr,
 		unsigned int w;
 		for(w=first;w<last;w++)
 		{
-			const char *ptr=*(wordlist+w);
+			const char *ptr=*(stringlist+w);
 			char c=*(ptr+pos);
 			if(c==current)
 			{
@@ -82,12 +82,12 @@ unsigned int seekWord( const char** wordptr,
 				}
 			}
 		}
-		if(!found)return SEEKWORD_NOT_IN_LIST;
-		(*wordptr)++;
+		if(!found)return SEEKSTRING_NOT_IN_LIST;
+		(*stringptr)++;
 		pos++;
 
 	}
-	return SEEKWORD_STRINGEND;
+	return SEEKSTRING_STRINGEND;
 }
 
 int parseStringUInt(const char **buffer, bool goAhead)
@@ -121,7 +121,7 @@ int parseStringUInt(const char **buffer, bool goAhead)
 			return PARSE_INT_STR_END;
 }
 
-void skipSpace(const char** buffer)
+inline void skipSpace(const char** buffer)
 {
 	while((**buffer)==' ')
 	{
@@ -150,3 +150,85 @@ void skipAllTillSeperators(const char** buffer, char *separator_list)
 		currentChar=**buffer;
 	}
 }
+
+inline bool checkforSpecialChr(const char **buffer, char chr)
+{
+	bool res=(**buffer==chr);
+	++(*buffer);
+	return res;
+}
+
+inline bool parseHTTPMethod(const char **buffer)
+{
+	unsigned int state=0;
+	int param;
+	int result;
+	int ret;
+	const char **strList;
+	while(state<=13)
+	{
+
+		//  POST / HTTP/1.1\n
+		switch(state)
+		{
+		case 3: case 7:
+			param='/'; //We expect to find that char here
+			break;
+		case 10:
+			param='.'; //We expect to find that char here (Version Dot)
+			break;
+		case 13:
+			param='\n'; //We expect to find that a new line
+			break;
+		case 1:
+			strList=http_methods; //Set string array for methods
+			param=HTTP_METHODS_LEN;
+			break;
+		case 5:
+			*strList="HTTP"; //Use the seek function for only one word
+			param=1;
+			break;
+		}
+
+		switch(state)
+		{
+		//Skipping spaces inside the Method string
+		case 0: //at beginning
+		case 2: //after method
+		case 4: //after first /
+		case 6: //after HTTP
+		case 8:	//after second /
+		case 12: //after version
+			skipSpace(buffer);
+			break;
+		case 3: case 7: case 10: case 13:
+			if(!checkforSpecialChr(buffer,param))
+				return false;
+			break;
+			case 1: /*METHOD*/
+			case 5: /*HTTP*/
+				ret=seekString(buffer,(const char**)strList,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],true);
+				if( ret<0 )
+					return false;
+				break;
+			case 9: case 11://Parse Version String
+				result=parseStringUInt(buffer,0);
+				if(result>=0)
+				{
+					if(state==9 && result!=1)
+							return false;
+				}
+				else
+				{
+					return false;
+				}
+				break;
+			default:
+					return false;
+				break;
+		}
+		state++;
+	}
+	return true;
+}
+

@@ -56,7 +56,7 @@ const char *rpc_xml_tag_strings[] =
 
 const char *http_methods[] =
 {
-	"HTTP",
+	"GET",
 	"POST"
 };
 

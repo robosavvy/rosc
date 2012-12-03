@@ -29,22 +29,28 @@
 
 #define TAG_BUFFER_SIZE 25
 
+
 typedef enum
 {
-	method,
-	header,
-	xml,
-}parse_state_message_part_t;
+	__PARSE_SEPARATORS(PARSE_METHOD)
+}parseSeparators_t;
+
+typedef enum
+{
+	__HTTP_METHODS(HTTP_METHOD)
+}http_methods_t;
+
+
 
 /**
- * This enum holds negative return values for the seekWord function.
+ * This enum holds negative return values for the seekString function.
  * Every time the output of this function is negative its in that list
  */
 typedef enum
 {
-	SEEKWORD_NOT_IN_LIST=-100,//!< The parsed word is not in the specified list
-	SEEKWORD_STRINGEND,  //!< The function reached a string terminator
-}seekWordStatus_t;
+	SEEKSTRING_NOT_IN_LIST=-100,//!< The parsed string is not in the specified list
+	SEEKSTRING_STRINGEND=-200,  //!< The function reached a string terminator
+}seekStringStatus_t;
 
 /**
  * This enum holds the possible error values which can be returned by
@@ -87,21 +93,42 @@ void skipAllTillSeperators(const char** buffer, char *seperatorList);
 
 
 /**
- * This function seeks for a word inside a string list
- * @param wordptr The pointer to the start pointer of the word (will be increased!)
- * @param wordlist The list of the known words
- * @param wordlist_len the length of the string list
+ * This function seeks for a string inside a string list
+ * @param stringptr The pointer to the start pointer of the string (will be increased!)
+ * @param stringlist The list of the known words
+ * @param stringlist_len the length of the string list
  * @param separator_list the list of seperators which end seeking
  * @param start If the previous search ended with no seperator and
- * @return
+ * @return Number of string inside the list or -1
  */
-unsigned int seekWord(const char** wordptr,
-						 const char** wordlist,
-						 unsigned int wordlist_len,
+unsigned int seekString(const char** stringptr,
+						 const char** stringlist,
+						 unsigned int stringlist_len,
 						 const char* separator_list,
 						 bool start);
 
-//returns list match number, 0 for stringend, -1 for no match of current wordlist
-unsigned int stringParse(const char* str, unsigned int len,  int (*handler)(int event), bool start);
+
+/**
+ * This function checks if the char where the pointer is currently pointing on
+ * is the specified one. It also will increase the value of the buffer!
+ *
+ * @param buffer String position to search for chr
+ * @param chr The char which is expected to be there.
+ */
+inline bool checkforSpecialChr(const char **buffer, char chr);
+
+
+/**
+ * This function parses the method string in a XMLRPC Message, to check if the method is supported.
+ * XMLRPC only supports HTTP POST. So only a correct header will be accepted.
+ *
+ * @param buffer the string buffer containing the function
+ * @return True if it's a HTTP POST Header.
+ */
+inline bool parseHTTPMethod(const char **buffer);
+
+
+
+
 
 #endif /* MSG_PARSE_H_ */

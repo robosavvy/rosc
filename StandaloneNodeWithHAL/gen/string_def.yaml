@@ -104,12 +104,11 @@ http_header_stdtext:
 #Method strings
 http_methods:
   comment:
-    'http method strings'
+    'method strings'
   defineShort:
     'METHOD'
   stringlist: {
     'POST',
-    'HTTP',
   }
 
 #Seperators for parsing
