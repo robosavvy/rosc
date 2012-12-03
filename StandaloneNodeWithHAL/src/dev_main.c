@@ -229,6 +229,7 @@ unsigned int parseXML(const char **buffer, void (*parseHandler)(unsigned int par
 
 	}
 
+	return 0;
 }
 
 

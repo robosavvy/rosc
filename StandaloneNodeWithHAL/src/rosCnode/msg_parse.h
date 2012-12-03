@@ -37,7 +37,9 @@ typedef enum
 
 typedef enum
 {
-	__HTTP_METHODS(HTTP_METHOD)
+	HTTP_METHOD_UNSUPPORTED=-2,
+	HTTP_METHOD_INVALID=-1,
+	__HTTP_METHODS(HTTP)
 }http_methods_t;
 
 
@@ -123,9 +125,10 @@ inline bool checkforSpecialChr(const char **buffer, char chr);
  * XMLRPC only supports HTTP POST. So only a correct header will be accepted.
  *
  * @param buffer the string buffer containing the function
- * @return True if it's a HTTP POST Header.
+ * @return If the method string is valid and the method supported,
+ *         it returns HTTP_METHOD_<method> or HTTP_METHOD_INVALID or HTTP_METHOD_UNSUPPORTED if not.
  */
-inline bool parseHTTPMethod(const char **buffer);
+inline unsigned int parseHTTPMethod(const char **buffer);
 
 
 

@@ -158,11 +158,11 @@ inline bool checkforSpecialChr(const char **buffer, char chr)
 	return res;
 }
 
-inline bool parseHTTPMethod(const char **buffer)
+inline unsigned int parseHTTPMethod(const char **buffer)
 {
 	unsigned int state=0;
 	int param;
-	int result;
+	int ires;
 	int ret;
 	const char **strList;
 	while(state<=13)
@@ -207,28 +207,33 @@ inline bool parseHTTPMethod(const char **buffer)
 			break;
 			case 1: /*METHOD*/
 			case 5: /*HTTP*/
-				ret=seekString(buffer,(const char**)strList,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],true);
-				if( ret<0 )
-					return false;
+				ires=seekString(buffer,(const char**)strList,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],true);
+				if(state == 1)
+					ret = ires;
+				if( ires<0 )
+					if(state == 5)
+						return HTTP_METHOD_INVALID;
+					else
+						return HTTP_METHOD_UNSUPPORTED;
 				break;
 			case 9: case 11://Parse Version String
-				result=parseStringUInt(buffer,0);
-				if(result>=0)
+				ires=parseStringUInt(buffer,0);
+				if(ires>=0)
 				{
-					if(state==9 && result!=1)
-							return false;
+					if(state==9 && ires!=1)
+							return HTTP_METHOD_INVALID;
 				}
 				else
 				{
-					return false;
+					return HTTP_METHOD_INVALID;
 				}
 				break;
 			default:
-					return false;
+					return HTTP_METHOD_INVALID;
 				break;
 		}
 		state++;
 	}
-	return true;
+	return ret;
 }
 
