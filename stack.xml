@@ -1,6 +1,6 @@
 <stack>
-  <description brief="C-Implementation of an Independent ROS Node">
-    This piece of software implements a ROS node for different embedded platforms.
+  <description brief="ROS Implementation in ANSI C for embedded devices">
+    This piece of Software implements ROS in ANSI C for using on embedded devices.
   </description>
   <author>Christian Holl</author>
   <license></license>
