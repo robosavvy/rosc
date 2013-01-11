@@ -35,12 +35,42 @@ typedef enum
 	__PARSE_SEPARATORS(PARSE_METHOD)
 }parseSeparators_t;
 
+
 typedef enum
 {
-	HTTP_METHOD_UNSUPPORTED=-2,
-	HTTP_METHOD_INVALID=-1,
-	__HTTP_METHODS(HTTP)
-}http_methods_t;
+	HTTP_METHOD_PARSE_UNKNOWN, //!< Unknown/Unsupported Method
+	HTTP_METHOD_PARSE_INVALID, //!< Invalid Method string
+
+	__HTTP_METHODS(HTTP_METHOD_PARS),	//!< Inserts available methods into the enum
+
+	 __HTTP_HEADER_DESCRIPTORS(HTTP_HEADER_PARSE), //!< Inserts available header descriptors into the enum
+
+
+	__XML_PARSE_EVENT_NO_EVENT, //!< This is just for internal processing and should never occur
+
+	XML_PARSE_EVENT_DOCUMENT_START, //!< Initialize event for result computing function
+
+	__XML_PARSE_EVENT_TAG_OPEN_START,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_OPEN), //!< one of these values will be transmitted if a known tag is found
+	XML_PARSE_EVENT_TAG_OPEN_UNKNOWN, //!< If this is transmitted there is a new open
+
+	__XML_PARSE_EVENT_TAG_CLOSE_START,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_CLOSE), //!< one of these values will be transmitted if a known close tag is found
+	XML_PARSE_EVENT_TAG_CLOSE_UNKNOWN,
+
+	__XML_PARSE_EVENT_TAG_EMPTY,
+	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_EMPTY), //!< one of these values will be transmitted if a known empty tag (<tag/>) is found
+	XML_PARSE_EVENT_TAG_EMPTY_UNKNOWN,
+
+	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_START,
+	__RPC_XML_ATTRIBUTE_STRINGS(XML_PARSE_EVENT), //!< one of these values will be transmitted if a known attribute ist found
+	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_END,
+	XML_PARSE_EVENT_UNKNOWN_ATTRIBUTE,
+
+	XML_PARSE_EVENT_STRING, //!< This is sent when a string was found inside a tag
+
+}parseEvents;
+
 
 
 
@@ -84,7 +114,7 @@ int parseStringUInt(const char **buffer, bool goAhead);
  * as the starting char is no space
  * @param buffer the pointer to the char pointer
  */
-void skipSpace(const char** buffer);
+inline void skipSpace(const char** buffer);
 
 /**
  * This function will skip all chars till a specified seperator is found.
@@ -123,12 +153,13 @@ inline bool checkforSpecialChr(const char **buffer, char chr);
 /**
  * This function parses the method string in a XMLRPC Message, to check if the method is supported.
  * XMLRPC only supports HTTP POST. So only a correct header will be accepted.
- *
+ * TODO REWORK THIS DOCUMENTATION
  * @param buffer the string buffer containing the function
  * @return If the method string is valid and the method supported,
- *         it returns HTTP_METHOD_<method> or HTTP_METHOD_INVALID or HTTP_METHOD_UNSUPPORTED if not.
+ *         it returns HTTP_METHOD_<method> or HTTP_METHOD_PARSE_INVALID or HTTP_METHOD_PARSE_UNKNOWN if not.
  */
-inline unsigned int parseHTTPMethod(const char **buffer);
+inline unsigned int parseHttpMethod(const char **buffer, const char **methods);
+
 
 
 

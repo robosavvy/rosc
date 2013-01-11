@@ -158,7 +158,7 @@ inline bool checkforSpecialChr(const char **buffer, char chr)
 	return res;
 }
 
-inline unsigned int parseHTTPMethod(const char **buffer)
+inline unsigned int parseHttpMethod(const char **buffer, const char **methods)
 {
 	unsigned int state=0;
 	int param;
@@ -181,7 +181,7 @@ inline unsigned int parseHTTPMethod(const char **buffer)
 			param='\n'; //We expect to find that a new line
 			break;
 		case 1:
-			strList=http_methods; //Set string array for methods
+			strList=methods; //Set string array for methods
 			param=HTTP_METHODS_LEN;
 			break;
 		case 5:
@@ -209,27 +209,27 @@ inline unsigned int parseHTTPMethod(const char **buffer)
 			case 5: /*HTTP*/
 				ires=seekString(buffer,(const char**)strList,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],true);
 				if(state == 1)
-					ret = ires;
+					ret = ires+HTTP_METHOD_PARSE_INVALID+1;
 				if( ires<0 )
 					if(state == 5)
-						return HTTP_METHOD_INVALID;
+						return HTTP_METHOD_PARSE_INVALID;
 					else
-						return HTTP_METHOD_UNSUPPORTED;
+						return HTTP_METHOD_PARSE_UNKNOWN;
 				break;
 			case 9: case 11://Parse Version String
 				ires=parseStringUInt(buffer,0);
-				if(ires>=0)
+				if(ires>=HTTP_METHOD_PARSE_INVALID)
 				{
 					if(state==9 && ires!=1)
-							return HTTP_METHOD_INVALID;
+							return HTTP_METHOD_PARSE_INVALID;
 				}
 				else
 				{
-					return HTTP_METHOD_INVALID;
+					return HTTP_METHOD_PARSE_INVALID;
 				}
 				break;
 			default:
-					return HTTP_METHOD_INVALID;
+					return HTTP_METHOD_PARSE_INVALID;
 				break;
 		}
 		state++;

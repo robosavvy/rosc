@@ -15,148 +15,9 @@
 #include <unistd.h>
 #include <errno.h>
 
+#include "rosCnode/msg_strings.h"
 
 
-
-//
-//inline bool parseHTTPMethod2(const char **buffer)
-//{
-//	skipSpace(buffer);
-//	int result;
-//
-//	result=seekString(buffer,http_methods,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],1);
-//
-//	switch(result)
-//	{
-//	case HTTP_METHOD_METHOD_POST:
-//		printf("POST\n");
-//	break;
-//	default:
-//		printf("Method not supported\n");
-//		return false;
-//	break;
-//	}
-//	skipSpace(buffer);
-//	if(**buffer!='/')
-//	{
-//		printf("Header malformed!\n");
-//		return false;
-//	}
-//	else
-//	{
-//		(*buffer)++;
-//	}
-//	skipSpace(buffer);
-//
-//	result=seekString(buffer,http_methods,HTTP_METHODS_LEN,parse_separators[PARSE_METHOD_SEP_METHOD],1);
-//	if(result==HTTP_METHOD_METHOD_HTTP)
-//		printf("HTTP\n");
-//	skipSpace(buffer);
-//	if(**buffer!='/')
-//	{
-//		printf("Header malformed!\n");
-//		return false;
-//	}
-//	else
-//	{
-//		(*buffer)++;
-//	}
-//	result=parseStringUInt(buffer,0);
-//
-//	if(result==1)
-//	{
-//		printf("HTTP Major Release 1\n");
-//	}
-//	else
-//	{
-//		printf("HTTP Release ERROR\n");
-//		return 1;
-//	}
-//	if(**buffer!='.')
-//	{
-//		printf("Header malformed!\n");
-//		return false;
-//	}
-//	else
-//	{
-//		(*buffer)++;
-//	}
-//
-//	result=parseStringUInt(buffer,0);
-//
-//	if(result>0)
-//	{
-//		printf("HTTP Minor Release: %i",result);
-//	}
-//	else
-//	{
-//		printf("HTTP Release ERROR\n");
-//		return 1;
-//	}
-//	skipSpace(buffer);
-//
-//	if(**buffer!='\n')
-//	{
-//		printf("Header malformed!\n");
-//		return false;
-//	}
-//	else
-//	{
-//		(*buffer)++;
-//	}
-//
-//	return true;
-//}
-
-
-
-int main()
-{
-	char* str=
-			    "POST / HTTP/1.1\n"
-	    		"User-Agent:askfhasdf\n"
-	    		"Host: sdfd-10: 34534\n"
-	    		"Content-Type: text/xml\n"
-	    		"Content-Length:289\n\n"
-
-	    		"<?xml version=\"1.0\"?>\n"
-	    		"<methodCall><methodName>registerPublisher</methodName>\n"
-	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
-
-	printf(" narf %i\n",parseHTTPMethod(&str));
-
-	return 0;
-}
-
-
-typedef enum
-{
-	__XML_PARSE_EVENT_NO_EVENT=0, //! This is just for internal processing and should never occur
-
-	XML_PARSE_EVENT_DOCUMENT_START, //!< Initialize event for result computing function
-
-	__XML_PARSE_EVENT_TAG_OPEN_START,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_OPEN), //!< one of these values will be transmitted if a known tag is found
-	XML_PARSE_EVENT_TAG_OPEN_UNKNOWN, //!< If this is transmitted there is a new open
-
-	__XML_PARSE_EVENT_TAG_CLOSE_START,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_CLOSE), //!< one of these values will be transmitted if a known close tag is found
-	XML_PARSE_EVENT_TAG_CLOSE_UNKNOWN,
-
-	__XML_PARSE_EVENT_TAG_EMPTY,
-	__RPC_XML_TAG_STRINGS(XML_PARSE_EVENT_EMPTY), //!< one of these values will be transmitted if a known empty tag (<tag/>) is found
-	XML_PARSE_EVENT_TAG_EMPTY_UNKNOWN,
-
-	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_START,
-	__RPC_XML_ATTRIBUTE_STRINGS(XML_PARSE_EVENT), //!< one of these values will be transmitted if a known attribute ist found
-	__XML_PARSE_EVENT_KNOWN_ATTRIBUTES_END,
-	XML_PARSE_EVENT_UNKNOWN_ATTRIBUTE,
-
-	XML_PARSE_EVENT_STRING, //!< This is sent when a string was found inside a tag
-
-
-
-}parseEvents;
 
 
 /**
@@ -185,6 +46,70 @@ typedef enum
 	XML_PARSE_ACT_SKIP_ATTRIBUTE,//!< XML_PARSE_ACT_SKIP_ATTRIBUTE
 
 }parserAction;
+
+
+
+
+unsigned int XMLRPCparse(char **buffer, void (*parseHandler)(unsigned int parseEvent, const char *buffer, int *parserAction))
+{
+	seekString(buffer,http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN,parse_separators[PARSE_METHOD_SEP_HTTP_HEADER],1);
+}
+
+
+int main()
+{
+	char* str=
+			    "POST / HTTP/1.1\n"
+	    		"User-Agent:askfhasdf\n"
+	    		"Host: sdfd-10: 34534\n"
+	    		"Content-Type: text/xml\n"
+	    		"Content-Length:289\n\n"
+
+	    		"<?xml version=\"1.0\"?>\n"
+	    		"<methodCall><methodName>registerPublisher</methodName>\n"
+	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
+
+	printf(" narf %i\n",parseHttpMethod((const char**)&str,http_methods));
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void getParserState(unsigned int parseEvent, const char *buffer, int *parseAction)
 {
