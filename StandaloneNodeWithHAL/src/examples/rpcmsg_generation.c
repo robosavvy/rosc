@@ -55,12 +55,12 @@ int main(void)
 	//! [Commands for the XML generation]
 	ros_rpc_gen_command msg_gen_array[]=
 	{
-	RPC_XML_DECLARATION, 					//<?xml version="1.0" ?>
+	RPC_STDTXT_XML_DEF,		//<?xml version="1.0" ?>
 
 	RPC_TAG_METHODCALL, 					//<methodcall>
 		//! [Standard Tag and Text]
 		RPC_TAG_METHODNAME, 	  			//<methodname>
-			RPC_STDTEXT_HASPARAM, 			//hasParam
+			RPC_STDTXT_HASPARAM, 			//hasParam
 		RPC_CT RPC_TAG_METHODNAME,			//</methodname>
 		//! [Standard Tag and Text]
 		RPC_TAG_PARAMS,   				//<params>
