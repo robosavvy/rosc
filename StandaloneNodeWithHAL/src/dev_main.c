@@ -18,6 +18,183 @@
 #include "rosCnode/msg_strings.h"
 
 
+unsigned int xmlTagGen(void (*output)(char), const char* str, str2buf_modes mode, bool gatherSize)
+{
+	int s;
+	int len;
+	char *strs[3];
+	strs[1]=str;
+	switch(mode)
+	{
+	case S2B_TAG:
+		strs[0]="<";
+		strs[2]=">";
+		break;
+	case S2B_CTAG:
+		strs[0]="</";
+		strs[2]=">";
+		break;
+	case S2B_HTTP_HEAD_FIELD_DESC:
+		strs[0]="";
+		strs[2]=": ";
+		break;
+	case S2B_HTTP_HEAD_FIELD:
+		strs[0]="";
+		strs[2]="\n";
+		break;
+	}
+	for(s=0;s<3;++s)
+	{
+		while (*strs[s] != '\0')
+		{
+			len++;
+			output(*strs[s]);
+			strs[s]++;
+		}
+	}
+	return len;
+}
+
+
+void output(char c)
+{
+	printf("%c",c);
+}
+
+
+//Custom string arrays for the message and header generator
+//Arrays can also be non const. To surpress
+//the warning a type cast should be made when handing
+//them over to the functions.
+
+//custom strings (message)
+const char *custom_msg_str[] =
+{
+	 "/PublishSubscribeTest",
+};
+
+//custom strings (header)
+ char *custom_header_str[] =
+{
+	"http://localhost:",
+	"custom_desc",
+	"custom_val"
+};
+
+
+int main()
+{
+	printf("\n %i",xmlTagGen(&output,"narf",S2B_CTAG));
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//message and header output buffer
+char buf_header[150];
+char buf_msg[850];
+
+/* For the xml generator array I suggest using the following structure:
+*
+* Adding the RPC_CT macro infront of a tag creates a closing tag
+*/
+//	<methodCall>
+//		<methodName>hasParam</methodName>
+//		<params>
+//			<param>
+//				<value>/PublishSubscribeTest</value>
+//			</param>
+//			<param>
+//				<value>/tcp_keepalive</value>
+//			</param>
+//		</params>
+//	</methodCall>
+ros_rpc_gen_command msg_gen_array[]=
+{
+RPC_STDTXT_XML_DEF,
+
+RPC_TAG_METHODCALL,
+
+	RPC_TAG_METHODNAME,
+		RPC_STDTXT_HASPARAM,
+	RPC_CT RPC_TAG_METHODNAME,
+
+	RPC_TAG_PARAMS,
+
+		RPC_TAG_PARAM,
+			RPC_TAG_VALUE,
+				RPC_CUSTOM_TEXT+0,
+			RPC_CT RPC_TAG_VALUE,
+		RPC_CT RPC_TAG_PARAM ,
+
+		RPC_TAG_PARAM,
+			RPC_TAG_VALUE,
+				RPC_STDTXT_HASPARAM,
+			RPC_CT RPC_TAG_VALUE,
+		RPC_CT RPC_TAG_PARAM ,
+	RPC_CT RPC_TAG_PARAMS,
+RPC_CT RPC_TAG_METHODCALL,
+RPC_GENERATOR_FINISH
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -56,7 +233,59 @@ unsigned int XMLRPCparse(char **buffer, void (*parseHandler)(unsigned int parseE
 }
 
 
-int main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int main4()
 {
 	char* str=
 			    "POST / HTTP/1.1\n"
@@ -73,41 +302,6 @@ int main()
 
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

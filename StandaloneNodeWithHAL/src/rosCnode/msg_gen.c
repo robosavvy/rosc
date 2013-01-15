@@ -226,3 +226,23 @@ unsigned int generateXML(char* message_buffer, const ros_rpc_gen_command* gen_ar
 	}
 	return buf_index;
 }
+
+
+
+
+inline unsigned int uintegerGen(void (output)(char),unsigned int number)
+{
+	unsigned int len=0;
+	//count the places
+	unsigned int a=10;
+	while(number/a)a*=10;
+	a/=10;
+	while(a>0)
+	{
+		output((char)(number/a)+48);
+		number%=a;
+		a/=10;
+		len++;
+	}
+	return len;
+}
