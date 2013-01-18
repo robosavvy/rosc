@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "rosCnode/rosCnode.h"
-#include "debug/debugutilities.h"
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -15,134 +13,65 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "rosCnode/msg_strings.h"
+#include "rosCnode/rosc_string_res/msg_strings.h"
+#include "rosCnode/rosc_com_xml/msg_gen.h"
+#include "rosCnode/rosc_com_base/eth.h"
 
-
-unsigned int xmlTagGen(void (*output)(char), const char* str, str2buf_modes mode, bool gatherSize)
+typedef enum
 {
-	int s;
-	int len;
-	char *strs[3];
-	strs[1]=str;
-	switch(mode)
-	{
-	case S2B_TAG:
-		strs[0]="<";
-		strs[2]=">";
-		break;
-	case S2B_CTAG:
-		strs[0]="</";
-		strs[2]=">";
-		break;
-	case S2B_HTTP_HEAD_FIELD_DESC:
-		strs[0]="";
-		strs[2]=": ";
-		break;
-	case S2B_HTTP_HEAD_FIELD:
-		strs[0]="";
-		strs[2]="\n";
-		break;
-	}
-	for(s=0;s<3;++s)
-	{
-		while (*strs[s] != '\0')
-		{
-			len++;
-			output(*strs[s]);
-			strs[s]++;
-		}
-	}
-	return len;
-}
+	SEND_STATUS_OK,
+	SEND_STATUS_ERROR,
+}send_status_t;
+
+typedef enum
+{
+	XML_SM_OPTAIN_XML_SIZE,
+	XML_SM_SEND_HTTP_HEADER,
+	XML_SM_SEND_XML,
+	XML_SM_SEND_FINISHED
+}XML_SM_SEND_State;
+typedef enum
+{
+	HTTP_SEND_CONTENT_LEN_DESC,
+	HTTP_SEND_CONTENT_LEN_VALUE,
+	HTTP_SEND_HEADER_SEPARATOR,
+}HTTP_SEND_LEN_State;
 
 
-void output(char c)
+
+
+int output(char c)
 {
 	printf("%c",c);
+	return 1;
+}
+
+int output2(char c, int port)
+{
+	printf("%c",c);
+	return 1;
 }
 
 
-//Custom string arrays for the message and header generator
-//Arrays can also be non const. To surpress
-//the warning a type cast should be made when handing
-//them over to the functions.
-
-//custom strings (message)
 const char *custom_msg_str[] =
 {
-	 "/PublishSubscribeTest",
+	 "custom_tag",
+	 "custom_text",
+	 "http://myHost:"
 };
-
-//custom strings (header)
- char *custom_header_str[] =
-{
-	"http://localhost:",
-	"custom_desc",
-	"custom_val"
-};
-
-
-int main()
-{
-	printf("\n %i",xmlTagGen(&output,"narf",S2B_CTAG));
-	return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//message and header output buffer
-char buf_header[150];
-char buf_msg[850];
-
-/* For the xml generator array I suggest using the following structure:
-*
-* Adding the RPC_CT macro infront of a tag creates a closing tag
-*/
-//	<methodCall>
-//		<methodName>hasParam</methodName>
-//		<params>
-//			<param>
-//				<value>/PublishSubscribeTest</value>
-//			</param>
-//			<param>
-//				<value>/tcp_keepalive</value>
-//			</param>
-//		</params>
-//	</methodCall>
 ros_rpc_gen_command msg_gen_array[]=
 {
 RPC_STDTXT_XML_DEF,
-
 RPC_TAG_METHODCALL,
-
 	RPC_TAG_METHODNAME,
 		RPC_STDTXT_HASPARAM,
 	RPC_CT RPC_TAG_METHODNAME,
-
 	RPC_TAG_PARAMS,
-
 		RPC_TAG_PARAM,
-			RPC_TAG_VALUE,
-				RPC_CUSTOM_TEXT+0,
-			RPC_CT RPC_TAG_VALUE,
-		RPC_CT RPC_TAG_PARAM ,
-
-		RPC_TAG_PARAM,
-			RPC_TAG_VALUE,
-				RPC_STDTXT_HASPARAM,
-			RPC_CT RPC_TAG_VALUE,
+			RPC_CUSTOM_TAG +0,
+				RPC_CUSTOM_TEXT +1,
+				RPC_UINT_NUMBER +900,
+			RPC_CT RPC_CUSTOM_TAG +0,
 		RPC_CT RPC_TAG_PARAM ,
 	RPC_CT RPC_TAG_PARAMS,
 RPC_CT RPC_TAG_METHODCALL,
@@ -151,486 +80,269 @@ RPC_GENERATOR_FINISH
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * The positive values given in this enum are the controlling signals for the XML
- * Parser. Any negative value will stop the parser and return the parsing function+
- * the negative value.
- */
-typedef enum
+http_head_gen_command http_gen_array[]=
 {
-	XML_PARSE_ACT_RETURN_GENERAL_FAILURE=0, //!< This will stop the parser and make it return 0
+	//![Standard header descriptor and value]
+	HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
+		HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
+	//![Standard header descriptor and value]
 
-	XML_PARSE_ACT_GO_AHEAD=1, //!< This will advice the parser to go on with parsing
+	HTTP_HEADER_GEN_DESC_HOST,
+		HTTP_HEADER_GEN_VAL_CUSTOM +2, 		   	//"http://myHost:" from custom array position 0
+		HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
+		HTTP_HEADER_GEN_CUSTOM_TEXT_END, 	   	//header line end
 
-	 /**
-	  * When this is sent to the parser it will skip
-	  * everything which is inside the current tag
-	  * (if this is not called after a tag, it has the
-	  * same effect as GO_AHEAD)
-	  */
-	XML_PARSE_ACT_SKIP_TAG,      //!< XML_PARSE_ACT_SKIP_TAG
+	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
+		HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
 
-	/**
-	 *  When this is sent to the parser it will skip the current attribute
-	 *  (if no attribute was found before, this has the same effect as GO_AHEAD)
-	 */
-	XML_PARSE_ACT_SKIP_ATTRIBUTE,//!< XML_PARSE_ACT_SKIP_ATTRIBUTE
-
-}parserAction;
+	HTTP_HEADER_GEN_END					//Empty Line(Header End)
+};
 
 
-
-
-unsigned int XMLRPCparse(char **buffer, void (*parseHandler)(unsigned int parseEvent, const char *buffer, int *parserAction))
+send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_array, const http_head_gen_command* http_gen_array, const char **custom_string_array)
 {
-	seekString(buffer,http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN,parse_separators[PARSE_METHOD_SEP_HTTP_HEADER],1);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int main4()
-{
-	char* str=
-			    "POST / HTTP/1.1\n"
-	    		"User-Agent:askfhasdf\n"
-	    		"Host: sdfd-10: 34534\n"
-	    		"Content-Type: text/xml\n"
-	    		"Content-Length:289\n\n"
-
-	    		"<?xml version=\"1.0\"?>\n"
-	    		"<methodCall><methodName>registerPublisher</methodName>\n"
-	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
-
-	printf(" narf %i\n",parseHttpMethod((const char**)&str,http_methods));
-
-	return 0;
-}
-
-
-
-void getParserState(unsigned int parseEvent, const char *buffer, int *parseAction)
-{
-
-}
-
-unsigned int parseXML(const char **buffer, void (*parseHandler)(unsigned int parseEvent, const char *buffer, int *parserAction))
-{
-
-	bool parse=true;
-	int event=__XML_PARSE_EVENT_NO_EVENT;
-	int action=XML_PARSE_ACT_GO_AHEAD;
-	char curchr;
-
-	for(;parse;++(*buffer))
+	XML_SM_SEND_State xml_state=XML_SM_OPTAIN_XML_SIZE;
+	HTTP_SEND_LEN_State http_state=HTTP_SEND_CONTENT_LEN_DESC;
+	const char *outstring;
+	int outmode;
+	unsigned int number;
+	unsigned int xml_len=0;
+	ros_rpc_gen_command* xml_gen_ptr=xml_gen_array;
+	int header_command=*http_gen_array; //TODO REMOVE THIS AND USE THE DIRECT VARIABLE
+
+	while(xml_state != XML_SM_SEND_FINISHED)
 	{
-		curchr=**buffer;
-		if(curchr>0x1F)
+		switch(xml_state)
+		{
+		case XML_SM_OPTAIN_XML_SIZE:
+		case XML_SM_SEND_XML:
 		{
 
-		}
-		else
-		{
-			if(curchr>0x00) //Unusual white space character
+			int command=*xml_gen_ptr;
+			/*
+			 * UNSIGNED INTEGER
+			 */
+			if(command>=RPC_UINT_NUMBER)
 			{
+				number=command-RPC_UINT_NUMBER;
+				outmode=-1;
+			}
+			/*
+			 * TEXT FIELD
+			 */
+			else if(command>=__RPC_STDTEXT_START-1) //Add text
+			{
+				if(command>=RPC_CUSTOM_TEXT)
+				{
+					outstring=custom_string_array[command-RPC_CUSTOM_TEXT];
+					outmode=S2B_NORMAL;
+				}
+				else
+				{
+					outstring=rpc_xml_stdtext[command-__RPC_STDTEXT_START-1];
+					outmode=S2B_NORMAL;
+				}
+			}
+			/*
+			 * CLOSING TAG
+			 */
+			else if(command>=RPC_CLOSE_TAG)
+			{
+				if(command>=RPC_CUSTOM_TAG+RPC_CLOSE_TAG)
+				{
+					outstring=custom_string_array[command-RPC_CUSTOM_TAG-RPC_CLOSE_TAG];
+					outmode=S2B_CTAG;
+				}
+				else
+				{
+					outstring=rpc_xml_tag_strings[command-__RPC_TAGS_START-1-RPC_CLOSE_TAG];
+					outmode=S2B_CTAG;
+				}
+			}
+			/*
+			 * OPENING TAG
+			 */
+			else if(command>=__RPC_TAGS_START-1)
+			{
+				if(command>=RPC_CUSTOM_TAG)
+				{
+					outstring=custom_string_array[command-RPC_CUSTOM_TAG];
+					outmode=S2B_TAG;
+				}
+				else
+				{
+					outstring=rpc_xml_tag_strings[command-__RPC_TAGS_START-1];
+					outmode=S2B_TAG;
+				}
+			}
+
+
+
+			if(command==RPC_GENERATOR_FINISH)
+			{
+				if(xml_state==XML_SM_OPTAIN_XML_SIZE)
+				{
+					//Reset it array pointer back to the start for generation
+					xml_gen_ptr=xml_gen_array;
+					xml_state=XML_SM_SEND_HTTP_HEADER;
+				}
+				else if(xml_state==XML_SM_SEND_XML)
+				{
+					xml_state=XML_SM_SEND_FINISHED;
+				}
+
+				continue;
+			}
+
+			xml_gen_ptr++;
+			command=*xml_gen_ptr;
+		}
+
+
+		break;
+	case XML_SM_SEND_HTTP_HEADER:
+
+
+
+			if(header_command == HTTP_HEADER_GEN_CUSTOM_TEXT_END)
+			{
+				outmode=S2B_NORMAL;
+				outstring="\n";
+			}
+			else if(header_command>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
+			{
+				number=header_command-HTTP_HEADER_GEN_VAL_UINT_NUMBER;
+				//int2buf(message_buffer,&buf_index,number);
+				outmode=-1;
+			}
+			else if(header_command>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
+			{
+				//str2buf(&buf_index,message_buffer,custom_string_array[header_command-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_NORMAL);
+				outstring=custom_string_array[header_command-HTTP_HEADER_GEN_VAL_CUSTOM];
+				outmode=S2B_NORMAL;
+			}
+			else if(header_command>=__HTTP_HEADER_GEN_VAL_START) //Print std value
+			{
+				//str2buf(&buf_index,message_buffer,http_header_stdtext[header_command-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
+				outstring=http_header_stdtext[header_command-__HTTP_HEADER_GEN_VAL_START-1];
+				outmode=S2B_HTTP_HEAD_FIELD;
+			}
+			else if(header_command>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
+			{
+				//str2buf(&buf_index,message_buffer,custom_string_array[header_command-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
+				outstring=custom_string_array[header_command-HTTP_HEADER_GEN_DESC_CUSTOM];
+				outmode=S2B_HTTP_HEAD_FIELD_DESC;
+			}
+			else if(header_command>=__HTTP_HEADER_GEN_DESC_START) //Print std descriptor
+			{
+				//str2buf(&buf_index,message_buffer,http_header_descriptors[header_command-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
+				outstring=http_header_descriptors[header_command-__HTTP_HEADER_GEN_DESC_START-1];
+				outmode=S2B_HTTP_HEAD_FIELD_DESC;
+			}
+
+
+
+			if(header_command==HTTP_HEADER_GEN_END)
+			{
+				switch (http_state) {
+					case HTTP_SEND_CONTENT_LEN_DESC:
+						outstring=http_header_descriptors[HTTP_HEADER_GEN_DESC_CONTENT_LENGTH-__HTTP_HEADER_GEN_DESC_START-1];
+						outmode=S2B_HTTP_HEAD_FIELD_DESC;
+						http_state=HTTP_SEND_CONTENT_LEN_VALUE;
+						break;
+					case HTTP_SEND_CONTENT_LEN_VALUE:
+						number=xml_len;
+						outmode=-1;
+						http_state=HTTP_SEND_HEADER_SEPARATOR;
+						break;
+					case HTTP_SEND_HEADER_SEPARATOR:
+						outstring="\n\n";
+						outmode=HTTP_HEADER_GEN_VAL_CUSTOM;
+						xml_state=XML_SM_SEND_XML;
+						break;
+
+					default:
+						break;
+				}
 
 			}
 			else
 			{
-
+				http_gen_array++;
+				header_command=*http_gen_array;
 			}
-		}
+		break;
 
-		if(event!=__XML_PARSE_EVENT_NO_EVENT)
+	}
+
+	if(outmode<0)
+	{
+		unsigned int a=10;
+		while(number/a)a*=10;
+		a/=10;
+		while(a>0)
 		{
-
-			parseHandler(event, buffer, &action);
-			event=__XML_PARSE_EVENT_NO_EVENT;
+			if(xml_state==XML_SM_OPTAIN_XML_SIZE) xml_len++;
+			else output((char)(number/a)+48); //TODO change this to sending function with port
+			number%=a;
+			a/=10;
 		}
+	}
+	else
+	{
+			int s;
+			char *strs[3];
+			strs[1]=(char*)outstring;
+			switch(outmode)
+			{
+			case S2B_TAG:
+				strs[0]="<";
+				strs[2]=">";
+				break;
+			case S2B_CTAG:
+				strs[0]="</";
+				strs[2]=">";
+				break;
+			case S2B_HTTP_HEAD_FIELD_DESC:
+				strs[0]="";
+				strs[2]=": ";
+				break;
+			case S2B_HTTP_HEAD_FIELD:
+				strs[0]="";
+				strs[2]="\n";
+				break;
+			case S2B_NORMAL:
+				strs[0]="";
+				strs[2]="";
+				break;
+			}
+			for(s=0;s<3;++s)
+			{
+				while (*strs[s] != '\0')
+				{
+					if(xml_state==XML_SM_SEND_XML || xml_state==XML_SM_SEND_HTTP_HEADER) output(*strs[s]); //TODO change this to sending function with port
+					else xml_len++;
+					strs[s]++;
+				}
+			}
+	}
+
+
+
+
 
 
 
 	}
+	return SEND_STATUS_OK;
+}
 
+
+
+int main()
+{
+	printf("\n %i",sendXMLMessage(0,msg_gen_array,http_gen_array,custom_msg_str));
 	return 0;
 }
 
 
-
-
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
-int handle(int event)
-{
-	printf("Handler received %i\n", event);
-	return true;
-}
-
-int main2()
-{
-	   char* str=
-			    "POST / HTTP/1.1\n"
-	    		"User-Agent:askfhasdf\n"
-	    		"Host: sdfd-10: 34534\n"
-	    		"Content-Type: text/xml\n"
-	    		"Content-Length:289\n\n"
-
-	    		"<?xml version=\"1.0\"?>\n"
-	    		"<methodCall><methodName>registerPublisher</methodName>\n"
-	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
-
-	unsigned int len=strlen(str);
-
-
-
-	//stringParse(str,len, &handle, PARSER_BEGIN);
-
-	const char *lala[]=
-	{
-			"ass",
-			"dnampf",
-			"gnampf1",
-			"gnampf2",
-			"narf",
-			"sampf"
-	};
-
-
-	const char *buffer="narf";
-	const char *buffer2="\n";
-
-
-	int ret=seekString(&buffer,lala,sizeof(lala)/sizeof(char*),"<>\n ",true);
-	printf("Word %i %c \n",ret, *(buffer));
-
-
-	ret=seekString(&buffer2,lala,sizeof(lala)/sizeof(char*),"<>\n ",false);
-	printf("Word %i %c \n",ret, *(buffer));
-
-
-	return 0;
-}
-
-int main3(void)
-{
-
-	//Custom string arrays for the message and header generator
-	//Arrays can also be non const. To surpress
-	//the warning a type cast should be made when handing
-	//them over to the functions.
-
-	//custom strings (message)
-	const char *custom_msg_str[] =
-	{
-		 "/PublishSubscribeTest",
-	};
-
-	//custom strings (header)
-	 char *custom_header_str[] =
-	{
-		"http://localhost:",
-		"custom_desc",
-		"custom_val"
-	};
-
-	 //message and header output buffer
-	char buf_header[150];
-	char buf_msg[850];
-
-	/* For the xml generator array I suggest using the following structure:
-	 *
-	 * Adding the RPC_CT macro infront of a tag creates a closing tag
-	 */
-//	<methodCall>
-//		<methodName>hasParam</methodName>
-//		<params>
-//			<param>
-//				<value>/PublishSubscribeTest</value>
-//			</param>
-//			<param>
-//				<value>/tcp_keepalive</value>
-//			</param>
-//		</params>
-//	</methodCall>
-	ros_rpc_gen_command msg_gen_array[]=
-	{
-	RPC_STDTXT_XML_DEF,
-
-	RPC_TAG_METHODCALL,
-
-		RPC_TAG_METHODNAME,
-			RPC_STDTXT_HASPARAM,
-		RPC_CT RPC_TAG_METHODNAME,
-
-		RPC_TAG_PARAMS,
-
-			RPC_TAG_PARAM,
-				RPC_TAG_VALUE,
-					RPC_CUSTOM_TEXT+0,
-				RPC_CT RPC_TAG_VALUE,
-			RPC_CT RPC_TAG_PARAM ,
-
-			RPC_TAG_PARAM,
-				RPC_TAG_VALUE,
-					RPC_STDTXT_HASPARAM,
-				RPC_CT RPC_TAG_VALUE,
-			RPC_CT RPC_TAG_PARAM ,
-		RPC_CT RPC_TAG_PARAMS,
-	RPC_CT RPC_TAG_METHODCALL,
-	RPC_GENERATOR_FINISH
-	};
-
-	unsigned int msglen=generateXML(buf_msg, msg_gen_array, custom_msg_str);
-
-	/*
-	 * And for the header generator array I suggest using the following structure:
-	 * Descriptor
-	 * \t Value,
-	 *
-	 * and for custom values:
-	 * Descriptor,
-	 * \t Custom text or int
-	 * \t Custom text or int
-	 * \t Custom text end
-	 *
-	 * as seen down here
-	 */
-	http_head_gen_command http_gen_array[]=
-	{
-		HTTP_HEADER_GEN_VAL_POST_HTTP_1_1,
-		HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
-			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,//XMLRPC ROSc-NodeLib
-
-		HTTP_HEADER_GEN_DESC_HOST,
-			HTTP_HEADER_GEN_VAL_CUSTOM+0, 		  //"http://myHost:" from custom array position 0
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+11311,//generate string number 11311
-			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 	  //header line end
-
-		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
-			HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
-
-
-		HTTP_HEADER_GEN_DESC_CONTENT_LENGTH, 		//Content Length:
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+msglen,	//Length of Message (generated:150)
-			HTTP_HEADER_GEN_CUSTOM_TEXT_END, 		//header line end
-
-
-		HTTP_HEADER_GEN_END							//Empty Line(Header End)
-	};
-
-	/*
-	 * If the array for the custom strings isn't const add a cast to (const char**)
-	 */
-	unsigned int headerlen=generateHTTPHeader(buf_header,http_gen_array,(const char**)custom_header_str);
-
-	//Just to have some output print the buffers to stdout
-	printbuffer(buf_header,headerlen);
-	printbuffer(buf_msg,msglen);
-
-
-
-	int sockfd = 0, n = 0;
-	    char recvBuff[1024];
-	    struct sockaddr_in serv_addr;
-
-	    memset(recvBuff, '0',sizeof(recvBuff));
-	    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-	    {
-	        printf("\n Error : Could not create socket \n");
-	        return 1;
-	    }
-
-	    memset(&serv_addr, '0', sizeof(serv_addr));
-
-	    serv_addr.sin_family = AF_INET;
-	    serv_addr.sin_port = htons(11311);
-
-	    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0)
-	    {
-	        printf("\n inet_pton error occured\n");
-	        return 1;
-	    }
-
-	    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-	    {
-	       printf("\n Error : Connect Failed \n");
-	       return 1;
-	    }
-
-//	    //printf("sending\n");
-//	    char *teststr=buf_header;
-//	    write(sockfd,teststr,headerlen);
-//	    teststr=buf_msg;
-//	    write(sockfd,teststr,msglen);
-//
-//char *teststr="POST / HTTP/1.1\n"  //CASE SENSITIVE!
-//	    		"User-Agent:askfhasdf\n"  //whatever: doesn't give a shit
-//	    		"Host: sdfd-10: 34534\n"    //wrong port: doesn't give a shit,
-//	    		"Content-Type: text/xml\n"
-//	    		"Content-Length:289\n\n"
-//
-//
-//	    		"<?xml version=\"1.0\"?>\n";
-//	    write(sockfd,teststr,strlen(teststr));
-
-//	    printf("zzzzz!");
-//	    sleep(4);
-
-
-
-
-
-
-
-
-//	exit(0);
-
-
-	   char* teststr=
-			    "POST / HTTP/1.1\n"
-	    		"User-Agent:askfhasdf\n"
-	    		"Host: sdfd-10: 34534\n"
-	    		"Content-Type: text/xml\n"
-	    		"Content-Length:289\n\n"
-
-	    		"<?xml version=\"1.0\"?>\n"
-	    		"<methodCall><methodName>registerPublisher</methodName>\n"
-	    		"<params><param><value>/PublishSubscribeTest</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://ROS:35552/</value></param></params></methodCall>";
-
-
-
-	   write(sockfd,teststr,strlen(teststr));
-
-	    printf("\n\n:::::::::::RESPONSE:::::::::::::\n\n");
-
-
-
-	    while (1)
-	    {
-	    	n = read(sockfd, recvBuff, sizeof(recvBuff)-1);
-
-	    	if(n>1)
-	    	{
-	    		recvBuff[n]=0;
-	    		printf("%s",recvBuff);
-	    		return 0;
-	    	}
-	    }
-
-	    if(n < 0)
-	    {
-	        printf("\n Read error \n");
-	    }
-	return 0;
-}
