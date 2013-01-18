@@ -22,7 +22,6 @@
  */
 
 #include "msg_gen.h"
-#include "msg_strings.h"
 
 void str2buf(unsigned int *index, char* buffer, const char* str, str2buf_modes mode)
 {
@@ -88,43 +87,43 @@ unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_comman
 	const char *outstring;
 	int outmode;
 	unsigned int number;
-	int command=*gen_array;
+	int header_command=*gen_array;
 
-	while(command != HTTP_HEADER_GEN_END)
+	while(header_command != HTTP_HEADER_GEN_END)
 	{
-		if(command == HTTP_HEADER_GEN_CUSTOM_TEXT_END)
+		if(header_command == HTTP_HEADER_GEN_CUSTOM_TEXT_END)
 		{
 			outmode=S2B_NORMAL;
 			outstring="\n";
 		}
-		else if(command>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
+		else if(header_command>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
 		{
-			number=command-HTTP_HEADER_GEN_VAL_UINT_NUMBER;
+			number=header_command-HTTP_HEADER_GEN_VAL_UINT_NUMBER;
 			//int2buf(message_buffer,&buf_index,number);
 			outmode=-1;
 		}
-		else if(command>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
+		else if(header_command>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
 		{
-			//str2buf(&buf_index,message_buffer,custom_string_array[command-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_NORMAL);
-			outstring=custom_string_array[command-HTTP_HEADER_GEN_VAL_CUSTOM];
+			//str2buf(&buf_index,message_buffer,custom_string_array[header_command-HTTP_HEADER_GEN_VAL_CUSTOM],S2B_NORMAL);
+			outstring=custom_string_array[header_command-HTTP_HEADER_GEN_VAL_CUSTOM];
 			outmode=S2B_NORMAL;
 		}
-		else if(command>=__HTTP_HEADER_GEN_VAL_START) //Print std value
+		else if(header_command>=__HTTP_HEADER_GEN_VAL_START) //Print std value
 		{
-			//str2buf(&buf_index,message_buffer,http_header_stdtext[command-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
-			outstring=http_header_stdtext[command-__HTTP_HEADER_GEN_VAL_START-1];
+			//str2buf(&buf_index,message_buffer,http_header_stdtext[header_command-HTTP_HEADER_VALUE_BEGIN],S2B_HTTP_HEAD_FIELD);
+			outstring=http_header_stdtext[header_command-__HTTP_HEADER_GEN_VAL_START-1];
 			outmode=S2B_HTTP_HEAD_FIELD;
 		}
-		else if(command>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
+		else if(header_command>=HTTP_HEADER_GEN_DESC_CUSTOM) //Print custom descriptor
 		{
-			//str2buf(&buf_index,message_buffer,custom_string_array[command-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
-			outstring=custom_string_array[command-HTTP_HEADER_GEN_DESC_CUSTOM];
+			//str2buf(&buf_index,message_buffer,custom_string_array[header_command-HTTP_HEADER_GEN_DESC_CUSTOM],S2B_HTTP_HEAD_FIELD_DESC);
+			outstring=custom_string_array[header_command-HTTP_HEADER_GEN_DESC_CUSTOM];
 			outmode=S2B_HTTP_HEAD_FIELD_DESC;
 		}
-		else if(command>=__HTTP_HEADER_GEN_DESC_START) //Print std descriptor
+		else if(header_command>=__HTTP_HEADER_GEN_DESC_START) //Print std descriptor
 		{
-			//str2buf(&buf_index,message_buffer,http_header_descriptors[command-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
-			outstring=http_header_descriptors[command-__HTTP_HEADER_GEN_DESC_START-1];
+			//str2buf(&buf_index,message_buffer,http_header_descriptors[header_command-HTTP_HEADER_DESC_BEGIN],S2B_HTTP_HEAD_FIELD_DESC);
+			outstring=http_header_descriptors[header_command-__HTTP_HEADER_GEN_DESC_START-1];
 			outmode=S2B_HTTP_HEAD_FIELD_DESC;
 		}
 
@@ -138,7 +137,7 @@ unsigned int generateHTTPHeader(char* message_buffer, const http_head_gen_comman
 		}
 
 		gen_array++;
-		command=*gen_array;
+		header_command=*gen_array;
 	}
 	//Finish Header with empty line
 	message_buffer[buf_index]='\n';

@@ -129,17 +129,16 @@ extern const char *rpc_xml_tag_strings[];
 /**
  * Length of the string array http_methods
  */
-#define HTTP_METHODS_LEN 	2
+#define HTTP_METHODS_LEN 	1
 
 /**
- * Macro for inserting http method strings string numbers into any enum
+ * Macro for inserting method strings string numbers into any enum
  */
 #define __HTTP_METHODS(ENUM) \
-	 ENUM ## _METHOD_HTTP, \
 	 ENUM ## _METHOD_POST
 
 /**
- * This array contains the strings for http method strings
+ * This array contains the strings for method strings
  */
 extern const char *http_methods[];
 

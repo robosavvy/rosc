@@ -40,8 +40,8 @@ if __name__ == '__main__':
         dataMap = yaml.load(stringDefFile)
 
     #Open header and source for generating them
-    with open(currentPath + "/../src/rosCnode/msg_strings.h", mode='w') as headerfile:
-        with open(currentPath + "/../src/rosCnode/msg_strings.c", mode='w') as sourcefile:
+    with open(currentPath + "/../src/rosCnode/rosc_string_res/msg_strings.h", mode='w') as headerfile:
+        with open(currentPath + "/../src/rosCnode/rosc_string_res/msg_strings.c", mode='w') as sourcefile:
             #Write file headers
             headerfile.write('/*\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                    currentComment==0 or 
                    currentStringDict==0 or
                    currentDefineShort==0):
-                    print "Error missing specification for variable: ", item
+                    print("Error missing specification for variable: ", item)
                     exit(1)
                     
                 #String list extraction and sorting

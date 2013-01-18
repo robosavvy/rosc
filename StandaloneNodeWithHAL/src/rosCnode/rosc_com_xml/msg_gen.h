@@ -153,7 +153,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "msg_strings.h"
+#include "../rosc_string_res/msg_strings.h"
 
 #define CUSTOM_STRINGS_MAX 50
 

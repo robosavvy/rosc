@@ -25,7 +25,7 @@
 #define MSG_PARSE_H_
 
 #include <stdbool.h>
-#include "msg_strings.h"
+#include "../rosc_string_res/msg_strings.h"
 
 #define TAG_BUFFER_SIZE 25
 

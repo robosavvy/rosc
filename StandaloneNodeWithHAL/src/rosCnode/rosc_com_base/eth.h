@@ -27,7 +27,7 @@
 #include <inttypes.h>
 
 typedef unsigned char ip_address_t[4];
-
+typedef uint16_t port_id;
 
 /**
  * This function opens a port for listening.
@@ -36,7 +36,7 @@ typedef unsigned char ip_address_t[4];
  * @return Port identifier, if 0 opening a port was not possible.
  *
  */
-uint16_t listenPort(uint16_t port);
+port_id listenPort(uint16_t port);
 
 /**
  * This function connects to a server
@@ -45,14 +45,14 @@ uint16_t listenPort(uint16_t port);
  * @param local_port The port on the local system, if 0 is supplied it will take the next free port.
  * @return Port identifier, if 0 connection was not possible.
  */
-uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t local_port);
+port_id connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t local_port);
 
 
 /**
  * Closes a port with the ID
  * @param portID
  */
-void closeConnection(uint16_t portID);
+void closeConnection(port_id portID);
 
 /**
  * This function receives data from a port when available and returns the data length.
@@ -62,7 +62,7 @@ void closeConnection(uint16_t portID);
  * @param buffersize
  * @return number of received bytes
  */
-uint32_t receiveFromPort(uint16_t portID, char* buffer, uint32_t buffersize);
+uint32_t receiveFromPort(port_id portID, char* buffer, uint32_t buffersize);
 
 /**
  * This function transmittes something over a open port
@@ -71,6 +71,6 @@ uint32_t receiveFromPort(uint16_t portID, char* buffer, uint32_t buffersize);
  * @param len length of the output buffer
  * @return number of transmitted bytes
  */
-uint32_t sendToPort(uint16_t portID, char* buffer, uint32_t len);
+uint32_t sendToPort(port_id portID, char* buffer, uint32_t len);
 
 #endif /* ETH_H_ */
