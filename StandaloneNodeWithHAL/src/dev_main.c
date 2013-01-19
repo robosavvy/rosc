@@ -65,33 +65,31 @@ ip_address_t system_ip={192,168,0,14};
 ip_address_t master_ip={192,168,0,14};
 port_t master_port=11311;
 
+
+//ros_rpc_gen_command xmlrpc_master_keepalive_msg[]=
+//{
+//RPC_STDTXT_XML_DEF,
+//RPC_TAG_METHODCALL,
+//	RPC_TAG_METHODNAME,
+//		RPC_STDTXT_HASPARAM,
+//	RPC_CT RPC_TAG_METHODNAME,
+//	RPC_TAG_PARAMS,
+//		RPC_TAG_PARAM,
+//			RPC_STDTXT_TCP_KEEPALIVE,
+//		RPC_CT RPC_TAG_PARAM ,
+//	RPC_CT RPC_TAG_PARAMS,
+//RPC_CT RPC_TAG_METHODCALL,
+//RPC_GENERATOR_FINISH
+//};
+
 int main()
 {
-	http_head_gen_command xmlrpc_http_std_header_2[]=
-	{
-		HTTP_HEADER_GEN_VAL_METHOD_POST,
-		HTTP_HEADER_GEN_DESC_USER_AGENT,
-			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
+	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_REQUEST_HTTP_HEADER();
 
-		HTTP_HEADER_GEN_DESC_HOST,
-			HTTP_HEADER_GEN_VAL_HTTP_URL_HEAD,
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[0],
-			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[1],
-			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[2],
-			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[3],
-			HTTP_HEADER_GEN_SINGLE_CHAR+':',
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_port,
+	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_KEEPALIVE();
 
-		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
-			HTTP_HEADER_GEN_VAL_TEXT_XML,
-
-		HTTP_HEADER_GEN_END
-	};
 	auto_aquire_system_ip();
-	printf("\n %i",sendXMLMessage(0,xmlrpc_master_keepalive_msg,xmlrpc_http_std_header_2,custom_msg_str));
+	printf("\n %i",sendXMLMessage(0,xmlrpc_keepalive, xmlrpc_http_std_header_2,custom_msg_str));
 	return 0;
 }
 

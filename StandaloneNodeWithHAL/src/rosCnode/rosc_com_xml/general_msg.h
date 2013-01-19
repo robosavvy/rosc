@@ -33,12 +33,68 @@
 #ifndef GENERAL_MSG_H_
 #define GENERAL_MSG_H_
 
+//TODO MOVE TO MAKEFILE STUFF....
+#define __ROS_C_VERSION__MAJOR__ 0
+#define __ROS_C_VERSION__MINOR__ 1
+
+
+
 #include "../rosc_string_res/msg_strings.h"
 #include "../rosc_com_xml/msg_gen.h"
 
+/**
+ * This macro is for initializing the standard xmlrpc http header
+ */
+#define XMLRPC_REQUEST_HTTP_HEADER()\
+	{\
+		HTTP_HEADER_GEN_VAL_METHOD_POST,\
+		HTTP_HEADER_GEN_DESC_USER_AGENT,\
+			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,\
+			HTTP_HEADER_GEN_SINGLE_CHAR+' ',\
+			HTTP_HEADER_GEN_SINGLE_CHAR+'V',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+__ROS_C_VERSION__MAJOR__,\
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+__ROS_C_VERSION__MINOR__,\
+\
+		HTTP_HEADER_GEN_DESC_HOST,\
+			HTTP_HEADER_GEN_VAL_HTTP_URL_HEAD,\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[0],\
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[1],\
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[2],\
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[3],\
+			HTTP_HEADER_GEN_SINGLE_CHAR+':',\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_port,\
+\
+		HTTP_HEADER_GEN_DESC_ACCEPTED_ENCODING,\
+			HTTP_HEADER_GEN_VAL_TEXT_XML,\
+\
+		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,\
+			HTTP_HEADER_GEN_VAL_TEXT_XML,\
+\
+		HTTP_HEADER_GEN_END\
+	}
 
-extern http_head_gen_command xmlrpc_http_std_header[];
-extern ros_rpc_gen_command xmlrpc_master_keepalive_msg[];
+/**
+ * The XML message defined by this macro sets keepalive option at the master
+ */
+#define XMLRPC_KEEPALIVE()\
+{\
+	RPC_STDTXT_XML_DEF,\
+	RPC_TAG_METHODCALL,\
+		RPC_TAG_METHODNAME,\
+			RPC_STDTXT_HASPARAM,\
+		RPC_CT RPC_TAG_METHODNAME,\
+		RPC_TAG_PARAMS,\
+			RPC_TAG_PARAM,\
+				RPC_STDTXT_TCP_KEEPALIVE,\
+			RPC_CT RPC_TAG_PARAM ,\
+		RPC_CT RPC_TAG_PARAMS,\
+	RPC_CT RPC_TAG_METHODCALL,\
+	RPC_GENERATOR_FINISH\
+}
 
 
 #endif /* GENERAL_MSG_H_ */
