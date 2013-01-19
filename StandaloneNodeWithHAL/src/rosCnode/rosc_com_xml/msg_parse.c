@@ -211,10 +211,12 @@ inline unsigned int parseHttpMethod(const char **buffer, const char **methods)
 				if(state == 1)
 					ret = ires+HTTP_METHOD_PARSE_INVALID+1;
 				if( ires<0 )
+				{
 					if(state == 5)
 						return HTTP_METHOD_PARSE_INVALID;
 					else
 						return HTTP_METHOD_PARSE_UNKNOWN;
+				}
 				break;
 			case 9: case 11://Parse Version String
 				ires=parseStringUInt(buffer,0);
