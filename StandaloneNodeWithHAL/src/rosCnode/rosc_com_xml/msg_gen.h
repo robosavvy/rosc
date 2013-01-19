@@ -182,7 +182,6 @@ typedef enum
 {
 	RPC_GENERATOR_FINISH, //!<Stops the generator at any place
 
-
 	__RPC_TAGS_START,
 	__RPC_XML_TAG_STRINGS(RPC), //!< Places the available tag numbers inside this enum
 	/**
@@ -204,9 +203,18 @@ typedef enum
 	RPC_CUSTOM_TEXT,
 
 	/**
+	 * This commands inserts a single char (useful for generating an IP address)
+	 */
+    RPC_SINGLE_CHAR,
+    __RPC_SINGLE_CHAR_END=RPC_SINGLE_CHAR+256,
+
+
+	/**
 	 * This command inserts a unsigned integer into the message
 	 */
 	RPC_UINT_NUMBER=RPC_CUSTOM_TEXT +CUSTOM_STRINGS_MAX,
+
+
 } ros_rpc_gen_command;
 
 
@@ -216,7 +224,6 @@ typedef enum
 typedef enum
 {
 	HTTP_HEADER_GEN_END=0, //!< This is required on any header generation array end.
-	HTTP_HEADER_GEN_CUSTOM_TEXT_END, //!< This adds a linefeed after custom values
 
 	__HTTP_HEADER_GEN_DESC_START,
 
@@ -245,6 +252,12 @@ typedef enum
 	HTTP_HEADER_GEN_VAL_CUSTOM,
 
 
+
+	/**
+	 * This command will insert a single char
+	 */
+	HTTP_HEADER_GEN_SINGLE_CHAR=HTTP_HEADER_GEN_VAL_CUSTOM+CUSTOM_STRINGS_MAX,
+
 	/**
 	 * This command will add a number to the
 	 * header.
@@ -254,7 +267,7 @@ typedef enum
 	 * the supplied X can be a unsigned integer.
 	 *
 	 */
-	HTTP_HEADER_GEN_VAL_UINT_NUMBER = HTTP_HEADER_GEN_VAL_CUSTOM+CUSTOM_STRINGS_MAX
+	HTTP_HEADER_GEN_VAL_UINT_NUMBER=HTTP_HEADER_GEN_SINGLE_CHAR+256,
 }http_head_gen_command;
 
 

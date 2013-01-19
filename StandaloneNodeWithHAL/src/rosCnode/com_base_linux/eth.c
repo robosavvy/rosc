@@ -43,6 +43,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 
 uint16_t listenPort(uint16_t port)
@@ -103,3 +108,10 @@ uint32_t sendToPort(uint16_t portID, char* buffer, uint32_t len)
 {
 	return write(portID, buffer,len);
 }
+
+
+void auto_aquire_system_ip()
+{
+
+}
+

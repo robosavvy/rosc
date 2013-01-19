@@ -63,6 +63,8 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 	XML_SM_SEND_State xml_state=XML_SM_OPTAIN_XML_SIZE;
 	HTTP_SEND_LEN_State http_state=HTTP_SEND_CONTENT_LEN_DESC;
 	const char *outstring;
+	char singleCharOutput[]={'\0','\0'};
+	bool firstOutputWritten=0;
 	int outmode;
 	unsigned int number;
 	unsigned int xml_len=0;
@@ -86,6 +88,18 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 				number=command-RPC_UINT_NUMBER;
 				outmode=-1;
 			}
+
+			/*
+			 * SINGLE CHAR
+			 */
+			if(command>=RPC_SINGLE_CHAR)
+			{
+				singleCharOutput[0]=command-RPC_SINGLE_CHAR;
+				outstring=singleCharOutput;
+				outmode=S2B_NORMAL;
+
+			}
+
 			/*
 			 * TEXT FIELD
 			 */
@@ -161,18 +175,17 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 		break;
 	case XML_SM_SEND_HTTP_HEADER:
 
-
-
-			if(header_command == HTTP_HEADER_GEN_CUSTOM_TEXT_END)
-			{
-				outmode=S2B_NORMAL;
-				outstring="\n";
-			}
-			else if(header_command>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
+			if(header_command>=HTTP_HEADER_GEN_VAL_UINT_NUMBER)
 			{
 				number=header_command-HTTP_HEADER_GEN_VAL_UINT_NUMBER;
 				//int2buf(message_buffer,&buf_index,number);
 				outmode=-1;
+			}
+			else if(header_command>=HTTP_HEADER_GEN_SINGLE_CHAR)
+			{
+				singleCharOutput[0]=header_command-HTTP_HEADER_GEN_SINGLE_CHAR;
+				outstring=singleCharOutput;
+				outmode=S2B_NORMAL;
 			}
 			else if(header_command>=HTTP_HEADER_GEN_VAL_CUSTOM) //Print custom value, no newline...
 			{
@@ -254,7 +267,7 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 	else
 	{
 			int s;
-			char *strs[3];
+			char *strs[3]={"","",""};
 			strs[1]=(char*)outstring;
 			switch(outmode)
 			{
@@ -267,23 +280,25 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 				strs[2]=">";
 				break;
 			case S2B_HTTP_HEAD_FIELD_DESC:
-				strs[0]="";
+				if(firstOutputWritten)
+				strs[0]="\n";
 				strs[2]=": ";
 				break;
 			case S2B_HTTP_HEAD_FIELD:
-				strs[0]="";
-				strs[2]="\n";
-				break;
 			case S2B_NORMAL:
-				strs[0]="";
-				strs[2]="";
 				break;
 			}
 			for(s=0;s<3;++s)
 			{
 				while (*strs[s] != '\0')
 				{
-					if(xml_state==XML_SM_SEND_XML || xml_state==XML_SM_SEND_HTTP_HEADER) output(*strs[s]); //TODO change this to sending function with port
+
+
+					if(xml_state==XML_SM_SEND_XML || xml_state==XML_SM_SEND_HTTP_HEADER)
+					{
+						firstOutputWritten=true;
+						output(*strs[s]); //TODO change this to sending function with port
+					}
 					else xml_len++;
 					strs[s]++;
 				}

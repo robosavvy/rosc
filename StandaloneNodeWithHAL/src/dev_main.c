@@ -13,9 +13,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "rosCnode/rosc_string_res/msg_strings.h"
-#include "rosCnode/rosc_com_xml/msg_gen.h"
-#include "rosCnode/rosc_com_base/eth.h"
+#include "rosCnode/rosc_com_xml/general_msg.h"
 
 const char *custom_msg_str[] =
 {
@@ -55,7 +53,6 @@ http_head_gen_command http_gen_array[]=
 	HTTP_HEADER_GEN_DESC_HOST,
 		HTTP_HEADER_GEN_VAL_CUSTOM +2, 		   	//"http://myHost:" from custom array position 0
 		HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
-		HTTP_HEADER_GEN_CUSTOM_TEXT_END, 	   	//header line end
 
 	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
 		HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
@@ -65,9 +62,37 @@ http_head_gen_command http_gen_array[]=
 
 
 
+ip_address_t system_ip={192,168,0,14};
+ip_address_t master_ip={192,168,0,14};
+
 int main()
 {
-	printf("\n %i",sendXMLMessage(0,msg_gen_array,http_gen_array,custom_msg_str));
+	http_head_gen_command xmlrpc_http_std_header_2[]=
+	{
+		//![Standard header descriptor and value]
+		HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
+			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
+		//![Standard header descriptor and value]
+
+		HTTP_HEADER_GEN_DESC_HOST,
+			HTTP_HEADER_GEN_VAL_HTTP_URL_HEAD,
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[0],
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[1],
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[2],
+			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[3],
+			HTTP_HEADER_GEN_SINGLE_CHAR+':',
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
+
+		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
+			HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
+
+		HTTP_HEADER_GEN_END					//Empty Line(Header End)
+	};
+	auto_aquire_system_ip();
+	printf("\n %i",sendXMLMessage(0,xmlrpc_master_keepalive_msg,xmlrpc_http_std_header_2,custom_msg_str));
 	return 0;
 }
 
