@@ -107,7 +107,7 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 	int outmode;
 	unsigned int number;
 	unsigned int xml_len=0;
-	ros_rpc_gen_command* xml_gen_ptr=xml_gen_array;
+	ros_rpc_gen_command* xml_gen_ptr=(ros_rpc_gen_command*)xml_gen_array;
 	int header_command=*http_gen_array; //TODO REMOVE THIS AND USE THE DIRECT VARIABLE
 
 	while(xml_state != XML_SM_SEND_FINISHED)
@@ -183,7 +183,7 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 				if(xml_state==XML_SM_OPTAIN_XML_SIZE)
 				{
 					//Reset it array pointer back to the start for generation
-					xml_gen_ptr=xml_gen_array;
+					xml_gen_ptr=(ros_rpc_gen_command *)xml_gen_array;
 					xml_state=XML_SM_SEND_HTTP_HEADER;
 				}
 				else if(xml_state==XML_SM_SEND_XML)
@@ -272,7 +272,11 @@ send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_
 				header_command=*http_gen_array;
 			}
 		break;
-
+	case XML_SM_SEND_FINISHED:
+		//Just surpressing the warning of unhandled state and
+		//be sure if this is ever executed to go back to the loop head
+		continue;
+		break;
 	}
 
 	if(outmode<0)
