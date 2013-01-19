@@ -302,7 +302,7 @@ typedef enum
 }send_status_t;
 
 
-send_status_t sendXMLMessage(port_id portID, const ros_rpc_gen_command* xml_gen_array, const http_head_gen_command* http_gen_array, const char **custom_string_array);
+send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_gen_array, const http_head_gen_command* http_gen_array, const char **custom_string_array);
 
 
 #endif /* MSG_GEN_H_ */

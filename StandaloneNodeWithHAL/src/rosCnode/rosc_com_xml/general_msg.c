@@ -37,10 +37,8 @@
 
 http_head_gen_command xmlrpc_http_std_header[]=
 {
-	//![Standard header descriptor and value]
-	HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
-		HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
-	//![Standard header descriptor and value]
+	HTTP_HEADER_GEN_DESC_USER_AGENT,
+		HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 
 	HTTP_HEADER_GEN_DESC_HOST,
 		HTTP_HEADER_GEN_VAL_HTTP_URL_HEAD,
@@ -52,12 +50,12 @@ http_head_gen_command xmlrpc_http_std_header[]=
 		HTTP_HEADER_GEN_SINGLE_CHAR+'.',
 		HTTP_HEADER_GEN_VAL_UINT_NUMBER,
 		HTTP_HEADER_GEN_SINGLE_CHAR+':',
-		HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
+		HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,
 
-	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
-		HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
+	HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
+		HTTP_HEADER_GEN_VAL_TEXT_XML,
 
-	HTTP_HEADER_GEN_END					//Empty Line(Header End)
+	HTTP_HEADER_GEN_END
 };
 
 

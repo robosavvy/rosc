@@ -49,17 +49,16 @@ extern const char *rpc_xml_attribute_strings[];
 /**
  * Length of the string array http_header_stdtext
  */
-#define HTTP_HEADER_STDTEXT_LEN 	8
+#define HTTP_HEADER_STDTEXT_LEN 	7
 
 /**
  * Macro for inserting some standard values for http headers string numbers into any enum
  */
 #define __HTTP_HEADER_STDTEXT(ENUM) \
-	 ENUM ## _VAL_PORT_SEPARATOR, \
 	 ENUM ## _VAL_BASEHTTP_ROSC_NODELIB, \
-	 ENUM ## _VAL_HTTP_1_0, \
+	 ENUM ## _VAL_REPLY_HTTP, \
 	 ENUM ## _VAL_OK, \
-	 ENUM ## _VAL_POST_HTTP_1_1, \
+	 ENUM ## _VAL_METHOD_POST, \
 	 ENUM ## _VAL_XMLRPC_ROSC_NODELIB, \
 	 ENUM ## _VAL_HTTP_URL_HEAD, \
 	 ENUM ## _VAL_TEXT_XML
@@ -167,14 +166,13 @@ extern const char *parse_separators[];
 /**
  * Length of the string array rpc_xml_stdtext
  */
-#define RPC_XML_STDTEXT_LEN 	11
+#define RPC_XML_STDTEXT_LEN 	10
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
  */
 #define __RPC_XML_STDTEXT(ENUM) \
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
-	 ENUM ## _STDTXT_PORT_SEPARATOR, \
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
 	 ENUM ## _STDTXT_HASPARAM, \

@@ -12,11 +12,10 @@ const char *rpc_xml_attribute_strings[] =
 
 const char *http_header_stdtext[] =
 {
-	":",
 	"BaseHTTP/ROSc-NodeLib",
 	"HTTP/1.0",
 	"OK",
-	"POST/HTTP/1.1",
+	"POST / HTTP/1.1",
 	"XMLRPC ROSc-NodeLib",
 	"http://",
 	"text/xml"
@@ -71,7 +70,6 @@ const char *parse_separators[] =
 const char *rpc_xml_stdtext[] =
 {
 	"/tcp_keepalive",
-	":",
 	"<?xml version=\"1.0\"?>",
 	"Error code",
 	"hasParam",

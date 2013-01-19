@@ -61,18 +61,17 @@ http_head_gen_command http_gen_array[]=
 };
 
 
-
 ip_address_t system_ip={192,168,0,14};
 ip_address_t master_ip={192,168,0,14};
+port_t master_port=11311;
 
 int main()
 {
 	http_head_gen_command xmlrpc_http_std_header_2[]=
 	{
-		//![Standard header descriptor and value]
-		HTTP_HEADER_GEN_DESC_USER_AGENT,			//User-Agent:
-			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,	//XMLRPC ROSc-NodeLib
-		//![Standard header descriptor and value]
+		HTTP_HEADER_GEN_VAL_METHOD_POST,
+		HTTP_HEADER_GEN_DESC_USER_AGENT,
+			HTTP_HEADER_GEN_VAL_XMLRPC_ROSC_NODELIB,
 
 		HTTP_HEADER_GEN_DESC_HOST,
 			HTTP_HEADER_GEN_VAL_HTTP_URL_HEAD,
@@ -84,12 +83,12 @@ int main()
 			HTTP_HEADER_GEN_SINGLE_CHAR+'.',
 			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[3],
 			HTTP_HEADER_GEN_SINGLE_CHAR+':',
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER +11311,		//generate string number 11311
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_port,
 
-		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,			//Content Type:
-			HTTP_HEADER_GEN_VAL_TEXT_XML,			//text/xml
+		HTTP_HEADER_GEN_DESC_CONTENT_TYPE,
+			HTTP_HEADER_GEN_VAL_TEXT_XML,
 
-		HTTP_HEADER_GEN_END					//Empty Line(Header End)
+		HTTP_HEADER_GEN_END
 	};
 	auto_aquire_system_ip();
 	printf("\n %i",sendXMLMessage(0,xmlrpc_master_keepalive_msg,xmlrpc_http_std_header_2,custom_msg_str));

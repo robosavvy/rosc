@@ -62,6 +62,7 @@ rpc_xml_stdtext:
       registerSubscriber,
       requestTopic,
       '/tcp_keepalive': TCP_KEEPALIVE,
+      'http://': HTTP_URL_HEAD,
       unregisterPublisher,
       unregisterSubscriber,
   }
@@ -92,11 +93,12 @@ http_header_stdtext:
   defineShort:
     'VAL'
   stringlist: {
-    'POST/HTTP/1.1',
-    'HTTP/1.0',
+    'POST / HTTP/1.1':METHOD_POST,
+    'HTTP/1.0':REPLY_HTTP,
     'XMLRPC ROSc-NodeLib',
     'BaseHTTP/ROSc-NodeLib',
     'text/xml',
+    'http://':HTTP_URL_HEAD,
     'OK'
   }
 
