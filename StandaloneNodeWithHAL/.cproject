@@ -33,9 +33,10 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1200593268" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.397758100" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1003667628" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
 									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/include/"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.942998728" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -105,8 +106,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="rosc_com_base|rosCnode/rosc_com_base|rosCnode/com_base|examples/example_msg_generation.c|rosCnode/msg_strings_OLD.h|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/rosCnode/rosc_com_base"/>
+						<entry excluding="rosCnode/msg_strings_OLD.h|examples/example_msg_generation.c|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+
 					</sourceEntries>
 				</configuration>
 			</storageModule>
