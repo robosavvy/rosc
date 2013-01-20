@@ -24,15 +24,14 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * rostcp_msg.h
+ * rosc.h
  *
- *  Created on: 19.01.2013
+ *  Created on: 20.01.2013
  *      Author: Christian Holl
  */
 
-#ifndef ROSTCP_MSG_H_
-#define ROSTCP_MSG_H_
+#ifndef ROSC_H_
+#define ROSC_H_
 
 
-
-#endif /* ROSTCP_MSG_H_ */
+#endif /* ROSC_H_ */

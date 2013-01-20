@@ -13,7 +13,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "rosCnode/rosc_com_xml/general_msg.h"
+#include <rosc/com_xml/general_msg.h>
+#include <rosc/com_base/ports.h>
+
 
 const char *custom_msg_str[] =
 {
@@ -60,11 +62,7 @@ http_head_gen_command http_gen_array[]=
 	HTTP_HEADER_GEN_END					//Empty Line(Header End)
 };
 
-
-ip_address_t system_ip={192,168,0,14};
-ip_address_t master_ip={192,168,0,14};
-port_t master_port=11311;
-
+ROSC_SYSTEM_SETTING("rosc_node",IP_ADDR(192,168,0,1),IP_ADDR(192,168,0,2),11311);
 
 //ros_rpc_gen_command xmlrpc_master_keepalive_msg[]=
 //{
@@ -82,8 +80,16 @@ port_t master_port=11311;
 //RPC_GENERATOR_FINISH
 //};
 
+
+
 int main()
 {
+
+	port_processing_t a,b;
+	a.nextPort=&b;
+	a.portID=2;
+	b.nextPort=&a;
+
 	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_REQUEST_HTTP_HEADER();
 
 	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_KEEPALIVE();

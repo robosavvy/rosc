@@ -3,7 +3,7 @@
  *    FILE GENERATED AUTOMATICALLY
  *  WARNING WARNING WARNING WARNING
  */
-#include "msg_strings.h" 
+#include <rosc/string_res/msg_strings.h>
  
 const char *rpc_xml_attribute_strings[] =
 {

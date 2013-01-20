@@ -31,7 +31,7 @@
  *
  */
 
-#include "msg_parse.h"
+#include <rosc/com_xml/msg_parse.h>
 
 
 unsigned int seekString( const char** stringptr,
