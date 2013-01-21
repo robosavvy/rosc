@@ -200,13 +200,13 @@ typedef enum
 	 * Use this number for selecting custom text strings where RPC_CUSTOM_TEXT is the first (0)
 	 * string of your custom array and RPC_CUSTOM_TAG+X, tag X in your array
 	 */
-	RPC_CUSTOM_TEXT,
+	RPC_CUSTOM_TEXT, //!< Marks the start of the custom text strings
 
 
 	/**
 	 * This commands inserts a single char (useful for generating an IP address)
 	 */
-    RPC_SINGLE_CHAR=RPC_CUSTOM_TEXT +CUSTOM_STRINGS_MAX,
+    RPC_SINGLE_CHAR=RPC_CUSTOM_TEXT +CUSTOM_STRINGS_MAX,//!< Marks the start of the single char strings
 
 
 	/**
