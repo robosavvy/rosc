@@ -17,12 +17,8 @@
 #include <rosc/com_base/ports.h>
 
 
-const char *custom_msg_str[] =
-{
-	 "custom_tag",
-	 "custom_text",
-	 "http://myHost:"
-};
+
+
 
 ros_rpc_gen_command msg_gen_array[]=
 {
@@ -36,6 +32,7 @@ RPC_TAG_METHODCALL,
 			RPC_CUSTOM_TAG +0,
 				RPC_CUSTOM_TEXT +1,
 				RPC_UINT_NUMBER +900,
+				RPC_SINGLE_CHAR,
 			RPC_CT RPC_CUSTOM_TAG +0,
 		RPC_CT RPC_TAG_PARAM ,
 	RPC_CT RPC_TAG_PARAMS,
@@ -90,9 +87,11 @@ int main()
 	a.portID=2;
 	b.nextPort=&a;
 
-	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_REQUEST_HTTP_HEADER();
+	char *custom_msg_str[] =XMLRPC_MSGSTR_REGISTERPUBLISHER_CUSTOM_STRING_ARRAY("topic","messagetype");
+	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_HTTP_HEADER_REQUEST();
 
-	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_KEEPALIVE();
+	unsigned int i=5351;
+	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_MSG_REGISTERPUBLISHER(i);
 
 	auto_aquire_system_ip();
 	printf("\n %i",sendXMLMessage(0,xmlrpc_keepalive, xmlrpc_http_std_header_2,custom_msg_str));

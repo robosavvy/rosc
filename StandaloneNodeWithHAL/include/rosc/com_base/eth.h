@@ -42,7 +42,7 @@ typedef uint16_t port_id_t;
 typedef uint16_t port_t;
 typedef char* nodename_t;
 
-extern nodename_t nodename;
+extern nodename_t node_name;
 extern ip_address_t node_ip;
 extern ip_address_t master_ip;
 extern port_t master_port;
@@ -51,7 +51,7 @@ extern port_t master_port;
 		{IP3,IP2,IP1,IP0}
 
 #define ROSC_SYSTEM_SETTING(NODENAME,NODE_IP,MASTER_IP,MASTER_PORT)\
-	nodename_t nodename=NODENAME;\
+	nodename_t node_name=NODENAME;\
 	ip_address_t node_ip=NODE_IP;\
 	ip_address_t master_ip=MASTER_IP;\
 	port_t master_port=MASTER_PORT

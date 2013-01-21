@@ -92,7 +92,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 			/*
 			 * SINGLE CHAR
 			 */
-			if(command>=RPC_SINGLE_CHAR)
+			else if(command>=RPC_SINGLE_CHAR)
 			{
 				singleCharOutput[0]=command-RPC_SINGLE_CHAR;
 				outstring=singleCharOutput;
