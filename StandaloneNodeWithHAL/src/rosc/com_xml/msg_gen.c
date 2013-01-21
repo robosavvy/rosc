@@ -259,7 +259,16 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 		while(a>0)
 		{
 			if(xml_state==XML_SM_OPTAIN_XML_SIZE) xml_len++;
-			else output((char)(number/a)+48); //TODO change this to sending function with port
+
+			else
+#ifdef XMLRPC_MESSAGE_GEN_DEBUG
+				output((char)(number/a)+48);
+#else
+				{
+					char outchar=(char)(number/a)+48;
+					sendToPort(portID, &outchar,1);
+				}
+#endif
 			number%=a;
 			a/=10;
 		}
@@ -297,7 +306,13 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 					if(xml_state==XML_SM_SEND_XML || xml_state==XML_SM_SEND_HTTP_HEADER)
 					{
 						firstOutputWritten=true;
-						output(*strs[s]); //TODO change this to sending function with port
+#ifdef XMLRPC_MESSAGE_GEN_DEBUG
+						output(*strs[s]);
+#else
+						{
+							sendToPort(portID, strs[s],1);
+						}
+#endif
 					}
 					else xml_len++;
 					strs[s]++;

@@ -67,7 +67,7 @@ uint16_t listenPort(uint16_t port)
     return listenfd;
 }
 
-uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t local_port)
+uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port)
 {
     int sockfd = 0;
     struct sockaddr_in serv_addr;
@@ -91,6 +91,16 @@ uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t lo
        printf("\n Error : Connect Failed \n");
        return -1;
     }
+
+    struct sockaddr_in sin;
+    unsigned int addrlen = sizeof(sin);
+    if(getsockname(sockfd, (struct sockaddr *)&sin, &addrlen) == 0 &&
+       sin.sin_family == AF_INET &&
+       addrlen == sizeof(sin))
+    {
+        *local_port = ntohs(sin.sin_port);
+    }
+
     return sockfd;
 }
 
@@ -99,12 +109,12 @@ void closeConnection(uint16_t portID)
 	close(portID);
 }
 
-uint32_t receiveFromPort(uint16_t portID, char* buffer, uint32_t buffersize)
+int32_t receiveFromPort(uint16_t portID, char* buffer, uint32_t buffersize)
 {
 	return read(portID, buffer, buffersize);
 }
 
-uint32_t sendToPort(uint16_t portID, char* buffer, uint32_t len)
+int32_t sendToPort(uint16_t portID, char* buffer, uint32_t len)
 {
 	return write(portID, buffer,len);
 }

@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <rosc/com_xml/general_msg.h>
+#include <rosc/com_xml/xmlrpc_requests.h>
 #include <rosc/com_base/ports.h>
 
 ros_rpc_gen_command msg_gen_array[]=
@@ -72,29 +72,77 @@ http_head_gen_command http_gen_array[]=
 //};
 
 
-
-ROSC_SYSTEM_SETTING("rosc_node",IP_ADDR(192,168,0,1),IP_ADDR(192,168,0,2),11311);
+ROSC_SYSTEM_SETTING("/rosc_node",IP_ADDR(192,168,101,59),IP_ADDR(192,168,101,59),11311);
 
 int main()
 {
-
+	char buf[1024];
 	port_processing_t a,b;
 	a.nextPort=&b;
 	a.portID=2;
 	b.nextPort=&a;
 
+	uint16_t localport;
+
+	port_id_t id_in_pub=listenPort(50101);
+	port_id_t id_in_sub=listenPort(50102);
+	port_id_t id_out=connectServer(master_ip,11311, &localport);
 
 
 
-	const char *custom_msg_str[] =XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY("topic","messagetype");
-	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_HTTP_HEADER_REQUEST(192,168,0,1,11311);
 
-	unsigned int i=5351;
-	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_MSG_REGISTERSUBSCRIBER(i);
 
-	auto_aquire_system_ip();
-	printf("\n %i",sendXMLMessage(0,xmlrpc_keepalive, xmlrpc_http_std_header_2,custom_msg_str));
+
+
+
+
+	char *topic="/lala";
+	char *messagetype="std_msgs/UInt8";
+
+	const char *msg_strings[]=XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY(topic, messagetype);
+
+
+
+	http_head_gen_command http_header[]=XMLRPC_HTTP_HEADER_REQUEST(192,168,0,1,11311);
+	ros_rpc_gen_command xml_message[]=XMLRPC_MSG_REGISTERPUBLISHER(50101);
+
+
+//	memset(buf,0,1024);
+//	sendXMLMessage(id_out,xml_message, http_header,msg_strings);
+//	if(receiveFromPort(id_out,buf,1024)>0)			printf("OUT: %s",buf);
+
+	topic="/lala2";
+
+	ros_rpc_gen_command xml_message2[]=XMLRPC_MSG_REGISTERSUBSCRIBER(50102);
+
+	memset(buf,0,1024);
+	sendXMLMessage(id_out,xml_message2, http_header,msg_strings);
+	if(receiveFromPort(id_out,buf,1024)>0)			printf("OUT: %s",buf);
+
+	sleep(1);
+
+
+
+
+
+
+		while(1)
+		{
+
+
+			memset(buf,0,1024);
+			if(receiveFromPort(id_in_pub,buf,1024)>0)			printf("IN_pub: %s",buf);
+
+			memset(buf,0,1024);
+			if(receiveFromPort(id_in_sub,buf,1024)>0)			printf("IN_sub: %s",buf);
+			usleep(100);
+		}
+
 	return 0;
+
+
+
+
 }
 
 

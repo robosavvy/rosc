@@ -94,8 +94,6 @@
 	RPC_GENERATOR_FINISH\
 }
 
-
-
 /**
  * This initializes a custom string array to be used with XMLRPC_MSG_REGISTERPUBLISHER
  * and XMLRPC_MSG_REGISTERSUBSCRIBER
@@ -106,8 +104,6 @@
 	 TOPICNAME,\
 	 MESSAGETYPE,\
 }
-
-
 
 /**
  * This will initialize a rpc command array for the "registerPublisher" message.

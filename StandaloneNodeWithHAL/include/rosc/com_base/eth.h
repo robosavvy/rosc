@@ -72,7 +72,7 @@ extern port_id_t listenPort(uint16_t port);
  * @param local_port The port on the local system, if 0 is supplied it will take the next free port.
  * @return Port identifier, if 0 connection was not possible.
  */
-extern port_id_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t local_port);
+extern port_id_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port);
 
 
 /**
@@ -89,7 +89,7 @@ extern void closeConnection(port_id_t portID);
  * @param buffersize
  * @return number of received bytes
  */
-extern uint32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersize);
+extern int32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersize);
 
 /**
  * This function transmittes something over a open port
@@ -98,7 +98,7 @@ extern uint32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffers
  * @param len length of the output buffer
  * @return number of transmitted bytes
  */
-extern uint32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
+extern int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
 
 /**
  * This function automatically determines the IP address of the system if the adress in the global variable is set to zero.
