@@ -98,21 +98,42 @@
 /**
  * Register Publisher
  */
-/*
-//<params><param><value>/roomba_controller</value></param><param><value>/rosout</value></param><param><value>rosgraph_msgs/Log</value></param><param><value>http://192.168.0.11:56381</value></param></params></methodCall>
-*/
 #define XMLRPC_REGISTERPUBLISHER()\
 {\
 	RPC_STDTXT_XML_DEF,\
+	\
 	RPC_TAG_METHODCALL,\
 		RPC_TAG_METHODNAME,\
 			RPC_STDTXT_REGISTERPUBLISHER,\
 		RPC_CT RPC_TAG_METHODNAME,\
+		\
 		RPC_TAG_PARAMS,\
+		\
 			RPC_TAG_PARAM,\
-				RPC_TAG_VALUE.\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+0,	/*Node Name*/\
 				RPC_CT RPC_TAG_VALUE,\
 			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+1,	/*Topic Name*/\
+				RPC_CT RPC_TAG_VALUE,\
+			\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+2,	/*Message Type*/\
+				RPC_CT RPC_TAG_VALUE,\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					\
+				RPC_CT RPC_TAG_VALUE,\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
 		RPC_CT RPC_TAG_PARAMS,\
 	RPC_CT RPC_TAG_METHODCALL,\
 	RPC_GENERATOR_FINISH\

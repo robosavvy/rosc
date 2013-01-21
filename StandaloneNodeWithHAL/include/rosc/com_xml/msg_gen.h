@@ -202,17 +202,17 @@ typedef enum
 	 */
 	RPC_CUSTOM_TEXT,
 
+
 	/**
 	 * This commands inserts a single char (useful for generating an IP address)
 	 */
-    RPC_SINGLE_CHAR,
-    __RPC_SINGLE_CHAR_END=RPC_SINGLE_CHAR+256,
+    RPC_SINGLE_CHAR=RPC_CUSTOM_TEXT +CUSTOM_STRINGS_MAX,
 
 
 	/**
 	 * This command inserts a unsigned integer into the message
 	 */
-	RPC_UINT_NUMBER=RPC_CUSTOM_TEXT +CUSTOM_STRINGS_MAX,
+	RPC_UINT_NUMBER=RPC_SINGLE_CHAR+256,
 
 
 } ros_rpc_gen_command;
