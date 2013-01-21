@@ -16,10 +16,6 @@
 #include <rosc/com_xml/general_msg.h>
 #include <rosc/com_base/ports.h>
 
-
-
-
-
 ros_rpc_gen_command msg_gen_array[]=
 {
 RPC_STDTXT_XML_DEF,
@@ -59,8 +55,6 @@ http_head_gen_command http_gen_array[]=
 	HTTP_HEADER_GEN_END					//Empty Line(Header End)
 };
 
-ROSC_SYSTEM_SETTING("rosc_node",IP_ADDR(192,168,0,1),IP_ADDR(192,168,0,2),11311);
-
 //ros_rpc_gen_command xmlrpc_master_keepalive_msg[]=
 //{
 //RPC_STDTXT_XML_DEF,
@@ -79,6 +73,8 @@ ROSC_SYSTEM_SETTING("rosc_node",IP_ADDR(192,168,0,1),IP_ADDR(192,168,0,2),11311)
 
 
 
+ROSC_SYSTEM_SETTING("rosc_node",IP_ADDR(192,168,0,1),IP_ADDR(192,168,0,2),11311);
+
 int main()
 {
 
@@ -87,11 +83,14 @@ int main()
 	a.portID=2;
 	b.nextPort=&a;
 
-	char *custom_msg_str[] =XMLRPC_MSGSTR_REGISTERPUBLISHER_CUSTOM_STRING_ARRAY("topic","messagetype");
-	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_HTTP_HEADER_REQUEST();
+
+
+
+	const char *custom_msg_str[] =XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY("topic","messagetype");
+	http_head_gen_command xmlrpc_http_std_header_2[]=XMLRPC_HTTP_HEADER_REQUEST(192,168,0,1,11311);
 
 	unsigned int i=5351;
-	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_MSG_REGISTERPUBLISHER(i);
+	ros_rpc_gen_command xmlrpc_keepalive[]=XMLRPC_MSG_REGISTERSUBSCRIBER(i);
 
 	auto_aquire_system_ip();
 	printf("\n %i",sendXMLMessage(0,xmlrpc_keepalive, xmlrpc_http_std_header_2,custom_msg_str));

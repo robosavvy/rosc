@@ -44,7 +44,7 @@
 /**
  * This macro is for initializing a generator command array for generating the http header
  */
-#define XMLRPC_HTTP_HEADER_REQUEST()\
+#define XMLRPC_HTTP_HEADER_REQUEST(IP0,IP1,IP2,IP3,PORT)\
 	{\
 		HTTP_HEADER_GEN_VAL_METHOD_POST,\
 		HTTP_HEADER_GEN_DESC_USER_AGENT,\
@@ -56,15 +56,15 @@
 			HTTP_HEADER_GEN_VAL_UINT_NUMBER+__ROS_C_VERSION__MINOR__,\
 			\
 		HTTP_HEADER_GEN_DESC_HOST,\
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[0],\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+IP0,\
 			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[1],\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+IP1,\
 			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[2],\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+IP2,\
 			HTTP_HEADER_GEN_SINGLE_CHAR+'.',\
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_ip[3],\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+IP3,\
 			HTTP_HEADER_GEN_SINGLE_CHAR+':',\
-			HTTP_HEADER_GEN_VAL_UINT_NUMBER+master_port,\
+			HTTP_HEADER_GEN_VAL_UINT_NUMBER+PORT,\
 			\
 		HTTP_HEADER_GEN_DESC_ACCEPTED_ENCODING,\
 			HTTP_HEADER_GEN_VAL_TEXT_XML,\
@@ -96,8 +96,11 @@
 
 
 
-
-#define XMLRPC_MSGSTR_REGISTERPUBLISHER_CUSTOM_STRING_ARRAY(TOPICNAME,MESSAGETYPE)\
+/**
+ * This initializes a custom string array to be used with XMLRPC_MSG_REGISTERPUBLISHER
+ * and XMLRPC_MSG_REGISTERSUBSCRIBER
+ */
+#define XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY(TOPICNAME,MESSAGETYPE)\
 {\
 	 node_name,\
 	 TOPICNAME,\
@@ -108,7 +111,7 @@
 
 /**
  * This will initialize a rpc command array for the "registerPublisher" message.
- * It requires to use the XMLRPC_MSGSTR_REGISTERPUBLISHER_CUSTOM_STRING_ARRAY for the string array
+ * It requires to use the XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY for the string array
  */
 #define XMLRPC_MSG_REGISTERPUBLISHER(PORT)\
 {\
@@ -161,7 +164,59 @@
 }
 
 
-
+/**
+ * This will initialize a rpc command array for the "registerSubscriber" message.
+ * It requires to use the XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY for the string array
+ */
+#define XMLRPC_MSG_REGISTERSUBSCRIBER(PORT)\
+{\
+	RPC_STDTXT_XML_DEF,\
+	\
+	RPC_TAG_METHODCALL,\
+		RPC_TAG_METHODNAME,\
+			RPC_STDTXT_REGISTERSUBSCRIBER,\
+		RPC_CT RPC_TAG_METHODNAME,\
+		\
+		RPC_TAG_PARAMS,\
+		\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+0,	/*Node Name*/\
+				RPC_CT RPC_TAG_VALUE,\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+1,	/*Topic Name*/\
+				RPC_CT RPC_TAG_VALUE,\
+			\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_CUSTOM_TEXT+2,	/*Message Type*/\
+				RPC_CT RPC_TAG_VALUE,\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+			RPC_TAG_PARAM,\
+				RPC_TAG_VALUE,\
+					RPC_STDTXT_HTTP_URL_HEAD,\
+					RPC_UINT_NUMBER +master_ip[0],\
+					RPC_SINGLE_CHAR+'.',\
+					RPC_UINT_NUMBER +master_ip[1],\
+					RPC_SINGLE_CHAR+'.',\
+					RPC_UINT_NUMBER +master_ip[2],\
+					RPC_SINGLE_CHAR+'.',\
+					RPC_UINT_NUMBER +master_ip[3],\
+					RPC_SINGLE_CHAR+':',\
+					RPC_UINT_NUMBER +PORT,\
+				RPC_CT RPC_TAG_VALUE,\
+			RPC_CT RPC_TAG_PARAM ,\
+			\
+		RPC_CT RPC_TAG_PARAMS,\
+	RPC_CT RPC_TAG_METHODCALL,\
+	RPC_GENERATOR_FINISH\
+}
 
 
 #endif /* GENERAL_MSG_H_ */
