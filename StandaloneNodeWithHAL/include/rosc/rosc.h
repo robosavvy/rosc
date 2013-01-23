@@ -34,4 +34,13 @@
 #define ROSC_H_
 
 
+#include <rosc/setup/setup.h>
+
+#ifdef __SYSTEM_HAS_MALLOC__
+#error ROSC MALLOC IS NOT IMPLEMENTED YET!
+#endif
+
+
+
+
 #endif /* ROSC_H_ */

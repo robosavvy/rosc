@@ -64,6 +64,7 @@ uint16_t listenPort(uint16_t port)
 	serv_addr.sin_port = htons(port);
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     listen(listenfd, 10);
+
     return listenfd;
 }
 
@@ -104,19 +105,24 @@ uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *l
     return sockfd;
 }
 
-void closeConnection(uint16_t portID)
+void closeConnection(port_id_t portID)
 {
 	close(portID);
 }
 
-int32_t receiveFromPort(uint16_t portID, char* buffer, uint32_t buffersize)
+int32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersize)
 {
 	return read(portID, buffer, buffersize);
 }
 
-int32_t sendToPort(uint16_t portID, char* buffer, uint32_t len)
+int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len)
 {
 	return write(portID, buffer,len);
+}
+
+port_id_t acceptConnectionOnPort(uint16_t portID)
+{
+	return accept(portID, (struct sockaddr*)NULL, NULL);
 }
 
 

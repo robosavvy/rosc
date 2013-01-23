@@ -106,4 +106,6 @@ extern int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
 extern void auto_aquire_system_ip();
 
 
+
+
 #endif /* ETH_H_ */

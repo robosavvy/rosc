@@ -265,6 +265,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 				output((char)(number/a)+48);
 #else
 				{
+					output((char)(number/a)+48);
 					char outchar=(char)(number/a)+48;
 					sendToPort(portID, &outchar,1);
 				}
@@ -307,9 +308,9 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 					{
 						firstOutputWritten=true;
 #ifdef XMLRPC_MESSAGE_GEN_DEBUG
-						output(*strs[s]);
+
 #else
-						{
+						{output(*strs[s]);
 							sendToPort(portID, strs[s],1);
 						}
 #endif

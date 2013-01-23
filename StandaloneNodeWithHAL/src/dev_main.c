@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <rosc/com_xml/xmlrpc_requests.h>
+#include <rosc/com_xml/rpc_request_msg.h>
 #include <rosc/com_base/ports.h>
 
 ros_rpc_gen_command msg_gen_array[]=
@@ -34,6 +34,12 @@ RPC_TAG_METHODCALL,
 	RPC_CT RPC_TAG_PARAMS,
 RPC_CT RPC_TAG_METHODCALL,
 RPC_GENERATOR_FINISH
+};
+
+
+ros_rpc_gen_command msg[]=
+{
+		RPC_STDTXT_XML_DEF,
 };
 
 
@@ -85,16 +91,7 @@ int main()
 	uint16_t localport;
 
 	port_id_t id_in_pub=listenPort(50101);
-	port_id_t id_in_sub=listenPort(50102);
 	port_id_t id_out=connectServer(master_ip,11311, &localport);
-
-
-
-
-
-
-
-
 
 	char *topic="/lala";
 	char *messagetype="std_msgs/UInt8";
@@ -107,17 +104,24 @@ int main()
 	ros_rpc_gen_command xml_message[]=XMLRPC_MSG_REGISTERPUBLISHER(50101);
 
 
-//	memset(buf,0,1024);
-//	sendXMLMessage(id_out,xml_message, http_header,msg_strings);
-//	if(receiveFromPort(id_out,buf,1024)>0)			printf("OUT: %s",buf);
+	memset(buf,0,1024);
+	sendXMLMessage(id_out,xml_message, http_header,msg_strings);
+	if(receiveFromPort(id_out,buf,1024)>0)			printf("OUT: %s",buf);
 
 	topic="/lala2";
 
-	ros_rpc_gen_command xml_message2[]=XMLRPC_MSG_REGISTERSUBSCRIBER(50102);
+	const char *msg_strings2[]=XMLRPC_MSGSTR_REGISTERPUBSUB_CUSTOM_STRING_ARRAY(topic, messagetype);
+
+
+	closeConnection(id_out);
+	id_out=connectServer(master_ip,11311, &localport);
+
+	ros_rpc_gen_command xml_message2[]=XMLRPC_MSG_REGISTERSUBSCRIBER(50101);
 
 	memset(buf,0,1024);
-	sendXMLMessage(id_out,xml_message2, http_header,msg_strings);
+	sendXMLMessage(id_out,xml_message2, http_header,msg_strings2);
 	if(receiveFromPort(id_out,buf,1024)>0)			printf("OUT: %s",buf);
+	closeConnection(id_out);
 
 	sleep(1);
 
@@ -129,12 +133,25 @@ int main()
 		while(1)
 		{
 
-
+			port_id_t con=acceptConnectionOnPort(id_in_pub);
 			memset(buf,0,1024);
-			if(receiveFromPort(id_in_pub,buf,1024)>0)			printf("IN_pub: %s",buf);
+			if(con>0)
+			{
+				printf("connection!\n");
+				int rec=receiveFromPort(con,buf,1024);
+				if(rec>0)
+				{
+					printf("IN_pub\n\n\n\n >>>>>>>>>  %s",buf);
 
-			memset(buf,0,1024);
-			if(receiveFromPort(id_in_sub,buf,1024)>0)			printf("IN_sub: %s",buf);
+					sendToPort(con,"T",1);
+				}
+				printf("%i\n",rec);
+				if(rec==0)
+				{
+					printf("Connection Close\n");
+					close(con);
+				}
+			}
 			usleep(100);
 		}
 
