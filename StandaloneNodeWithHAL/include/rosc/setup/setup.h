@@ -24,26 +24,26 @@
 #include <rosc/com_base/eth.h>
 #include <stdbool.h>
 
-
-#ifndef _TEST_DEFINE_
-#error testdefine
-#endif
-
-
-
-
-
-
-typedef struct node_info_t
-{
-#ifdef  __SYSTEM_HAS_MALLOC__
-	struct node_info_t* next;
-#else
-	bool inUse;
-#endif
-	bool isMaster;
-	ip_address_t node_ip;
-	nodename_t nodename;
-}node_info_t;
-
+//
+//#ifndef _TEST_DEFINE_
+//#error testdefine
+//#endif
+//
+//
+//
+//
+//
+//
+//typedef struct node_info_t
+//{
+//#ifdef  __SYSTEM_HAS_MALLOC__
+//	struct node_info_t* next;
+//#else
+//	bool inUse;
+//#endif
+//	bool isMaster;
+//	ip_address_t node_ip;
+//	nodename_t nodename;
+//}node_info_t;
+//
 

@@ -40,7 +40,7 @@
 typedef unsigned char ip_address_t[4];
 typedef uint16_t port_id_t;
 typedef uint16_t port_t;
-typedef char* nodename_t;
+typedef char nodename_t[];
 
 extern nodename_t node_name;
 extern ip_address_t node_ip;

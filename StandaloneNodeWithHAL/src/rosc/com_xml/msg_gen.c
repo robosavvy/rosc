@@ -58,6 +58,10 @@ typedef enum
 	HTTP_SEND_HEADER_SEPARATOR,
 }HTTP_SEND_LEN_State;
 
+
+
+//TODO Size optimizations should be possible here
+//Example: Combine string array pointer accesses
 send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_gen_array, const http_head_gen_command* http_gen_array, const char **custom_string_array)
 {
 	XML_SM_SEND_State xml_state=XML_SM_OPTAIN_XML_SIZE;
