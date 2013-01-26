@@ -33,7 +33,7 @@
 
 #include <rosc/com_xml/msg_gen.h>
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/com_base/eth.h>
+#include <rosc/system/eth.h>
 
 
 

@@ -30,10 +30,10 @@
  *      Author: Christian Holl
  */
 
-#include <rosc/com_base/eth.h>
 
 #ifndef PORTS_H_
 #define PORTS_H_
+#include <rosc/system/eth.h>
 
 typedef  void (*process_function_t)(char *, unsigned int len);
 

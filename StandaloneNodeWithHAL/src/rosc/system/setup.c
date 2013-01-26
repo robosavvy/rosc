@@ -21,5 +21,4 @@
  *	File created by Christian Holl on 23.01.2013
  */
 
-#include <rosc/setup/setup.h>
-
+#include <rosc/system/setup.h>

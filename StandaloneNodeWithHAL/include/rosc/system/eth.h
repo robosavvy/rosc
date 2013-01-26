@@ -34,27 +34,10 @@
 #define ETH_H_
 
 #include <inttypes.h>
-#include <rosc/rosc.h>
+
+#include <rosc/system/setup.h>
 
 
-typedef unsigned char ip_address_t[4];
-typedef uint16_t port_id_t;
-typedef uint16_t port_t;
-typedef char nodename_t[];
-
-extern nodename_t node_name;
-extern ip_address_t node_ip;
-extern ip_address_t master_ip;
-extern port_t master_port;
-
-#define IP_ADDR(IP3,IP2,IP1,IP0)\
-		{IP3,IP2,IP1,IP0}
-
-#define ROSC_SYSTEM_SETTING(NODENAME,NODE_IP,MASTER_IP,MASTER_PORT)\
-	nodename_t node_name=NODENAME;\
-	ip_address_t node_ip=NODE_IP;\
-	ip_address_t master_ip=MASTER_IP;\
-	port_t master_port=MASTER_PORT
 
 /**
  * This function opens a port for listening.
@@ -99,6 +82,10 @@ extern int32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersi
  * @return number of transmitted bytes
  */
 extern int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
+
+
+
+extern port_id_t acceptConnectionOnPort(uint16_t portID);
 
 /**
  * This function automatically determines the IP address of the system if the adress in the global variable is set to zero.

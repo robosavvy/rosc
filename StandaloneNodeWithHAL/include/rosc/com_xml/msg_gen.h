@@ -165,7 +165,7 @@
 #include <stdbool.h>
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/com_base/eth.h>
+#include <rosc/system/eth.h>
 
 #define CUSTOM_STRINGS_MAX 50
 
