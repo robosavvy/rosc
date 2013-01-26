@@ -24,23 +24,22 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * rosc.h
+ * system.c
  *
- *  Created on: 20.01.2013
+ *  Created on: 26.01.2013
  *      Author: Christian Holl
  */
-
-#ifndef ROSC_H_
-#define ROSC_H_
 
 
 #include <rosc/system/setup.h>
 
-#ifdef __SYSTEM_HAS_MALLOC__
-#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK!
+
+
+#ifndef __SYSTEM_HAS_MALLOC__
+	host_info_t hosts[__PORT_MAXIMUM__];
+#else
+	//TODO
 #endif
 
 
 
-
-#endif /* ROSC_H_ */

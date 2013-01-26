@@ -30,54 +30,93 @@
  *     Author: Christian Holl
  */
 
-#include <rosc/rosc.h>
-#include <stdbool.h>
-#include <inttypes.h>
-
-#ifdef _TEST_DEFINE_
-#error testdefine
-#endif
 
 #ifndef _SETUP_H_
 #define _SETUP_H_
 
+#include <rosc/rosc.h>
+#include <stdbool.h>
+#include <inttypes.h>
+#include <system_spec.h>
+
+
+#ifndef __SYSTEM_HAS_MALLOC__
+	#ifndef __HOSTNAME_MAX_LEN__
+		#define __HOSTNAME_MAX_LEN__ 50
+		#warning __HOSTNAME_MAX_LEN__ undefined, it will be automatically set to 50
+	#endif
+	#ifndef __NODENAME_MAX_LEN__
+		#define __NODENAME_MAX_LEN__ 50
+		#warning __NODENAME_MAX_LEN__ undefined, it will be automatically set to 50
+	#endif
+	#ifndef __PORT_MAXIMUM__
+		#define __PORT_MAXIMUM__
+		#warning __PORT_MAXIMUM__ undefined, it will be automatically set to 8
+	#endif
+#endif
+
+#ifndef __SYSTEM_HAS_OS__
+	#ifndef __DEFAULT_XMLRPC_PORT_OVERRIDE__
+		#define XMLRPC_PORT 8284
+	#else
+		#define XMLRPC_PORT __DEFAULT_XMLRPC_PORT_OVERRIDE__
+	#endif
+#else
+	#define XMLRPC_PORT 0  //just open an available port
+#endif
+
+
+#ifndef __SYSTEM_MEM_ALLOC_BIG_ENDIAN__
+	#ifndef __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
+		#error __SYSTEM_MEM_ALLOC_<TYPE>_ENDIAN  not set!
+	#endif
+#endif
+
+
+
 typedef unsigned char ip_address_t[4];
 typedef uint16_t port_id_t;
 typedef uint16_t port_t;
-typedef char nodename_t[50];
+
+#ifdef __SYSTEM_HAS_MALLOC__
+	typedef char *hostname_t;
+	typedef char *nodename_t;
+#else
+	typedef char hostname_t[__HOSTNAME_MAX_LEN__];
+	typedef char nodename_t[__NODENAME_MAX_LEN__];
+#endif
+
 typedef enum
 {
-	NODETYPE_UNUSED,
-	NODETYPE_SELF,
-	NODETYPE_MASTER,
-	NODETYPE_NODE
-}node_type_t;
+	HOST_TYPE_SLOT_UNUSED,
+	HOST_TYPE_SELF,
+	HOST_TYPE_MASTER,
+	HOST_TYPE_NODE
+}host_type_t;
 
-
-extern nodename_t node_name;
+extern hostname_t node_name;
 extern ip_address_t node_ip;
 extern ip_address_t master_ip;
-extern port_t master_port;
 
 #define IP_ADDR(IP3,IP2,IP1,IP0)\
 		{IP3,IP2,IP1,IP0}
 
-#define ROSC_SYSTEM_SETTING(NODENAME,NODE_IP,MASTER_IP,MASTER_PORT)\
-	nodename_t node_name=NODENAME;\
+#define ROSC_SYSTEM_SETTING(NODE_NAME,NODE_IP,MASTER_IP,MASTER_PORT)\
+	hostname_t node_name=NODE_NAME;\
 	ip_address_t node_ip=NODE_IP;\
 	ip_address_t master_ip=MASTER_IP;\
 	port_t master_port=MASTER_PORT
-
 
 typedef struct
 {
 #ifdef  __SYSTEM_HAS_MALLOC__
 	struct node_info_t* next;
 #endif
-	node_type_t node_type;
-	ip_address_t node_ip;
-	nodename_t nodename;
-}node_info_t;
+	host_type_t host_type;
+	ip_address_t host_ip;
+	hostname_t host_name;
+	port_t xmlrpc_port; //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
+}host_info_t;
 
 
 #endif /*_SETUP_H_*/
