@@ -75,7 +75,7 @@
 
 
 typedef unsigned char ip_address_t[4];
-typedef uint16_t port_id_t;
+typedef int16_t port_id_t;
 typedef uint16_t port_t;
 
 #ifdef __SYSTEM_HAS_MALLOC__

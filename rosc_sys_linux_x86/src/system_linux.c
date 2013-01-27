@@ -48,8 +48,9 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <fcntl.h>
 
-uint16_t listenPort(uint16_t port)
+port_id_t listenPort(uint16_t port)
 {
 	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
 	//The OS will then pick an available port for you. You can get the port
@@ -71,11 +72,11 @@ uint16_t listenPort(uint16_t port)
 	serv_addr.sin_port = htons(port);
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     listen(listenfd, 10);
-
+	fcntl(listenfd, F_SETFL, O_NONBLOCK);
     return listenfd;
 }
 
-uint16_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port)
+port_id_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port)
 {
     int sockfd = 0;
     struct sockaddr_in serv_addr;
@@ -129,7 +130,9 @@ int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len)
 
 port_id_t acceptConnectionOnPort(uint16_t portID)
 {
-	return accept(portID, (struct sockaddr*)NULL, NULL);
+	int id=accept(portID, (struct sockaddr*)NULL, NULL);
+		//printf("id %i\n",id);
+	return id;
 }
 
 
