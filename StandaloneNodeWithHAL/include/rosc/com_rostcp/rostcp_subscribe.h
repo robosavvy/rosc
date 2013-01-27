@@ -24,27 +24,15 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * ports.h
+ * rostcp_subscribe.h
  *
- *  Created on: 20.01.2013
+ *  Created on: 27.01.2013
  *      Author: Christian Holl
  */
 
-
-#ifndef PORTS_H_
-#define PORTS_H_
-#include <rosc/system/eth.h>
-
-typedef  void (*process_function_t)(char *, unsigned int len);
-
-
-typedef struct port_processing_t
-{
-	struct port_processing_t *nextPort;
- 	port_id_t portID;
-	process_function_t func;
-}port_processing_t;
+#ifndef ROSTCP_SUBSCRIBE_H_
+#define ROSTCP_SUBSCRIBE_H_
 
 
 
-#endif /* PORTS_H_ */
+#endif /* ROSTCP_SUBSCRIBE_H_ */

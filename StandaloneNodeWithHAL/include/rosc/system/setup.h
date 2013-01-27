@@ -66,6 +66,7 @@
 #endif
 
 
+
 #ifndef __SYSTEM_MEM_ALLOC_BIG_ENDIAN__
 	#ifndef __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
 		#error __SYSTEM_MEM_ALLOC_<TYPE>_ENDIAN  not set!
@@ -94,6 +95,18 @@ typedef enum
 	HOST_TYPE_NODE
 }host_type_t;
 
+typedef enum
+{
+	CONNECTION_TYPE_OUTGOING,
+#ifdef __SYSTEM_NEEDS_ACCEPTING__
+	CONNECTION_TYPE_INCOMING_ACCEPTED,
+	CONNECTION_TYPE_INCOMING_ACCEPTING,
+#else
+	CONNECTION_TYPE_INCOMING,
+#endif
+}connection_type_t;
+
+
 extern hostname_t node_name;
 extern ip_address_t node_ip;
 extern ip_address_t master_ip;
@@ -112,6 +125,7 @@ typedef struct
 #ifdef  __SYSTEM_HAS_MALLOC__
 	struct node_info_t* next;
 #endif
+
 	host_type_t host_type;
 	ip_address_t host_ip;
 	hostname_t host_name;

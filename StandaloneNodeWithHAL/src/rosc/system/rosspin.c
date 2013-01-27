@@ -24,24 +24,16 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * rosc.h
+ * rosspin.c
  *
- *  Created on: 20.01.2013
+ *  Created on: 27.01.2013
  *      Author: Christian Holl
  */
 
-#ifndef ROSC_H_
-#define ROSC_H_
-
-
-#include <rosc/system/setup.h>
 #include <rosc/system/rosspin.h>
+void rosspin()
+{
 
-#ifdef __SYSTEM_HAS_MALLOC__
-#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK!
-#endif
-
-
+}
 
 
-#endif /* ROSC_H_ */

@@ -24,24 +24,15 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * rosc.h
+ * rostcp_publish.h
  *
- *  Created on: 20.01.2013
+ *  Created on: 27.01.2013
  *      Author: Christian Holl
  */
 
-#ifndef ROSC_H_
-#define ROSC_H_
-
-
-#include <rosc/system/setup.h>
-#include <rosc/system/rosspin.h>
-
-#ifdef __SYSTEM_HAS_MALLOC__
-#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK!
-#endif
+#ifndef ROSTCP_PUBLISH_H_
+#define ROSTCP_PUBLISH_H_
 
 
 
-
-#endif /* ROSC_H_ */
+#endif /* ROSTCP_PUBLISH_H_ */
