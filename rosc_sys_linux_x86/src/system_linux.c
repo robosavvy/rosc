@@ -49,6 +49,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <inttypes.h>
 
 port_id_t listenPort(uint16_t port)
 {
