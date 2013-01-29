@@ -1,5 +1,5 @@
 /*
- *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2013
+ *  Copyright by Synapticon GmbH (www.synapticon.com)  ��2013
  *
  *  iface_setup.h
  *
@@ -83,6 +83,14 @@ typedef struct ros_topic_t
 }ros_topic_t;
 
 extern ros_topic_t pubSub_list[];
+
+
+//TODO:
+// Into ENTRY:
+// -Array with message identification string
+// -Marshalling stuff array (by Typename)
+// -
+
 
 
 #define PUBLISHER_SUBSCRIBER_LIST_HEAD\

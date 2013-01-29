@@ -22,6 +22,7 @@
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="NoBuild"/>
 								</outputEntries>
 							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.621161126" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
@@ -36,8 +37,10 @@
 									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/include/"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/ROScNode Library/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
+									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.942998728" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -51,16 +54,20 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.230831990" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1083505935" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
 								<option id="gnu.both.asm.option.include.paths.1947853572" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
 									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/include/"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/ROScNode Library/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
+									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.649192722" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="examples/example_msg_generation.c|rosCnode/msg_strings_OLD.h|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.h|examples/example_msg_generation.c|rosCnode/msg_strings_OLD.c|examples/msg_generation.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -187,6 +194,7 @@
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/ROScNode Library"/>
 		</configuration>
+		<configuration configurationName="NoBuild"/>
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/ROScNode Library"/>
 		</configuration>
