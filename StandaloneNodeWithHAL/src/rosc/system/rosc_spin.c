@@ -30,8 +30,8 @@
  *      Author: Christian Holl
  */
 
-#include <rosc/system/rosspin.h>
-void rosspin()
+#include <rosc/system/rosc_spin.h>
+void rosc_spin()
 {
 
 }

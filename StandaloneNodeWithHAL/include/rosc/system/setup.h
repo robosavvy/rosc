@@ -73,8 +73,6 @@
 	#endif
 #endif
 
-
-
 typedef unsigned char ip_address_t[4];
 typedef int16_t port_id_t;
 typedef uint16_t port_t;
@@ -98,9 +96,9 @@ typedef enum
 typedef enum
 {
 	CONNECTION_TYPE_OUTGOING,
-#ifdef __SYSTEM_NEEDS_ACCEPTING__
+#ifdef __SYSTEM_NEEDS_CON_ACCEPT__
 	CONNECTION_TYPE_INCOMING_ACCEPTED,
-	CONNECTION_TYPE_INCOMING_ACCEPTING,
+	CONNECTION_TYPE_INCOMING_ACCEPTING_PORT,
 #else
 	CONNECTION_TYPE_INCOMING,
 #endif
@@ -125,7 +123,9 @@ typedef struct
 #ifdef  __SYSTEM_HAS_MALLOC__
 	struct node_info_t* next;
 #endif
+#ifdef __SYSTEM_NEEDS_CON_ACCEPT__
 
+#endif
 	host_type_t host_type;
 	ip_address_t host_ip;
 	hostname_t host_name;

@@ -58,9 +58,6 @@ port_id_t listenPort(uint16_t port)
 	//that was chosen using sock.getsockname()[1], and pass it on to the slaves so
 	//that they can connect back.
 
-
-
-
 	int listenfd = 0;
 	struct sockaddr_in serv_addr;
 
@@ -136,9 +133,4 @@ port_id_t acceptConnectionOnPort(uint16_t portID)
 	return id;
 }
 
-
-void auto_aquire_system_ip()
-{
-
-}
 

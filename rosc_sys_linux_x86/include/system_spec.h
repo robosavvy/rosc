@@ -35,3 +35,5 @@
 #define __PORT_MAXIMUM__     8
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
 #define __SYSTEM_HAS_OS__
+#define __SYSTEM_NEEDS_CON_ACCEPT__
+

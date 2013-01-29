@@ -33,6 +33,7 @@
 #ifndef ROSTCP_PUBLISH_H_
 #define ROSTCP_PUBLISH_H_
 
-
+void rosc_Publish(char *topic);
+void rosc_UnPublish(char *topic);
 
 #endif /* ROSTCP_PUBLISH_H_ */
