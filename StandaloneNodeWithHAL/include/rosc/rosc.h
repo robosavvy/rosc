@@ -33,7 +33,7 @@
 #ifndef ROSC_SPIN_H_
 #define ROSC_SPIN_H_
 
-
+#include <rosc/system/types.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/rosc_spin.h>
 #include <rosc/system/rosc_init.h>

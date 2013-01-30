@@ -1,7 +1,7 @@
 /*
- *  Copyright by Synapticon GmbH (www.synapticon.com)  ?2013
+ *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2013
  *
- *  Vector3.h
+ *  exmsg.h
  *
  *  This file is part of rosc_example_messages.
  *
@@ -18,12 +18,33 @@
  *  You should have received a copy of the GNU General Public License
  *  along with rosc_example_messages. If not, see <http://www.gnu.org/licenses/>.
  *
- *	File created by choll on Jan 29, 2013
+ *	File created by choll on 30.01.2013
  */
 
-#ifndef VECTOR3_H_
-#define VECTOR3_H_
+
+
+/*
+ * Message File
+ * bool   r_or_w
+ * uint8  Bytes[]
+ * uint16 Words[]
+ */
+
+#include <rosc/system/types.h>
+
+#ifndef EXMSG_H_
+#define EXMSG_H_
+
+
+//This is used to send out a message
+typedef struct
+{
+	bool r_or_w;
+	uint8_t *Bytes;
+	uint16_t *Words;
+}examplepack_exmsg_t;
 
 
 
-#endif /* VECTOR3_H_ */
+
+#endif /* EXMSG_H_ */

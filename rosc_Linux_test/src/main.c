@@ -35,9 +35,21 @@ PUBLISHER_SUBSCRIBER_LIST_FOOT
 
 int main()
 {
+
+
+	double test=100;
+	void *t=&test;
+	unsigned char *p=(char *)t;
+
+
+	int var;
+	for ( var = 0; var < 8; ++var)
+	{
+		int out=p[var];
+		printf("%x ",out);
+	}
+
 	rosc_init();
-
-
 	while(1)
 	{
 
@@ -52,7 +64,7 @@ int main()
 
 
 
-
+// 2e4 7e17a14ae2840
 
 
 

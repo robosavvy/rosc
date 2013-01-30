@@ -27,9 +27,10 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1633212473" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1460409444" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.1802111620" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.1620461707" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.1620461707" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1860946522" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

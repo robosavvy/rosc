@@ -37,7 +37,7 @@
 #include <rosc/rosc.h>
 #include <stdbool.h>
 #include <inttypes.h>
-#include <system_spec.h>
+#include <rosc/system/system_spec.h>
 
 
 #ifndef __SYSTEM_HAS_MALLOC__
@@ -65,6 +65,13 @@
 	#define XMLRPC_PORT 0  //just open an available port
 #endif
 
+
+#ifdef __SYSTEM_FAKES_DOUBLE__
+	#ifndef THIS_SYSTEM_DOES_NOT_SUPPORT_DOUBLE_INCOMING_DOUBLE_IS_CONVERTED_TO_FLOAT
+		#warning Your system does not support double, incoming double values will be converted to float!
+		#warning To get rid of this warning define THIS_SYSTEM_DOES_NOT_SUPPORT_DOUBLE_INCOMING_DOUBLE_IS_CONVERTED_TO_FLOAT at top of your main file.
+	#endif
+#endif
 
 
 #ifndef __SYSTEM_MEM_ALLOC_BIG_ENDIAN__
