@@ -31,20 +31,53 @@
  */
 
 #include <rosc/system/types.h>
+#include <rosc/com_ifaces/iface_setup.h>
 
 #ifndef EXMSG_H_
 #define EXMSG_H_
 
 
-//This is used to send out a message
+//This is used to send out a message for every configuration
+#pragma pack(push,1)
+
 typedef struct
 {
 	bool r_or_w;
-	uint8_t *Bytes;
-	uint16_t *Words;
+
+	struct
+	{
+	uint32_t size;
+	uint8_t *data;
+	}Bytes;
+
+	struct
+	{
+	uint32_t size;
+	uint16_t *data;
+	}Words;
+
 }examplepack_exmsg_t;
 
+#pragma pack(pop)
 
+#define FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
+		struct\
+		{\
+			bool r_or_w;\
+			\
+			struct\
+			{\
+			uint32_t size;\
+			}Bytes;\
+			\
+			struct\
+			{\
+			uint32_t size;\
+			uint16_t data[__WORDS_SIZE];\
+			}Words;\
+		}__STRUCTNAME;
+
+#define FIXED_SIZE_EXAMPLEPACK_EXMSG_MARSHALLING_CMDS(__BYTES_SIZE, __WORDS_SIZE)\
 
 
 #endif /* EXMSG_H_ */

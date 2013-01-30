@@ -36,8 +36,8 @@
 
 #include <rosc/rosc.h>
 #include <stdbool.h>
-#include <inttypes.h>
-#include <rosc/system/system_spec.h>
+#include <platform/types.h>
+#include <platform/spec.h>
 
 
 #ifndef __SYSTEM_HAS_MALLOC__

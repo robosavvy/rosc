@@ -36,8 +36,8 @@ typedef enum
 //TODO Add callback additions stuff (xmos channels)
 typedef void (*ros_iface_callback)(void *);
 
-#define MARSCHALL_CMD_UNDEF_ARRAY(TYPE) 100+TYPE
-#define MARSCHALL_CMD_DEF_ARRAY(TYPE) -100-TYPE
+#define MARSHALLING_CMD_UNDEF_ARRAY(TYPE) 100+TYPE
+#define MARSHALLING_CMD_DEF_ARRAY(TYPE) -100-TYPE
 
 typedef enum
 {
@@ -61,8 +61,7 @@ typedef enum
 	MARSHALLING_CMD_TIME    =44,
 	MARSHALLING_CMD_DURATION=54,
 	MARSHALLING_CMD_BOOL    =61,
-
-	MARSHALLING_CMD_STRING=MARSCHALL_CMD_UNDEF_ARRAY(MARSHALLING_CMD_INT8),
+	MARSHALLING_CMD_STRING  =71
 
 //	two 32 BIT integer values, there is no msg file for it
 }marshalling_cmd_t;
