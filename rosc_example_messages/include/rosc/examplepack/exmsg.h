@@ -30,7 +30,7 @@
  * uint16 Words[]
  */
 
-#include <rosc/system/types.h>
+#include <platform/types.h>
 #include <rosc/com_ifaces/iface_setup.h>
 
 #ifndef EXMSG_H_
