@@ -17,7 +17,7 @@
 // /////////////////////////
 
 #include <rosc/rosc.h>
-
+#include <rosc/examplepack/exmsg.h>
 
 
 const marshalling_cmd_t marshalling[]={MARSHALLING_CMD_BOOL,MARSHALLING_CMD_FLOAT32};
@@ -28,8 +28,13 @@ void callbackTest(int *a)
 }
 ros_topic_t t={ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling };
 
+
+FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(tsdfasest,6,5);
+
 PUBLISHER_SUBSCRIBER_LIST_HEAD
-		{ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling }
+//		{ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling }
+		//PUBLISHER("/topic", FIXED_SIZE_TYPE),
+
 PUBLISHER_SUBSCRIBER_LIST_FOOT
 
 

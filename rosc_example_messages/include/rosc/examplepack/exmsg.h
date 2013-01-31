@@ -18,7 +18,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with rosc_example_messages. If not, see <http://www.gnu.org/licenses/>.
  *
- *	File created by choll on 30.01.2013
+ *	File created by Christian Holl on 30.01.2013
  */
 
 
@@ -60,14 +60,19 @@ typedef struct
 
 #pragma pack(pop)
 
+
+#define FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME)\
+	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = {MARSHALLING_CMD_BOOL,MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT8), __BYTES_SIZE, MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT16),__WORDS_SIZE}
+
 #define FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
-		struct\
+		typedef struct\
 		{\
 			bool r_or_w;\
 			\
 			struct\
 			{\
 			uint32_t size;\
+			uint8_t data[__BYTES_SIZE];\
 			}Bytes;\
 			\
 			struct\
@@ -75,9 +80,10 @@ typedef struct
 			uint32_t size;\
 			uint16_t data[__WORDS_SIZE];\
 			}Words;\
-		}__STRUCTNAME;
+		} examplepack_exmsg_structfixed_##__STRUCTNAME;\
+		FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME)
 
-#define FIXED_SIZE_EXAMPLEPACK_EXMSG_MARSHALLING_CMDS(__BYTES_SIZE, __WORDS_SIZE)\
+
 
 
 #endif /* EXMSG_H_ */

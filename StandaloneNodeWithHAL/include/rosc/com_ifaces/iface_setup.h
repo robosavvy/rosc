@@ -70,8 +70,9 @@ typedef enum
 	MARSHALLING_CMD_TIME    =44,
 	MARSHALLING_CMD_DURATION=54,
 	MARSHALLING_CMD_BOOL    =61,
-	MARSHALLING_CMD_STRING  =71
+	MARSHALLING_CMD_STRING  =71,
 
+	MARSHALLING_CMD_MSG_END=80,
 //	two 32 BIT integer values, there is no msg file for it
 }marshalling_cmd_t;
 
