@@ -91,17 +91,10 @@ typedef struct ros_topic_t
 	ros_iface_m_state_t state;
 	ros_iface_callback callback_fct;
 	const marshalling_cmd_t *marshalling_cmds;
+	const char * message_id_string;
 }ros_topic_t;
 
 extern ros_topic_t pubSub_list[];
-
-
-//TODO:
-// Into ENTRY:
-// -Array with message identification string
-// -Marshalling stuff array (by Typename)
-// -
-
 
 
 #define PUBLISHER_SUBSCRIBER_LIST_HEAD\

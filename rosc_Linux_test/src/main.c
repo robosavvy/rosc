@@ -29,12 +29,21 @@ void callbackTest(int *a)
 ros_topic_t t={ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling };
 
 
-FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(tsdfasest,6,5);
+STATIC_HOST_LIST_HEAD
+STATIC_HOST_LIST_ENTRY_MASTER( IP_ADDR(192,168,0,1), "master", 11311)
+STATIC_HOST_LIST_ENTRY_LOCALHOST(IP_ADDR(192,168,0,2), "local")
+STATIC_HOST_LIST_ENTRY_MACHINE(IP_ADDR(192,168,0,3), "anotherMachine")
+STATIC_HOST_LIST_FOOT;
+
+
+
+
+
+FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT( tsdfasest, 6, 5);
 
 PUBLISHER_SUBSCRIBER_LIST_HEAD
 //		{ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling }
 		//PUBLISHER("/topic", FIXED_SIZE_TYPE),
-
 PUBLISHER_SUBSCRIBER_LIST_FOOT
 
 
@@ -44,7 +53,7 @@ int main()
 
 	double test=100;
 	void *t=&test;
-	unsigned char *p=(char *)t;
+	unsigned char *p=(unsigned char *)t;
 
 
 	int var;

@@ -33,7 +33,7 @@
 #ifndef ETH_H_
 #define ETH_H_
 
-#include <platform/types.h>
+#include <rosc/system/types.h>
 #include <rosc/system/setup.h>
 
 

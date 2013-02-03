@@ -36,43 +36,37 @@
 
 #include <rosc/rosc.h>
 #include <stdbool.h>
-#include <platform/types.h>
-#include <platform/spec.h>
-
+#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
+#include <rosc/system/hosts.h>
 
 #ifndef __SYSTEM_HAS_MALLOC__
+
 	#ifndef __HOSTNAME_MAX_LEN__
 		#define __HOSTNAME_MAX_LEN__ 50
 		#warning __HOSTNAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
+
 	#ifndef __NODENAME_MAX_LEN__
 		#define __NODENAME_MAX_LEN__ 50
 		#warning __NODENAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
+
 	#ifndef __PORT_MAXIMUM__
 		#define __PORT_MAXIMUM__
 		#warning __PORT_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
-#endif
 
-#ifndef __SYSTEM_HAS_OS__
-	#ifndef __DEFAULT_XMLRPC_PORT_OVERRIDE__
-		#define XMLRPC_PORT 8284
+	#ifndef __SYSTEM_HAS_OS__
+		#ifndef __DEFAULT_XMLRPC_PORT_OVERRIDE__
+			#define XMLRPC_PORT 8284
+		#else
+			#define XMLRPC_PORT __DEFAULT_XMLRPC_PORT_OVERRIDE__
+		#endif
 	#else
-		#define XMLRPC_PORT __DEFAULT_XMLRPC_PORT_OVERRIDE__
-	#endif
-#else
-	#define XMLRPC_PORT 0  //just open an available port
-#endif
-
-
-#ifdef __SYSTEM_FAKES_DOUBLE__
-	#ifndef THIS_SYSTEM_DOES_NOT_SUPPORT_DOUBLE_INCOMING_DOUBLE_IS_CONVERTED_TO_FLOAT
-		#warning Your system does not support double, incoming double values will be converted to float!
-		#warning To get rid of this warning define THIS_SYSTEM_DOES_NOT_SUPPORT_DOUBLE_INCOMING_DOUBLE_IS_CONVERTED_TO_FLOAT at top of your main file.
+		#define XMLRPC_PORT 0  //just open an available port
 	#endif
 #endif
-
 
 #ifndef __SYSTEM_MEM_ALLOC_BIG_ENDIAN__
 	#ifndef __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
@@ -84,21 +78,7 @@ typedef unsigned char ip_address_t[4];
 typedef int16_t port_id_t;
 typedef uint16_t port_t;
 
-#ifdef __SYSTEM_HAS_MALLOC__
-	typedef char *hostname_t;
-	typedef char *nodename_t;
-#else
-	typedef char hostname_t[__HOSTNAME_MAX_LEN__];
-	typedef char nodename_t[__NODENAME_MAX_LEN__];
-#endif
 
-typedef enum
-{
-	HOST_TYPE_SLOT_UNUSED,
-	HOST_TYPE_SELF,
-	HOST_TYPE_MASTER,
-	HOST_TYPE_NODE
-}host_type_t;
 
 typedef enum
 {
@@ -125,19 +105,6 @@ extern ip_address_t master_ip;
 	ip_address_t master_ip=MASTER_IP;\
 	port_t master_port=MASTER_PORT
 
-typedef struct
-{
-#ifdef  __SYSTEM_HAS_MALLOC__
-	struct node_info_t* next;
-#endif
-#ifdef __SYSTEM_NEEDS_CON_ACCEPT__
-
-#endif
-	host_type_t host_type;
-	ip_address_t host_ip;
-	hostname_t host_name;
-	port_t xmlrpc_port; //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
-}host_info_t;
 
 
 #endif /*_SETUP_H_*/

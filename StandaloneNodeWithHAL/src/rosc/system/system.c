@@ -35,11 +35,3 @@
 
 
 
-#ifndef __SYSTEM_HAS_MALLOC__
-	host_info_t hosts[__PORT_MAXIMUM__+1];
-#else
-	#error TODO
-#endif
-
-
-

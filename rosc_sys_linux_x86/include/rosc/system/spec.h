@@ -36,13 +36,13 @@
 #define __HOSTNAME_MAX_LEN__ 50
 #define __NODENAME_MAX_LEN__ 50
 #define __PORT_MAXIMUM__     8
+#define __INPUT_BUFFER_SIZE__ 256
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
 #define __SYSTEM_HAS_OS__
 #define __SYSTEM_NEEDS_CON_ACCEPT__
 
 //#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
 
-typedef float  float32_t;
-typedef double float64_t;
+
 
 #endif /*_SYSTEM_SPEC_H_*/

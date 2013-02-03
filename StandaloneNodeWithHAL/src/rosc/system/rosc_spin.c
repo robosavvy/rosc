@@ -30,10 +30,19 @@
  *      Author: Christian Holl
  */
 
+#include <rosc/system/setup.h>
+
 #include <rosc/system/rosc_spin.h>
+
 void rosc_spin()
 {
 
+	//Go through publisher subscriber list
+
+	//Send out, pending requests
+
+	//Receive network packages
+
+	//Process incoming xmlrpc requests/responses
+
 }
-
-
