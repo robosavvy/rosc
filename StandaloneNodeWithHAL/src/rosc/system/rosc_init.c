@@ -24,8 +24,11 @@
 
 #include <rosc/system/rosc_init.h>
 #include <rosc/system/setup.h>
+#include <rosc/system/ports.h>
 
+#include <stdio.h> //TODO Remove
 void rosc_init()
 {
-	printf("ROS Init\n");
+	printf("ROS Init\n"); //TODO Remove
+	ports_info_init();
 }

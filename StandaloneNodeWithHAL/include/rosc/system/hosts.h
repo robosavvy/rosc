@@ -8,6 +8,13 @@
 #ifndef HOSTS_H_
 #define HOSTS_H_
 
+#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
+
+typedef unsigned char ip_address_t[4];
+typedef int16_t port_id_t;
+typedef uint16_t port_t;
+
 
 #ifdef __SYSTEM_HAS_MALLOC__
 	typedef char *hostname_t;
@@ -17,18 +24,14 @@
 	typedef char nodename_t[__NODENAME_MAX_LEN__];
 #endif
 
-typedef struct
-{
-#ifdef  __SYSTEM_HAS_MALLOC__
-	struct node_info_t* next;
-#endif
-	host_type_t host_type;
-	ip_address_t host_ip;
-	hostname_t host_name;
-	port_t xmlrpc_port; //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
-}host_info_t;
+	typedef enum
+	{
+		HOST_TYPE_SLOT_UNUSED,
+		HOST_TYPE_LOCALHOST,
+		HOST_TYPE_MASTER,
+		HOST_TYPE_MACHINE
+	}host_type_t;
 
-extern host_info_t host_list[];
 
 #define STATIC_HOST_LIST_HEAD\
 		host_info_t host_list[]={
@@ -45,13 +48,19 @@ extern host_info_t host_list[];
 #define STATIC_HOST_LIST_ENTRY_MACHINE(MACHINE_IP, MACHINE_HOSTNAME)\
 		{.host_type=HOST_TYPE_MACHINE, .host_ip=MACHINE_IP, .host_name=MACHINE_HOSTNAME}
 
-
-typedef enum
+typedef struct
 {
-	HOST_TYPE_SLOT_UNUSED,
-	HOST_TYPE_LOCALHOST,
-	HOST_TYPE_MASTER,
-	HOST_TYPE_MACHINE
-}host_type_t;
+#ifdef  __SYSTEM_HAS_MALLOC__
+	struct node_info_t* next;
+#endif
+	host_type_t host_type;//!< Type of Host Master, Current System, Another Machine
+	ip_address_t host_ip; //!< IP Address
+	hostname_t host_name; //!< Hostname
+	port_t xmlrpc_port;   //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
+}host_info_t;
+
+extern host_info_t host_list[];
+
+
 
 #endif /* HOSTS_H_ */

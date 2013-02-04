@@ -17,6 +17,7 @@
 // /////////////////////////
 
 #include <rosc/rosc.h>
+#include <rosc/system/eth.h>
 #include <rosc/examplepack/exmsg.h>
 
 
@@ -49,6 +50,9 @@ PUBLISHER_SUBSCRIBER_LIST_FOOT
 
 int main()
 {
+
+
+	printf("%i\n",__listenPort(5660));
 
 
 	double test=100;

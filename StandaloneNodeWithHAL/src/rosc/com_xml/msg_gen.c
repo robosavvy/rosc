@@ -271,7 +271,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 				{
 					output((char)(number/a)+48);
 					char outchar=(char)(number/a)+48;
-					sendToPort(portID, &outchar,1);
+					__sendToPort(portID, &outchar,1);
 				}
 #endif
 			number%=a;
@@ -315,7 +315,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 
 #else
 						{output(*strs[s]);
-							sendToPort(portID, strs[s],1);
+							__sendToPort(portID, strs[s],1);
 						}
 #endif
 					}

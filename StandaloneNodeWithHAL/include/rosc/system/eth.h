@@ -45,7 +45,7 @@
  * @return Port identifier, if 0 opening a port was not possible.
  *
  */
-extern port_id_t listenPort(uint16_t port);
+extern port_id_t __listenPort(uint16_t port);
 
 /**
  * This function connects to a server
@@ -54,14 +54,14 @@ extern port_id_t listenPort(uint16_t port);
  * @param local_port The port on the local system, if 0 is supplied it will take the next free port.
  * @return Port identifier, if 0 connection was not possible.
  */
-extern port_id_t connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port);
+extern port_id_t __connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port);
 
 
 /**
  * Closes a port with the ID
  * @param portID
  */
-extern void closeConnection(port_id_t portID);
+extern void __closeConnection(port_id_t portID);
 
 /**
  * This function receives data from a port when available and returns the data length.
@@ -84,12 +84,12 @@ extern int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
 
 
 
-extern port_id_t acceptConnectionOnPort(uint16_t portID);
+extern port_id_t __acceptConnectionOnPort(uint16_t portID);
 
 /**
  * This function automatically determines the IP address of the system if the adress in the global variable is set to zero.
  */
-extern void auto_aquire_system_ip();
+extern void __auto_aquire_system_ip();
 
 
 
