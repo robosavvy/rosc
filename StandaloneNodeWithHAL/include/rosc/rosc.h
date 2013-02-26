@@ -38,8 +38,7 @@
 #include <rosc/system/rosc_spin.h>
 #include <rosc/system/rosc_init.h>
 #include <rosc/com_ifaces/iface_setup.h>
-#include <rosc/com_ifaces/rostcp_publish.h>
-#include <rosc/com_ifaces/rostcp_subscribe.h>
+
 
 
 #ifdef __SYSTEM_HAS_MALLOC__

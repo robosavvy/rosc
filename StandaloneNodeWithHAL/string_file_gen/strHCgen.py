@@ -40,26 +40,25 @@ if __name__ == '__main__':
         dataMap = yaml.load(stringDefFile)
 
     #Open header and source for generating them
-    with open(currentPath + "/../src/rosCnode/rosc_string_res/msg_strings.h", mode='w') as headerfile:
-        with open(currentPath + "/../src/rosCnode/rosc_string_res/msg_strings.c", mode='w') as sourcefile:
+    with open(currentPath + "/../include/rosc/string_res/msg_strings.h", mode='w') as headerfile:
+        with open(currentPath + "/../src/rosc/string_res/msg_strings.c", mode='w') as sourcefile:
             #Write file headers
             headerfile.write('/*\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')
             headerfile.write(' *    FILE GENERATED AUTOMATICALLY\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')
-            headerfile.write(' *\n')
+            headerfile.write(' */\n')
             headerfile.write('#ifndef MSG_STRINGS_H_\n#define MSG_STRINGS_H_')
             headerfile.write(' \n')
             headerfile.write(' \n')
             headerfile.write(' \n')
-            
             
             sourcefile.write('/*\n')
             sourcefile.write(' *  WARNING WARNING WARNING WARNING\n')
             sourcefile.write(' *    FILE GENERATED AUTOMATICALLY\n')
             sourcefile.write(' *  WARNING WARNING WARNING WARNING\n')
             sourcefile.write(' */\n')
-            sourcefile.write('#include "msg_strings.h"')
+            sourcefile.write('#include <rosc/string_res/msg_strings.h>')
             sourcefile.write(' \n')
             sourcefile.write(' \n')
 

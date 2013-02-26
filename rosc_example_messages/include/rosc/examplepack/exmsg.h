@@ -1,5 +1,5 @@
 /*
- *  Copyright by Synapticon GmbH (www.synapticon.com)  ©2013
+ *  Copyright by Synapticon GmbH (www.synapticon.com)  ??2013
  *
  *  exmsg.h
  *
@@ -61,10 +61,10 @@ typedef struct
 #pragma pack(pop)
 
 
-#define FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME, __BYTES_SIZE, __WORDS_SIZE)\
-	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = { MARSHALLING_CMD_BOOL, MARSHALLING_CMD_UNDEF_ARRAY( MARSHALLING_CMD_UINT8 ), __BYTES_SIZE , MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT16) , __WORDS_SIZE }
+#define FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
+	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = {MARSHALLING_CMD_BOOL,MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT8), __BYTES_SIZE, MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT16),__WORDS_SIZE}
 
-#define FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT( __STRUCTNAME, __BYTES_SIZE, __WORDS_SIZE)\
+#define FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
 		typedef struct\
 		{\
 			bool r_or_w;\
@@ -72,16 +72,16 @@ typedef struct
 			struct\
 			{\
 			uint32_t size;\
-			uint8_t data[ __BYTES_SIZE ];\
+			uint8_t data[__BYTES_SIZE];\
 			}Bytes;\
 			\
 			struct\
 			{\
 			uint32_t size;\
-			uint16_t data[ __WORDS_SIZE ];\
+			uint16_t data[__WORDS_SIZE];\
 			}Words;\
 		} examplepack_exmsg_structfixed_##__STRUCTNAME;\
-		FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME, __BYTES_SIZE, __WORDS_SIZE)
+		FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME)
 
 
 

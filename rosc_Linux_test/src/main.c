@@ -21,59 +21,101 @@
 #include <rosc/examplepack/exmsg.h>
 
 
-const marshalling_cmd_t marshalling[]={MARSHALLING_CMD_BOOL,MARSHALLING_CMD_FLOAT32};
+char *test_message=
+"POST / HTTP/1.1\n"
+"Host: sncn-10:53556\n"
+"Accept-Encoding: gzip\n"
+"User-Agent: xmlrpclib.py/1.0.1 (by www.pythonware.com)\n"
+"Content-Type: text/xml\n"
+"Content-Length: 339\n"
+"\n"
+"<?xml version='1.0'?>\n"
+"<methodCall>\n"
+"<methodName>publisherUpdate</methodName>\n"
+"<params>\n"
+"<param>\n"
+"<value><string>/master</string></value>\n"
+"</param>\n"
+"<param>\n"
+"<value><string>/rosout</string></value>\n"
+"</param>\n"
+"<param>\n"
+"<value><array><data>\n"
+"<value><string>http://sncn-10:56998/</string></value>\n"
+"</data></array></value>\n"
+"</param>\n"
+"</params>\n"
+"</methodCall>";
 
-void callbackTest(int *a)
+
+
+
+
+typedef enum
 {
-	printf("\n-%i-\n",*a);
+	PARSE_ACT_STATE_FINSIHED,
+	PARSE_ACT_STATE_BEGIN=PARSE_ACT_STATE_FINSIHED,
+	PRASE_ACT_STATE_HEADER,
+	PARSE_ACT_STATE_XML_DEG,
+	PARSE_ACT_STATE_TAG,
+	PARSE_ACT_STATE_TAG_INNER_CONTENT,
+	PARSE_ACT_STATE_IN_ATTRIBUTE,
+	PARSE_ACT_STATE_IN_DATA,
+}parse_act_state_t;
+
+typedef struct parse_act_t
+{
+	const char** tag_array;
+	parse_act_state_t state;
+	uint32_t depth;
+}parse_act_t;
+
+
+void httpxml_parse_act(parse_act_t *pact)
+{
+	pact->state=PARSE_ACT_STATE_BEGIN;
+
 }
-ros_topic_t t={ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling };
 
 
-STATIC_HOST_LIST_HEAD
-STATIC_HOST_LIST_ENTRY_MASTER( IP_ADDR(192,168,0,1), "master", 11311)
-STATIC_HOST_LIST_ENTRY_LOCALHOST(IP_ADDR(192,168,0,2), "local")
-STATIC_HOST_LIST_ENTRY_MACHINE(IP_ADDR(192,168,0,3), "anotherMachine")
-STATIC_HOST_LIST_FOOT;
+void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
+{
+#if 1
+	printf("Chunk Length: %i\n",len);
+#endif
+}
 
 
+void xmlrpc_handler_test_fct()
+{
+
+}
 
 
-
-FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT( tsdfasest, 6, 5);
-
-PUBLISHER_SUBSCRIBER_LIST_HEAD
-//		{ .topic_str="/test", .type=PUBSUB_TYPE_PUBLISHER, .state=ROS_IFACE_OFF, .callback_fct=(ros_iface_callback)&callbackTest, .marshalling_cmds=marshalling }
-		//PUBLISHER("/topic", FIXED_SIZE_TYPE),
-PUBLISHER_SUBSCRIBER_LIST_FOOT
-
-
+#define buffersize 200
 int main()
 {
+	int rlen;
+	parse_act_t pact;
+	httpxml_parse_act(&pact);
 
+	for(rlen=0;test_message[rlen]!=0;rlen++);
 
-	printf("%i\n",__listenPort(5660));
+	printf("Test Message Length: %i\n",rlen);
 
-
-	double test=100;
-	void *t=&test;
-	unsigned char *p=(unsigned char *)t;
-
-
-	int var;
-	for ( var = 0; var < 8; ++var)
+	int i;
+	for(i=0;rlen-i*buffersize+buffersize>=0;i++)
 	{
-		int out=p[var];
-		printf("%x ",out);
+		printf("i: %i %i\n",i, i*buffersize);
+		int len=buffersize;
+		if(i*buffersize>rlen)
+		{
+			len=len-(i*buffersize-rlen);
+		}
+		xmlrpc_parse(test_message,len,&pact);
 	}
-
-	rosc_init();
-	while(1)
-	{
-
-		rosc_spin();
-	}
-
 
 	return 0;
 }
+
+

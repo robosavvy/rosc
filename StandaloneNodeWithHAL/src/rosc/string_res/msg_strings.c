@@ -3,7 +3,7 @@
  *    FILE GENERATED AUTOMATICALLY
  *  WARNING WARNING WARNING WARNING
  */
-#include <rosc/string_res/msg_strings.h>
+#include <rosc/string_res/msg_strings.h> 
  
 const char *rpc_xml_attribute_strings[] =
 {
@@ -35,23 +35,18 @@ const char *http_header_descriptors[] =
 const char *rpc_xml_tag_strings[] =
 {
 	"array",
-	"body",
 	"boolean",
 	"data",
 	"fault",
-	"h1",
-	"head",
 	"int",
 	"member",
 	"methodCall",
 	"methodName",
 	"methodResponse",
-	"p",
 	"param",
 	"params",
 	"string",
 	"struct",
-	"title",
 	"value"
 };
 

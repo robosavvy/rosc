@@ -16,23 +16,18 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   #If the string can't be used as enum declaration in C, you 
                   #can specifiy a replacement for it after a : like 
                   #shown in the next variable definition                  
-                  body,
                   boolean,
                   data,
                   fault,
-                  h1,
-                  head,
                   int,
                   member,
                   methodCall,
                   methodName,
                   methodResponse,
-                  p,
                   param,
                   params,
                   string,
                   struct,
-                  title,
                   value,
                   array,
               }
