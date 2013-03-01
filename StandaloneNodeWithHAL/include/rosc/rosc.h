@@ -33,13 +33,25 @@
 #ifndef ROSC_SPIN_H_
 #define ROSC_SPIN_H_
 
+
+#include <rosc/system/spec.h>
 #include <rosc/system/types.h>
+
+#ifndef __HOSTNAME_MAX_LEN__
+	#warning __HOSTNAME_MAX_LEN__ undefined! Automatically set to 50.
+	#define __HOSTNAME_MAX_LEN__ 50
+#endif
+
+#ifndef __NODENAME_MAX_LEN__
+	#warning __NODENAME_MAX_LEN__ undefined! Automatically set to 50.
+	#define __HOSTNAME_MAX_LEN__ 50
+#endif
+
+
 #include <rosc/system/setup.h>
 #include <rosc/system/rosc_spin.h>
 #include <rosc/system/rosc_init.h>
 #include <rosc/com_ifaces/iface_setup.h>
-
-
 
 #ifdef __SYSTEM_HAS_MALLOC__
 #error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK!

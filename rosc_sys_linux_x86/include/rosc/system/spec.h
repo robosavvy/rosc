@@ -33,6 +33,8 @@
 #ifndef _SYSTEM_SPEC_H_
 #define _SYSTEM_SPEC_H_
 
+
+
 #define __HOSTNAME_MAX_LEN__ 50
 #define __NODENAME_MAX_LEN__ 50
 #define __PORT_MAXIMUM__     8

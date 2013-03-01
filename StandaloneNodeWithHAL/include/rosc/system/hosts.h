@@ -8,8 +8,7 @@
 #ifndef HOSTS_H_
 #define HOSTS_H_
 
-#include <rosc/system/types.h>
-#include <rosc/system/spec.h>
+#include <rosc/rosc.h>
 
 typedef unsigned char ip_address_t[4];
 typedef int16_t port_id_t;
