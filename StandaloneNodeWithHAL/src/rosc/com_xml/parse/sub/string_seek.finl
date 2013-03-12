@@ -1,0 +1,15 @@
+
+#ifndef FORCE_INLINE
+	//Fake includes
+
+#endif
+
+
+#ifndef FORCE_INLINE
+void name() {
+#endif
+
+
+#ifndef FORCE_INLINE
+}
+#endif
