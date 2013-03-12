@@ -75,6 +75,9 @@ typedef struct parse_act_t
 		}xml;
 	}mode_data;
 
+	/**
+	 * submode_data contains the data for the different submodes
+	 */
 	union
 	{
 
