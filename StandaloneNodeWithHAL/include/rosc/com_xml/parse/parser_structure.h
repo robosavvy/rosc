@@ -1,6 +1,6 @@
 
-#ifndef PARSER_STRUCTURES_H_
-#define PARSER_STRUCTURES_H_
+#ifndef PARSER_STRUCTURE_H_
+#define PARSER_STRUCTURE_H_
 
 #include <rosc/rosc.h>
 #include <rosc/com_xml/parse/sub/http_header_parsing.h>
@@ -131,4 +131,4 @@ typedef struct parse_act_t
  */
 typedef void (*parse_handler_fct)(parse_act_t *pact);
 
-#endif /* PARSER_STRUCTURES_H_ */
+#endif /* PARSER_STRUCTURE_H_ */
