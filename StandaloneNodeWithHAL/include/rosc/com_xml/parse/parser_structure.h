@@ -3,8 +3,8 @@
 #define PARSER_STRUCTURE_H_
 
 #include <rosc/rosc.h>
-#include <rosc/com_xml/parse/sub/http_header_parsing.h>
-#include <rosc/com_xml/parse/sub/xml_parsing.h>
+#include <rosc/com_xml/parse/sub/parsehttp.h>
+#include <rosc/com_xml/parse/sub/parsexml.h>
 #include <rosc/com_xml/parse/sub/parseurl.h>
 
 /**

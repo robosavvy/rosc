@@ -1,5 +1,5 @@
-#ifndef HTTP_HEADER_PARSING_H_
-#define HTTP_HEADER_PARSING_H_
+#ifndef PARSE_HTTP_H_
+#define PARSE_HTTP_H_
 
 #include <rosc/string_res/msg_strings.h>
 
@@ -29,4 +29,4 @@ typedef enum
 	PARSE_HTTTP_STATE_FIELD,
 }parse_http_state_t;
 
-#endif /* HTTP_HEADER_PARSING_H_ */
+#endif /* PARSE_HTTP_H_ */

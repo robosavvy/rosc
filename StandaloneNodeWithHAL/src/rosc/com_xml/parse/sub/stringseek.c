@@ -1,12 +1,12 @@
 
 #ifndef FORCE_INLINE
-	//Fake includes
+
 
 #endif
 
 
 #ifndef FORCE_INLINE
-void name() {
+	void stringSeek() {
 #endif
 
 
