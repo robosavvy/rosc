@@ -1,3 +1,7 @@
+
+#define DEBUG_PRINT
+
+
 // /////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +23,7 @@
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
 #include <rosc/examplepack/exmsg.h>
+#include <rosc/com_xml/parse/parser.h>
 
 char *test_message=
 "POST / HTTP/1.1\n"
@@ -48,26 +53,28 @@ char *test_message=
 
 int main()
 {
-//	int rlen;
-//	parse_act_t pact;
-//
-//	httpxml_parse_act_init(&pact,0,0);
-//
-//	for(rlen=0;test_message[rlen]!=0;rlen++);
-//
-//	printf("Test Message Length: %i\n",rlen);
-//
-//	int i;
-//	for(i=0;rlen-i*buffersize+buffersize>=0;i++)
-//	{
-//		printf("i: %i %i\n",i, i*buffersize);
-//		int len=buffersize;
-//		if(i*buffersize>rlen)
-//		{
-//			len=len-(i*buffersize-rlen);
-//		}
-//		xmlrpc_parse(test_message,len,&pact);
-//	}
+	int rlen;
+	int buffersize=10;
+	parse_act_t pact;
+
+	xmlrpc_server_data_t server_data;
+	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
+
+	for(rlen=0;test_message[rlen]!=0;rlen++);
+
+	//printf("Test Message Length: %i\n",rlen);
+
+	int i;
+	for(i=0;rlen-i*buffersize+buffersize>=0;i++)
+	{
+		printf("i: %i %i\n",i, i*buffersize);
+		int len=buffersize;
+		if(i*buffersize>rlen)
+		{
+			len=len-(i*buffersize-rlen);
+		}
+		xmlrpc_parse(test_message+i*len,len,&pact);
+	}
 
 	return 0;
 }
