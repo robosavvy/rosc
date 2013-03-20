@@ -18,7 +18,12 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.752697924." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1459541209" name="Linux GCC" nonInternalBuilderId="cdt.managedbuild.target.gnu.builder.exe.debug" superClass="cdt.managedbuild.toolchain.gnu.exe.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug.2064741872" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
-							<builder buildPath="${workspace_loc:/rosc_Linux_test/Debug}" id="cdt.managedbuild.target.gnu.builder.exe.debug.1172530921" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug"/>
+							<builder buildPath="${workspace_loc:/rosc_Linux_test/Debug}" id="cdt.managedbuild.target.gnu.builder.exe.debug.1172530921" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+								</outputEntries>
+							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.772239607" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.543769016" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 								<option id="gnu.cpp.compiler.exe.debug.option.optimization.level.367674937" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
@@ -28,15 +33,15 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1933020746" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.1705354411" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.476533326" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/include}&quot;"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/x86_64-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/src_and_inc/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1268951385" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -48,15 +53,26 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.1483105432" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1827563066" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
+								<option id="gnu.both.asm.option.include.paths.1726958807" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
+									<listOptionValue builtIn="false" value="/usr/include"/>
+									<listOptionValue builtIn="false" value="/usr/include/x86_64-linux-gnu"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_Linux_test/rosc_example_messages/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_Linux_test/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
+									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_Linux_test/ROScNode Library/src_and_inc/include}&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.685489234" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="sys_linux|src_example_messages|src_rosc|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="rosc_src|sys_linux|src_rosc|src|src_example_messages" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="rosc_src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src_example_messages"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src_rosc"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sys_linux"/>
 					</sourceEntries>
 				</configuration>

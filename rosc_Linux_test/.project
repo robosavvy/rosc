@@ -25,14 +25,14 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>rosc_src</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/ROScNode%20Library/src_and_inc/src</locationURI>
+		</link>
+		<link>
 			<name>src_example_messages</name>
 			<type>2</type>
 			<locationURI>WORKSPACE_LOC/rosc_example_messages/src</locationURI>
-		</link>
-		<link>
-			<name>src_rosc</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/ROScNode%20Library/src</locationURI>
 		</link>
 		<link>
 			<name>sys_linux</name>
