@@ -38,6 +38,7 @@
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/src_and_inc/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.942998728" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

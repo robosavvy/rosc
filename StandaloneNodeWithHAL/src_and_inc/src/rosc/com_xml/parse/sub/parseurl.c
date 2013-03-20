@@ -1,4 +1,3 @@
-
 #ifndef FORCE_INLINE
 #include <rosc/com_xml/parse/sub/parseurl.h>
 
@@ -6,7 +5,7 @@
 
 
 #ifndef FORCE_INLINE
-	void parseurl() {
+	void parseurl(parse_act_t *pact) {
 #endif
 
 
