@@ -108,6 +108,8 @@ typedef struct parse_act_t
 	uint32_t xml_curChr; //!< xml_curChr keeps the current xml char number
 	parse_mode_t mode; //!< mode saves contains the current main mode, xml or http header parsing
 	parse_submode_t submode; //!< submode is the current sub mode the parser is using
+	bool submode_finished; //!< is one when submode is finished
+	uint8_t submode_result;	//!< contains the result code from each submode when finished
 	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
 
 	/**
@@ -135,7 +137,6 @@ typedef struct parse_act_t
 	 */
 	union
 	{
-
 		struct
 		{
 			char **stringlist;	//!< The stringlist
@@ -143,14 +144,12 @@ typedef struct parse_act_t
 			uint16_t curChr;	//!< The char number since the start of seekString
 			uint16_t fit_min;	//!< The beginning of the range with possibly matching strings
 			uint16_t fit_max;	//!< The end of the range with possibly matching strings
-			uint16_t result;	//!< This is the string found in the array, if no string was found this is -1.
 		}seekString;
 
 		struct
 		{
 			uint8_t cur_place; //!< cur_place stores the number of the current figure of the number
 			uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
-			uint32_t result; //!< storing the result of the parsing and the steps between.
 		}numberParse;
 
 		struct
@@ -158,7 +157,6 @@ typedef struct parse_act_t
 			char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
 			uint16_t cur_len; //!< cur_len stores the amount of already copied chars.
 			uint16_t max_len; //!< max_len is the maximum length to be used for the buffer.
-			uint8_t result; //TODO create type
 		}copy2Buffer;
 
 		struct

@@ -25,7 +25,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 	bool chunk_processed=false;
 	while(!chunk_processed)
 	{
-		if(pact->submode==PARSE_SUBMODE_NONE)
+		if(pact->submode==PARSE_SUBMODE_NONE || pact->submode_finished)
 		{
 			switch(pact->mode)
 			{
