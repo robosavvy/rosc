@@ -16,7 +16,7 @@
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.exe.debug.601067584" name="Debug" parent="cdt.managedbuild.config.gnu.exe.debug">
 					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.601067584." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1590941077" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1590941077" name="Linux GCC" resourceTypeBasedDiscovery="true" superClass="cdt.managedbuild.toolchain.gnu.exe.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug.798840805" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
 							<builder buildPath="" command="" id="cdt.managedbuild.target.gnu.builder.exe.debug.1964823711" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.exe.debug">
 								<outputEntries>
@@ -34,10 +34,7 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1200593268" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.397758100" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1003667628" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/include/"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
@@ -54,13 +51,8 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.230831990" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.1083505935" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug">
 								<option id="gnu.both.asm.option.include.paths.1947853572" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
 									<listOptionValue builtIn="false" value="/usr/include/"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/rosc_sys_linux_x86/include}&quot;"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.6/include/"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/ROScNode Library/src_and_inc/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.649192722" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -205,8 +197,11 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.309036014;cdt.managedbuild.config.gnu.exe.release.309036014.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.1423663781;cdt.managedbuild.tool.gnu.c.compiler.input.1167362789">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584;cdt.managedbuild.config.gnu.exe.debug.601067584.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.2121412901;cdt.managedbuild.tool.gnu.c.compiler.input.942998728">
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584;cdt.managedbuild.config.gnu.exe.debug.601067584.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.2121412901;cdt.managedbuild.tool.gnu.c.compiler.input.942998728">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

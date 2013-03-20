@@ -30,8 +30,6 @@
 								<option id="gnu.c.compiler.option.include.paths.1620461707" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
-									<listOptionValue builtIn="false" value="/usr/include/i386-linux-gnu"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/i686-linux-gnu/4.7/include/"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/src_and_inc/include}&quot;"/>
 								</option>
