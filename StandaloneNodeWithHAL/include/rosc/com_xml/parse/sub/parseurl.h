@@ -13,5 +13,7 @@ typedef enum
 	PARSE_URL_MATCH_IPv6_RESOLV,//!< PARSE_URL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
 }parse_url_match_t;
 
+void parseurl();
+
 
 #endif /* PARSEURL_H_ */
