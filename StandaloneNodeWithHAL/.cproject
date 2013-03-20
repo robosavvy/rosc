@@ -197,11 +197,11 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.309036014;cdt.managedbuild.config.gnu.exe.release.309036014.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.1423663781;cdt.managedbuild.tool.gnu.c.compiler.input.1167362789">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584;cdt.managedbuild.config.gnu.exe.debug.601067584.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.2121412901;cdt.managedbuild.tool.gnu.c.compiler.input.942998728">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

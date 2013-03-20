@@ -107,15 +107,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="rosc_example_messages.cdt.managedbuild.target.gnu.exe.625972937" name="Executable" projectType="cdt.managedbuild.target.gnu.exe"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1640087513;cdt.managedbuild.config.gnu.exe.debug.1640087513.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1633212473;cdt.managedbuild.tool.gnu.c.compiler.input.1860946522">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.2118712770;cdt.managedbuild.config.gnu.exe.release.2118712770.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.202421590;cdt.managedbuild.tool.gnu.c.compiler.input.481144519">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Release">
@@ -126,4 +117,13 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1640087513;cdt.managedbuild.config.gnu.exe.debug.1640087513.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1633212473;cdt.managedbuild.tool.gnu.c.compiler.input.1860946522">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.2118712770;cdt.managedbuild.config.gnu.exe.release.2118712770.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.202421590;cdt.managedbuild.tool.gnu.c.compiler.input.481144519">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
 </cproject>
