@@ -32,6 +32,11 @@
 #ifndef SKIPWHOLEMESSAGE_H_
 #define SKIPWHOLEMESSAGE_H_
 
+#include <rosc/com_xml/parse/parser_structure.h>
 
+
+#ifndef FORCE_INLINE
+	void skipwholemessage(char *buf, uint32_t len, parse_act_t *pact);
+#endif
 
 #endif /* SKIPWHOLEMESSAGE_H_ */

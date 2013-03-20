@@ -32,6 +32,11 @@
 #ifndef COPY2BUFFER_H_
 #define COPY2BUFFER_H_
 
+#include <rosc/com_xml/parse/parser_structure.h>
 
+
+#ifndef FORCE_INLINE
+	void copy2buffer(char *buf, uint32_t len, parse_act_t *pact);
+#endif
 
 #endif /* COPY2BUFFER_H_ */

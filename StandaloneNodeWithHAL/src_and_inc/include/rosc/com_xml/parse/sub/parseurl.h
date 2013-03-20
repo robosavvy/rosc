@@ -16,9 +16,7 @@ typedef enum
 }parse_url_match_t;
 
 #ifndef FORCE_INLINE
-
-void parseurl(parse_act_t *pact);
-
+	void parseurl(char *buf, uint32_t len, parse_act_t *pact);
 #endif
 
 #endif /* PARSEURL_H_ */

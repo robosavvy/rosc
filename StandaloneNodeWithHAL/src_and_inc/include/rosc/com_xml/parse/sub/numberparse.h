@@ -32,6 +32,11 @@
 #ifndef NUMBERPARSE_H_
 #define NUMBERPARSE_H_
 
+#include <rosc/com_xml/parse/parser_structure.h>
 
+
+#ifndef FORCE_INLINE
+	void numberparse(char *buf, uint32_t len, parse_act_t *pact);
+#endif
 
 #endif /* NUMBERPARSE_H_ */
