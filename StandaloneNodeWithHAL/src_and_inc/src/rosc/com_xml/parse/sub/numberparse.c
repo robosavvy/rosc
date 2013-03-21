@@ -26,10 +26,14 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  numberparse.h created by Christian Holl on 20.03.2013
+ *  numberparse.c created by Christian Holl on 20.03.2013
  */
 
 #ifndef FORCE_INLINE
+	#ifndef ENABLE_C
+		#define ENABLE_C
+	#endif
+
 	#include <rosc/com_xml/parse/sub/numberparse.h>
 #endif
 
@@ -37,8 +41,10 @@
 #ifndef FORCE_INLINE
 	void numberparse(char *buf, uint32_t len, parse_act_t *pact) {
 #endif
+#ifdef ENABLE_C
 
 
+#endif
 #ifndef FORCE_INLINE
 }
 #endif

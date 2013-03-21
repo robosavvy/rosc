@@ -50,11 +50,23 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 		{
 			switch (pact->submode) {
 				case PARSE_SUBMODE_COPY2BUFFER:
-
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "sub/copy2buffer.c"
+							#undef ENABLE_C
+						#else
+							copy2buffer(buf, &len, pact);
+						#endif
 					break;
 
 				case PARSE_SUBMODE_NUMBERPARSE:
-
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "sub/numberparse.c"
+							#undef ENABLE_C
+						#else
+							numberparse(buf, &len, pact);
+						#endif
 					break;
 
 				case PARSE_SUBMODE_SEEKSTRING:
@@ -68,11 +80,23 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					break;
 
 				case PARSE_SUBMODE_SKIPWHOLEMESSAGE:
-
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "sub/skipwholemessage.c"
+							#undef ENABLE_C
+						#else
+							skipwholemessage(buf, &len, pact);
+						#endif
 					break;
 
 				case PARSE_SUBMODE_SKIPUNTILCHAR:
-
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "sub/skipuntilchar.c"
+							#undef ENABLE_C
+						#else
+							skipunitlchar(buf, &len, pact);
+						#endif
 					break;
 				default:
 					break;
