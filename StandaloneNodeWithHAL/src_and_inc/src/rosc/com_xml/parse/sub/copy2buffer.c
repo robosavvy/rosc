@@ -49,6 +49,37 @@
 			uint32_t len=*len_ptr;
 	#endif
 
+	const char *sep=pact->submode_data.copy2Buffer.endChrs;
+	while(len > 0)
+	{
+		bool isEndChar=false;
+		while(*sep!='\0')
+		{
+			if(*buf==*sep)
+			{
+				isEndChar=true;
+				break;
+			}
+			++sep;
+		}
+		if((pact->submode_data.copy2Buffer.cur_pos+1<=pact->submode_data.copy2Buffer.max_len) && !isEndChar )
+		{
+			pact->submode_data.copy2Buffer.buffer[pact->submode_data.copy2Buffer.cur_pos]=*buf;
+			pact->submode_data.copy2Buffer.cur_pos++;
+			len--;
+			buf++;
+		}
+		else if(isEndChar)
+		{
+			pact->submode_result=COPY2BUFFER_ENDCHR;
+		}
+		else
+		{
+			pact->submode_result=COPY2BUFFER_MAXLEN;
+		}
+		buf++;
+		len--;
+	}
 }
 #endif
 
