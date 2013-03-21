@@ -1,5 +1,11 @@
-#include <stdio.h> //TODO remove
+#include <stdio.h>
 #include <rosc/com_xml/parse/parser.h>
+#include <rosc/com_xml/parse/sub/seekstring.h>
+#include <rosc/com_xml/parse/sub/copy2buffer.h>
+#include <rosc/com_xml/parse/sub/parseurl.h>
+#include <rosc/com_xml/parse/sub/numberparse.h>
+#include <rosc/com_xml/parse/sub/skipuntilchar.h>
+#include <rosc/com_xml/parse/sub/skipwholemessage.h>
 
 //TODO inline???
 void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * handler_data_storage)
@@ -52,7 +58,13 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					break;
 
 				case PARSE_SUBMODE_SEEKSTRING:
-
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "sub/seekstring.c"
+							#undef ENABLE_C
+						#else
+							seekstring(buf, &len, pact);
+						#endif
 					break;
 
 				case PARSE_SUBMODE_SKIPWHOLEMESSAGE:
@@ -62,8 +74,6 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 				case PARSE_SUBMODE_SKIPUNTILCHAR:
 
 					break;
-
-
 				default:
 					break;
 			}

@@ -32,8 +32,10 @@
 #ifndef SEEKSTRING_H_
 #define SEEKSTRING_H_
 
+#include <rosc/system/types.h>
 #include <rosc/com_xml/parse/parser_structure.h>
 
+#define STRING_NOT_FOUND  -1
 
 #ifndef FORCE_INLINE
 	void seekstring(char *buf, uint32_t len, parse_act_t *pact);

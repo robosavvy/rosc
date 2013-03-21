@@ -141,7 +141,8 @@ typedef struct parse_act_t
 		{
 			char **stringlist;	//!< The stringlist
 			char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
-			uint16_t curChr;	//!< The char number since the start of seekString
+			uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
+			uint16_t curChrPos;	//!< The char number since the start of seekString
 			uint16_t fit_min;	//!< The beginning of the range with possibly matching strings
 			uint16_t fit_max;	//!< The end of the range with possibly matching strings
 		}seekString;
