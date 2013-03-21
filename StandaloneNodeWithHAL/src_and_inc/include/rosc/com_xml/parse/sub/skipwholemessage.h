@@ -33,6 +33,8 @@
 #define SKIPWHOLEMESSAGE_H_
 
 #include <rosc/com_xml/parse/parser_structure.h>
+#include <rosc/system/types.h>
+
 
 
 #ifndef FORCE_INLINE

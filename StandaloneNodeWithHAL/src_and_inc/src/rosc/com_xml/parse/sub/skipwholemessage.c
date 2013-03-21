@@ -33,8 +33,8 @@
 	#ifndef ENABLE_C
 		#define ENABLE_C
 	#endif
-
 	#include <rosc/com_xml/parse/sub/skipwholemessage.h>
+
 #endif
 
 
@@ -47,7 +47,15 @@
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
-
+	while(len>0)
+	{
+		buf++;
+		len--;
+	}
+	if(len==EOF)
+	{
+		pact->submode_finished=1;
+	}
 }
 #endif
 
