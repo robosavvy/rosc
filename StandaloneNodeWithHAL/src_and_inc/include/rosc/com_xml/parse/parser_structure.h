@@ -151,6 +151,7 @@ typedef struct parse_act_t
 		{
 			uint8_t cur_place; //!< cur_place stores the number of the current figure of the number
 			uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
+			uint32_t number; //!< contains the parsed number
 		}numberParse;
 
 		struct

@@ -34,6 +34,12 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 
+typedef enum
+{
+	NUMBERPARSE_MAX_FIGURES,
+	NUMBERPARSE_ANOTHER_CHAR,
+	NUMBERPARSE_ERROR_NONUMBER,
+}numberparse_result_t;
 
 #ifndef FORCE_INLINE
 	void numberparse(char *buf, uint32_t len, parse_act_t *pact);
