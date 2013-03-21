@@ -40,12 +40,15 @@
 
 
 #ifndef FORCE_INLINE
-	void copy2buffer(char *buf, uint32_t len, parse_act_t *pact) {
+	void copy2buffer(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
+{
+	#ifndef FORCE_INLINE
+			uint32_t len=*len_ptr;
+	#endif
 
-
-#endif
-#ifndef FORCE_INLINE
 }
 #endif
+

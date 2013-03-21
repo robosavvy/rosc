@@ -34,18 +34,43 @@
 	#ifndef ENABLE_C
 		#define ENABLE_C
 	#endif
-
 	#include <rosc/com_xml/parse/sub/skipuntilchar.h>
 #endif
 
 
 #ifndef FORCE_INLINE
-	void skipuntilchar(char *buf, uint32_t len, parse_act_t *pact) {
+	void skipuntilchar(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
+{
+	#ifndef FORCE_INLINE
+			uint32_t len=*len_ptr;
+	#endif
 
+		bool isSpecChar=false;
+		while(len > 0)
+		{
+			const char *sep=pact->submode_data.skipUntilChr.chrs;
+			while(*sep!='\0')
+			{
+				if(*buf==*sep)
+				{
+					isSpecChar=true;
+					break;
+				}
+				++sep;
+			}
 
-#endif
-#ifndef FORCE_INLINE
+			if((isSpecChar && pact->submode_data.skipUntilChr.negative) ||
+					(!isSpecChar && !pact->submode_data.skipUntilChr.negative))
+			{
+				pact->submode_result=1;
+				break;
+			}
+			buf++;
+			len--;
+		}
 }
 #endif
+

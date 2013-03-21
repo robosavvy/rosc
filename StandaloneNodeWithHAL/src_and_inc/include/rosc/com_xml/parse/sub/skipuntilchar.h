@@ -34,7 +34,6 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 
-
 #ifndef FORCE_INLINE
 	void skipuntilchar(char *buf, uint32_t len, parse_act_t *pact);
 #endif

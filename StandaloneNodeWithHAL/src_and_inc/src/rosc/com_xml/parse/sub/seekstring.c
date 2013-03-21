@@ -23,11 +23,14 @@
 	 * @param len_ptr the lenght of the current input buffer
 	 * @param pact    the parsers struct
 	 */
-	void seekstring(char *buf, uint32_t *len_ptr, parse_act_t *pact) {
-		uint32_t len=*len_ptr; //work around for inlining the function
+	void seekstring(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
-
+{
+	#ifndef FORCE_INLINE
+			uint32_t len=*len_ptr;
+	#endif
 
 		while(len > 0)
 		{
@@ -99,7 +102,5 @@
 		}
 
 
-#endif
-#ifndef FORCE_INLINE
 }
 #endif
