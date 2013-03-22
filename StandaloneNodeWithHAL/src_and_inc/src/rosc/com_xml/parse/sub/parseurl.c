@@ -8,11 +8,11 @@
 
 
 #ifndef FORCE_INLINE
-	void parseurl(char *buf, uint32_t len, parse_act_t *pact)
+	void parseurl(char *buf, uint32_t *len_ptr, parse_act_t *pact)
 #endif
 #ifdef ENABLE_C
 {
-	#ifdef FORCE_INLINE
+	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
 }

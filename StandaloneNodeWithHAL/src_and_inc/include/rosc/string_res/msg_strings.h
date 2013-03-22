@@ -71,6 +71,69 @@ extern const char *http_header_descriptors[];
 
 
 /**
+ * Length of the string array http_header_content_types
+ */
+#define HTTP_HEADER_CONTENT_TYPES_LEN 	2
+
+/**
+ * Macro for inserting contains known content types string numbers into any enum
+ */
+#define __HTTP_HEADER_CONTENT_TYPES(ENUM) \
+	 ENUM ## _CONTENT_GZIP, \
+	 ENUM ## _CONTENT_TEXT_HTML
+
+/**
+ * This array contains the strings for contains known content types
+ */
+extern const char *http_header_content_types[];
+
+
+/**
+ * Length of the string array rpc_xml_stdtext
+ */
+#define RPC_XML_STDTEXT_LEN 	10
+
+/**
+ * Macro for inserting standard XMLRPC text pieces string numbers into any enum
+ */
+#define __RPC_XML_STDTEXT(ENUM) \
+	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
+	 ENUM ## _STDTXT_XML_DEF, \
+	 ENUM ## _STDTXT_ERROR_CODE, \
+	 ENUM ## _STDTXT_HASPARAM, \
+	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
+	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
+	 ENUM ## _STDTXT_REQUESTTOPIC, \
+	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER
+
+/**
+ * This array contains the strings for standard XMLRPC text pieces
+ */
+extern const char *rpc_xml_stdtext[];
+
+
+/**
+ * Length of the string array parse_separators
+ */
+#define PARSE_SEPARATORS_LEN 	3
+
+/**
+ * Macro for inserting seperators for parsing different pieces of a XMLRPC message string numbers into any enum
+ */
+#define __PARSE_SEPARATORS(ENUM) \
+	 ENUM ## _SEP_METHOD, \
+	 ENUM ## _SEP_XML, \
+	 ENUM ## _SEP_HTTP_HEADER
+
+/**
+ * This array contains the strings for seperators for parsing different pieces of a XMLRPC message
+ */
+extern const char *parse_separators[];
+
+
+/**
  * Length of the string array rpc_xml_tag_strings
  */
 #define RPC_XML_TAG_STRINGS_LEN 	14
@@ -103,63 +166,19 @@ extern const char *rpc_xml_tag_strings[];
 /**
  * Length of the string array http_methods
  */
-#define HTTP_METHODS_LEN 	1
+#define HTTP_METHODS_LEN 	2
 
 /**
  * Macro for inserting method strings string numbers into any enum
  */
 #define __HTTP_METHODS(ENUM) \
+	 ENUM ## _METHOD_GET, \
 	 ENUM ## _METHOD_POST
 
 /**
  * This array contains the strings for method strings
  */
 extern const char *http_methods[];
-
-
-/**
- * Length of the string array parse_separators
- */
-#define PARSE_SEPARATORS_LEN 	3
-
-/**
- * Macro for inserting seperators for parsing different pieces of a XMLRPC message string numbers into any enum
- */
-#define __PARSE_SEPARATORS(ENUM) \
-	 ENUM ## _SEP_METHOD, \
-	 ENUM ## _SEP_XML, \
-	 ENUM ## _SEP_HTTP_HEADER
-
-/**
- * This array contains the strings for seperators for parsing different pieces of a XMLRPC message
- */
-extern const char *parse_separators[];
-
-
-/**
- * Length of the string array rpc_xml_stdtext
- */
-#define RPC_XML_STDTEXT_LEN 	10
-
-/**
- * Macro for inserting standard XMLRPC text pieces string numbers into any enum
- */
-#define __RPC_XML_STDTEXT(ENUM) \
-	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
-	 ENUM ## _STDTXT_XML_DEF, \
-	 ENUM ## _STDTXT_ERROR_CODE, \
-	 ENUM ## _STDTXT_HASPARAM, \
-	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
-	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
-	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
-	 ENUM ## _STDTXT_REQUESTTOPIC, \
-	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
-	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER
-
-/**
- * This array contains the strings for standard XMLRPC text pieces
- */
-extern const char *rpc_xml_stdtext[];
 
 
 #endif /* MSG_STRINGS_H_ */

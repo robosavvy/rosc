@@ -26,51 +26,47 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipuntilchar.c created by Christian Holl on 20.03.2013
+ *  parse_mode_header.c created by Christian Holl on 22.03.2013
  */
-
 
 #ifndef FORCE_INLINE
 	#ifndef ENABLE_C
 		#define ENABLE_C
 	#endif
-	#include <rosc/com_xml/parse/sub/skipuntilchar.h>
+
+	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
 #endif
 
 
 #ifndef FORCE_INLINE
-	void skipuntilchar(char *buf, uint32_t *len_ptr, parse_act_t *pact)
-	 //work around for inlining the function
+	void parse_mode_header(char *buf, uint32_t *len_ptr, parse_act_t *pact)
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
-
-		while(len > 0)
-		{
-			bool isSpecChar=false;
-			const char *sep=pact->submode_data.skipUntilChr.chrs;
-			while(*sep!='\0')
+	switch(pact->mode_data.http.state)
+	{
+	case PARSE_HTTP_STATE_METHSTR_BEGIN:
+			if(pact->submode!=PARSE_SUBMODE_SKIPUNTILCHAR)
 			{
-				if(*buf==*sep)
-				{
-					isSpecChar=true;
-					break;
-				}
-				++sep;
+				printf("SKIP SPACES ... %c \n",*buf);
+				pact->submode=PARSE_SUBMODE_SKIPUNTILCHAR;
+				pact->submode_data.skipUntilChr.chrs=" ";
+				pact->submode_data.skipUntilChr.negative=false;
 			}
-
-			if((isSpecChar && pact->submode_data.skipUntilChr.negative) ||
-					(!isSpecChar && !pact->submode_data.skipUntilChr.negative))
+			else
 			{
-				pact->submode_finished=1;
-				break;
+				printf("SPACES SKIPPED... %c \n",*buf);
+				pact->submode_finished=false;
+				while(1);
 			}
-			buf++;
-			len--;
-		}
+		break;
+	}
 }
 #endif
+
+
+
 

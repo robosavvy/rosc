@@ -40,8 +40,8 @@ if __name__ == '__main__':
         dataMap = yaml.load(stringDefFile)
 
     #Open header and source for generating them
-    with open(currentPath + "/../include/rosc/string_res/msg_strings.h", mode='w') as headerfile:
-        with open(currentPath + "/../src/rosc/string_res/msg_strings.c", mode='w') as sourcefile:
+    with open(currentPath + "/../src_and_inc/include/rosc/string_res/msg_strings.h", mode='w') as headerfile:
+        with open(currentPath + "/../src_and_inc/src/rosc/string_res/msg_strings.c", mode='w') as sourcefile:
             #Write file headers
             headerfile.write('/*\n')
             headerfile.write(' *  WARNING WARNING WARNING WARNING\n')

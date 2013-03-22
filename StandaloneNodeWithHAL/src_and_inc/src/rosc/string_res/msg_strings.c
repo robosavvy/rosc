@@ -32,6 +32,33 @@ const char *http_header_descriptors[] =
 	"User-Agent"
 };
 
+const char *http_header_content_types[] =
+{
+	"gzip",
+	"text/html"
+};
+
+const char *rpc_xml_stdtext[] =
+{
+	"/tcp_keepalive",
+	"<?xml version=\"1.0\"?>",
+	"Error code",
+	"hasParam",
+	"http://",
+	"registerPublisher",
+	"registerSubscriber",
+	"requestTopic",
+	"unregisterPublisher",
+	"unregisterSubscriber"
+};
+
+const char *parse_separators[] =
+{
+	"/. \n",
+	"</>\n \"=",
+	"\n:"
+};
+
 const char *rpc_xml_tag_strings[] =
 {
 	"array",
@@ -52,27 +79,7 @@ const char *rpc_xml_tag_strings[] =
 
 const char *http_methods[] =
 {
+	"GET",
 	"POST"
-};
-
-const char *parse_separators[] =
-{
-	"/. \n",
-	"</>\n \"=",
-	"\n:"
-};
-
-const char *rpc_xml_stdtext[] =
-{
-	"/tcp_keepalive",
-	"<?xml version=\"1.0\"?>",
-	"Error code",
-	"hasParam",
-	"http://",
-	"registerPublisher",
-	"registerSubscriber",
-	"requestTopic",
-	"unregisterPublisher",
-	"unregisterSubscriber"
 };
 

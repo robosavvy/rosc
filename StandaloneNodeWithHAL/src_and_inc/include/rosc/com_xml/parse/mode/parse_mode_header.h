@@ -26,51 +26,17 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipuntilchar.c created by Christian Holl on 20.03.2013
+ *  parse_mode_header.h created by Christian Holl on 22.03.2013
  */
 
+#ifndef PARSE_MODE_HEADER_H_
+#define PARSE_MODE_HEADER_H_
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
-	#include <rosc/com_xml/parse/sub/skipuntilchar.h>
-#endif
+#include <rosc/com_xml/parse/parser_structure.h>
 
 
 #ifndef FORCE_INLINE
-	void skipuntilchar(char *buf, uint32_t *len_ptr, parse_act_t *pact)
-	 //work around for inlining the function
-#endif
-#ifdef ENABLE_C
-{
-	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
-	#endif
-
-		while(len > 0)
-		{
-			bool isSpecChar=false;
-			const char *sep=pact->submode_data.skipUntilChr.chrs;
-			while(*sep!='\0')
-			{
-				if(*buf==*sep)
-				{
-					isSpecChar=true;
-					break;
-				}
-				++sep;
-			}
-
-			if((isSpecChar && pact->submode_data.skipUntilChr.negative) ||
-					(!isSpecChar && !pact->submode_data.skipUntilChr.negative))
-			{
-				pact->submode_finished=1;
-				break;
-			}
-			buf++;
-			len--;
-		}
-}
+	void parse_mode_header(char *buf, uint32_t len, parse_act_t *pact);
 #endif
 
+#endif /* PARSE_MODE_HEADER_H_ */

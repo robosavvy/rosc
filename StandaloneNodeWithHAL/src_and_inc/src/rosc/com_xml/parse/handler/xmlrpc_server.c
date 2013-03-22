@@ -2,5 +2,5 @@
 #include <stdio.h>
 void xmlrpc_server_handler(parse_act_t * pact)
 {
-
+	printf("Server Handler Called\n");
 }

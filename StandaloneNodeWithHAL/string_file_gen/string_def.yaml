@@ -97,6 +97,17 @@ http_header_stdtext:
     'OK'
   }
 
+#Expectable content types (not only supported)
+http_header_content_types:
+  comment:
+    'contains known content types'
+  defineShort:
+    'CONTENT'
+  stringlist: {
+    'gzip',
+    'text/html'
+  }
+
 
 #Method strings
 http_methods:
@@ -106,6 +117,7 @@ http_methods:
     'METHOD'
   stringlist: {
     'POST',
+    'GET',
   }
 
 #Seperators for parsing

@@ -9,6 +9,10 @@ typedef struct xmlrpc_server_data_t
 	char test[12];
 }xmlrpc_server_data_t;
 
+
+
+void init_server(parse_act_t * pact);
+
 void xmlrpc_server_handler(parse_act_t * pact);
 
 #endif /* XMLRPC_SERVER_H_ */
