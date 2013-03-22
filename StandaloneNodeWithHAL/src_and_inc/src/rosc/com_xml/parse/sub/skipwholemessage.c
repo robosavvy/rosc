@@ -54,7 +54,7 @@
 	}
 	if(len==EOF)
 	{
-		pact->submode_finished=1;
+		pact->submode_state=1;
 	}
 }
 #endif

@@ -47,7 +47,10 @@
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
-
+//		if(pact->submode_state==PARSE_SUBMODE_INIT) //Unneeded here... nothing to setup
+//		{
+			pact->submode_state=PARSE_SUBMODE_RUNNING;
+//		}
 		while(len > 0)
 		{
 			bool isSpecChar=false;
@@ -65,7 +68,7 @@
 			if((isSpecChar && pact->submode_data.skipUntilChr.negative) ||
 					(!isSpecChar && !pact->submode_data.skipUntilChr.negative))
 			{
-				pact->submode_finished=1;
+				pact->submode_state=PARSE_SUBMODE_FINISHED;
 				break;
 			}
 			buf++;

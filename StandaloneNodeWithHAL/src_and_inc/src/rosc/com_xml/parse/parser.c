@@ -7,7 +7,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 	pact->mode=PARSE_MODE_HEADER;
 	pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BEGIN;
 	pact->submode=PARSE_SUBMODE_NONE;
-	pact->submode_finished=false;
+
 
 	switch (type) {
 		case  XMLRPC_SERVER:
@@ -27,7 +27,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 	bool chunk_processed=false;
 	while(!chunk_processed)
 	{
-		if(pact->submode==PARSE_SUBMODE_NONE || pact->submode_finished)
+		if((pact->submode==PARSE_SUBMODE_NONE) || (pact->submode_state==PARSE_SUBMODE_FINISHED))
 		{
 			switch(pact->mode)
 			{
@@ -104,6 +104,10 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					break;
 			}
 		}
+	}
+	if((len <= 0)  && pact->submode_state!=PARSE_SUBMODE_FINISHED)
+	{
+		chunk_processed=true;
 	}
 }
 

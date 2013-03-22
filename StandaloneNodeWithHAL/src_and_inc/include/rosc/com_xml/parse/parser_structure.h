@@ -111,6 +111,16 @@ typedef enum
 
 
 /**
+ * Values for the state of the current submode
+ */
+typedef enum
+{
+	PARSE_SUBMODE_INIT,    //!< PARSE_SUBMODE_INIT means it was not initialized yet
+	PARSE_SUBMODE_RUNNING, //!< PARSE_SUBMODE_RUNNING means that the submode is running
+	PARSE_SUBMODE_FINISHED,//!< PARSE_SUBMODE_FINISHED means that the submode has finshed
+}parse_submode_state_t;
+
+/**
  * Definition for handler function type
  */
 typedef struct parse_act_t
@@ -121,7 +131,8 @@ typedef struct parse_act_t
 	uint32_t content_curChr; //!< xml_curChr keeps the current xml char number
 	parse_mode_t mode; //!< mode saves contains the current main mode, xml or http header parsing
 	parse_submode_t submode; //!< submode is the current sub mode the parser is using
-	bool submode_finished; //!< is one when submode is finished
+
+	parse_submode_state_t submode_state; //!< is one when submode is finished
 	uint8_t submode_result;	//!< contains the result code from each submode when finished
 	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
 

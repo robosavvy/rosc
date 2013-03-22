@@ -35,6 +35,7 @@
 	#endif
 
 	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
+	#include <rosc/com_xml/msg_gen.h>
 #endif
 
 
@@ -53,15 +54,22 @@
 			{
 				printf("SKIP SPACES ... %c \n",*buf);
 				pact->submode=PARSE_SUBMODE_SKIPUNTILCHAR;
+				pact->submode_state=PARSE_SUBMODE_INIT;
 				pact->submode_data.skipUntilChr.chrs=" ";
 				pact->submode_data.skipUntilChr.negative=false;
 			}
 			else
 			{
 				printf("SPACES SKIPPED... %c \n",*buf);
-				pact->submode_finished=false;
+				pact->submode_state=false;
+				pact->submode=PARSE_SUBMODE_SEEKSTRING;
+				pact->submode_data.seekString.stringlist=http_methods;
 				while(1);
 			}
+
+
+
+
 		break;
 	}
 }
