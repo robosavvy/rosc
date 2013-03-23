@@ -32,6 +32,13 @@
 			uint32_t len=*len_ptr;
 	#endif
 
+		if(pact->submode_state==PARSE_SUBMODE_INIT)
+		{
+			pact->submode_data.seekString.curChrPos=0;
+			pact->submode_data.seekString.fit_min=0;
+			pact->submode_data.seekString.fit_max=pact->submode_data.seekString.stringlist_len-1;
+			pact->submode_state=PARSE_SUBMODE_RUNNING;
+		}
 		while(len > 0)
 		{
 			//Check if current char in buffer one is a separator
@@ -52,18 +59,24 @@
 			//Seek for the current char inside of all strings at given position
 			bool found=false;//found at least one match
 			unsigned int StrLstE;//Contains the current string list entry to be checked
-			for(StrLstE=pact->submode_data.seekString.fit_min;StrLstE<pact->submode_data.seekString.fit_max;StrLstE++)
+			for(StrLstE=pact->submode_data.seekString.fit_min;StrLstE<=pact->submode_data.seekString.fit_max;StrLstE++)
 			{
 				const char *ptr=*(pact->submode_data.seekString.stringlist+StrLstE);
 				char curChrStrLstE=*(ptr+pact->submode_data.seekString.curChrPos);
 
-				//If the current char inside the current entry of the string array is a separator
+				printf("min %i\n", pact->submode_data.seekString.fit_min);
+				printf("max %i\n", pact->submode_data.seekString.fit_max);
+				printf("curChrStrLstE %c\n", curChrStrLstE);
+				printf("curChrBuf %c\n", curChrBuf);
+
+				//If the current char inside the current entry of the string array is finished
 				if(curChrStrLstE == '\0')
 				{
 					if(isSeparator) //and the current char in the buffer is a separator as well
 					{
 						//write positive result
 						pact->submode_result=StrLstE;
+						found=true;
 					}
 					else //and no separator inside the buffer, the current value does not match
 					{
@@ -93,8 +106,17 @@
 			}
 			//If a separator is found inside the current iteration and the string was not found
 			//it is not inside the string array.
-			if(isSeparator && !found) pact->submode_result=STRING_NOT_FOUND;
-			break;
+			if(isSeparator)
+			{
+				if(!found)
+				{
+					pact->submode_result=STRING_NOT_FOUND;
+				}
+				pact->submode_state=PARSE_SUBMODE_FINISHED;
+				break;
+			}
+
+
 
 			buf++;
 			pact->submode_data.seekString.curChrPos++;

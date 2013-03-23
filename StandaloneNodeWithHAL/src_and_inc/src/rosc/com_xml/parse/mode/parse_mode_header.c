@@ -49,6 +49,7 @@
 	#endif
 	switch(pact->mode_data.http.state)
 	{
+	//Skip any space at the beginning
 	case PARSE_HTTP_STATE_METHSTR_BEGIN:
 			if(pact->submode!=PARSE_SUBMODE_SKIPUNTILCHAR)
 			{
@@ -64,11 +65,14 @@
 				pact->submode_state=false;
 				pact->submode=PARSE_SUBMODE_SEEKSTRING;
 				pact->submode_data.seekString.stringlist=http_methods;
-				while(1);
+				pact->submode_data.seekString.stringlist_len=HTTP_METHODS_LEN;
+				pact->submode_data.seekString.endchrs=" /";
+				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_METHODSTR;
 			}
-
-
-
+			break;
+	//Parse Method
+	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
+			printf("parsing Methodstring ... %i \n",pact->submode_result);
 
 		break;
 	}

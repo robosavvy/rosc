@@ -24,6 +24,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 
 void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 {
+
 	bool chunk_processed=false;
 	while(!chunk_processed)
 	{
