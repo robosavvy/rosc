@@ -37,6 +37,16 @@
 
 #define STRING_NOT_FOUND  -1
 
+
+#define PARSE_SUBMODE_INIT_SEEKSTRING(STRING_ARRAY,ARRAY_LEN,SEP)\
+				pact->submode_state=PARSE_SUBMODE_INIT;\
+				pact->submode=PARSE_SUBMODE_SEEKSTRING;\
+				pact->submode_data.seekString.stringlist=STRING_ARRAY;\
+				pact->submode_data.seekString.stringlist_len=ARRAY_LEN;\
+				pact->submode_data.seekString.endchrs=SEP;
+
+
+
 #ifndef FORCE_INLINE
 	void seekstring(char *buf, uint32_t len, parse_act_t *pact);
 #endif

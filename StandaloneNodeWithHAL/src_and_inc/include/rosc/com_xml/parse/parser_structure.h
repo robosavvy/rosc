@@ -62,6 +62,7 @@ typedef enum
 	PARSE_HTTP_STATE_METHSTR_METHODSTR,//!< PARSE_HTTP_STATE_METHSTR_METHODSTR - Seeking the Method string inside the list
 	PARSE_HTTP_STATE_METHSTR_SKPSPC0,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC0 - Skip spaces
 	PARSE_HTTP_STATE_METHSTR_BCKSLSH0, //!< PARSE_HTTP_STATE_METHSTR_BCKSLSH0 - Check backslash
+	PARSE_HTTP_STATE_METHSTR_TARGET,   //!< PARSE_HTTP_STATE_METHSTR_TARGET - Check if target available
 	PARSE_HTTP_STATE_METHSTR_SKPSPC1,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC1 - Skip spaces
 	PARSE_HTTP_STATE_METHSTR_HTTP,     //!< PARSE_HTTP_STATE_METHSTR_HTTP - Check for HTTP
 	PARSE_HTTP_STATE_METHSTR_SKPSPC2,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC1 - Skip spaces
@@ -120,12 +121,23 @@ typedef enum
 	PARSE_SUBMODE_FINISHED,//!< PARSE_SUBMODE_FINISHED means that the submode has finshed
 }parse_submode_state_t;
 
+
+/**
+ * Contains events for the handler for it to know what currently happend
+ */
+typedef enum
+{
+	PARSE_EVENT_NONE,
+	PARSE_EVENT_HTTP_METHOD_PARSED,
+
+}parse_event;
+
 /**
  * Definition for handler function type
  */
 typedef struct parse_act_t
 {
-	void (*handler_fkt)(/*parse_act_t pact*/); //!< This function handles the parser events
+	void (*handler_fkt)(void *); //!< This function handles the parser events
 	void *handler_data_storage;	//!< This is a pointer for different handlers data storage
 	uint32_t content_length; //!< xml_length stores the length parsed from the http header
 	uint32_t content_curChr; //!< xml_curChr keeps the current xml char number
@@ -135,6 +147,7 @@ typedef struct parse_act_t
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	uint8_t submode_result;	//!< contains the result code from each submode when finished
 	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
+	parse_event event; //!< tells the handler function what currently has happened.
 
 	/**
 	 * The mode_data union stores the http and the xml data inside the same memory location.

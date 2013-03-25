@@ -34,6 +34,14 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 
+
+#define PARSE_SUBMODE_INIT_SKIPUNTILCHAR(PARSE_STRUCT, SEP, NEGATIVE)\
+				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPUNTILCHAR;\
+				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
+				PARSE_STRUCT->submode_data.skipUntilChr.chrs=SEP;\
+				PARSE_STRUCT->submode_data.skipUntilChr.negative=NEGATIVE
+
+
 #ifndef FORCE_INLINE
 	void skipuntilchar(char *buf, uint32_t len, parse_act_t *pact);
 #endif

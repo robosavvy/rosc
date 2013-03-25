@@ -54,27 +54,36 @@
 			if(pact->submode!=PARSE_SUBMODE_SKIPUNTILCHAR)
 			{
 				printf("SKIP SPACES ... %c \n",*buf);
-				pact->submode=PARSE_SUBMODE_SKIPUNTILCHAR;
-				pact->submode_state=PARSE_SUBMODE_INIT;
-				pact->submode_data.skipUntilChr.chrs=" ";
-				pact->submode_data.skipUntilChr.negative=false;
+				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 			}
 			else
 			{
 				printf("SPACES SKIPPED... %c \n",*buf);
-				pact->submode_state=false;
-				pact->submode=PARSE_SUBMODE_SEEKSTRING;
-				pact->submode_data.seekString.stringlist=http_methods;
-				pact->submode_data.seekString.stringlist_len=HTTP_METHODS_LEN;
-				pact->submode_data.seekString.endchrs=" /";
+				PARSE_SUBMODE_INIT_SEEKSTRING(http_methods,HTTP_METHODS_LEN," ");
 				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_METHODSTR;
 			}
 			break;
+
 	//Parse Method
 	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
-			printf("parsing Methodstring ... %i \n",pact->submode_result);
-
+			pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
+			pact->handler_fkt(pact);
+			pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_SKPSPC0;
+			PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 		break;
+
+	case PARSE_HTTP_STATE_METHSTR_SKPSPC0:
+			pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
+			if(*buf!='/')
+			{
+
+			}
+			else
+			{
+
+			}
+		break;
+
 	}
 }
 #endif

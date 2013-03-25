@@ -120,6 +120,18 @@ http_methods:
     'GET',
   }
 
+
+#Available targets
+http_available_targets:
+  comment:
+    'contains available targets for http requests'
+  defineShort:
+    'TARGETS'
+  stringlist: {
+    '',
+    'test'
+  }
+
 #Seperators for parsing
 parse_separators:
   comment:
