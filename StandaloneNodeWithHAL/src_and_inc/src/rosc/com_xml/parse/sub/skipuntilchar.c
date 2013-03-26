@@ -60,6 +60,7 @@
 				if(*buf==*sep)
 				{
 					isSpecChar=true;
+					pact->submode_data.skipUntilChr.fndchr=*sep;
 					break;
 				}
 				++sep;

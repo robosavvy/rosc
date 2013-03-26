@@ -62,14 +62,8 @@ typedef enum
 	PARSE_HTTP_STATE_METHSTR_METHODSTR,//!< PARSE_HTTP_STATE_METHSTR_METHODSTR -Checking method
 	PARSE_HTTP_STATE_METHSTR_BCKSLSH0, //!< PARSE_HTTP_STATE_METHSTR_BCKSLSH0 - Check backslash
 	PARSE_HTTP_STATE_METHSTR_TARGET,   //!< PARSE_HTTP_STATE_METHSTR_TARGET - Check if target available
-	PARSE_HTTP_STATE_METHSTR_HTTP,     //!< PARSE_HTTP_STATE_METHSTR_HTTP - Check for HTTP
-	PARSE_HTTP_STATE_METHSTR_SKPSPC2,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC1 - Skip spaces
-	PARSE_HTTP_STATE_METHSTR_BCKSLSH1, //!< PARSE_HTTP_STATE_METHSTR_BCKSLSH1 - Check backslash
-	PARSE_HTTP_STATE_METHSTR_SKPSPC3,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC2 - Skip spaces
-	PARSE_HTTP_STATE_METHSTR_MAIN_VER, //!< PARSE_HTTP_STATE_METHSTR_MAIN_VER - Check main version
-	PARSE_HTTP_STATE_METHSTR_POINT,    //!< PARSE_HTTP_STATE_METHSTR_POINT - Check subversion separator
-	PARSE_HTTP_STATE_METHSTR_SUB_VER,  //!< PARSE_HTTP_STATE_METHSTR_SUB_VER - Check subversion
-	PARSE_HTTP_STATE_METHSTR_LF,       //!< PARSE_HTTP_STATE_METHSTR_LF - wait for line feed
+	PARSE_HTTP_STATE_METHSTR_HTTP,     //!< PARSE_HTTP_STATE_METHSTR_HTTP - Parse HTTP/1.1
+	PARSE_HTTP_STATE_METHSTR_LF,        //!< PARSE_HTTP_STATE_METHSTR_LF - wait for line feed
 	PARSE_HTTP_STATE_DESCRIPTOR,       //!< PARSE_HTTP_STATE_DESCRIPTOR - seek descriptor inside string array
 	PARSE_HTTP_STATE_FIELD,           //!< PARSE_HTTTP_STATE_FIELD - parse state field (using submode)
 }parse_http_state_t;
@@ -189,6 +183,7 @@ typedef struct parse_act_t
 			uint16_t curChrPos;	//!< The char number since the start of seekString
 			uint16_t fit_min;	//!< The beginning of the range with possibly matching strings
 			uint16_t fit_max;	//!< The end of the range with possibly matching strings
+			char separator; //!< the separator which was found
 		}seekString;
 
 		struct
@@ -210,6 +205,7 @@ typedef struct parse_act_t
 		{
 			char* chrs; //!< chrs to skip/ to stop skip, according to negative
 			bool negative; //!< negative, if true the chars inside chrs will stop skipping
+			char fndchr; //!< the chr which was found
 		}skipUntilChr;
 
 		struct

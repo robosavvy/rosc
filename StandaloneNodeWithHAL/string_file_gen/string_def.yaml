@@ -89,7 +89,8 @@ http_header_stdtext:
     'VAL'
   stringlist: {
     'POST / HTTP/1.1':METHOD_POST,
-    'HTTP/1.0':REPLY_HTTP,
+    'HTTP/1.0':HTTP1_0,
+    'HTTP/1.1':HTTP1_1,
     'XMLRPC ROSc-NodeLib',
     'BaseHTTP/ROSc-NodeLib',
     'text/xml',

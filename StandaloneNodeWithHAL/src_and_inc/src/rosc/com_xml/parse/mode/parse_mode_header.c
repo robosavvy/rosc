@@ -74,10 +74,11 @@
 
 	//Check for the backslash
 	case PARSE_HTTP_STATE_METHSTR_BCKSLSH0:
+			if(len <= 0 ) break; //Make sure this is not the buffer end
 			if(*buf=='/')
 			{
-				buf++;
-				len--;
+				++buf;
+				--len;
 				PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_available_targets,HTTP_AVAILABLE_TARGETS_LEN," ");
 				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_TARGET;
 			}
@@ -105,28 +106,52 @@
 
 		//Compare HTTP
 		case PARSE_HTTP_STATE_METHSTR_HTTP:
-			{
-				char *http = "HTTP";
-				PARSE_SUBMODE_INIT_SEEKSTRING(pact,&http,1,"/");
-				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BCKSLSH1;
-			}
+			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_stdtext,HTTP_HEADER_STDTEXT_LEN," \n");
+			pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_LF;
+			break;
+
+		//Check HTTP and separator
+		case PARSE_HTTP_STATE_METHSTR_LF:
+				if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1)
+				{
+					if(pact->submode_data.seekString.separator=='\n')
+					{
+						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
+					}
+					else
+					{
+						pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+					}
+				}
+				else
+				{
+					pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+					PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+				}
 			break;
 
 
-		//Check for the backslash and check if HTTP was found.
-		case PARSE_HTTP_STATE_METHSTR_BCKSLSH1:
-			if(pact->submode_result>=0
-					&& (*buf=='/'))
-			{
-				buf++;
-				len--;
-			}
-			else
-			{
-				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
-			}
+		case PARSE_HTTP_STATE_DESCRIPTOR:
+
+			printf("I am here!\n");
+			while(1);
 			break;
+
+		case PARSE_HTTP_STATE_FIELD:
+
+			break;
+
+
+		//Check for the backslash and check if HTTP was found
+//		case PARSE_HTTP_STATE_METHSTR_BCKSLSH1:
+//		{
+//			if(pact->submode_result==0)
+//			{
+//
+//			}
+//		}
+//			break;
 	}
 }
 #endif
