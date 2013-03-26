@@ -67,7 +67,6 @@
 	//Parse Method
 	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
 			pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
-			pact->handler_fkt(pact);
 			pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_SKPSPC0;
 			PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 		break;

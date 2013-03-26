@@ -106,6 +106,14 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 			}
 		}
 	}
+
+	if(pact->event!=PARSE_EVENT_NONE)
+	{
+		pact->handler_fkt(pact);
+		pact->event=PARSE_EVENT_NONE;
+	}
+
+
 	if((len <= 0)  && pact->submode_state!=PARSE_SUBMODE_FINISHED)
 	{
 		chunk_processed=true;
