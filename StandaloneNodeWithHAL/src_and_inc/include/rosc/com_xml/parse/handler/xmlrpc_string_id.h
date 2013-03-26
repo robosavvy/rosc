@@ -46,9 +46,14 @@
 		__HTTP_AVAILABLE_TARGETS(HTTP)
 	}xmlrpc_server_target_t;
 
-	enum
+	typedef enum
 	{
 		__HTTP_HEADER_STDTEXT(HTTP)
 	}xmlrpc_server_stdtxt_t;
+
+	typedef enum
+	{
+		__HTTP_HEADER_DESCRIPTORS(HTTP)
+	}xmlrpc_header_descriptors_t;
 
 #endif /* XMLRPC_STRING_ID_H_ */

@@ -66,6 +66,7 @@ typedef enum
 	PARSE_HTTP_STATE_METHSTR_LF,        //!< PARSE_HTTP_STATE_METHSTR_LF - wait for line feed
 	PARSE_HTTP_STATE_DESCRIPTOR,       //!< PARSE_HTTP_STATE_DESCRIPTOR - seek descriptor inside string array
 	PARSE_HTTP_STATE_FIELD,           //!< PARSE_HTTTP_STATE_FIELD - parse state field (using submode)
+	PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS, //!< PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS skip separators inside the field
 }parse_http_state_t;
 
 /**
@@ -126,7 +127,7 @@ typedef enum
 	PARSE_EVENT_HTTP_METHOD_PARSED,
 	PARSE_EVENT_HTTP_TARGET_PARSED,
 
-}parse_event;
+}parse_event_t;
 
 
 
@@ -148,7 +149,7 @@ typedef struct parse_act_t
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	int16_t submode_result;	//!< contains the result code from each submode when finished
 	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
-	parse_event event; //!< tells the handler function what currently has happened.
+	parse_event_t event; //!< tells the handler function what currently has happened.
 
 	/**
 	 * The mode_data union stores the http and the xml data inside the same memory location.

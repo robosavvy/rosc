@@ -107,6 +107,10 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 		}
 		if(pact->event!=PARSE_EVENT_NONE)
 		{
+			if(pact->event<0)
+			{//ERROR skip this message
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			}
 			pact->handler_fkt(pact);
 			pact->event=PARSE_EVENT_NONE;
 		}

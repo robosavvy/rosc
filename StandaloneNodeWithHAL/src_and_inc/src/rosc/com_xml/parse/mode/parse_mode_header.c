@@ -47,6 +47,9 @@
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
+
+
+
 	switch(pact->mode_data.http.state)
 	{
 	//Parse the methodstring
@@ -66,15 +69,11 @@
 			else
 			{
 				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
-
-
 		break;
 
 	//Check for the backslash
 	case PARSE_HTTP_STATE_METHSTR_BCKSLSH0:
-			if(len <= 0 ) break; //Make sure this is not the buffer end
 			if(*buf=='/')
 			{
 				++buf;
@@ -85,7 +84,6 @@
 			else
 			{
 				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
 		break;
 
@@ -100,7 +98,6 @@
 			else
 			{
 				pact->event=PARSE_EVENT_ERROR_404;
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
 			break;
 
@@ -114,44 +111,69 @@
 		case PARSE_HTTP_STATE_METHSTR_LF:
 				if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1)
 				{
-					if(pact->submode_data.seekString.separator=='\n')
+					if(*buf=='\n')
 					{
 						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
 					}
 					else
 					{
 						pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 					}
 				}
 				else
 				{
 					pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-					PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 				}
 			break;
 
 
+		//Parse the descriptor
 		case PARSE_HTTP_STATE_DESCRIPTOR:
-
-			printf("I am here!\n");
-			while(1);
+			if(*buf=='\n')
+			{
+				++buf;
+				--len;
+			}
+			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
+			pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
 			break;
 
+
+
+
+		case PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS:
+			PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ;",false);
+		break;
+
+		//Check if we have a field to be parsed
 		case PARSE_HTTP_STATE_FIELD:
+			if(*buf==':' && pact->submode_result>=0)//check if separator was a :
+			{
+				++buf;
+				--len;
 
+
+					switch(pact->submode_result)
+					{
+	//				case HTTP_DESC_CONTENT_LENGTH:
+	//
+	//					break;
+	//				case HTTP_DESC_CONTENT_TYPE:
+	//
+	//					break;
+
+					default:
+						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
+						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
+						break;
+					}
+			}
+			else
+			{
+				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+			}
 			break;
 
-
-		//Check for the backslash and check if HTTP was found
-//		case PARSE_HTTP_STATE_METHSTR_BCKSLSH1:
-//		{
-//			if(pact->submode_result==0)
-//			{
-//
-//			}
-//		}
-//			break;
 	}
 }
 #endif

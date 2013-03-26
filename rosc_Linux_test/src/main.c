@@ -26,7 +26,7 @@
 #include <rosc/com_xml/parse/parser.h>
 
 char *test_message=
-" POST / HTTP/1.1\n"
+"POST / HTTP/1.1\n"
 "Host: sncn-10:53556\n"
 "Accept-Encoding: gzip\n"
 "User-Agent: xmlrpclib.py/1.0.1 (by www.pythonware.com)\n"
@@ -67,12 +67,12 @@ int main()
 	int i;
 	for(i=0;rlen-i*buffersize+buffersize>=0;i++)
 	{
-		printf("Current Chunk %i, Size %i: \n",i, (i+1)*buffersize);
 		int len=buffersize;
 		if(i*buffersize>rlen)
 		{
 			len=len-(i*buffersize-rlen);
 		}
+		printf("Current Chunk %i, Size %i: \n",i, len);
 		xmlrpc_parse(test_message+i*len,len,&pact);
 	}
 
