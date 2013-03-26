@@ -49,40 +49,84 @@
 	#endif
 	switch(pact->mode_data.http.state)
 	{
-	//Skip any space at the beginning
+	//Parse the methodstring
 	case PARSE_HTTP_STATE_METHSTR_BEGIN:
-			if(pact->submode!=PARSE_SUBMODE_SKIPUNTILCHAR)
+		PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_methods,HTTP_METHODS_LEN," ");
+		pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_METHODSTR;
+	break;
+
+	//Call handler to check what to do with the methodstring
+	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
+			if(pact->submode_result>=0)
 			{
-				printf("SKIP SPACES ... %c \n",*buf);
+				pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
+				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BCKSLSH0;
 				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 			}
 			else
 			{
-				printf("SPACES SKIPPED... %c \n",*buf);
-				PARSE_SUBMODE_INIT_SEEKSTRING(http_methods,HTTP_METHODS_LEN," ");
-				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_METHODSTR;
+				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
-			break;
 
-	//Parse Method
-	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
-			pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
-			pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_SKPSPC0;
-			PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
+
 		break;
 
-	case PARSE_HTTP_STATE_METHSTR_SKPSPC0:
-			pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
-			if(*buf!='/')
+	//Check for the backslash
+	case PARSE_HTTP_STATE_METHSTR_BCKSLSH0:
+			if(*buf=='/')
 			{
-
+				buf++;
+				len--;
+				PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_available_targets,HTTP_AVAILABLE_TARGETS_LEN," ");
+				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_TARGET;
 			}
 			else
 			{
-
+				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
 		break;
 
+	 //Check Target
+		case PARSE_HTTP_STATE_METHSTR_TARGET:
+			if(pact->submode_result>=0)
+			{
+				pact->event=PARSE_EVENT_HTTP_TARGET_PARSED;
+				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_HTTP;
+				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
+			}
+			else
+			{
+				pact->event=PARSE_EVENT_ERROR_404;
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			}
+			break;
+
+		//Compare HTTP
+		case PARSE_HTTP_STATE_METHSTR_HTTP:
+			{
+				char *http = "HTTP";
+				PARSE_SUBMODE_INIT_SEEKSTRING(pact,&http,1,"/");
+				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BCKSLSH1;
+			}
+			break;
+
+
+		//Check for the backslash and check if HTTP was found.
+		case PARSE_HTTP_STATE_METHSTR_BCKSLSH1:
+			if(pact->submode_result>=0
+					&& (*buf=='/'))
+			{
+				buf++;
+				len--;
+			}
+			else
+			{
+				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			}
+			break;
 	}
 }
 #endif

@@ -59,6 +59,12 @@ const char *parse_separators[] =
 	"\n:"
 };
 
+const char *http_available_targets[] =
+{
+	"",
+	"test"
+};
+
 const char *rpc_xml_tag_strings[] =
 {
 	"array",

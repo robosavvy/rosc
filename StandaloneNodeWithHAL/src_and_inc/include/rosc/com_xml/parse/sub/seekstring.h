@@ -38,12 +38,12 @@
 #define STRING_NOT_FOUND  -1
 
 
-#define PARSE_SUBMODE_INIT_SEEKSTRING(STRING_ARRAY,ARRAY_LEN,SEP)\
-				pact->submode_state=PARSE_SUBMODE_INIT;\
-				pact->submode=PARSE_SUBMODE_SEEKSTRING;\
-				pact->submode_data.seekString.stringlist=STRING_ARRAY;\
-				pact->submode_data.seekString.stringlist_len=ARRAY_LEN;\
-				pact->submode_data.seekString.endchrs=SEP;
+#define PARSE_SUBMODE_INIT_SEEKSTRING(PARSE_STRUCT,STRING_ARRAY,ARRAY_LEN,SEP)\
+				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
+				PARSE_STRUCT->submode=PARSE_SUBMODE_SEEKSTRING;\
+				PARSE_STRUCT->submode_data.seekString.stringlist=STRING_ARRAY;\
+				PARSE_STRUCT->submode_data.seekString.stringlist_len=ARRAY_LEN;\
+				PARSE_STRUCT->submode_data.seekString.endchrs=SEP;
 
 
 

@@ -126,9 +126,9 @@ http_available_targets:
   comment:
     'contains available targets for http requests'
   defineShort:
-    'TARGETS'
+    'TARGET'
   stringlist: {
-    '',
+    '':ROOT,
     'test'
   }
 

@@ -58,12 +58,10 @@ typedef enum
  */
 typedef enum
 {
-	PARSE_HTTP_STATE_METHSTR_BEGIN,    //!< PARSE_HTTP_STATE_METHSTR_BEGIN - Skipping every white space at start
-	PARSE_HTTP_STATE_METHSTR_METHODSTR,//!< PARSE_HTTP_STATE_METHSTR_METHODSTR - Seeking the Method string inside the list
-	PARSE_HTTP_STATE_METHSTR_SKPSPC0,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC0 - Skip spaces
+	PARSE_HTTP_STATE_METHSTR_BEGIN, //!<PARSE_HTTP_STATE_METHSTR_BEGIN - Init with seeking method string
+	PARSE_HTTP_STATE_METHSTR_METHODSTR,//!< PARSE_HTTP_STATE_METHSTR_METHODSTR -Checking method
 	PARSE_HTTP_STATE_METHSTR_BCKSLSH0, //!< PARSE_HTTP_STATE_METHSTR_BCKSLSH0 - Check backslash
 	PARSE_HTTP_STATE_METHSTR_TARGET,   //!< PARSE_HTTP_STATE_METHSTR_TARGET - Check if target available
-	PARSE_HTTP_STATE_METHSTR_SKPSPC1,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC1 - Skip spaces
 	PARSE_HTTP_STATE_METHSTR_HTTP,     //!< PARSE_HTTP_STATE_METHSTR_HTTP - Check for HTTP
 	PARSE_HTTP_STATE_METHSTR_SKPSPC2,  //!< PARSE_HTTP_STATE_METHSTR_SKPSPC1 - Skip spaces
 	PARSE_HTTP_STATE_METHSTR_BCKSLSH1, //!< PARSE_HTTP_STATE_METHSTR_BCKSLSH1 - Check backslash
@@ -127,10 +125,19 @@ typedef enum
  */
 typedef enum
 {
+	PARSE_EVENT_ERROR_404=-3,
+	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST=-2,
+	PARSE_EVENT_ERROR_HTTP_METHOD=-1,
 	PARSE_EVENT_NONE,
 	PARSE_EVENT_HTTP_METHOD_PARSED,
+	PARSE_EVENT_HTTP_TARGET_PARSED,
 
 }parse_event;
+
+
+
+
+
 
 /**
  * Definition for handler function type
@@ -145,7 +152,7 @@ typedef struct parse_act_t
 	parse_submode_t submode; //!< submode is the current sub mode the parser is using
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
-	uint8_t submode_result;	//!< contains the result code from each submode when finished
+	int16_t submode_result;	//!< contains the result code from each submode when finished
 	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
 	parse_event event; //!< tells the handler function what currently has happened.
 
@@ -223,8 +230,7 @@ typedef struct parse_act_t
  * Definition for handler function type
  */
 typedef void (*parse_handler_fct)(parse_act_t *pact);
-
-
+typedef void (*parse_handler_fct_cast)(void *pact);
 
 
 

@@ -26,20 +26,24 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipwholemessage.h created by Christian Holl on 20.03.2013
+ *  xmlrpc_string_id.h created by Christian Holl on 26.03.2013
  */
 
-#ifndef SKIPWHOLEMESSAGE_H_
-#define SKIPWHOLEMESSAGE_H_
+#ifndef XMLRPC_STRING_ID_H_
+#define XMLRPC_STRING_ID_H_
 
-#include <rosc/com_xml/parse/parser_structure.h>
-#include <rosc/system/types.h>
+#include <rosc/string_res/msg_strings.h>
 
-#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(PARSE_STRUCT)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPWHOLEMESSAGE
+	typedef enum
+	{
+		HTTP_METHOD_UNKNOWN,
+		__HTTP_METHODS(HTTP)
+	}xmlrpc_server_method_t;
 
-#ifndef FORCE_INLINE
-	void skipwholemessage(char *buf, uint32_t len, parse_act_t *pact);
-#endif
+	typedef enum
+	{
+		HTTP_TARGET_UNKOWN,
+		__HTTP_AVAILABLE_TARGETS(HTTP)
+	}xmlrpc_server_target_t;
 
-#endif /* SKIPWHOLEMESSAGE_H_ */
+#endif /* XMLRPC_STRING_ID_H_ */

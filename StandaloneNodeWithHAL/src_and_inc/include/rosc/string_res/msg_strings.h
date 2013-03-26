@@ -134,6 +134,24 @@ extern const char *parse_separators[];
 
 
 /**
+ * Length of the string array http_available_targets
+ */
+#define HTTP_AVAILABLE_TARGETS_LEN 	2
+
+/**
+ * Macro for inserting contains available targets for http requests string numbers into any enum
+ */
+#define __HTTP_AVAILABLE_TARGETS(ENUM) \
+	 ENUM ## _TARGET_ROOT, \
+	 ENUM ## _TARGET_TEST
+
+/**
+ * This array contains the strings for contains available targets for http requests
+ */
+extern const char *http_available_targets[];
+
+
+/**
  * Length of the string array rpc_xml_tag_strings
  */
 #define RPC_XML_TAG_STRINGS_LEN 	14

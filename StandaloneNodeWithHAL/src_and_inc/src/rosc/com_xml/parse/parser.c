@@ -11,7 +11,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 
 	switch (type) {
 		case  XMLRPC_SERVER:
-			pact->handler_fkt=&xmlrpc_server_handler;
+			pact->handler_fkt=(parse_handler_fct_cast) &xmlrpc_server_handler;
 			break;
 		case XMLRPC_CLIENT:
 			printf("TODO: IMPLEMENT!");
@@ -105,18 +105,15 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					break;
 			}
 		}
-	}
-
-	if(pact->event!=PARSE_EVENT_NONE)
-	{
-		pact->handler_fkt(pact);
-		pact->event=PARSE_EVENT_NONE;
-	}
-
-
-	if((len <= 0)  && pact->submode_state!=PARSE_SUBMODE_FINISHED)
-	{
-		chunk_processed=true;
+		if(pact->event!=PARSE_EVENT_NONE)
+		{
+			pact->handler_fkt(pact);
+			pact->event=PARSE_EVENT_NONE;
+		}
+		if((len <= 0)  && pact->submode_state!=PARSE_SUBMODE_FINISHED)
+		{
+			chunk_processed=true;
+		}
 	}
 }
 
