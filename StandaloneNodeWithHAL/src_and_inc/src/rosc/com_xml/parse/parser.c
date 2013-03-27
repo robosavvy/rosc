@@ -42,7 +42,8 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					#endif
 				break;
 			case PARSE_MODE_XML:
-
+				printf("XML\n");
+				while(1);
 				break;
 			default:
 				//TODO Error
