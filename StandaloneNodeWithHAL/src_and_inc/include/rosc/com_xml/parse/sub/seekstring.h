@@ -41,7 +41,7 @@
 #define PARSE_SUBMODE_INIT_SEEKSTRING(PARSE_STRUCT,STRING_ARRAY,ARRAY_LEN,SEP)\
 				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
 				PARSE_STRUCT->submode=PARSE_SUBMODE_SEEKSTRING;\
-				PARSE_STRUCT->submode_data.seekString.stringlist=STRING_ARRAY;\
+				PARSE_STRUCT->submode_data.seekString.stringlist=(char**)STRING_ARRAY;\
 				PARSE_STRUCT->submode_data.seekString.stringlist_len=ARRAY_LEN;\
 				PARSE_STRUCT->submode_data.seekString.endchrs=SEP;
 

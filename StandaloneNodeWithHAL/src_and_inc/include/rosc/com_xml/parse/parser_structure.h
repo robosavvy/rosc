@@ -66,14 +66,12 @@ typedef enum
 	PARSE_HTTP_STATE_METHSTR_LF,        //!< PARSE_HTTP_STATE_METHSTR_LF - wait for line feed
 	PARSE_HTTP_STATE_DESCRIPTOR,       //!< PARSE_HTTP_STATE_DESCRIPTOR - seek descriptor inside string array
 	PARSE_HTTP_STATE_FIELD,           //!< PARSE_HTTTP_STATE_FIELD - parse state parsed descripter, decide if known field
-	PARSE_HTTP_STATE_FIELD_SKIP_SPACES, //!< PARSE_HTTP_STATE_FIELD_SKIP_SPACES - Skip spaces after a known field definition
-	PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS, //!< PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS skip separators inside the field
 
 	PARSE_HTTP_STATE_GET_FIELD_VALUE,	//! PARSE_HTTP_STATE_FIELD_VALUE - Setup field parsing...
 	PARSE_HTTP_STATE_CONTENT_TYPE,	//! PARSE_HTTP_STATE_CONTENT_TYPE - Parse the content type field and check for (un)supported type(s)
 	PARSE_HTTP_STATE_CONTENT_LENGTH,    //! PARSE_HTTP_STATE_CONTENT_LENGTH - Parse the length of the incoming stuff
 
-	PARSE_HTTP_STATE_FIELD_CHECK_HANDLER_CMD, //!< PARSE_HTTP_STATE_FIELD_CHECK_HANDLER_CMD check if handler is interested in the field
+//	PARSE_HTTP_STATE_FIELD_CHECK_HANDLER_CMD, //!< PARSE_HTTP_STATE_FIELD_CHECK_HANDLER_CMD check if handler is interested in the field
 }parse_http_state_t;
 
 /**
@@ -136,7 +134,6 @@ typedef enum
 	PARSE_EVENT_HTTP_METHOD_PARSED,
 	PARSE_EVENT_HTTP_TARGET_PARSED,
 	PARSE_EVENT_HTTP_HEADER_FIELD,
-
 }parse_event_t;
 
 

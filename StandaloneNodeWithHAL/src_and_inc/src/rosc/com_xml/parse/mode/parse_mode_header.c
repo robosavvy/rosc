@@ -133,10 +133,11 @@
 			{
 				++buf;
 				--len;
-				if(*buf=='\n') //Header end
+				if(*buf=='\n')
 				{
-					printf("Header End!\n");
-					while(1);
+					pact->mode=PARSE_MODE_XML;
+
+					break;
 				}
 			}
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
@@ -152,10 +153,7 @@
 				pact->mode_data.http.state=PARSE_HTTP_STATE_CONTENT_LENGTH;
 				PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
 				break;
-//			case HTTP_DESC_CONTENT_TYPE:
-//				pact->mode_data.http.state=PARSE_HTTP_STATE_CONTENT_TYPE;
-//
-//				break;
+				//TODO Check for Content-Encoding / Content-type //Now we just guess we always get text/html
 			default:
 				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
 				pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
