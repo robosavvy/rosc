@@ -135,7 +135,8 @@
 				--len;
 				if(*buf=='\n') //Header end
 				{
-					printf("Header End!");
+					printf("Header End!\n");
+					while(1);
 				}
 			}
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
@@ -168,26 +169,32 @@
 
 		break;
 
-		//Parsing a string
+		//Checking the content length parsing result
 		case PARSE_HTTP_STATE_CONTENT_LENGTH:
 			switch(pact->submode_result)
 			{
 			case NUMBERPARSE_ANOTHER_CHAR:
 				pact->content_length=pact->submode_data.numberParse.number;
-				printf("content_length: %i\n", pact->content_length);
-				while(1);
+
+				if(*buf!=' ' && *buf!='\n')
+				{
+					pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH;
+				}
+				else
+				{
+					printf("content-length: %i\n", pact->content_length);
+					PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
+					pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
+				}
 				break;
 			case NUMBERPARSE_MAX_FIGURES:
-				pact->event=PARSE_EVENT_ERROR_MESSAGE_TOO_LONG;
+				pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG;
 				break;
 			case NUMBERPARSE_ERROR_NONUMBER:
-				pact->event=PARSE_EVENT_ERROR_LENGTH_NO_NUMBER;
+				pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH;
 				break;
 			}
 		break;
-
-
-
 
 		//Check if we have a field to be parsed
 		case PARSE_HTTP_STATE_FIELD:
@@ -200,8 +207,8 @@
 						//Known Field
 						pact->mode_data.http.descriptor=pact->submode_result;
 						pact->mode_data.http.state=PARSE_HTTP_STATE_GET_FIELD_VALUE;
-						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 						pact->event=PARSE_EVENT_HTTP_HEADER_FIELD;
+						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
 					}
 					else
 					{
