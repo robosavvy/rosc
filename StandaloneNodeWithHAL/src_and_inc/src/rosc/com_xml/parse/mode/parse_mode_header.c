@@ -133,39 +133,81 @@
 			{
 				++buf;
 				--len;
+				if(*buf=='\n') //Header end
+				{
+					printf("Header End!");
+				}
 			}
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
 			pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
 			break;
 
 
+		case PARSE_HTTP_STATE_GET_FIELD_VALUE:
 
-
-		case PARSE_HTTP_STATE_FIELD_SKIP_SEPARATORS:
-			PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ;",false);
+			switch(pact->mode_data.http.descriptor)
+			{
+			case HTTP_DESC_CONTENT_LENGTH:
+				pact->mode_data.http.state=PARSE_HTTP_STATE_CONTENT_LENGTH;
+				PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
+				break;
+//			case HTTP_DESC_CONTENT_TYPE:
+//				pact->mode_data.http.state=PARSE_HTTP_STATE_CONTENT_TYPE;
+//
+//				break;
+			default:
+				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
+				pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
+				break;
+			}
 		break;
+
+
+		//Parsing a number
+		case PARSE_HTTP_STATE_CONTENT_TYPE:
+
+		break;
+
+		//Parsing a string
+		case PARSE_HTTP_STATE_CONTENT_LENGTH:
+			switch(pact->submode_result)
+			{
+			case NUMBERPARSE_ANOTHER_CHAR:
+				pact->content_length=pact->submode_data.numberParse.number;
+				printf("content_length: %i\n", pact->content_length);
+				while(1);
+				break;
+			case NUMBERPARSE_MAX_FIGURES:
+				pact->event=PARSE_EVENT_ERROR_MESSAGE_TOO_LONG;
+				break;
+			case NUMBERPARSE_ERROR_NONUMBER:
+				pact->event=PARSE_EVENT_ERROR_LENGTH_NO_NUMBER;
+				break;
+			}
+		break;
+
+
+
 
 		//Check if we have a field to be parsed
 		case PARSE_HTTP_STATE_FIELD:
-			if(*buf==':' && pact->submode_result>=0)//check if separator was a :
+			if(*buf==':')//check if separator was a :
 			{
 				++buf;
 				--len;
-
-
-					switch(pact->submode_result)
+					if(pact->submode_result>=0)
 					{
-	//				case HTTP_DESC_CONTENT_LENGTH:
-	//
-	//					break;
-	//				case HTTP_DESC_CONTENT_TYPE:
-	//
-	//					break;
-
-					default:
+						//Known Field
+						pact->mode_data.http.descriptor=pact->submode_result;
+						pact->mode_data.http.state=PARSE_HTTP_STATE_GET_FIELD_VALUE;
+						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
+						pact->event=PARSE_EVENT_HTTP_HEADER_FIELD;
+					}
+					else
+					{
+						//Skip unknown field
 						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
 						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
-						break;
 					}
 			}
 			else

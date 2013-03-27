@@ -47,6 +47,12 @@
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
 	#endif
+
+	if(pact->submode_state==PARSE_SUBMODE_INIT)
+	{
+		pact->submode_data.numberParse.cur_place=0;
+		pact->submode_data.numberParse.number=0;
+	}
 	while(len > 0)
 	{
 		if(*buf>=48 && *buf<=57)
@@ -58,15 +64,8 @@
 			}
 			else
 			{
-
-				//create multiplicator
-				uint32_t multiplicator=1;
-				uint8_t  i;
-
-				for(i=0;i<pact->submode_data.numberParse.cur_place;++i)
-					multiplicator*=10;
-
-				pact->submode_data.numberParse.number+=((uint32_t)*buf)*multiplicator;
+				pact->submode_data.numberParse.number*=10;
+				pact->submode_data.numberParse.number+=*buf-48;
 				++pact->submode_data.numberParse.cur_place;
 				++buf;
 				--len;
@@ -75,6 +74,8 @@
 		else
 		{
 			pact->submode_result=NUMBERPARSE_ANOTHER_CHAR;
+			pact->submode_state=PARSE_SUBMODE_FINISHED;
+			break;
 		}
 	}
 	if(pact->submode_result)

@@ -34,6 +34,14 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 
+
+
+#define PARSE_SUBMODE_INIT_NUMBERPARSE(PARSE_STRUCT,MAX_FIGURES)\
+				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
+				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
+				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
+
+
 typedef enum
 {
 	NUMBERPARSE_MAX_FIGURES,
