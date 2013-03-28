@@ -26,32 +26,48 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_string_id.h created by Christian Holl on 26.03.2013
+ *  debug_out.h created by Christian Holl on 28.03.2013
  */
 
-#ifndef XMLRPC_STRING_ID_H_
-#define XMLRPC_STRING_ID_H_
+#ifndef DEBUG_OUT_H_
+#define DEBUG_OUT_H_
 
-#include <rosc/string_res/msg_strings.h>
+#ifdef __DEBUG__PRINTS__
+	#ifndef __DEBUG__WITH__XMOS__PRINTH__
+		#include <stdio.h>
+		#define STR "%s\n"
+		#define INT "%i\n"
+		#define CHR "%c\n"
+	#else
+		#include <print.h>
+		#define STR str
+		#define INT int
+		#define CHR chr
+	#endif
 
-	typedef enum
-	{
-		__HTTP_METHODS(HTTP)
-	}xmlrpc_server_method_t;
 
-	typedef enum
-	{
-		__HTTP_AVAILABLE_TARGETS(HTTP)
-	}xmlrpc_server_target_t;
+		#ifndef __DEBUG__WITH__XMOS__PRINTH__
+					#define DEBUG_PRINT(STR_INT_CHR, DESCR,  VARIABLE)\
+						printf(DESCR);\
+						printf(": ");\
+						printf(STR_INT_CHR,VARIABLE)
 
-	typedef enum
-	{
-		__HTTP_HEADER_STDTEXT(HTTP)
-	}xmlrpc_server_stdtxt_t;
+					#define	DEBUG_PRINT_STR(STR)\
+						printf(STR);\
+						printf("\n")
 
-	typedef enum
-	{
-		__HTTP_HEADER_DESCRIPTORS(HTTP)
-	}xmlrpc_header_descriptors_t;
+		#else
+					#define DEBUG_PRINT(STR_INT_CHR, DESCR,  VARIABLE)\
+					printstr(DESCR);\
+					printstr(": ");\
+					print ## STR_INT_CHR ## ln(VARIABLE)
 
-#endif /* XMLRPC_STRING_ID_H_ */
+					#define	DEBUG_PRINT_STR(STR)\
+						printstrln(STR)
+		#endif
+
+#else
+	#define DEBUG_PRINT(STR_INT_CHR, DESCR,  VARIABLE)
+	#define	DEBUG_PRINT_STR(STR)
+#endif
+#endif /* DEBUG_OUT_H_ */

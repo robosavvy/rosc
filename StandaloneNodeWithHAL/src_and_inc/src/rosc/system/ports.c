@@ -38,7 +38,7 @@ void closePort(port_id_t port_id)
 	}
 	else
 	{
-		printf("Error! Can not close port id: %i\n",port_id); //TODO Remove
+		DEBUG_PRINT(INT,"Error! Can not close port id",  port_id);
 	}
 }
 

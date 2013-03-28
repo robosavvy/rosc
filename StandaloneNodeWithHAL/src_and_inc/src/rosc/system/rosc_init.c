@@ -29,6 +29,6 @@
 #include <stdio.h> //TODO Remove
 void rosc_init()
 {
-	printf("ROS Init\n"); //TODO Remove
+	DEBUG_PRINT(STR,"","ROSC_INIT");
 	ports_info_init();
 }

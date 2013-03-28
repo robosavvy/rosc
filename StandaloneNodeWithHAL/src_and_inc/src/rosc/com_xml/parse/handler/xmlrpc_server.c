@@ -10,19 +10,19 @@ void xmlrpc_server_handler(parse_act_t * pact)
 	/*
 	 * Check events
 	 */
-	printf("Submode Result: %i\n",pact->submode_result);
+	DEBUG_PRINT(INT, "Submode Result",  pact->submode_result);
+
 	switch(pact->event)
 	{
 
 	case PARSE_EVENT_NONE:
-		printf("ERROR! this state should never be reached");
+		DEBUG_PRINT(STR, "ERROR! this state should never be reached",  "PARSE_EVENT_NONE");
 		break;
 	case PARSE_EVENT_HTTP_METHOD_PARSED:
 		data->method=pact->submode_result;
 		if(pact->submode_result <0) //Do we have that method?
 		{
-
-			printf("ERROR Method not supported 501 Cannot process request!");
+			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
 		}
 		break;
 	case PARSE_EVENT_HTTP_TARGET_PARSED:
@@ -30,7 +30,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		break;
 		if(pact->submode_result <0) //Do we have that target?
 		{
-			printf("Page not found 404 !");
+			DEBUG_PRINT(STR, "Page not found 404 !",  "PARSE_EVENT_METHOD");
 		}
 		break;
 

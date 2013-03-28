@@ -65,11 +65,6 @@
 				const char *ptr=*(pact->submode_data.seekString.stringlist+StrLstE);
 				char curChrStrLstE=*(ptr+pact->submode_data.seekString.curChrPos);
 
-//				printf("min %i\n", pact->submode_data.seekString.fit_min);
-//				printf("max %i\n", pact->submode_data.seekString.fit_max);
-//				printf("curChrStrLstE %c\n", curChrStrLstE);
-//				printf("curChrBuf %c\n", curChrBuf);
-
 				//If the current char inside the current entry of the string array is finished
 				if(curChrStrLstE == '\0')
 				{
@@ -111,12 +106,12 @@
 			{
 				if(!found)
 				{
-					printf("SEEKSTRING: NOT FOUND!\n");
+					DEBUG_PRINT(STR, "SEEKSTRING",  "NOT FOUND!");
 					pact->submode_result=STRING_NOT_FOUND;
 				}
 				else
 				{
-					printf("SEEKSTRING: FOUND! It's %s\n",pact->submode_data.seekString.stringlist[pact->submode_result]);
+					DEBUG_PRINT(STR, "SEEKSTRING",  pact->submode_data.seekString.stringlist[pact->submode_result]);
 				}
 				pact->submode_state=PARSE_SUBMODE_FINISHED;
 				break;

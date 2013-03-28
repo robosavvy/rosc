@@ -26,32 +26,31 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_string_id.h created by Christian Holl on 26.03.2013
+ *  parse_mode_xml.c created by Christian Holl on 28.03.2013
  */
 
-#ifndef XMLRPC_STRING_ID_H_
-#define XMLRPC_STRING_ID_H_
 
-#include <rosc/string_res/msg_strings.h>
+#ifndef FORCE_INLINE
+	#ifndef ENABLE_C
+		#define ENABLE_C
+	#endif
 
-	typedef enum
-	{
-		__HTTP_METHODS(HTTP)
-	}xmlrpc_server_method_t;
+	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
+	#include <rosc/com_xml/msg_gen.h>
 
-	typedef enum
-	{
-		__HTTP_AVAILABLE_TARGETS(HTTP)
-	}xmlrpc_server_target_t;
+#endif
 
-	typedef enum
-	{
-		__HTTP_HEADER_STDTEXT(HTTP)
-	}xmlrpc_server_stdtxt_t;
 
-	typedef enum
-	{
-		__HTTP_HEADER_DESCRIPTORS(HTTP)
-	}xmlrpc_header_descriptors_t;
+#ifndef FORCE_INLINE
+	void parse_mode_xml(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+#endif
+#ifdef ENABLE_C
+{
+	#ifndef FORCE_INLINE
+			uint32_t len=*len_ptr;
+	#endif
+	DEBUG_PRINT(STR,"XML","");
+	while(1);
 
-#endif /* XMLRPC_STRING_ID_H_ */
+}
+#endif

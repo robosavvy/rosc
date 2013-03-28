@@ -14,7 +14,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 			pact->handler_fkt=(parse_handler_fct_cast) &xmlrpc_server_handler;
 			break;
 		case XMLRPC_CLIENT:
-			printf("TODO: IMPLEMENT!");
+			DEBUG_PRINT(STR, "TODO:",  "IMPLEMENT!");
 			break;
 		default:
 			break;
@@ -42,8 +42,13 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					#endif
 				break;
 			case PARSE_MODE_XML:
-				printf("XML\n");
-				while(1);
+					#ifdef FORCE_INLINE
+						#define ENABLE_C
+							#include "mode/parse_mode_xml.c"
+						#undef ENABLE_C
+					#else
+						parse_mode_xml(buf, &len, pact);
+					#endif
 				break;
 			default:
 				//TODO Error
@@ -52,7 +57,8 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 		}
 		else
 		{
-			switch (pact->submode) {
+			switch (pact->submode)
+			{
 				case PARSE_SUBMODE_COPY2BUFFER:
 						#ifdef FORCE_INLINE
 							#define ENABLE_C
