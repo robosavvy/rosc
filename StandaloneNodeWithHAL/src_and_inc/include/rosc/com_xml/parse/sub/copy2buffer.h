@@ -41,7 +41,7 @@ typedef enum
 }copy2buffer_result_t;
 
 #ifndef FORCE_INLINE
-	void copy2buffer(char *buf, uint32_t len, parse_act_t *pact);
+	void copy2buffer(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
 #endif /* COPY2BUFFER_H_ */

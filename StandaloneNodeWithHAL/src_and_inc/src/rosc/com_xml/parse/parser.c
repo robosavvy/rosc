@@ -38,7 +38,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 							#include "mode/parse_mode_header.c"
 						#undef ENABLE_C
 					#else
-						parse_mode_header(buf, &len, pact);
+						parse_mode_header(&buf, &len, pact);
 					#endif
 				break;
 			case PARSE_MODE_XML:
@@ -47,7 +47,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 							#include "mode/parse_mode_xml.c"
 						#undef ENABLE_C
 					#else
-						parse_mode_xml(buf, &len, pact);
+						parse_mode_xml(&buf, &len, pact);
 					#endif
 				break;
 			default:
@@ -65,7 +65,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 								#include "sub/copy2buffer.c"
 							#undef ENABLE_C
 						#else
-							copy2buffer(buf, &len, pact);
+							copy2buffer(&buf, &len, pact);
 						#endif
 					break;
 
@@ -75,7 +75,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 								#include "sub/numberparse.c"
 							#undef ENABLE_C
 						#else
-							numberparse(buf, &len, pact);
+							numberparse(&buf, &len, pact);
 						#endif
 					break;
 
@@ -85,7 +85,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 								#include "sub/seekstring.c"
 							#undef ENABLE_C
 						#else
-							seekstring(buf, &len, pact);
+							seekstring(&buf, &len, pact);
 						#endif
 					break;
 
@@ -95,7 +95,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 								#include "sub/skipwholemessage.c"
 							#undef ENABLE_C
 						#else
-							skipwholemessage(buf, &len, pact);
+							skipwholemessage(&buf, &len, pact);
 						#endif
 					break;
 
@@ -105,7 +105,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 								#include "sub/skipuntilchar.c"
 							#undef ENABLE_C
 						#else
-							skipunitlchar(buf, &len, pact);
+							skipuntilchar(&buf, &len, pact);
 						#endif
 					break;
 				default:

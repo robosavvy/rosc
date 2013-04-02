@@ -39,7 +39,7 @@
 				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPWHOLEMESSAGE
 
 #ifndef FORCE_INLINE
-	void skipwholemessage(char *buf, uint32_t len, parse_act_t *pact);
+	void skipwholemessage(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
 #endif /* SKIPWHOLEMESSAGE_H_ */

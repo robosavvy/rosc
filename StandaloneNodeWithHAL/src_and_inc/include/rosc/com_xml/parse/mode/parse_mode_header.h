@@ -36,7 +36,7 @@
 
 
 #ifndef FORCE_INLINE
-	void parse_mode_header(char *buf, uint32_t len, parse_act_t *pact);
+	void parse_mode_header(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
 #endif /* PARSE_MODE_HEADER_H_ */

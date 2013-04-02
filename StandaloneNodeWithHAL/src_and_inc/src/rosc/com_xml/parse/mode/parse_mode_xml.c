@@ -42,15 +42,29 @@
 
 
 #ifndef FORCE_INLINE
-	void parse_mode_xml(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	void parse_mode_xml(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
+		uint32_t len=*len_ptr;
+		char *buf=*buf_ptr;
 	#endif
-	DEBUG_PRINT(STR,"XML","");
-	while(1);
 
+
+
+
+
+
+	DEBUG_PRINT(STR,"XMLa","abcfe ...");
+	exit(1);
+
+
+
+
+	#ifndef FORCE_INLINE
+		*len_ptr=len;
+		*buf_ptr=buf;
+	#endif
 }
 #endif

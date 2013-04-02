@@ -33,19 +33,18 @@
 	#ifndef ENABLE_C
 		#define ENABLE_C
 	#endif
-
 	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
-	#include <rosc/com_xml/msg_gen.h>
+	#include <rosc/com_xml/parse/handler/xmlrpc_string_id.h>
 #endif
 
-
 #ifndef FORCE_INLINE
-	void parse_mode_header(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	void parse_mode_header(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
+		uint32_t len=*len_ptr;
+		char *buf=*buf_ptr;
 	#endif
 
 
@@ -220,6 +219,10 @@
 			break;
 
 	}
+	#ifndef FORCE_INLINE
+		*len_ptr=len;
+		*buf_ptr=buf;
+	#endif
 }
 #endif
 

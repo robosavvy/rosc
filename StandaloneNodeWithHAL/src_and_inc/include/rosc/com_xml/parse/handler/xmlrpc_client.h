@@ -7,7 +7,7 @@
 typedef struct xmlrpc_client_data_t
 {
 	char test[12];
-}xmlrpc_server_data_t;
+}xmlrpc_client_data_t;
 
 void xmlrpc_client_handler(parse_act_t * pact);
 

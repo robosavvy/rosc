@@ -48,7 +48,7 @@
 
 
 #ifndef FORCE_INLINE
-	void seekstring(char *buf, uint32_t len, parse_act_t *pact);
+	void seekstring(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
 

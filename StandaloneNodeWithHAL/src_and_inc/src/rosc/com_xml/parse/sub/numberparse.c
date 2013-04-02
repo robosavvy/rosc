@@ -39,13 +39,14 @@
 
 
 #ifndef FORCE_INLINE
-	void numberparse(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	void numberparse(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
 	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
+			char *buf=*buf_ptr;
 	#endif
 
 	if(pact->submode_state==PARSE_SUBMODE_INIT)
@@ -82,8 +83,14 @@
 	{
 		if(pact->submode_data.numberParse.cur_place == 0)
 		pact->submode_result=NUMBERPARSE_ERROR_NONUMBER;
-		break;
 	}
+
+	#ifndef FORCE_INLINE
+		*len_ptr=len;
+		*buf_ptr=buf;
+	#endif
+
+
 }
 #endif
 

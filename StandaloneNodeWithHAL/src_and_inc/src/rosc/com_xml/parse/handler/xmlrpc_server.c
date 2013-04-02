@@ -15,8 +15,8 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 	if(pact->event<0)
 	{
-		printf("ERROR!\n");
-		while(1);
+		printf("ERROR !\n");
+		exit(1);
 	}
 
 	switch(pact->event)

@@ -29,7 +29,6 @@
  *  copy2buffer.c created by Christian Holl on 20.03.2013
  */
 
-
 #ifndef FORCE_INLINE
 	#ifndef ENABLE_C
 		#define ENABLE_C
@@ -40,13 +39,14 @@
 
 
 #ifndef FORCE_INLINE
-	void copy2buffer(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	void copy2buffer(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
 	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
 			uint32_t len=*len_ptr;
+			char *buf=*buf_ptr;
 	#endif
 
 	const char *sep=pact->submode_data.copy2Buffer.endChrs;
@@ -80,6 +80,10 @@
 		buf++;
 		len--;
 	}
+	#ifndef FORCE_INLINE
+		*len_ptr=len;
+		*buf_ptr=buf;
+	#endif
 }
 #endif
 

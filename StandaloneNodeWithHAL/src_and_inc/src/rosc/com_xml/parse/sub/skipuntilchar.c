@@ -39,13 +39,14 @@
 
 
 #ifndef FORCE_INLINE
-	void skipuntilchar(char *buf, uint32_t *len_ptr, parse_act_t *pact)
+	void skipuntilchar(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
 	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
+		uint32_t len=*len_ptr;
+		char *buf=*buf_ptr;
 	#endif
 
 		pact->submode_state=PARSE_SUBMODE_RUNNING;
@@ -78,6 +79,10 @@
 			buf++;
 			len--;
 		}
+	#ifndef FORCE_INLINE
+		*len_ptr=len;
+		*buf_ptr=buf;
+	#endif
 }
 #endif
 
