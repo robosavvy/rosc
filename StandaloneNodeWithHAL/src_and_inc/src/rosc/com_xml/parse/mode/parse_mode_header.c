@@ -113,6 +113,8 @@
 				{
 					if(*buf=='\n')
 					{
+						++buf;
+						--len;
 						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
 					}
 					else
@@ -133,12 +135,8 @@
 			{
 				++buf;
 				--len;
-				if(*buf=='\n')
-				{
-					pact->mode=PARSE_MODE_XML;
-
-					break;
-				}
+				pact->mode=PARSE_MODE_XML;
+				break;
 			}
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
 			pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
@@ -162,7 +160,7 @@
 		break;
 
 
-		//Parsing a number
+		//Checking if content type is supported
 		case PARSE_HTTP_STATE_CONTENT_TYPE:
 
 		break;

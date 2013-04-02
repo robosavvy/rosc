@@ -12,6 +12,13 @@ void xmlrpc_server_handler(parse_act_t * pact)
 	 */
 	DEBUG_PRINT(INT, "Submode Result",  pact->submode_result);
 
+
+	if(pact->event<0)
+	{
+		printf("ERROR!\n");
+		while(1);
+	}
+
 	switch(pact->event)
 	{
 
