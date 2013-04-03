@@ -72,7 +72,7 @@
 			switch(*buf)
 			{
 			case ' ':
-				switch(pact->mode_data.xml.state)
+					switch(pact->mode_data.xml.state)
 					{
 						case PARSE_XML_QMTAG_EXPECT_CLOSE:
 							pact->event=PARSE_EVENT_MALFORMED_XML;
@@ -95,10 +95,28 @@
 					}
 				break;
 			case '>':
-
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_QMTAG_EXPECT_CLOSE:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
+						default:
+							break;
+					}
 				break;
 			case '/':
-
+				switch(pact->mode_data.xml.state)
+				{
+					case PARSE_XML_TAG_START:
+						pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
+					break;
+					case PARSE_XML_INNER:
+					case PARSE_XML_ROOT:
+						break;
+					default:
+						pact->event=PARSE_EVENT_MALFORMED_XML;
+					break;
+				}
 				break;
 			case '?':
 				switch(pact->mode_data.xml.state)
@@ -118,7 +136,12 @@
 				}
 				break;
 			case '!':
-
+				switch(pact->mode_data.xml.state)
+				{
+					case PARSE_XML_TAG_START:
+						pact->mode_data.xml.state=PARSE_XML_EMTAG_START;
+					break;
+				}
 				break;
 			default:
 				switch(pact->mode_data.xml.state)
