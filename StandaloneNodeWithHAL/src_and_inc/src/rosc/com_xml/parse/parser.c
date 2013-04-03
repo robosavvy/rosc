@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <rosc/com_xml/parse/parser.h>
+#include <rosc/com_xml/parse/mode/parse_mode_xml.h>
+#include <rosc/com_xml/parse/mode/parse_mode_header.h>
+#include <rosc/com_xml/parse/sub/subs.h>
+
 
 void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * handler_data_storage)
 {

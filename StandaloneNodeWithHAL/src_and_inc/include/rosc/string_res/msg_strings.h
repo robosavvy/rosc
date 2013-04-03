@@ -155,12 +155,15 @@ extern const char *http_available_targets[];
 /**
  * Length of the string array rpc_xml_tag_strings
  */
-#define RPC_XML_TAG_STRINGS_LEN 	14
+#define RPC_XML_TAG_STRINGS_LEN 	17
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
  */
 #define __RPC_XML_TAG_STRINGS(ENUM) \
+	 ENUM ## _TAG_COMMENT, \
+	 ENUM ## _TAG_CDDATA, \
+	 ENUM ## _TAG_XMLDEF, \
 	 ENUM ## _TAG_ARRAY, \
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \

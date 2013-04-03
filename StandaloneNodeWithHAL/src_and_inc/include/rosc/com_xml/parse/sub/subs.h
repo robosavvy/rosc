@@ -26,22 +26,15 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  parse_mode_xml.h created by Christian Holl on 28.03.2013
+ *  subs.h created by Christian Holl on 03.04.2013
  */
 
-#ifndef PARSE_MODE_XML_H_
-#define PARSE_MODE_XML_H_
-
-#include <rosc/com_xml/parse/parser_structure.h>
-#include <rosc/com_xml/parse/sub/subs.h>
-
-
-#define PARSE_MODE_INIT_XML()\
-
-
-#ifndef FORCE_INLINE
-	void parse_mode_xml(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
-#endif
-
-
-#endif /* PARSE_MODE_XML_H_ */
+#ifndef SUBS_H_
+#define SUBS_H_
+	#include <rosc/com_xml/parse/sub/copy2buffer.h>
+    #include <rosc/com_xml/parse/sub/numberparse.h>
+	#include <rosc/com_xml/parse/sub/parseurl.h>
+	#include <rosc/com_xml/parse/sub/seekstring.h>
+	#include <rosc/com_xml/parse/sub/skipuntilchar.h>
+	#include <rosc/com_xml/parse/sub/skipwholemessage.h>
+#endif /* SUBS_H_ */

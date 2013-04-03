@@ -3,6 +3,9 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 #include <rosc/com_xml/parse/handler/xmlrpc_server.h>
+#include <rosc/com_xml/parse/handler/xmlrpc_client.h>
+
+
 typedef enum
 {
 	XMLRPC_SERVER,

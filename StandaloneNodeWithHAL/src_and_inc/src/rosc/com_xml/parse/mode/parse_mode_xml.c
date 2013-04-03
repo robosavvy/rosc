@@ -35,11 +35,12 @@
 		#define ENABLE_C
 	#endif
 
-	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
-	#include <rosc/com_xml/msg_gen.h>
+	#include <rosc/com_xml/parse/parser_structure.h>
+	#include <rosc/com_xml/parse/parser.h>
+	#include <rosc/string_res/msg_strings.h>
+	#include <rosc/com_xml/parse/mode/parse_mode_xml.h>
 
 #endif
-
 
 #ifndef FORCE_INLINE
 	void parse_mode_xml(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
@@ -50,18 +51,105 @@
 		uint32_t len=*len_ptr;
 		char *buf=*buf_ptr;
 	#endif
+// ///////////////////////////////////////
+
+		if(pact->mode_data.xml.state==PARSE_XML_INIT)
+		{
+			pact->mode_data.xml.depth=0;
+			pact->mode_data.xml.current_tag=XML_TAG_NONE;
+			pact->mode_data.xml.state=PARSE_XML_ROOT;
+		}
+
+		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
+				(pact->submode==PARSE_SUBMODE_NONE || pact->submode_state==PARSE_SUBMODE_FINISHED))
+		{
+			if(pact->submode!=PARSE_SUBMODE_NONE)
+			{
+				if(pact->submode_state!=PARSE_SUBMODE_FINISHED)
+					break;
+			}
+
+			switch(*buf)
+			{
+			case ' ':
+				switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_QMTAG_EXPECT_CLOSE:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
+						default:
+							break;
+					}
+				break;
+
+			case '<':
+					if(pact->mode_data.xml.state == PARSE_XML_INNER ||
+						pact->mode_data.xml.state == PARSE_XML_ROOT)
+					{
+						pact->mode_data.xml.state=PARSE_XML_TAG_START;
+					}
+					else
+					{
+						pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
+					}
+				break;
+			case '>':
+
+				break;
+			case '/':
+
+				break;
+			case '?':
+				switch(pact->mode_data.xml.state)
+				{
+					case PARSE_XML_TAG_START:
+						pact->mode_data.xml.state=PARSE_XML_QMTAG_START;
+					break;
+
+					case PARSE_XML_QMTAG:
+						pact->mode_data.xml.state=PARSE_XML_QMTAG_EXPECT_CLOSE;
+					break;
+
+					default:
+						pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
+					break;
+				}
+				break;
+			case '!':
+
+				break;
+			default:
+				switch(pact->mode_data.xml.state)
+				{
+				case PARSE_XML_TAG_START:
+					 pact->mode_data.xml.state=PARSE_XML_TAG_ID;
+					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
+				break;
+				case PARSE_XML_QMTAG_START:
+					pact->mode_data.xml.state=PARSE_XML_TAG_ID;
+					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
+				break;
+
+				default:
+					break;
+
+				}
+				break;
+			}
+
+			buf++;
+			len--;
+		}
 
 
-
-
-
-
-	DEBUG_PRINT(STR,"XMLa","abcfe ...");
+	DEBUG_PRINT(STR,"XML","...");
 	exit(1);
 
 
 
-
+// ///////////////////////////////////////
 	#ifndef FORCE_INLINE
 		*len_ptr=len;
 		*buf_ptr=buf;

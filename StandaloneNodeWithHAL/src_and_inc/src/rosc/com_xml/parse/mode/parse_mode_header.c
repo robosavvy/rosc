@@ -35,6 +35,7 @@
 	#endif
 	#include <rosc/com_xml/parse/mode/parse_mode_header.h>
 	#include <rosc/com_xml/parse/handler/xmlrpc_string_id.h>
+	#include <rosc/com_xml/parse/sub/subs.h>
 #endif
 
 #ifndef FORCE_INLINE
