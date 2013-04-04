@@ -1,0 +1,23 @@
+<package>
+  <name>rosc</name>
+  <version>0.0.1</version>
+  <description>
+    rosc is a C implementation of ROS. It provides
+    a client library that enables programmers of embedded devices 
+    to support ROS natively by crosscompiling the software for the device
+    on a full blown ROS system and only storing the machine code
+    on the target device.
+  </description>
+    <license>BSD</license>
+
+  <url>http://ros.org/wiki/rosc</url>
+  <author>Christian Holl</author>
+  
+  <build_depend>catkin</build_depend>
+  <build_depend>genmsg</build_depend>
+  <build_depend>pkg-config</build_depend>
+  <build_depend>rostime</build_depend>
+  <run_depend>rosgraph_msgs</run_depend>
+  <run_depend>rostime</run_depend>
+  <run_depend>std_msgs</run_depend>
+</package>
