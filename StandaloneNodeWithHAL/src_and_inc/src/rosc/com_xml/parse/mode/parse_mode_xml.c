@@ -58,6 +58,7 @@
 			pact->mode_data.xml.depth=0;
 			pact->mode_data.xml.current_tag=XML_TAG_NONE;
 			pact->mode_data.xml.state=PARSE_XML_ROOT;
+			pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
 		}
 
 		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
@@ -65,10 +66,41 @@
 		{
 			if(pact->submode!=PARSE_SUBMODE_NONE)
 			{
-				if(pact->submode_state!=PARSE_SUBMODE_FINISHED)
+				if(pact->submode_state==PARSE_SUBMODE_FINISHED)
+				{
+
+				}
+				else
+				{
 					break;
+				}
 			}
 
+
+			switch(pact->mode_data.xml.sub_state)
+			{
+			case PARSE_XML_SUB_TAG_ID:
+				pact->submode=PARSE_SUBMODE_NONE;
+				if(pact->submode_result<0)
+				{
+					pact->mode_data.xml.current_tag=XML_TAG_UNKNOWN;
+				}
+				else
+				{
+					pact->mode_data.xml.current_tag=pact->submode_result;
+				}
+				break;
+
+
+
+
+				default:
+
+				break;
+			}
+
+
+			//Check for different chars...
 			switch(*buf)
 			{
 			case ' ':
@@ -122,12 +154,16 @@
 				switch(pact->mode_data.xml.state)
 				{
 					case PARSE_XML_TAG_START:
-						pact->mode_data.xml.state=PARSE_XML_QMTAG_START;
+						pact->mode_data.xml.tag_type=XML_TAG_TYPE_QUESTION_MARK;
 					break;
 
-					case PARSE_XML_QMTAG:
-						pact->mode_data.xml.state=PARSE_XML_QMTAG_EXPECT_CLOSE;
+					case PARSE_XML_INNER:
+						break;
+
+					case PARSE_XML_TAG:
+
 					break;
+
 
 					default:
 						pact->event=PARSE_EVENT_MALFORMED_XML;
@@ -139,7 +175,15 @@
 				switch(pact->mode_data.xml.state)
 				{
 					case PARSE_XML_TAG_START:
-						pact->mode_data.xml.state=PARSE_XML_EMTAG_START;
+						pact->mode_data.xml.tag_type=XML_TAG_TYPE_EXCLAMATION_MARK;
+					break;
+
+					case PARSE_XML_INNER:
+						break;
+
+					default:
+						pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
 					break;
 				}
 				break;
@@ -147,17 +191,11 @@
 				switch(pact->mode_data.xml.state)
 				{
 				case PARSE_XML_TAG_START:
-					 pact->mode_data.xml.state=PARSE_XML_TAG_ID;
-					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
-				break;
-				case PARSE_XML_QMTAG_START:
-					pact->mode_data.xml.state=PARSE_XML_TAG_ID;
 					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
 				break;
 
 				default:
 					break;
-
 				}
 				break;
 			}
@@ -167,8 +205,8 @@
 		}
 
 
-	DEBUG_PRINT(STR,"XML","...");
-	exit(1);
+//	DEBUG_PRINT(STR,"XML","...");
+//	exit(1);
 
 
 

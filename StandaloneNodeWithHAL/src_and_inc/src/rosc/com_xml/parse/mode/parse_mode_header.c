@@ -50,6 +50,7 @@
 
 
 
+
 	switch(pact->mode_data.http.state)
 	{
 	//Parse the methodstring
@@ -136,6 +137,7 @@
 				++buf;
 				--len;
 				pact->mode=PARSE_MODE_XML;
+				pact->mode_data.xml.state=PARSE_XML_INIT;
 				break;
 			}
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
