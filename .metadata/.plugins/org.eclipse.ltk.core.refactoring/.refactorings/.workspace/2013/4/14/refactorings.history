@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete 2 resources" deleteContents="false" description="Delete 2 resources" element1="/rosc_node/include" element2="/rosc_node/src" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="2" stamp="1365120810352"/>
+<session version="1.0">&#x0A;<refactoring comment="Delete 2 resources" deleteContents="false" description="Delete 2 resources" element1="/rosc_node/include" element2="/rosc_node/src" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="2" stamp="1365120810352"/>&#x0A;<refactoring comment="Delete resource &apos;rosc_node/src_and_inc&apos;" deleteContents="false" description="Delete resource &apos;rosc_node/src_and_inc&apos;" element1="/rosc_node/src_and_inc" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1365121630766"/>
 </session>
