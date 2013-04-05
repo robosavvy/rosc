@@ -37,6 +37,7 @@
 	#include <rosc/com_xml/parse/sub/copy2buffer.h>
 #endif
 
+//FIXME 99% sure it will NOT work atm.
 
 #ifndef FORCE_INLINE
 	void copy2buffer(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
@@ -71,6 +72,8 @@
 		}
 		else if(isEndChar)
 		{
+			pact->submode_state=PARSE_SUBMODE_NONE;
+			pact->submode=PARSE_SUBMODE_NONE;
 			pact->submode_result=COPY2BUFFER_ENDCHR;
 		}
 		else

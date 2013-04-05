@@ -114,6 +114,7 @@
 				{
 					DEBUG_PRINT(STR, "SEEKSTRING",  pact->submode_data.seekString.stringlist[pact->submode_result]);
 				}
+				pact->submode=PARSE_SUBMODE_NONE;
 				pact->submode_state=PARSE_SUBMODE_FINISHED;
 				break;
 			}

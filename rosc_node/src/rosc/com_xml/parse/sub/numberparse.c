@@ -76,10 +76,11 @@
 		{
 			pact->submode_result=NUMBERPARSE_ANOTHER_CHAR;
 			pact->submode_state=PARSE_SUBMODE_FINISHED;
+			pact->submode=PARSE_SUBMODE_NONE;
 			break;
 		}
 	}
-	if(pact->submode_result)
+	if(pact->submode_result==NUMBERPARSE_ANOTHER_CHAR)
 	{
 		if(pact->submode_data.numberParse.cur_place == 0)
 		pact->submode_result=NUMBERPARSE_ERROR_NONUMBER;

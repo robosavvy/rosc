@@ -16,9 +16,9 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   #If the string can't be used as enum declaration in C, you 
                   #can specifiy a replacement for it after a : like 
                   #shown in the next variable definition                  
-                  '?xml':XMLDEF,
-                  '!--':COMMENT,
-                  '![CDATA[':CDDATA,
+                  'xml':XMLDEF,
+                  '--':COMMENT,
+                  '[CDATA[':CDDATA,
                   boolean,
                   data,
                   fault,

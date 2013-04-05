@@ -18,3 +18,6 @@
 
 #Linux TXT Editor Backup
 *.*~
+
+#Eclipse workspace data folder
+.metadata

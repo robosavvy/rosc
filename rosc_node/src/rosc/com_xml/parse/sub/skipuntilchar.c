@@ -69,6 +69,7 @@
 					(!isSpecChar && !pact->submode_data.skipUntilChr.negative))
 			{
 				pact->submode_state=PARSE_SUBMODE_FINISHED;
+				pact->submode=PARSE_SUBMODE_NONE;
 				if(pact->submode_data.skipUntilChr.negative)
 				{
 					buf++;

@@ -68,9 +68,8 @@ const char *http_available_targets[] =
 
 const char *rpc_xml_tag_strings[] =
 {
-	"!--",
-	"![CDATA[",
-	"?xml",
+	"--",
+	"[CDATA[",
 	"array",
 	"boolean",
 	"data",
@@ -84,7 +83,8 @@ const char *rpc_xml_tag_strings[] =
 	"params",
 	"string",
 	"struct",
-	"value"
+	"value",
+	"xml"
 };
 
 const char *http_methods[] =

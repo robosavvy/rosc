@@ -191,7 +191,9 @@
 				switch(pact->mode_data.xml.state)
 				{
 				case PARSE_XML_TAG_START:
+					 printf("Submode State: %i",pact->submode_state);
 					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
+					 printf("Submode State: %i",pact->submode_state);
 				break;
 
 				default:
@@ -200,8 +202,16 @@
 				break;
 			}
 
-			buf++;
-			len--;
+			if(pact->submode==PARSE_SUBMODE_NONE)
+			{
+				buf++;
+				len--;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("GOING INTO SUBMODE");
+				break;
+			}
 		}
 
 

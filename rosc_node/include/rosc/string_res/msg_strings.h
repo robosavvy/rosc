@@ -163,7 +163,6 @@ extern const char *http_available_targets[];
 #define __RPC_XML_TAG_STRINGS(ENUM) \
 	 ENUM ## _TAG_COMMENT, \
 	 ENUM ## _TAG_CDDATA, \
-	 ENUM ## _TAG_XMLDEF, \
 	 ENUM ## _TAG_ARRAY, \
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \
@@ -177,7 +176,8 @@ extern const char *http_available_targets[];
 	 ENUM ## _TAG_PARAMS, \
 	 ENUM ## _TAG_STRING, \
 	 ENUM ## _TAG_STRUCT, \
-	 ENUM ## _TAG_VALUE
+	 ENUM ## _TAG_VALUE, \
+	 ENUM ## _TAG_XMLDEF
 
 /**
  * This array contains the strings for standard XMLRPC tags
