@@ -31,7 +31,7 @@
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/x86_64-linux-gnu"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/src_and_inc/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.877807531" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -47,7 +47,22 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.66505261.1748143890" name="/" resourcePath="include">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.1376101061" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.820100387" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1683851840"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.506212349" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1593905123"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.776526030" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1271052135">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1842591985" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.513959994" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug.284802734"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.738136300" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.202022999"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.59322470" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug.1618115738">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1478503942" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="include"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>

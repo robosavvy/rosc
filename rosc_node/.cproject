@@ -36,9 +36,9 @@
 								<option id="gnu.c.compiler.option.include.paths.1003667628" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/rosc_sys_linux_x86/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/rosc_example_messages/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../ROScNode Library/src_and_inc/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.942998728" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -54,9 +54,9 @@
 								<option id="gnu.both.asm.option.include.paths.1947853572" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/rosc_sys_linux_x86/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/rosc_example_messages/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../ROScNode Library/src_and_inc/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.649192722" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>

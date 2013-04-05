@@ -1,0 +1,122 @@
+09:42:36 **** Build of configuration Debug for project rosc_Linux_test ****
+make all 
+Building file: ../src/main.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/main.d" -MT"src/main.d" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_sys_linux_x86/src/system_linux.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_sys_linux_x86_src/system_linux.d" -MT"external_sources/rosc_sys_linux_x86_src/system_linux.d" -o "external_sources/rosc_sys_linux_x86_src/system_linux.o" "/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/src/system_linux.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_init.c: In function ‘rosc_init’:
+Finished building: /home/choll/Entwicklung/rosc/rosc_sys_linux_x86/src/system_linux.c
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_init.c:32:2: warning: zero-length gnu_printf format string [-Wformat-zero-length]
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/ports.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/system/ports.d" -MT"external_sources/rosc_node_src/rosc/system/ports.d" -o "external_sources/rosc_node_src/rosc/system/ports.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/ports.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/ports.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_init.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/system/rosc_init.d" -MT"external_sources/rosc_node_src/rosc/system/rosc_init.d" -o "external_sources/rosc_node_src/rosc/system/rosc_init.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_init.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_init.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_spin.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/system/rosc_spin.d" -MT"external_sources/rosc_node_src/rosc/system/rosc_spin.d" -o "external_sources/rosc_node_src/rosc/system/rosc_spin.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_spin.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c: In function ‘xmlrpc_server_handler’:
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:19:3: warning: implicit declaration of function ‘exit’ [-Wimplicit-function-declaration]
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/rosc_spin.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/system.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/system/system.d" -MT"external_sources/rosc_node_src/rosc/system/system.d" -o "external_sources/rosc_node_src/rosc/system/system.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/system.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/system/system.c
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:19:3: warning: incompatible implicit declaration of built-in function ‘exit’ [enabled by default]
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/string_res/msg_strings.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/string_res/msg_strings.d" -MT"external_sources/rosc_node_src/rosc/string_res/msg_strings.d" -o "external_sources/rosc_node_src/rosc/string_res/msg_strings.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/string_res/msg_strings.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG’ not handled in switch [-Wswitch]
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/string_res/msg_strings.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/copy2buffer.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/copy2buffer.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/copy2buffer.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/copy2buffer.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/copy2buffer.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_ERROR_CONTENT_LENGTH’ not handled in switch [-Wswitch]
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/copy2buffer.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/numberparse.c
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_ERROR_404’ not handled in switch [-Wswitch]
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/numberparse.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/numberparse.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/numberparse.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/numberparse.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_ERROR_HTTP_BAD_REQUEST’ not handled in switch [-Wswitch]
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/numberparse.c
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_ERROR_HTTP_METHOD’ not handled in switch [-Wswitch]
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/parseurl.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/parseurl.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/parseurl.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/parseurl.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/parseurl.c"
+/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c:22:2: warning: enumeration value ‘PARSE_EVENT_HTTP_HEADER_FIELD’ not handled in switch [-Wswitch]
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/parseurl.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/seekstring.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/seekstring.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/seekstring.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/seekstring.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/seekstring.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/seekstring.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipuntilchar.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipuntilchar.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipuntilchar.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipuntilchar.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipuntilchar.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipuntilchar.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipwholemessage.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipwholemessage.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipwholemessage.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipwholemessage.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipwholemessage.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/sub/skipwholemessage.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_header.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_header.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_header.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_header.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_header.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_header.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_xml.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_xml.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_xml.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_xml.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_xml.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/mode/parse_mode_xml.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_client.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_client.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_client.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_client.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_client.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_client.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_server.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_server.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_server.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/handler/xmlrpc_server.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/parser.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/parse/parser.d" -MT"external_sources/rosc_node_src/rosc/com_xml/parse/parser.d" -o "external_sources/rosc_node_src/rosc/com_xml/parse/parser.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/parser.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/parse/parser.c
+ 
+Building file: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/msg_gen.c
+Invoking: GCC C Compiler
+gcc -D__DEBUG__PRINTS__ -I/opt/ros/groovy/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/4.7/include -I"/home/choll/Entwicklung/rosc/rosc_node/include" -I"/home/choll/Entwicklung/rosc/rosc_example_messages/include" -I"/home/choll/Entwicklung/rosc/rosc_sys_linux_x86/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"external_sources/rosc_node_src/rosc/com_xml/msg_gen.d" -MT"external_sources/rosc_node_src/rosc/com_xml/msg_gen.d" -o "external_sources/rosc_node_src/rosc/com_xml/msg_gen.o" "/home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/msg_gen.c"
+Finished building: /home/choll/Entwicklung/rosc/rosc_node/src/rosc/com_xml/msg_gen.c
+ 
+Building target: rosc_Linux_test
+Invoking: GCC C Linker
+gcc  -o "rosc_Linux_test"  ./src/main.o  ./external_sources/rosc_sys_linux_x86_src/system_linux.o  ./external_sources/rosc_node_src/rosc/system/ports.o ./external_sources/rosc_node_src/rosc/system/rosc_init.o ./external_sources/rosc_node_src/rosc/system/rosc_spin.o ./external_sources/rosc_node_src/rosc/system/system.o  ./external_sources/rosc_node_src/rosc/string_res/msg_strings.o  ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/copy2buffer.o ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/numberparse.o ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/parseurl.o ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/seekstring.o ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipuntilchar.o ./external_sources/rosc_node_src/rosc/com_xml/parse/sub/skipwholemessage.o  ./external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_header.o ./external_sources/rosc_node_src/rosc/com_xml/parse/mode/parse_mode_xml.o  ./external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_client.o ./external_sources/rosc_node_src/rosc/com_xml/parse/handler/xmlrpc_server.o  ./external_sources/rosc_node_src/rosc/com_xml/parse/parser.o  ./external_sources/rosc_node_src/rosc/com_xml/msg_gen.o   
+Finished building target: rosc_Linux_test
+ 
+09:42:42 **** Build of configuration Debug for project rosc_example_messages ****
+ all 
+09:42:42 **** Build of configuration Debug for project rosc_node ****
+ all 
+09:42:42 **** Build of configuration Debug for project rosc_sys_linux_x86 ****
+ all 
+09:43:13 **** Incremental Build of configuration Debug for project rosc_Linux_test ****
+make all 
+make: Nothing to be done for `all'.
