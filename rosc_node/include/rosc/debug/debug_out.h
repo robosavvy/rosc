@@ -35,9 +35,9 @@
 #ifdef __DEBUG__PRINTS__
 	#ifndef __DEBUG__WITH__XMOS__PRINTH__
 		#include <stdio.h>
-		#define STR "%s\n"
-		#define INT "%i\n"
-		#define CHR "%c\n"
+		#define STR "%s"
+		#define INT "%i"
+		#define CHR "%c"
 	#else
 		#include <print.h>
 		#define STR str
@@ -50,7 +50,8 @@
 					#define DEBUG_PRINT(STR_INT_CHR, DESCR,  VARIABLE)\
 						printf(DESCR);\
 						printf(": ");\
-						printf(STR_INT_CHR,VARIABLE)
+						printf(STR_INT_CHR,VARIABLE);\
+						printf("\n")
 
 					#define	DEBUG_PRINT_STR(STR)\
 						printf(STR);\
@@ -61,6 +62,7 @@
 					printstr(DESCR);\
 					printstr(": ");\
 					print ## STR_INT_CHR ## ln(VARIABLE)
+
 
 					#define	DEBUG_PRINT_STR(STR)\
 						printstrln(STR)

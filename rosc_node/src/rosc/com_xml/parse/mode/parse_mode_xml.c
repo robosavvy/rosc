@@ -64,11 +64,12 @@
 		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
 				pact->submode==PARSE_SUBMODE_NONE)
 		{
-
+			//Are we inside a substate (awaiting "reply" from subfunction_state?)
+			//If yes, in which one?
 			switch(pact->mode_data.xml.sub_state)
 			{
 			case PARSE_XML_SUB_TAG_ID:
-				pact->submode=PARSE_SUBMODE_NONE;
+				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
 				if(pact->submode_result<0)
 				{
 					pact->mode_data.xml.current_tag=XML_TAG_UNKNOWN;
@@ -76,10 +77,15 @@
 				else
 				{
 					pact->mode_data.xml.current_tag=pact->submode_result;
-					pact->event=PARSE_EVENT_NONE;
+					pact->event=PARSE_EVENT_TAG;
 				}
+				pact->mode_data.xml.state=PARSE_XML_TAG;
 				break;
-			default:
+
+
+
+
+			default: //we are not ...
 				//Check for different chars...
 				switch(*buf)
 				{
@@ -172,11 +178,14 @@
 					switch(pact->mode_data.xml.state)
 					{
 					case PARSE_XML_TAG_START:
-						 printf("Submode State: %i",pact->submode_state);
-						 pact->mode_data.xml.state=PARSE_XML_SUB_TAG_ID;
-						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
-						 printf("Submode State: %i",pact->submode_state);
+						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_TAG_ID;
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," =\"\'/<>?!");
 					break;
+
+					case PARSE_XML_TAG: //A non empty space inside a tag means, that we have a attribute.
+						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_ATTRIBUTE_ID;
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," =\"\'/<>?!");
+						break;
 
 					default:
 						break;
@@ -195,7 +204,6 @@
 				}
 				break;
 			}
-	break;
 
 
 
