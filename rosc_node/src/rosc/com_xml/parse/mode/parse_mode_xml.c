@@ -62,20 +62,8 @@
 		}
 
 		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
-				(pact->submode==PARSE_SUBMODE_NONE || pact->submode_state==PARSE_SUBMODE_FINISHED))
+				pact->submode==PARSE_SUBMODE_NONE)
 		{
-			if(pact->submode!=PARSE_SUBMODE_NONE)
-			{
-				if(pact->submode_state==PARSE_SUBMODE_FINISHED)
-				{
-
-				}
-				else
-				{
-					break;
-				}
-			}
-
 
 			switch(pact->mode_data.xml.sub_state)
 			{
@@ -88,136 +76,131 @@
 				else
 				{
 					pact->mode_data.xml.current_tag=pact->submode_result;
-				}
-				break;
-
-
-
-
-				default:
-
-				break;
-			}
-
-
-			//Check for different chars...
-			switch(*buf)
-			{
-			case ' ':
-					switch(pact->mode_data.xml.state)
-					{
-						case PARSE_XML_QMTAG_EXPECT_CLOSE:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
-						break;
-						default:
-							break;
-					}
-				break;
-
-			case '<':
-					if(pact->mode_data.xml.state == PARSE_XML_INNER ||
-						pact->mode_data.xml.state == PARSE_XML_ROOT)
-					{
-						pact->mode_data.xml.state=PARSE_XML_TAG_START;
-					}
-					else
-					{
-						pact->event=PARSE_EVENT_MALFORMED_XML;
-						break;
-					}
-				break;
-			case '>':
-					switch(pact->mode_data.xml.state)
-					{
-						case PARSE_XML_QMTAG_EXPECT_CLOSE:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
-						break;
-						default:
-							break;
-					}
-				break;
-			case '/':
-				switch(pact->mode_data.xml.state)
-				{
-					case PARSE_XML_TAG_START:
-						pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
-					break;
-					case PARSE_XML_INNER:
-					case PARSE_XML_ROOT:
-						break;
-					default:
-						pact->event=PARSE_EVENT_MALFORMED_XML;
-					break;
-				}
-				break;
-			case '?':
-				switch(pact->mode_data.xml.state)
-				{
-					case PARSE_XML_TAG_START:
-						pact->mode_data.xml.tag_type=XML_TAG_TYPE_QUESTION_MARK;
-					break;
-
-					case PARSE_XML_INNER:
-						break;
-
-					case PARSE_XML_TAG:
-
-					break;
-
-
-					default:
-						pact->event=PARSE_EVENT_MALFORMED_XML;
-						break;
-					break;
-				}
-				break;
-			case '!':
-				switch(pact->mode_data.xml.state)
-				{
-					case PARSE_XML_TAG_START:
-						pact->mode_data.xml.tag_type=XML_TAG_TYPE_EXCLAMATION_MARK;
-					break;
-
-					case PARSE_XML_INNER:
-						break;
-
-					default:
-						pact->event=PARSE_EVENT_MALFORMED_XML;
-						break;
-					break;
+					pact->event=PARSE_EVENT_NONE;
 				}
 				break;
 			default:
-				switch(pact->mode_data.xml.state)
+				//Check for different chars...
+				switch(*buf)
 				{
-				case PARSE_XML_TAG_START:
-					 printf("Submode State: %i",pact->submode_state);
-					 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
-					 printf("Submode State: %i",pact->submode_state);
-				break;
-
-				default:
+				case ' ':
+						switch(pact->mode_data.xml.state)
+						{
+							case PARSE_XML_QMTAG_EXPECT_CLOSE:
+							case PARSE_XML_TAG_START:
+								pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+							default:
+								break;
+						}
 					break;
+
+				case '<':
+						if(pact->mode_data.xml.state == PARSE_XML_INNER ||
+							pact->mode_data.xml.state == PARSE_XML_ROOT)
+						{
+							pact->mode_data.xml.state=PARSE_XML_TAG_START;
+						}
+						else
+						{
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						}
+					break;
+				case '>':
+						switch(pact->mode_data.xml.state)
+						{
+							case PARSE_XML_QMTAG_EXPECT_CLOSE:
+								pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+							default:
+								break;
+						}
+					break;
+				case '/':
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_TAG_START:
+							pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
+						break;
+						case PARSE_XML_INNER:
+						case PARSE_XML_ROOT:
+							break;
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+						break;
+					}
+					break;
+				case '?':
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_TAG_START:
+							pact->mode_data.xml.tag_type=XML_TAG_TYPE_QUESTION_MARK;
+						break;
+
+						case PARSE_XML_INNER:
+							break;
+
+						case PARSE_XML_TAG:
+
+						break;
+
+
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						break;
+					}
+					break;
+				case '!':
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_TAG_START:
+							pact->mode_data.xml.tag_type=XML_TAG_TYPE_EXCLAMATION_MARK;
+						break;
+
+						case PARSE_XML_INNER:
+							break;
+
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						break;
+					}
+					break;
+				default:
+					switch(pact->mode_data.xml.state)
+					{
+					case PARSE_XML_TAG_START:
+						 printf("Submode State: %i",pact->submode_state);
+						 pact->mode_data.xml.state=PARSE_XML_SUB_TAG_ID;
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," /<>?!");
+						 printf("Submode State: %i",pact->submode_state);
+					break;
+
+					default:
+						break;
+					}
+					break;
+				}
+
+				if(pact->submode==PARSE_SUBMODE_NONE)
+				{
+					buf++;
+					len--;
+				}
+				else
+				{
+					DEBUG_PRINT_STR("GOING INTO SUBMODE");
 				}
 				break;
 			}
+	break;
 
-			if(pact->submode==PARSE_SUBMODE_NONE)
-			{
-				buf++;
-				len--;
-			}
-			else
-			{
-				DEBUG_PRINT_STR("GOING INTO SUBMODE");
-				break;
-			}
+
+
+
 		}
-
-
-//	DEBUG_PRINT(STR,"XML","...");
-//	exit(1);
-
 
 
 // ///////////////////////////////////////

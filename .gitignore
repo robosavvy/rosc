@@ -10,6 +10,7 @@
 *.so
 *.so.*
 *.dylib
+*.d
 
 # Executables
 *.exe
@@ -19,5 +20,12 @@
 #Linux TXT Editor Backup
 *.*~
 
+
 #Eclipse workspace data folder
 .metadata
+
+#Eclipse binary folder for debug
+*/Debug/*
+
+#Eclipse binary folder for release
+*/Release/*
