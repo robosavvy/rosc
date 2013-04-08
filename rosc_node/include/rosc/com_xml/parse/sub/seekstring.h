@@ -43,7 +43,8 @@
 				PARSE_STRUCT->submode=PARSE_SUBMODE_SEEKSTRING;\
 				PARSE_STRUCT->submode_data.seekString.stringlist=(char**)STRING_ARRAY;\
 				PARSE_STRUCT->submode_data.seekString.stringlist_len=ARRAY_LEN;\
-				PARSE_STRUCT->submode_data.seekString.endchrs=SEP;
+				PARSE_STRUCT->submode_data.seekString.endchrs=SEP
+
 
 
 

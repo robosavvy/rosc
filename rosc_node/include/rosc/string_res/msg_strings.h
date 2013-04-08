@@ -13,13 +13,13 @@
 #define RPC_XML_ATTRIBUTE_STRINGS_LEN 	1
 
 /**
- * Macro for inserting standard attributes for XMLRPC (None available just a "dummy" for the parser) string numbers into any enum
+ * Macro for inserting standard attributes for XMLRPC string numbers into any enum
  */
 #define __RPC_XML_ATTRIBUTE_STRINGS(ENUM) \
-	 ENUM ## _ATTRIBUTE_DUMMY
+	 ENUM ## _ATTRIBUTE_VERSION
 
 /**
- * This array contains the strings for standard attributes for XMLRPC (None available just a "dummy" for the parser)
+ * This array contains the strings for standard attributes for XMLRPC
  */
 extern const char *rpc_xml_attribute_strings[];
 

@@ -40,11 +40,11 @@ rpc_xml_tag_strings: # <- This is the variable name for the
 #Known Attributes strings XML
 rpc_xml_attribute_strings:
   comment: 
-    'standard attributes for XMLRPC (None available just a "dummy" for the parser)'
+    'standard attributes for XMLRPC'
   defineShort:
     'ATTRIBUTE'
   stringlist: {
-    dummy
+    version
   }
 
 #Standard strings for XMLRPC

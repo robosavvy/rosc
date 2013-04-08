@@ -7,7 +7,7 @@
  
 const char *rpc_xml_attribute_strings[] =
 {
-	"dummy"
+	"version"
 };
 
 const char *http_header_stdtext[] =

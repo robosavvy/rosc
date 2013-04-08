@@ -119,8 +119,6 @@
 				break;
 			}
 
-
-
 			buf++;
 			pact->submode_data.seekString.curChrPos++;
 			len--;

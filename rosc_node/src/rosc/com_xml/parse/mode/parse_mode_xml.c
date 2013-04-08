@@ -64,6 +64,8 @@
 		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
 				pact->submode==PARSE_SUBMODE_NONE)
 		{
+
+
 			//Are we inside a substate (awaiting "reply" from subfunction_state?)
 			//If yes, in which one?
 			switch(pact->mode_data.xml.sub_state)
@@ -82,11 +84,22 @@
 				pact->mode_data.xml.state=PARSE_XML_TAG;
 				break;
 
+			case PARSE_XML_SUB_ATTRIBUTE_ID:
+				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
+				if(pact->submode_result<0)
+				{
+					pact->mode_data.xml.attribute=XML_ATTRIBUTE_NONE;
+				}
+				else
+				{
+					pact->mode_data.xml.attribute=pact->submode_result;
+				}
+				pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_WAIT_EQUAL;
+				break;
+			default:
+				break;
+			}
 
-
-
-			default: //we are not ...
-				//Check for different chars...
 				switch(*buf)
 				{
 				case ' ':
@@ -94,6 +107,7 @@
 						{
 							case PARSE_XML_QMTAG_EXPECT_CLOSE:
 							case PARSE_XML_TAG_START:
+							case PARSE_XML_ATTRIBUTE_WAIT_EQUAL:
 								pact->event=PARSE_EVENT_MALFORMED_XML;
 							break;
 							default:
@@ -116,11 +130,27 @@
 				case '>':
 						switch(pact->mode_data.xml.state)
 						{
-							case PARSE_XML_QMTAG_EXPECT_CLOSE:
+						case PARSE_XML_TAG:
+							if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_QUESTION_MARK)
+							{
 								pact->event=PARSE_EVENT_MALFORMED_XML;
+							}
 							break;
-							default:
-								break;
+						case PARSE_XML_QMTAG_EXPECT_CLOSE:
+							break;
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						}
+						pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
+						pact->mode_data.xml.current_tag=XML_TAG_NONE;
+						if(pact->mode_data.xml.depth==0)
+						{
+							pact->mode_data.xml.state=PARSE_XML_ROOT;
+						}
+						else
+						{
+							pact->mode_data.xml.state=PARSE_XML_INNER;
 						}
 					break;
 				case '/':
@@ -148,13 +178,18 @@
 							break;
 
 						case PARSE_XML_TAG:
-
-						break;
-
+							if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_QUESTION_MARK)
+							{
+								pact->mode_data.xml.state=PARSE_XML_QMTAG_EXPECT_CLOSE;
+							}
+							else
+							{
+								pact->event=PARSE_EVENT_MALFORMED_XML;
+							}
+							break;
 
 						default:
 							pact->event=PARSE_EVENT_MALFORMED_XML;
-							break;
 						break;
 					}
 					break;
@@ -174,6 +209,49 @@
 						break;
 					}
 					break;
+				case '=':
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_ATTRIBUTE_WAIT_EQUAL:
+							pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_WAIT_VAL_BOUND;
+							break;
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						break;
+					}
+					break;
+				case '\'': // '
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_ATTRIBUTE_WAIT_VAL_BOUND:
+							pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB;
+							break;
+						case PARSE_XML_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB:
+							pact->mode_data.xml.state=PARSE_XML_TAG;
+							break;
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						break;
+					}
+					break;
+				case '"': // '
+					switch(pact->mode_data.xml.state)
+					{
+						case PARSE_XML_ATTRIBUTE_WAIT_VAL_BOUND:
+							pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_INSIDE_QUOTES_ATTRIB;
+							break;
+						case PARSE_XML_ATTRIBUTE_INSIDE_QUOTES_ATTRIB:
+							pact->mode_data.xml.state=PARSE_XML_TAG;
+							break;
+						default:
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+						break;
+					}
+					break;
+
 				default:
 					switch(pact->mode_data.xml.state)
 					{
@@ -184,7 +262,7 @@
 
 					case PARSE_XML_TAG: //A non empty space inside a tag means, that we have a attribute.
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_ATTRIBUTE_ID;
-						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," =\"\'/<>?!");
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_attribute_strings,RPC_XML_ATTRIBUTE_STRINGS_LEN," =\"\'/<>?!");
 						break;
 
 					default:
@@ -202,12 +280,6 @@
 				{
 					DEBUG_PRINT_STR("GOING INTO SUBMODE");
 				}
-				break;
-			}
-
-
-
-
 		}
 
 
