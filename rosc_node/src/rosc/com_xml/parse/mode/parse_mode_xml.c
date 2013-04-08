@@ -131,10 +131,26 @@
 						switch(pact->mode_data.xml.state)
 						{
 						case PARSE_XML_TAG:
-							if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_QUESTION_MARK)
+							switch(pact->mode_data.xml.tag_type)
 							{
+							case XML_TAG_TYPE_EXCLAMATION_MARK:
+							case XML_TAG_TYPE_QUESTION_MARK:
 								pact->event=PARSE_EVENT_MALFORMED_XML;
+							break;
+							case XML_TAG_TYPE_NORMAL:
+								pact->mode_data.xml.depth++;
+								DEBUG_PRINT_STR("XML LVL DOWN");
+								break;
+							case XML_TAG_TYPE_CLOSE:
+								pact->mode_data.xml.depth--;
+								DEBUG_PRINT_STR("XML LVL UP");
+								break;
+							default:
+								break;
 							}
+							break;
+
+						case PARSE_XML_EXPECT_SELFCLOSE_TAG_END:
 							break;
 						case PARSE_XML_QMTAG_EXPECT_CLOSE:
 							break;
@@ -142,16 +158,23 @@
 							pact->event=PARSE_EVENT_MALFORMED_XML;
 							break;
 						}
+
 						pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
 						pact->mode_data.xml.current_tag=XML_TAG_NONE;
 						if(pact->mode_data.xml.depth==0)
 						{
 							pact->mode_data.xml.state=PARSE_XML_ROOT;
 						}
-						else
+						else if(pact->mode_data.xml.depth>0)
 						{
 							pact->mode_data.xml.state=PARSE_XML_INNER;
 						}
+						else
+						{
+							DEBUG_PRINT_STR("NEGATIVE LVL!!! MALFORMED!");
+							pact->event=PARSE_EVENT_MALFORMED_XML;
+						}
+						DEBUG_PRINT(INT,"DEPTH",pact->mode_data.xml.depth);
 					break;
 				case '/':
 					switch(pact->mode_data.xml.state)
@@ -159,6 +182,10 @@
 						case PARSE_XML_TAG_START:
 							pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
 						break;
+						case PARSE_XML_TAG:
+							pact->mode_data.xml.state=PARSE_XML_EXPECT_SELFCLOSE_TAG_END;
+						break;
+
 						case PARSE_XML_INNER:
 						case PARSE_XML_ROOT:
 							break;
@@ -257,6 +284,11 @@
 					{
 					case PARSE_XML_TAG_START:
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_TAG_ID;
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," =\"\'/<>?!");
+					break;
+					case PARSE_XML_CLOSE_TAG_START:
+						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_TAG_ID;
+						 pact->mode_data.xml.tag_type=XML_TAG_TYPE_CLOSE;
 						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," =\"\'/<>?!");
 					break;
 
