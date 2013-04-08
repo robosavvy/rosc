@@ -51,6 +51,7 @@
 
 	if(pact->submode_state==PARSE_SUBMODE_INIT)
 	{
+		pact->submode_state=PARSE_SUBMODE_RUNNING;
 		pact->submode_data.numberParse.cur_place=0;
 		pact->submode_data.numberParse.number=0;
 	}
