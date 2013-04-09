@@ -61,7 +61,7 @@
 			pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
 		}
 
-		while(len>=0 && pact->event == PARSE_EVENT_NONE &&
+		while(len>0 && pact->event == PARSE_EVENT_NONE &&
 				pact->submode==PARSE_SUBMODE_NONE)
 		{
 
@@ -139,11 +139,11 @@
 							break;
 							case XML_TAG_TYPE_NORMAL:
 								pact->mode_data.xml.depth++;
-								DEBUG_PRINT_STR("XML LVL DOWN");
+								DEBUG_PRINT_STR(">");
 								break;
 							case XML_TAG_TYPE_CLOSE:
 								pact->mode_data.xml.depth--;
-								DEBUG_PRINT_STR("XML LVL UP");
+								DEBUG_PRINT_STR(">");
 								break;
 							default:
 								break;
@@ -174,7 +174,7 @@
 							DEBUG_PRINT_STR("NEGATIVE LVL!!! MALFORMED!");
 							pact->event=PARSE_EVENT_MALFORMED_XML;
 						}
-						DEBUG_PRINT(INT,"DEPTH",pact->mode_data.xml.depth);
+						//DEBUG_PRINT(INT,"DEPTH",pact->mode_data.xml.depth);
 					break;
 				case '/':
 					switch(pact->mode_data.xml.state)
@@ -303,14 +303,10 @@
 					break;
 				}
 
-				if(pact->submode==PARSE_SUBMODE_NONE)
+				if(pact->submode==PARSE_SUBMODE_NONE && len>0)
 				{
 					buf++;
 					len--;
-				}
-				else
-				{
-					DEBUG_PRINT_STR("GOING INTO SUBMODE");
 				}
 		}
 

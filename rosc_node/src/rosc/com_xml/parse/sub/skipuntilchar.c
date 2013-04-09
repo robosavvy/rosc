@@ -77,8 +77,11 @@
 				}
 				break;
 			}
-			buf++;
-			len--;
+			else
+			{
+				buf++;
+				len--;
+			}
 		}
 	#ifndef FORCE_INLINE
 		*len_ptr=len;

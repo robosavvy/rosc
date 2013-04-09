@@ -10,7 +10,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 	/*
 	 * Check events
 	 */
-	DEBUG_PRINT(INT, "Submode Result",  pact->submode_result);
+//	DEBUG_PRINT(INT, "Submode Result",  pact->submode_result);
 
 
 	if(pact->event<0)

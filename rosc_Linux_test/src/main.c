@@ -53,7 +53,7 @@ char *test_message=
 int main()
 {
 	int rlen;
-	int buffersize=10;
+	int buffersize=1;
 	parse_act_t pact;
 
 	xmlrpc_server_data_t server_data;
@@ -71,7 +71,7 @@ int main()
 		{
 			len=len-(i*buffersize-rlen);
 		}
-		printf("Current Chunk %i, Size %i: \n",i, len);
+	//	printf("Current Chunk %i, Size %i: \n",i, len);
 		xmlrpc_parse(test_message+i*len,len,&pact);
 	}
 

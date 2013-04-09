@@ -136,6 +136,7 @@
 			{
 				++buf;
 				--len;
+				pact->submode_state=PARSE_SUBMODE_INIT;
 				pact->mode=PARSE_MODE_XML;
 				pact->mode_data.xml.state=PARSE_XML_INIT;
 				break;
