@@ -69,7 +69,7 @@ const char *http_available_targets[] =
 const char *rpc_xml_tag_strings[] =
 {
 	"--",
-	"[CDATA[",
+	"CDATA",
 	"array",
 	"boolean",
 	"data",
