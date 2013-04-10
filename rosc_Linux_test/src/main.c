@@ -40,7 +40,7 @@ char *test_message=
 "<value><string>/master</string></value>\n"
 "</param>\n"
 "<param>\n"
-"<value><string>/rosout</string></value>\n"
+"<value><![CDATA[NAG NAG NAG ]] NARG NARF [[ ]] > hahaha nafnafnaf töf töf töf]]></value>\n"
 "</param>\n"
 "<param>\n"
 "<value><array><data>\n"
