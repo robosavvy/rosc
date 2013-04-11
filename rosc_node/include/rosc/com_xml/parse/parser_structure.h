@@ -235,6 +235,7 @@ typedef struct parse_act_t
 		struct
 		{
 			uint16_t depth;	//!< depth stores the depth of the current location of the parser
+			uint32_t processed_bytes; //!<
 			parse_xml_tags_t current_tag; //!< current_tag contains the current known xml tag
 			parse_xml_tag_type_t tag_type; //!< normal, ! or ? tag.
 			parse_xml_attrib_t attribute; //!< shows the attribute if inside an attribute otherwise XML_ATTRIBUTE_NONE

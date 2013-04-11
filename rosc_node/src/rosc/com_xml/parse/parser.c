@@ -29,8 +29,17 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 {
 	bool chunk_processed=false;
+	if(pact->mode == PARSE_MODE_XML)
+	{
+		pact->mode_data.xml.processed_bytes+=len;
+	}
 	while(!chunk_processed)
 	{
+		if(pact->mode_data.xml.state == PARSE_XML_INIT)
+		{
+			pact->mode_data.xml.processed_bytes=len;
+		}
+
 		if((pact->submode==PARSE_SUBMODE_NONE) || (pact->submode_state==PARSE_SUBMODE_FINISHED))
 		{
 			switch(pact->mode)
@@ -124,9 +133,20 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 			pact->handler_fkt(pact);
 			pact->event=PARSE_EVENT_NONE;
 		}
-		if((len <= 0) )// && pact->submode_state!=PARSE_SUBMODE_FINISHED)
+		if((len == 0) )// && pact->submode_state!=PARSE_SUBMODE_FINISHED)
 		{
 			chunk_processed=true;
+			printf("CL: %i\n",pact->mode_data.xml.processed_bytes);
+
+			if(pact->mode==PARSE_MODE_XML && pact->mode_data.xml.processed_bytes == pact->content_length)
+			{
+				printf("FINISHED!");
+				return;
+			}
+		}
+		else if(len<0)
+		{
+			DEBUG_PRINT(INT,"ERROR in LEN",len);
 		}
 	}
 }
