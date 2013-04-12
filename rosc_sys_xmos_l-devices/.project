@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rosc_sys_linux_x86</name>
+	<name>rosc_sys_xmos_l-devices</name>
 	<comment></comment>
 	<projects>
-		<project>rosc_node</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
