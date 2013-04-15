@@ -45,6 +45,7 @@
 								<option id="gnu.c.compiler.option.misc.other.148810775" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0" valueType="string"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1131237982" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__DEBUG__PRINTS__"/>
+									<listOptionValue builtIn="false" value="FORCE_INLINE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1268951385" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

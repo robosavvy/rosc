@@ -30,5 +30,5 @@
 void rosc_init()
 {
 	DEBUG_PRINT(STR,"","ROSC_INIT");
-	ports_info_init();
+	//ports_info_init();
 }

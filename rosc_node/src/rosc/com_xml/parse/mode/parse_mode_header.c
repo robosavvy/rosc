@@ -181,7 +181,7 @@
 				}
 				else
 				{
-					printf("content-length: %i\n", pact->content_length);
+					//printf("content-length: %i\n", pact->content_length);
 					PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
 					pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
 				}

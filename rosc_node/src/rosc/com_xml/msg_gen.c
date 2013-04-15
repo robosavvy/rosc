@@ -39,7 +39,7 @@
 
 int output(char c) //TODO REMOVE THIS FUNCTION...
 {
-	printf("%c",c);
+//	printf("%c",c);
 	return 1;
 }
 
@@ -272,7 +272,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 					output((char)(number/a)+48);
 					char outchar=(char)(number/a)+48;
 					//__sendToPort(portID, &outchar,1); //TODO create function in system package with a
-					printf("%c",outchar);
+//					printf("%c",outchar);
 				}
 #endif
 			number%=a;
