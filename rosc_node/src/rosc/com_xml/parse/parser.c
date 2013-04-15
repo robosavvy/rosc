@@ -9,6 +9,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 {
 	pact->handler_data_storage=handler_data_storage;
 	pact->mode=PARSE_MODE_HEADER;
+	pact->event=PARSE_EVENT_NONE;
 	pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BEGIN;
 	pact->submode=PARSE_SUBMODE_NONE;
 
@@ -136,11 +137,11 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 		if((len == 0) )// && pact->submode_state!=PARSE_SUBMODE_FINISHED)
 		{
 			chunk_processed=true;
-			printf("CL: %i\n",pact->mode_data.xml.processed_bytes);
 
 			if(pact->mode==PARSE_MODE_XML && pact->mode_data.xml.processed_bytes == pact->content_length)
 			{
-				printf("FINISHED!");
+				DEBUG_PRINT_STR("FINISHED!");
+//				while(1);
 				return;
 			}
 		}

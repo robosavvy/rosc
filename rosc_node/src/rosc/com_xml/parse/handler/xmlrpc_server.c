@@ -15,8 +15,8 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 	if(pact->event<0)
 	{
-		printf("ERROR !\n");
-		exit(1);
+		DEBUG_PRINT_STR("ERROR !\n");
+		//exit(1);
 	}
 
 	switch(pact->event)
@@ -40,10 +40,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			DEBUG_PRINT(STR, "Page not found 404 !",  "PARSE_EVENT_METHOD");
 		}
 		break;
-
-
-
-
 
 	}
 

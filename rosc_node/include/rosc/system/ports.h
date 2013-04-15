@@ -33,7 +33,7 @@ extern port_info ports_info[__PORT_MAXIMUM__];
 extern unsigned int open_ports_count;
 
 
-inline void ports_info_init();
+//inline void ports_info_init();
 
 port_id_t listenPort(port_t port, port_user_type_t port_user_type, port_uin_t port_user_number);
 void closePort(port_id_t);

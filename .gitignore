@@ -29,3 +29,6 @@
 
 #Eclipse binary folder for release
 */Release/*
+
+#NoBuild Config Folders
+*/NoBuild/*
