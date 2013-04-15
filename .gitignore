@@ -32,3 +32,6 @@
 
 #NoBuild Config Folders
 */NoBuild/*
+
+#XMOS xe files
+*.xe
