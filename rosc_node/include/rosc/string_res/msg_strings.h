@@ -92,7 +92,7 @@ extern const char *http_header_content_types[];
 /**
  * Length of the string array rpc_xml_stdtext
  */
-#define RPC_XML_STDTEXT_LEN 	10
+#define RPC_XML_STDTEXT_LEN 	30
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
@@ -101,12 +101,32 @@ extern const char *http_header_content_types[];
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
+	 ENUM ## _STDTXT_TCPROS, \
+	 ENUM ## _STDTXT_GETBUSINFO, \
+	 ENUM ## _STDTXT_GETBUSSTATS, \
+	 ENUM ## _STDTXT_GETMASTERURI, \
+	 ENUM ## _STDTXT_GETPARAM, \
+	 ENUM ## _STDTXT_GETPID, \
+	 ENUM ## _STDTXT_GETPUBLICATIONS, \
+	 ENUM ## _STDTXT_GETPUBLISHEDTOPICS, \
+	 ENUM ## _STDTXT_GETSUBSCRIPTIONS, \
+	 ENUM ## _STDTXT_GETSYSTEMSTATE, \
+	 ENUM ## _STDTXT_GETTOPICTYPES, \
+	 ENUM ## _STDTXT_GETURI, \
 	 ENUM ## _STDTXT_HASPARAM, \
 	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
+	 ENUM ## _STDTXT_LOOKUPNODE, \
+	 ENUM ## _STDTXT_LOOKUPSERVICE, \
+	 ENUM ## _STDTXT_PARAMUPDATE, \
+	 ENUM ## _STDTXT_PUBLISHERUPDATE, \
 	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_REGISTERSERVICE, \
 	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
 	 ENUM ## _STDTXT_REQUESTTOPIC, \
+	 ENUM ## _STDTXT_ROSRPC___, \
+	 ENUM ## _STDTXT_SHUTDOWN, \
 	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
+	 ENUM ## _STDTXT_UNREGISTERSERVICE, \
 	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER
 
 /**
@@ -155,7 +175,7 @@ extern const char *http_available_targets[];
 /**
  * Length of the string array rpc_xml_tag_strings
  */
-#define RPC_XML_TAG_STRINGS_LEN 	17
+#define RPC_XML_TAG_STRINGS_LEN 	18
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
@@ -167,6 +187,7 @@ extern const char *http_available_targets[];
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \
 	 ENUM ## _TAG_FAULT, \
+	 ENUM ## _TAG_I4, \
 	 ENUM ## _TAG_INT, \
 	 ENUM ## _TAG_MEMBER, \
 	 ENUM ## _TAG_METHODCALL, \

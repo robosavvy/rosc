@@ -24,14 +24,14 @@
 #include <rosc/examplepack/exmsg.h>
 #include <rosc/com_xml/parse/parser.h>
 
-char *test_message=
+char *test_call_message=
 		"POST / HTTP/1.1\n"
 		"Host: sncn-10:53556\n"
 		"Accept-Encoding: gzip\n"
 		"User-Agent: xmlrpclib.py/1.0.1 (by www.pythonware.com)\n"
 		"Content-Type: text/xml\n"
 		"Content-Length: 339\n"
-		"\n"
+		"\n" //157
 		"<?xml version='1.0'?>\n"
 		"<methodCall>\n"
 		"<methodName>publisherUpdate</methodName>\n"
@@ -52,8 +52,11 @@ char *test_message=
 
 
 
+
+
 int main()
 {
+	char *msg=test_call_message;
 	int rlen;
 	int buffersize=1;
 	parse_act_t pact;
@@ -61,7 +64,7 @@ int main()
 	xmlrpc_server_data_t server_data;
 	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
 
-	for(rlen=0;test_message[rlen]!=0;rlen++);
+	for(rlen=0;msg[rlen]!=0;rlen++);
 
 	//printf("Test Message Length: %i\n",rlen);
 
@@ -74,7 +77,7 @@ int main()
 			len=len-(i*buffersize-rlen);
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
-		xmlrpc_parse(test_message+i*len,len,&pact);
+		xmlrpc_parse(test_call_message+i*len,len,&pact);
 	}
 
 	return 0;

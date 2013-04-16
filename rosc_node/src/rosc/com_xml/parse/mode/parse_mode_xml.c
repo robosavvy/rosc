@@ -178,6 +178,7 @@
 								break;
 							case PARSE_XML_INNER:
 							case PARSE_XML_ROOT:
+								pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
 								pact->mode_data.xml.state=PARSE_XML_TAG_START;
 								break;
 
@@ -248,7 +249,7 @@
 						if(pact->mode_data.xml.state!=PARSE_XML_COMMENT &&
 						   pact->mode_data.xml.state!=PARSE_XML_CDATA)
 						{
-							pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
+							//pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
 							pact->mode_data.xml.current_tag=XML_TAG_NONE;
 							if(pact->mode_data.xml.depth==0)
 							{

@@ -10,7 +10,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 	/*
 	 * Check events
 	 */
-	DEBUG_PRINT(INT, "Submode Result",  pact->submode_result);
+
 
 
 	if(pact->event<0)
@@ -41,6 +41,39 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
+	case PARSE_EVENT_TAG:
+		#ifdef __DEBUG__PRINTS__
+		{
+			unsigned int i=pact->mode_data.xml.depth;
+			if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_CLOSE)
+				++i;
+
+				for(;i>0;--i)
+				{
+					printf("   ");
+				}
+		}
+		#endif
+
+		switch(pact->mode_data.xml.tag_type)
+		{
+		case XML_TAG_TYPE_CLOSE:
+			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+			break;
+		case XML_TAG_TYPE_NORMAL:
+			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+			break;
+		case XML_TAG_TYPE_CDATA:
+			DEBUG_PRINT_STR("<CDATA>");
+			break;
+		case XML_TAG_TYPE_EXCLAMATION_MARK:
+			DEBUG_PRINT_STR("<!>");
+			break;
+		case XML_TAG_TYPE_QUESTION_MARK:
+			DEBUG_PRINT(STR,"<?>",  pact->submode_data.seekString.stringlist[pact->submode_result]);
+			break;
+		}
+		break;
 	}
 
 }

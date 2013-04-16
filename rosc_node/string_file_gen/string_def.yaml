@@ -33,7 +33,7 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   struct,
                   value,
                   array,
-                  
+                  i4,
               }
 
 
@@ -64,6 +64,26 @@ rpc_xml_stdtext:
       'http://': HTTP_URL_HEAD,
       unregisterPublisher,
       unregisterSubscriber,
+      registerService,
+      unregisterService,
+      lookupNode,
+      getPublishedTopics,
+      getTopicTypes,
+      getSystemState,
+      getUri,
+      lookupService,
+      getBusStats,
+      getBusInfo,
+      getMasterUri,
+      shutdown,
+      paramUpdate,
+      publisherUpdate,
+      getPid,
+      getSubscriptions,
+      getPublications,
+      TCPROS,
+      'rosrpc://',
+      getParam,      
   }
 
 
