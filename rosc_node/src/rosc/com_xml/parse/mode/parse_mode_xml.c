@@ -71,7 +71,7 @@
 			switch(pact->mode_data.xml.sub_state)
 			{
 			case PARSE_XML_SUB_TAG_ID:
-				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
+
 				if(pact->submode_result<0)
 				{
 					pact->mode_data.xml.current_tag=XML_TAG_UNKNOWN;
@@ -93,7 +93,7 @@
 				break;
 
 			case PARSE_XML_SUB_ATTRIBUTE_ID:
-				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
+
 				if(pact->submode_result<0)
 				{
 					pact->mode_data.xml.attribute=XML_ATTRIBUTE_UNKNOWN;
@@ -106,7 +106,7 @@
 				break;
 
 			case PARSE_XML_SUB_CDATA_TAG_STRING:
-				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
+
 				if(pact->submode_result!=XML_TAG_CDATA)
 				{
 					pact->event=PARSE_EVENT_MALFORMED_XML;
@@ -121,6 +121,12 @@
 				break;
 			}
 
+			if(pact->mode_data.xml.sub_state!=PARSE_XML_SUB_STATE_NONE)
+			{
+				pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
+			}
+			else
+			{
 				switch(*buf)
 				{
 				case ' ':
@@ -211,9 +217,9 @@
 							break;
 							case XML_TAG_TYPE_NORMAL:
 								pact->mode_data.xml.depth++;
+								pact->event=PARSE_EVENT_TAG_CONTENT;
 								break;
 							case XML_TAG_TYPE_CLOSE:
-								pact->mode_data.xml.depth--;
 								break;
 
 							default:
@@ -249,7 +255,6 @@
 						if(pact->mode_data.xml.state!=PARSE_XML_COMMENT &&
 						   pact->mode_data.xml.state!=PARSE_XML_CDATA)
 						{
-							//pact->mode_data.xml.tag_type=XML_TAG_TYPE_NORMAL;
 							pact->mode_data.xml.current_tag=XML_TAG_NONE;
 							if(pact->mode_data.xml.depth==0)
 							{
@@ -274,6 +279,7 @@
 							break;
 						case PARSE_XML_TAG_START:
 							pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
+							pact->mode_data.xml.depth--;
 						break;
 						case PARSE_XML_TAG:
 							pact->mode_data.xml.state=PARSE_XML_EXPECT_SELFCLOSE_TAG_END;
@@ -521,12 +527,12 @@
 					}
 					break;
 				}
-
 				if(pact->submode==PARSE_SUBMODE_NONE && len>0)
 				{
 					buf++;
 					len--;
 				}
+			}
 		}
 
 

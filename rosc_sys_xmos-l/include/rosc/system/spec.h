@@ -37,6 +37,7 @@
 
 #define __HOSTNAME_MAX_LEN__ 46 //minimum 46 bytes, storing a IPv6 Address in characters
 #define __NODENAME_MAX_LEN__ 50
+#define __ROS_PARAMETER_MAX_LEN__ 50
 #define __PORT_MAXIMUM__     8
 #define __INPUT_BUFFER_SIZE__ 256
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__

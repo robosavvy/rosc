@@ -44,9 +44,13 @@
 
 #ifndef __NODENAME_MAX_LEN__
 	#warning __NODENAME_MAX_LEN__ undefined! Automatically set to 50.
-	#define __HOSTNAME_MAX_LEN__ 50
+	#define __NODENAME_MAX_LEN__ 50
 #endif
 
+#ifndef __ROS_PARAMETER_MAX_LEN__
+	#warning __ROS_PARAMETER_MAX_LEN__ undefined! Automatically set to 50.
+	#define __ROS_PARAMETER_MAX_LEN__ 50
+#endif
 
 
 #ifdef __SYSTEM_HAS_MALLOC__

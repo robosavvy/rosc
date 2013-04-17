@@ -22,6 +22,20 @@ const char *http_header_stdtext[] =
 	"text/xml"
 };
 
+const char *rpc_xml_slave_methodnames[] =
+{
+	"getBusInfo",
+	"getBusStats",
+	"getMasterUri",
+	"getPid",
+	"getPublications",
+	"getSubscriptions",
+	"paramUpdate",
+	"publisherUpdate",
+	"requestTopic",
+	"shutdown"
+};
+
 const char *http_header_descriptors[] =
 {
 	"Accepted-Encoding",
@@ -45,29 +59,13 @@ const char *rpc_xml_stdtext[] =
 	"<?xml version=\"1.0\"?>",
 	"Error code",
 	"TCPROS",
-	"getBusInfo",
-	"getBusStats",
-	"getMasterUri",
-	"getParam",
-	"getPid",
-	"getPublications",
-	"getPublishedTopics",
-	"getSubscriptions",
-	"getSystemState",
-	"getTopicTypes",
-	"getUri",
 	"hasParam",
 	"http://",
-	"lookupNode",
-	"lookupService",
-	"paramUpdate",
-	"publisherUpdate",
 	"registerPublisher",
 	"registerService",
 	"registerSubscriber",
 	"requestTopic",
 	"rosrpc://",
-	"shutdown",
 	"unregisterPublisher",
 	"unregisterService",
 	"unregisterSubscriber"

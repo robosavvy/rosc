@@ -110,6 +110,7 @@ typedef enum
 	//XML
 	PARSE_EVENT_TAG,
 	PARSE_EVENT_INSIDE_TAG,
+	PARSE_EVENT_TAG_CONTENT,
 }parse_event_t;
 
 

@@ -41,18 +41,31 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
+	case PARSE_EVENT_TAG_CONTENT:
 	case PARSE_EVENT_TAG:
 		#ifdef __DEBUG__PRINTS__
 		{
 			unsigned int i=pact->mode_data.xml.depth;
-			if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_CLOSE)
-				++i;
 
 				for(;i>0;--i)
 				{
 					printf("   ");
 				}
 		}
+
+		if(pact->event==PARSE_EVENT_TAG_CONTENT)
+		{
+			printf("->\n");
+			break;
+		}
+
+		if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_CLOSE)
+		{
+			printf("/");
+		}
+
+
+
 		#endif
 
 		switch(pact->mode_data.xml.tag_type)

@@ -49,6 +49,32 @@ extern const char *http_header_stdtext[];
 
 
 /**
+ * Length of the string array rpc_xml_slave_methodnames
+ */
+#define RPC_XML_SLAVE_METHODNAMES_LEN 	10
+
+/**
+ * Macro for inserting Strings for known methods of the slave api string numbers into any enum
+ */
+#define __RPC_XML_SLAVE_METHODNAMES(ENUM) \
+	 ENUM ## _METHOD_NAME_GETBUSINFO, \
+	 ENUM ## _METHOD_NAME_GETBUSSTATS, \
+	 ENUM ## _METHOD_NAME_GETMASTERURI, \
+	 ENUM ## _METHOD_NAME_GETPID, \
+	 ENUM ## _METHOD_NAME_GETPUBLICATIONS, \
+	 ENUM ## _METHOD_NAME_GETSUBSCRIPTIONS, \
+	 ENUM ## _METHOD_NAME_PARAMUPDATE, \
+	 ENUM ## _METHOD_NAME_PUBLISHERUPDATE, \
+	 ENUM ## _METHOD_NAME_REQUESTTOPIC, \
+	 ENUM ## _METHOD_NAME_SHUTDOWN
+
+/**
+ * This array contains the strings for Strings for known methods of the slave api
+ */
+extern const char *rpc_xml_slave_methodnames[];
+
+
+/**
  * Length of the string array http_header_descriptors
  */
 #define HTTP_HEADER_DESCRIPTORS_LEN 	7
@@ -92,7 +118,7 @@ extern const char *http_header_content_types[];
 /**
  * Length of the string array rpc_xml_stdtext
  */
-#define RPC_XML_STDTEXT_LEN 	30
+#define RPC_XML_STDTEXT_LEN 	14
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
@@ -102,29 +128,13 @@ extern const char *http_header_content_types[];
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
 	 ENUM ## _STDTXT_TCPROS, \
-	 ENUM ## _STDTXT_GETBUSINFO, \
-	 ENUM ## _STDTXT_GETBUSSTATS, \
-	 ENUM ## _STDTXT_GETMASTERURI, \
-	 ENUM ## _STDTXT_GETPARAM, \
-	 ENUM ## _STDTXT_GETPID, \
-	 ENUM ## _STDTXT_GETPUBLICATIONS, \
-	 ENUM ## _STDTXT_GETPUBLISHEDTOPICS, \
-	 ENUM ## _STDTXT_GETSUBSCRIPTIONS, \
-	 ENUM ## _STDTXT_GETSYSTEMSTATE, \
-	 ENUM ## _STDTXT_GETTOPICTYPES, \
-	 ENUM ## _STDTXT_GETURI, \
 	 ENUM ## _STDTXT_HASPARAM, \
 	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
-	 ENUM ## _STDTXT_LOOKUPNODE, \
-	 ENUM ## _STDTXT_LOOKUPSERVICE, \
-	 ENUM ## _STDTXT_PARAMUPDATE, \
-	 ENUM ## _STDTXT_PUBLISHERUPDATE, \
 	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
 	 ENUM ## _STDTXT_REGISTERSERVICE, \
 	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
 	 ENUM ## _STDTXT_REQUESTTOPIC, \
-	 ENUM ## _STDTXT_ROSRPC___, \
-	 ENUM ## _STDTXT_SHUTDOWN, \
+	 ENUM ## _STDTXT_ROSRPC_URL_HEAD, \
 	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
 	 ENUM ## _STDTXT_UNREGISTERSERVICE, \
 	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER

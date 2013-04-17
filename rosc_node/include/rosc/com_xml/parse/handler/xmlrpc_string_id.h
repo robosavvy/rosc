@@ -32,6 +32,7 @@
 #ifndef XMLRPC_STRING_ID_H_
 #define XMLRPC_STRING_ID_H_
 
+#include <rosc/rosc.h>
 #include <rosc/string_res/msg_strings.h>
 
 	typedef enum
@@ -49,9 +50,17 @@
 		__HTTP_HEADER_STDTEXT(HTTP)
 	}xmlrpc_server_stdtxt_t;
 
+
 	typedef enum
 	{
 		__HTTP_HEADER_DESCRIPTORS(HTTP)
 	}xmlrpc_header_descriptors_t;
+
+	typedef enum
+	{
+		SLAVE_METHOD_NAME_NOT_SET=-1,
+		__RPC_XML_SLAVE_METHODNAMES(SLAVE)
+	}xmlrpc_slave_api_method_t;
+
 
 #endif /* XMLRPC_STRING_ID_H_ */

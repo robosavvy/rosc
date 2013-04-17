@@ -48,6 +48,7 @@ rpc_xml_attribute_strings:
   }
 
 #Standard strings for XMLRPC
+#TODO maybe move strings of master API to another array, requires generator update
 rpc_xml_stdtext:
   comment:
     'standard XMLRPC text pieces'
@@ -56,38 +57,38 @@ rpc_xml_stdtext:
   stringlist: {
       '<?xml version=\"1.0\"?>': XML_DEF,
       Error code, 
-      hasParam,
-      registerPublisher,
-      registerSubscriber,
-      requestTopic,
       '/tcp_keepalive': TCP_KEEPALIVE,
       'http://': HTTP_URL_HEAD,
+      TCPROS,
+      'rosrpc://': ROSRPC_URL_HEAD,
+      registerPublisher,
+      registerSubscriber,
       unregisterPublisher,
       unregisterSubscriber,
       registerService,
       unregisterService,
-      lookupNode,
-      getPublishedTopics,
-      getTopicTypes,
-      getSystemState,
-      getUri,
-      lookupService,
+      hasParam,
+      requestTopic,
+  }
+
+#Method names for RPC
+rpc_xml_slave_methodnames:
+  comment:
+    'Strings for known methods of the slave api'
+  defineShort:
+    'METHOD_NAME'
+  stringlist: {
       getBusStats,
       getBusInfo,
       getMasterUri,
       shutdown,
-      paramUpdate,
-      publisherUpdate,
       getPid,
       getSubscriptions,
       getPublications,
-      TCPROS,
-      'rosrpc://',
-      getParam,      
+      paramUpdate,
+      publisherUpdate,
+      requestTopic,
   }
-
-
-
 
 #Standard descriptors for headers
 http_header_descriptors:
