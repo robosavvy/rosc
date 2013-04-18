@@ -12,7 +12,8 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 	pact->event=PARSE_EVENT_NONE;
 	pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BEGIN;
 	pact->submode=PARSE_SUBMODE_NONE;
-
+	pact->submode_by_handler=false;
+	pact->event=PARSE_EVENT_HANDLER_INIT;
 
 	switch (type) {
 		case  XMLRPC_SERVER:
@@ -43,29 +44,32 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 
 		if((pact->submode==PARSE_SUBMODE_NONE) || (pact->submode_state==PARSE_SUBMODE_FINISHED))
 		{
-			switch(pact->mode)
+			if(!pact->submode_by_handler)
 			{
-			case PARSE_MODE_HEADER:
-					#ifdef FORCE_INLINE
-						#define ENABLE_C
-							#include "mode/parse_mode_header.c"
-						#undef ENABLE_C
-					#else
-						parse_mode_header(&buf, &len, pact);
-					#endif
-				break;
-			case PARSE_MODE_XML:
-					#ifdef FORCE_INLINE
-						#define ENABLE_C
-							#include "mode/parse_mode_xml.c"
-						#undef ENABLE_C
-					#else
-						parse_mode_xml(&buf, &len, pact);
-					#endif
-				break;
-			default:
-				//TODO Error
-				break;
+				switch(pact->mode)
+				{
+				case PARSE_MODE_HEADER:
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "mode/parse_mode_header.c"
+							#undef ENABLE_C
+						#else
+							parse_mode_header(&buf, &len, pact);
+						#endif
+					break;
+				case PARSE_MODE_XML:
+						#ifdef FORCE_INLINE
+							#define ENABLE_C
+								#include "mode/parse_mode_xml.c"
+							#undef ENABLE_C
+						#else
+							parse_mode_xml(&buf, &len, pact);
+						#endif
+					break;
+				default:
+					//TODO Error
+					break;
+				}
 			}
 		}
 		else
@@ -125,10 +129,20 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 					break;
 			}
 		}
+
+		if(pact->submode_by_handler)
+		{
+			if(pact->submode_state==PARSE_SUBMODE_FINISHED)
+			{
+				pact->event=PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED;
+				pact->submode_by_handler=false;
+				pact->submode=PARSE_SUBMODE_NONE;
+			}
+		}
 		if(pact->event!=PARSE_EVENT_NONE)
 		{
 			if(pact->event<0)
-			{//ERROR skip this message
+			{//On ERROR skip the whole message, notifiy handler
 				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 			}
 			pact->handler_fkt(pact);

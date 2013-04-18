@@ -37,6 +37,7 @@
 
 	typedef enum
 	{
+		HTTP_METHOD_NOT_SET=-1,
 		__HTTP_METHODS(HTTP)
 	}xmlrpc_server_method_t;
 

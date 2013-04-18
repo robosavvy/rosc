@@ -104,6 +104,7 @@ typedef enum
 	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST=-2,
 	PARSE_EVENT_ERROR_HTTP_METHOD=-1,
 	PARSE_EVENT_NONE=0,
+	PARSE_EVENT_HANDLER_INIT,
 	PARSE_EVENT_HTTP_METHOD_PARSED,
 	PARSE_EVENT_HTTP_TARGET_PARSED,
 	PARSE_EVENT_HTTP_HEADER_FIELD,
@@ -111,6 +112,7 @@ typedef enum
 	PARSE_EVENT_TAG,
 	PARSE_EVENT_INSIDE_TAG,
 	PARSE_EVENT_TAG_CONTENT,
+	PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED,
 }parse_event_t;
 
 
@@ -164,17 +166,6 @@ typedef enum
 	PARSE_MODE_XML,   //!< PARSE_MODE_XML is when parsing the xml
 }parse_mode_t;
 
-/**
- * This enum contains the values for different commands from the handler function back to the parser
- */
-typedef enum
-{
-	PARSE_NONE_GO_AHEAD,  //!< PARSE_NONE_GO_AHEAD means that the parser just should go on
-	PARSE_SEEKSTRING,     //!< PARSE_SEEKSTRING Seek a string inside a string array
-	PARSE_NUMBERPARSE,    //!< PARSE_NUMBERPARSE Parse a unsigned integer number
-	PARSE_COPY2BUFFER,    //!< PARSE_COPY2BUFFER Copy a string to the buffer
-	PARSE_SKIPWHOLEMESSAGE//!< PARSE_SKIPWHOLEMESSAGE Truncate whole message (for errors)
-}parse_ctrl_t;
 
 /**
  * This enum contains the states for the current submode
@@ -218,8 +209,11 @@ typedef struct parse_act_t
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	int16_t submode_result;	//!< contains the result code from each submode when finished
-	parse_ctrl_t ctrl_command; //!< ctrl_command contains current command from the handler to the parser
+	bool submode_by_handler; //!< needs to be set when the submode is started by the handler function
 	parse_event_t event; //!< tells the handler function what currently has happened.
+
+
+
 
 	/**
 	 * The mode_data union stores the http and the xml data inside the same memory location.
