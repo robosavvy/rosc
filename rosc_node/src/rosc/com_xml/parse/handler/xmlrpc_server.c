@@ -2,7 +2,7 @@
 #include <rosc/com_xml/parse/sub/subs.h>
 #include <stdio.h>
 
-
+#define __XML_MAX_DEPTH__ 20
 
 void xmlrpc_server_handler(parse_act_t * pact)
 {
@@ -24,19 +24,20 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 	case PARSE_EVENT_HANDLER_INIT:
 		DEBUG_PRINT_STR("EVENT_HANDLER_INIT_SERVER");
-		data->last_open_tag=XML_TAG_NONE;
 		data->method=HTTP_METHOD_NOT_SET;
 		data->rpcmethod=SLAVE_METHOD_NAME_NOT_SET;
+		data->tags[0]=XML_TAG_NONE;
+		data->depth=0;
 		break;
 	case PARSE_EVENT_NONE:
 		DEBUG_PRINT(STR, "ERROR! this state should never be reached",  "PARSE_EVENT_NONE");
 		break;
 	case PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
 		DEBUG_PRINT_STR("SUBMODE_FINISHED_FOR_HANDLER");
-		switch (data->last_open_tag)
+		switch (data->tags[data->depth])
 		{
 			case XML_TAG_METHODNAME:
-				//if(data->rpcmethod==SLAVE_METHOD_NAME_NOT_SET)
+				//if(data->rpcmethod == SLAVE_METHOD_NAME_NOT_SET)
 				{
 					data->rpcmethod=pact->submode_result;
 					DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
@@ -67,14 +68,49 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		break;
 
 	case PARSE_EVENT_TAG_CONTENT:
-		switch(data->last_open_tag)
+		switch(data->tags[data->depth])
 		{
 		case XML_TAG_METHODNAME:
-			//PARSE_SUBMODE_INIT_SEEKSTRING
+			//Check if we are at the right place otherwise break;
+			if(!(data->tags[1]==XML_TAG_METHODCALL
+				&& data->depth == 2)) break;
+
+			if(data->rpcmethod!=SLAVE_METHOD_NAME_NOT_SET)
+			{
+				DEBUG_PRINT_STR("XML ERROR: MethodName already given before!");
+				break;
+			}
 			DEBUG_PRINT_STR("::methodName");
 			pact->submode_by_handler=true;
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN,"<");
+			break;
+		case XML_TAG_VALUE:
+			//Check if we are at the right place otherwise break;
+				if(!(data->tags[1]==XML_TAG_METHODCALL &&
+					 data->tags[2]==XML_TAG_PARAMS &&
+					 data->tags[3]==XML_TAG_PARAM &&
+					 data->depth == 4)) break;
+				DEBUG_PRINT(INT,"VALUE", data->value_number);
+				switch(data->value_number)
+				{
+				case 0:
+					//Caller-ID
 
+					break;
+				case 1:
+
+					break;
+				case 2:
+
+					break;
+				}
+
+
+
+
+
+
+				data->value_number++;
 			break;
 		default:
 			break;
@@ -112,10 +148,32 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		{
 		case XML_TAG_TYPE_CLOSE:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+
+			if(data->tags[data->depth]==pact->mode_data.xml.current_tag)
+			{
+				if(data->depth>0)
+				data->depth--;
+				else
+				DEBUG_PRINT_STR("XML ERROR! XML INVALID!");//TODO Error Handling
+			}
+			else
+			{
+				data->depth--;
+				DEBUG_PRINT_STR("XML ERROR! XML INVALID!"); //TODO Error Handling
+			}
+
 			break;
 		case XML_TAG_TYPE_NORMAL:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
-			data->last_open_tag=pact->mode_data.xml.current_tag;
+			if(data->depth!=__XML_MAX_DEPTH__)
+			{
+				data->depth++;
+				data->tags[data->depth]=pact->mode_data.xml.current_tag;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("XML ERROR! TOO DEEP!");
+			}
 			break;
 		case XML_TAG_TYPE_CDATA:
 			DEBUG_PRINT_STR("<CDATA>");

@@ -112,3 +112,11 @@ const char *http_methods[] =
 	"POST"
 };
 
+const char *xml_rpc_boolean_strings[] =
+{
+	"0",
+	"1",
+	"false",
+	"true"
+};
+

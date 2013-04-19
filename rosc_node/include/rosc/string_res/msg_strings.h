@@ -234,4 +234,24 @@ extern const char *rpc_xml_tag_strings[];
 extern const char *http_methods[];
 
 
+/**
+ * Length of the string array xml_rpc_boolean_strings
+ */
+#define XML_RPC_BOOLEAN_STRINGS_LEN 	4
+
+/**
+ * Macro for inserting possible strings for representing boolean in xml rpc string numbers into any enum
+ */
+#define __XML_RPC_BOOLEAN_STRINGS(ENUM) \
+	 ENUM ## _BOOLEAN_ZERO, \
+	 ENUM ## _BOOLEAN_ONE, \
+	 ENUM ## _BOOLEAN_FALSE, \
+	 ENUM ## _BOOLEAN_TRUE
+
+/**
+ * This array contains the strings for possible strings for representing boolean in xml rpc
+ */
+extern const char *xml_rpc_boolean_strings[];
+
+
 #endif /* MSG_STRINGS_H_ */
