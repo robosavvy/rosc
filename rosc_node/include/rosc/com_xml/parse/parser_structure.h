@@ -8,6 +8,8 @@
 #include <rosc/rosc.h>
 
 
+#define __XML_MAX_DEPTH__ 20
+
 /**
  *	Contains the result states parse url submode
  */
@@ -98,6 +100,7 @@ parse_xml_tag_type_t;
 typedef enum
 {
 	PARSE_EVENT_MALFORMED_XML,
+	PARSE_EVENT_ERROR_XML_DEPTH=-6,
 	PARSE_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG=-5,
 	PARSE_EVENT_ERROR_CONTENT_LENGTH=-4,
 	PARSE_EVENT_ERROR_404=-3,
@@ -236,6 +239,7 @@ typedef struct parse_act_t
 			parse_xml_attrib_t attribute; //!< shows the attribute if inside an attribute otherwise XML_ATTRIBUTE_NONE
 			parse_xml_state_t state; //!< contains the current state of the xml parser
 			parse_xml_sub_state_t sub_state; //!< gives additional state information
+			parse_xml_tags_t tags[__XML_MAX_DEPTH__]; //!< array for checking tag validity
 		}xml;
 	}mode_data;
 

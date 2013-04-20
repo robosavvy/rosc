@@ -1,8 +1,6 @@
 #include <rosc/com_xml/parse/handler/xmlrpc_server.h>
 #include <rosc/com_xml/parse/sub/subs.h>
-#include <stdio.h>
 
-#define __XML_MAX_DEPTH__ 20
 
 void xmlrpc_server_handler(parse_act_t * pact)
 {
@@ -68,7 +66,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		break;
 
 	case PARSE_EVENT_TAG_CONTENT:
-		switch(data->tags[data->depth])
+		switch(pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 		case XML_TAG_METHODNAME:
 			//Check if we are at the right place otherwise break;
@@ -86,10 +84,10 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			break;
 		case XML_TAG_VALUE:
 			//Check if we are at the right place otherwise break;
-				if(!(data->tags[1]==XML_TAG_METHODCALL &&
-					 data->tags[2]==XML_TAG_PARAMS &&
-					 data->tags[3]==XML_TAG_PARAM &&
-					 data->depth == 4)) break;
+				if(!(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
+					 pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
+					 pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
+					 pact->mode_data.xml.depth == 4)) break;
 				DEBUG_PRINT(INT,"VALUE", data->value_number);
 				switch(data->value_number)
 				{
@@ -104,12 +102,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 					break;
 				}
-
-
-
-
-
-
 				data->value_number++;
 			break;
 		default:
@@ -149,31 +141,10 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		case XML_TAG_TYPE_CLOSE:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
 
-			if(data->tags[data->depth]==pact->mode_data.xml.current_tag)
-			{
-				if(data->depth>0)
-				data->depth--;
-				else
-				DEBUG_PRINT_STR("XML ERROR! XML INVALID!");//TODO Error Handling
-			}
-			else
-			{
-				data->depth--;
-				DEBUG_PRINT_STR("XML ERROR! XML INVALID!"); //TODO Error Handling
-			}
-
 			break;
 		case XML_TAG_TYPE_NORMAL:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
-			if(data->depth!=__XML_MAX_DEPTH__)
-			{
-				data->depth++;
-				data->tags[data->depth]=pact->mode_data.xml.current_tag;
-			}
-			else
-			{
-				DEBUG_PRINT_STR("XML ERROR! TOO DEEP!");
-			}
+
 			break;
 		case XML_TAG_TYPE_CDATA:
 			DEBUG_PRINT_STR("<CDATA>");

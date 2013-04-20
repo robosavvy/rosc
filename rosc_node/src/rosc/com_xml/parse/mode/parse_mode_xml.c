@@ -216,10 +216,32 @@
 								pact->event=PARSE_EVENT_MALFORMED_XML;
 							break;
 							case XML_TAG_TYPE_NORMAL:
-								pact->mode_data.xml.depth++;
-								pact->event=PARSE_EVENT_TAG_CONTENT;
+								if(pact->mode_data.xml.depth!=__XML_MAX_DEPTH__)
+								{
+									pact->mode_data.xml.depth++;
+									pact->mode_data.xml.tags[pact->mode_data.xml.depth]=pact->mode_data.xml.current_tag;
+									pact->event=PARSE_EVENT_TAG_CONTENT;
+								}
+								else
+								{
+									pact->event=PARSE_EVENT_ERROR_XML_DEPTH;
+									DEBUG_PRINT_STR("XML ERROR! TOO DEEP!");
+									PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+								}
 								break;
 							case XML_TAG_TYPE_CLOSE:
+								if(pact->mode_data.xml.tags[pact->mode_data.xml.depth]==pact->mode_data.xml.current_tag)
+								{
+									if(pact->mode_data.xml.depth>0)
+									pact->mode_data.xml.depth--;
+									else
+									pact->event=PARSE_EVENT_ERROR_XML_DEPTH;
+								}
+								else
+								{
+									DEBUG_PRINT_STR("XML ERROR! XML INVALID!"); //TODO Error Handling
+									PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+								}
 								break;
 
 							default:
@@ -279,7 +301,6 @@
 							break;
 						case PARSE_XML_TAG_START:
 							pact->mode_data.xml.state=PARSE_XML_CLOSE_TAG_START;
-							pact->mode_data.xml.depth--;
 						break;
 						case PARSE_XML_TAG:
 							pact->mode_data.xml.state=PARSE_XML_EXPECT_SELFCLOSE_TAG_END;

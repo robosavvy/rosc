@@ -48,7 +48,7 @@
 						printf("\n");}
 
 					#define	DEBUG_PRINT_STR(STR)\
-						{printf(STR);\
+						{printf("%s",STR);\
 						printf("\n");}
 
 
