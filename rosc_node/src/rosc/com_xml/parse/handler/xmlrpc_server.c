@@ -24,15 +24,19 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		DEBUG_PRINT_STR("EVENT_HANDLER_INIT_SERVER");
 		data->method=HTTP_METHOD_NOT_SET;
 		data->rpcmethod=SLAVE_METHOD_NAME_NOT_SET;
-		data->tags[0]=XML_TAG_NONE;
-		data->depth=0;
+		data->value_number=0;
+
 		break;
 	case PARSE_EVENT_NONE:
 		DEBUG_PRINT(STR, "ERROR! this state should never be reached",  "PARSE_EVENT_NONE");
 		break;
+
+	case PARSE_EVENT_CONTENT_START:
+		DEBUG_PRINT_STR("CONTENT!");
+		break;
 	case PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
 		DEBUG_PRINT_STR("SUBMODE_FINISHED_FOR_HANDLER");
-		switch (data->tags[data->depth])
+		switch (pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 			case XML_TAG_METHODNAME:
 				//if(data->rpcmethod == SLAVE_METHOD_NAME_NOT_SET)
@@ -65,13 +69,13 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
-	case PARSE_EVENT_TAG_CONTENT:
+	case PARSE_EVENT_TAG_INSIDE:
 		switch(pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 		case XML_TAG_METHODNAME:
 			//Check if we are at the right place otherwise break;
-			if(!(data->tags[1]==XML_TAG_METHODCALL
-				&& data->depth == 2)) break;
+			if(!(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL
+				&& pact->mode_data.xml.depth == 2)) break;
 
 			if(data->rpcmethod!=SLAVE_METHOD_NAME_NOT_SET)
 			{
