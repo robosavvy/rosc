@@ -39,22 +39,15 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		switch (pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 			case XML_TAG_METHODNAME:
-				//if(data->rpcmethod == SLAVE_METHOD_NAME_NOT_SET)
+				if(pact->submode_result>0)
 				{
-					if(pact->submode_result>0)
-					{
-						data->rpcmethod=pact->submode_result;
-						DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
-					}
-					else
-					{
-						DEBUG_PRINT_STR("MethodName not found!");
-						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
-					}
+					data->rpcmethod=pact->submode_result;
+					DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
 				}
-			//	else
+				else
 				{
-					//ERROR!
+					DEBUG_PRINT_STR("MethodName not found!");
+					PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 				}
 				break;
 			default:
@@ -104,6 +97,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 
 		case XML_TAG_STRING:
+
 			switch(data->current_value_tag)
 			{
 			//Numbers start with one! 0 stands for NO value tag
@@ -142,12 +136,12 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			if(!(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL
 				&& pact->mode_data.xml.depth == 2)) break;
 
-			if(data->rpcmethod!=SLAVE_METHOD_NAME_NOT_SET)
+			if(data->rpcmethod!=SLAVE_METHOD_NAME_NOT_SET) //Check if it was not set before
 			{
 				DEBUG_PRINT_STR("XML ERROR: MethodName already given before!");
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 				break;
 			}
-			DEBUG_PRINT_STR("::methodName");
 			pact->submode_by_handler=true;
 			PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>");
 		}
@@ -174,6 +168,8 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		{
 			unsigned int i=pact->mode_data.xml.depth;
 
+			if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_CLOSE)
+				--i;
 				for(;i>0;--i)
 				{
 					printf("   ");
@@ -191,7 +187,14 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			printf("/");
 		}
 
-
+		if(pact->submode_result>=0)
+		{
+			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+		}
+		else
+		{
+			DEBUG_PRINT_STR("UNKNOWN_TAG");
+		}
 
 		#endif
 
@@ -205,7 +208,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		switch(pact->mode_data.xml.tag_type)
 		{
 		case XML_TAG_TYPE_CLOSE:
-			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
 
 			//reset the value for being inside a params/param/value tag back to zero
 			//when leaving the current tag
@@ -224,7 +226,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			data->content_cnt=0;
 			break;
 		case XML_TAG_TYPE_NORMAL:
-			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
 
 			break;
 		case XML_TAG_TYPE_CDATA:

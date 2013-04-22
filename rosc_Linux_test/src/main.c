@@ -47,12 +47,8 @@ char *test_call_message=
 		"<value><string>http://sncn-10:56998/</string></value>\n"
 		"</data></array></value>\n"
 		"</param>\n"
-		"</params>\n"
+		"</params>\n<narf>fff</narf>"
 		"</methodCall>";
-
-
-
-
 
 int main()
 {

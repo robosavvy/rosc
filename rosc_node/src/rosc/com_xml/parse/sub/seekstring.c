@@ -98,6 +98,10 @@
 							//if it does not match, it will not do any more -> string sorting is considered to be alphabetic!
 							break;
 						}
+						else
+						{
+							pact->submode_data.seekString.fit_min=StrLstE+1;
+						}
 					}
 				}
 			}
