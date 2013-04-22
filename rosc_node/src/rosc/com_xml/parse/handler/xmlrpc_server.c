@@ -83,7 +83,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			}
 		break;
 		case XML_TAG_VALUE:
-			//Number the current value tag
+			//Number the current value tag (param)
 				if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
 				   pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
 				   pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
@@ -211,8 +211,12 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 			//reset the value for being inside a params/param/value tag back to zero
 			//when leaving the current tag
-			if(pact->mode_data.xml.current_tag==XML_TAG_VALUE)
+			if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
+			   pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
+			   pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
+			   pact->mode_data.xml.depth == 4)
 			{
+				DEBUG_PRINT_STR("VALUE END!");
 				data->current_value_tag=0;
 			}
 			if(data->content_is_mandatory && !data->content_cnt)
