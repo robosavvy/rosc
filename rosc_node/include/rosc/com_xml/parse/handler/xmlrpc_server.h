@@ -3,8 +3,6 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 #include <rosc/com_xml/parse/handler/xmlrpc_string_id.h>
-#include <rosc/string_res/msg_strings.h>
-
 
 
 
@@ -14,7 +12,11 @@ typedef struct xmlrpc_server_data_t
 	xmlrpc_server_target_t target;
 	xmlrpc_slave_api_method_t rpcmethod;
 	uint8_t value_number;
+	uint32_t current_value_tag;
 	uint8_t array_value;
+	bool fetch_content;
+	bool content_is_mandatory;
+	uint32_t content_cnt;
 
 	char caller_id[__NODENAME_MAX_LEN__];
 	union

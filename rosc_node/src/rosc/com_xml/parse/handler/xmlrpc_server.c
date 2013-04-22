@@ -25,15 +25,15 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		data->method=HTTP_METHOD_NOT_SET;
 		data->rpcmethod=SLAVE_METHOD_NAME_NOT_SET;
 		data->value_number=0;
-
+		data->fetch_content=false;
+		data->content_is_mandatory=false;
+		data->content_cnt=0;
 		break;
+
 	case PARSE_EVENT_NONE:
 		DEBUG_PRINT(STR, "ERROR! this state should never be reached",  "PARSE_EVENT_NONE");
 		break;
 
-	case PARSE_EVENT_CONTENT_START:
-		DEBUG_PRINT_STR("CONTENT!");
-		break;
 	case PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
 		DEBUG_PRINT_STR("SUBMODE_FINISHED_FOR_HANDLER");
 		switch (pact->mode_data.xml.tags[pact->mode_data.xml.depth])
@@ -41,8 +41,16 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			case XML_TAG_METHODNAME:
 				//if(data->rpcmethod == SLAVE_METHOD_NAME_NOT_SET)
 				{
-					data->rpcmethod=pact->submode_result;
-					DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
+					if(pact->submode_result>0)
+					{
+						data->rpcmethod=pact->submode_result;
+						DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
+					}
+					else
+					{
+						DEBUG_PRINT_STR("MethodName not found!");
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+					}
 				}
 			//	else
 				{
@@ -60,20 +68,77 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
 		}
 		break;
+
 	case PARSE_EVENT_HTTP_TARGET_PARSED:
 		data->target=pact->submode_result;
-		break;
 		if(pact->submode_result <0) //Do we have that target?
 		{
-			DEBUG_PRINT(STR, "Page not found 404 !",  "PARSE_EVENT_METHOD");
+			DEBUG_PRINT(STR, "not found 404 !",  "PARSE_EVENT_METHOD");
 		}
 		break;
 
 	case PARSE_EVENT_TAG_INSIDE:
+
 		switch(pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 		case XML_TAG_METHODNAME:
-			//Check if we are at the right place otherwise break;
+			if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
+			   pact->mode_data.xml.depth==2)
+			{
+				data->fetch_content=true;
+				data->content_is_mandatory=true;
+			}
+		break;
+		case XML_TAG_VALUE:
+			//Number the current value tag
+				if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
+				   pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
+				   pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
+				   pact->mode_data.xml.depth == 4)
+				{
+					DEBUG_PRINT(INT,"VALUE", data->value_number);
+					++data->value_number;
+					data->current_value_tag=data->value_number;
+				}
+			break;
+
+
+		case XML_TAG_STRING:
+			switch(data->current_value_tag)
+			{
+			//Numbers start with one! 0 stands for NO value tag
+			case 1:
+			case 2:
+			case 3:
+				data->fetch_content=true;
+				break;
+			}
+				break;
+
+		default:
+			break;
+		}
+
+		break;
+
+
+
+	case PARSE_EVENT_CONTENT_START:
+		DEBUG_PRINT_STR("CONTENT!!!");
+
+		//Check if we have multiple content inside that tag (which is not allowed)
+		if(data->content_cnt != 0)
+		{
+			DEBUG_PRINT_STR("ERROR: Only single strings are allowed inside tags!!!");
+			//TODO ERROR!
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			break;
+		}
+
+		//Method Name
+		if(pact->mode_data.xml.tags[pact->mode_data.xml.depth]==XML_TAG_METHODNAME)
+		{
+
 			if(!(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL
 				&& pact->mode_data.xml.depth == 2)) break;
 
@@ -84,35 +149,25 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			}
 			DEBUG_PRINT_STR("::methodName");
 			pact->submode_by_handler=true;
-			PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN,"<");
-			break;
-		case XML_TAG_VALUE:
-			//Check if we are at the right place otherwise break;
-				if(!(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
-					 pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
-					 pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
-					 pact->mode_data.xml.depth == 4)) break;
-				DEBUG_PRINT(INT,"VALUE", data->value_number);
-				switch(data->value_number)
-				{
-				case 0:
-					//Caller-ID
-
-					break;
-				case 1:
-
-					break;
-				case 2:
-
-					break;
-				}
-				data->value_number++;
-			break;
-		default:
-			break;
+			PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>");
 		}
 
+
+		//Getting Values
+		if(data->fetch_content)
+		{
+			DEBUG_PRINT_STR("FETCH!");
+			if(data->value_number!=0 && pact->mode_data.xml.tags[pact->mode_data.xml.depth]==XML_TAG_VALUE)
+			{
+				DEBUG_PRINT_STR("Interesting Value Content!");
+			}
+
+		}
+
+		data->content_cnt++;
 		break;
+
+
 
 	case PARSE_EVENT_TAG:
 		#ifdef __DEBUG__PRINTS__
@@ -140,11 +195,33 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 		#endif
 
+
+		if(data->fetch_content && pact->mode_data.xml.tag_type != XML_TAG_TYPE_CLOSE)
+		{
+			DEBUG_PRINT_STR("Unexpected Tag Opening!");
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+		}
+
 		switch(pact->mode_data.xml.tag_type)
 		{
 		case XML_TAG_TYPE_CLOSE:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
 
+			//reset the value for being inside a params/param/value tag back to zero
+			//when leaving the current tag
+			if(pact->mode_data.xml.current_tag==XML_TAG_VALUE)
+			{
+				data->current_value_tag=0;
+			}
+			if(data->content_is_mandatory && !data->content_cnt)
+			{
+				DEBUG_PRINT_STR("Required content not found!");
+			}
+			//set fetch content to false when leaving the current tag
+			data->fetch_content=false;
+			data->content_is_mandatory=false;
+			//set the content counter back to zero when leaving the tag
+			data->content_cnt=0;
 			break;
 		case XML_TAG_TYPE_NORMAL:
 			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
