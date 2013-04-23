@@ -48,9 +48,191 @@
 		char *buf=*buf_ptr;
 	#endif
 
+		while(len>0 && pact->event == PARSE_EVENT_NONE &&
+						pact->submode==PARSE_SUBMODE_NONE)
+				{
 
 
+					switch(pact->mode_data.http.sub_state)
+					{
 
+					case PARSE_HTTP_SUB_CHECK_METHOD:
+						if(pact->submode_result>=0)
+						{
+							DEBUG_PRINT_STR("->METHOD found")
+							pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
+							pact->mode_data.http.state=PARSE_HTTP_STATE_REQUEST_ACTION;
+						}
+						else
+						{
+							DEBUG_PRINT_STR("ERROR! HTTP Method unknown");
+							pact->event=PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED;
+						}
+						break;
+
+
+						case PARSE_HTTP_SUB_CHECK_ACTION:
+							if(pact->submode_result>=0)
+							{
+								DEBUG_PRINT_STR("->ACTION found...");
+								pact->event=PARSE_EVENT_HTTP_ACTION_PARSED;
+								pact->mode_data.http.state=PARSE_HTTP_STATE_REQUEST_HTTP_VER;
+							}
+							else
+							{
+								DEBUG_PRINT_STR("ERROR! HTTP Action unknown");
+								pact->event=PARSE_EVENT_ERROR_NOT_FOUND_404;
+							}
+						break;
+
+						case PARSE_HTTP_SUB_CHECK_VERSION:
+							if(pact->submode_result>=0)
+							{
+								DEBUG_PRINT_STR("Version found...");
+								pact->mode_data.http.state=PARSE_HTTP_STATE_HEADLINE_WAIT_END;
+							}
+							else
+							{
+								DEBUG_PRINT_STR("ERROR! HTTP Version unknown");
+								pact->event=PARSE_EVENT_ERROR_VERSION_NOT_SUPPORTED_505;
+							}
+							break;
+
+						case PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID:
+
+							if(pact->submode_result>=0)
+							{
+								DEBUG_PRINT(STR,"Descriptor",http_header_descriptors[pact->submode_result]);
+								pact->mode_data.http.descriptor=pact->submode_result;
+							}
+							else
+							{
+								DEBUG_PRINT_STR("Unknown Descriptor...");
+							}
+							pact->mode_data.http.state=PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR;
+							break;
+
+					default:
+						break;
+					}
+
+					if(pact->mode_data.http.sub_state != PARSE_HTTP_SUB_STATE_NONE)
+					{
+						pact->mode_data.http.sub_state=PARSE_HTTP_SUB_STATE_NONE;
+					}
+					else
+					{
+						switch(*buf)
+						{
+						case '/':
+							switch(pact->mode_data.http.state)
+							{
+							case PARSE_HTTP_STATE_REQUEST_ACTION:
+								PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_available_actions,HTTP_AVAILABLE_ACTIONS_LEN," ");
+								pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_ACTION;
+								++buf;
+								--len;
+								break;
+
+							case PARSE_HTTP_STATE_FIELD:
+								break;
+
+							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
+							default:
+								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+								break;
+							}
+							break;
+
+						case ':':
+							switch(pact->mode_data.http.state)
+							{
+
+
+							case PARSE_HTTP_STATE_FIELD_CONTENT:
+								break;
+
+							case PARSE_HTTP_STATE_FIELD:
+								break;
+
+							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
+								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
+								break;
+							default:
+								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+								break;
+							}
+							break;
+
+						case ' ':
+							switch(pact->mode_data.http.state)
+							{
+
+							case PARSE_HTTP_STATE_FIELD_CONTENT:
+								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
+								break;
+
+
+							default:
+								break;
+							}
+							break;
+
+						case '\n':
+							switch(pact->mode_data.http.state)
+							{
+							case PARSE_HTTP_STATE_FIELD:
+							case PARSE_HTTP_STATE_FIELD_CONTENT:
+							case PARSE_HTTP_STATE_HEADLINE_WAIT_END:
+								pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END;
+								break;
+
+							case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
+								pact->submode_state=PARSE_SUBMODE_INIT;
+								pact->mode=PARSE_MODE_XML;
+								pact->mode_data.xml.state=PARSE_XML_INIT;
+								break;
+
+							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
+								DEBUG_PRINT_STR("ERROR: Line feed between Field and field separator(http parser)");
+								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+								PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+								break;
+
+							default:
+								break;
+							}
+							break;
+
+						//Any other char
+						default:
+							switch(pact->mode_data.http.state)
+							{
+								case PARSE_HTTP_STATE_REQUEST_METHOD:
+										PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_methods,HTTP_METHODS_LEN," /\n.");
+										pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_METHOD;
+								break;
+
+								case PARSE_HTTP_STATE_REQUEST_HTTP_VER:
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact ,http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_VERSION;
+									break;
+
+								case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN," :");
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID;
+									break;
+							}
+							break;
+						}
+						if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_CONTENT_START)
+						{
+							buf++;
+							len--;
+						}
+					}
+				}
+/*
 	switch(pact->mode_data.http.state)
 	{
 	//Parse the methodstring
@@ -221,8 +403,9 @@
 				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
 			}
 			break;
+			}
+*/
 
-	}
 	#ifndef FORCE_INLINE
 		*len_ptr=len;
 		*buf_ptr=buf;

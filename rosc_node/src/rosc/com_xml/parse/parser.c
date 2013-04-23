@@ -9,18 +9,22 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 {
 	pact->handler_data_storage=handler_data_storage;
 	pact->mode=PARSE_MODE_HEADER;
+
 	pact->event=PARSE_EVENT_NONE;
-	pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BEGIN;
+
 	pact->submode=PARSE_SUBMODE_NONE;
 	pact->submode_by_handler=false;
 	pact->event=PARSE_EVENT_HANDLER_INIT;
 
+	pact->mode_data.http.sub_state=PARSE_HTTP_SUB_STATE_NONE;
+
 	switch (type) {
 		case  XMLRPC_SERVER:
+			pact->mode_data.http.state=PARSE_HTTP_STATE_REQUEST_METHOD;
 			pact->handler_fkt=(parse_handler_fct_cast) &xmlrpc_server_handler;
 			break;
 		case XMLRPC_CLIENT:
-			DEBUG_PRINT(STR, "TODO:",  "IMPLEMENT!");
+			pact->mode_data.http.state=PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
 			break;
 		default:
 			break;
@@ -37,7 +41,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 	}
 	while(!chunk_processed)
 	{
-		if(pact->mode_data.xml.state == PARSE_XML_INIT)
+		if(pact->mode==PARSE_MODE_XML && pact->mode_data.xml.state == PARSE_XML_INIT)
 		{
 			pact->mode_data.xml.processed_bytes=len;
 		}

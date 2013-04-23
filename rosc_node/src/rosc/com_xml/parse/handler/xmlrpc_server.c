@@ -62,7 +62,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
-	case PARSE_EVENT_HTTP_TARGET_PARSED:
+	case PARSE_EVENT_HTTP_ACTION_PARSED:
 		data->target=pact->submode_result;
 		if(pact->submode_result <0) //Do we have that target?
 		{

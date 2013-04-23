@@ -53,6 +53,7 @@
 	#endif
 // ///////////////////////////////////////
 
+
 		if(pact->mode_data.xml.state==PARSE_XML_INIT)
 		{
 			pact->mode_data.xml.depth=0;

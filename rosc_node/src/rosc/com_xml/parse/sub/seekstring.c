@@ -111,12 +111,12 @@
 			{
 				if(!found)
 				{
-				//	DEBUG_PRINT_STR("UNKNOWN");
+					DEBUG_PRINT_STR("UNKNOWN");
 					pact->submode_result=STRING_NOT_FOUND;
 				}
 				else
 				{
-				//	DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+					DEBUG_PRINT(STR,"SEEKSTRING",pact->submode_data.seekString.stringlist[pact->submode_result]);
 				}
 				pact->submode=PARSE_SUBMODE_NONE;
 				pact->submode_state=PARSE_SUBMODE_FINISHED;

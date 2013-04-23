@@ -147,12 +147,12 @@ http_methods:
   }
 
 
-#Available targets
-http_available_targets:
+#Available actions
+http_available_actions:
   comment:
-    'contains available targets for http requests'
+    'contains available actions for http requests'
   defineShort:
-    'TARGET'
+    'ACTION'
   stringlist: {
     '':ROOT,
     'test'

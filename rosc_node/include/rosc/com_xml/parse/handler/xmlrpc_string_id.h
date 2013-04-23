@@ -43,7 +43,7 @@
 
 	typedef enum
 	{
-		__HTTP_AVAILABLE_TARGETS(HTTP)
+		__HTTP_AVAILABLE_ACTIONS(HTTP)
 	}xmlrpc_server_target_t;
 
 	typedef enum
@@ -62,6 +62,5 @@
 		SLAVE_METHOD_NAME_NOT_SET=-1,
 		__RPC_XML_SLAVE_METHODNAMES(SLAVE)
 	}xmlrpc_slave_api_method_t;
-
 
 #endif /* XMLRPC_STRING_ID_H_ */

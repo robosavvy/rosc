@@ -71,17 +71,17 @@ const char *rpc_xml_stdtext[] =
 	"unregisterSubscriber"
 };
 
+const char *http_available_actions[] =
+{
+	"",
+	"test"
+};
+
 const char *parse_separators[] =
 {
 	"/. \n",
 	"</>\n \"=",
 	"\n:"
-};
-
-const char *http_available_targets[] =
-{
-	"",
-	"test"
 };
 
 const char *rpc_xml_tag_strings[] =

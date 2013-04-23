@@ -30,7 +30,7 @@ char *test_call_message=
 		"Accept-Encoding: gzip\n"
 		"User-Agent: xmlrpclib.py/1.0.1 (by www.pythonware.com)\n"
 		"Content-Type: text/xml\n"
-		"Content-Length: 339\n"
+		"Content-length: 339\n"
 		"\n" //157
 		"<?xml version='1.0'?>\n"
 		"<methodCall>\n"
@@ -47,7 +47,7 @@ char *test_call_message=
 		"<value><string>http://sncn-10:56998/</string></value>\n"
 		"</data></array></value>\n"
 		"</param>\n"
-		"</params>\n<narf>fff</narf>"
+		"</params>\n"
 		"</methodCall>";
 
 int main()
