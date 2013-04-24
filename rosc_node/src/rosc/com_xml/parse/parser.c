@@ -15,6 +15,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 	pact->submode=PARSE_SUBMODE_NONE;
 	pact->submode_by_handler=false;
 	pact->event=PARSE_EVENT_HANDLER_INIT;
+	pact->content_length=-1;
 
 	pact->mode_data.http.sub_state=PARSE_HTTP_SUB_STATE_NONE;
 
