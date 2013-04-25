@@ -108,9 +108,10 @@ typedef enum
 	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST=-5,
 	PARSE_EVENT_ERROR_LENGTH_REQUIRED=-6,
 	PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED=-7,
+	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE=-8,
 
-	PARSE_EVENT_ERROR_XML_DEPTH,
-	PARSE_EVENT_MALFORMED_XML=-1,
+	PARSE_EVENT_ERROR_XML_DEPTH=-9,
+	PARSE_EVENT_ERROR_MALFORMED_XML=-1,
 
 
 
@@ -119,6 +120,8 @@ typedef enum
 	PARSE_EVENT_HTTP_METHOD_PARSED,
 	PARSE_EVENT_HTTP_ACTION_PARSED,
 	PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT,
+
+
 	//XML
 	PARSE_EVENT_TAG,
 	PARSE_EVENT_INSIDE_TAG,
@@ -259,7 +262,8 @@ typedef struct parse_act_t
 			parse_http_state_t state; //!< state contains the current state of the http parser
 			parse_http_sub_state_t sub_state; //!< contains the substate of the http parser (analyzing results of submodes)
 			parse_http_desc_t descriptor; //!< descriptor contains the current known descriptor
-			uint32_t field_number; //!< number of data string in the current data field
+			uint8_t content_type_text_xml_found; //!< checks if the text/xml content type was found.
+
 		}http;
 
 		struct

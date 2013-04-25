@@ -51,9 +51,6 @@
 		while(len>0 && pact->event  == PARSE_EVENT_NONE &&
 					   pact->submode== PARSE_SUBMODE_NONE)
 		{
-
-
-
 				/*
 				 *	Handling substate results
 				 */
@@ -89,7 +86,7 @@
 							}
 						break;
 
-						case PARSE_HTTP_SUB_CHECK_VERSION_REQUEST:
+						case PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER:
 							if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1 )
 							{
 								DEBUG_PRINT_STR("Version found...");
@@ -103,7 +100,6 @@
 							break;
 
 						case PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID:
-
 							if(pact->submode_result>=0)
 							{
 								DEBUG_PRINT(STR,"Descriptor",http_header_descriptors[pact->submode_result]);
@@ -140,6 +136,30 @@
 							}
 
 							break;
+
+							case PARSE_HTTP_SUB_CHECK_CONTENT_TYPE:
+								if(pact->submode_result==HTTP_VAL_TEXT_XML)
+								{
+									DEBUG_PRINT_STR("Found text/xml!");
+									pact->mode_data.http.content_type_text_xml_found=true;
+								}
+								else
+								{
+									DEBUG_PRINT_STR("Found other");
+									if(!pact->mode_data.http.content_type_text_xml_found)
+									{
+										pact->event=PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE;
+									}
+								}
+
+								//default chars will lead to reengage seekstring
+								//so we need to skip them here
+								if(*buf==',' || *buf==';')
+								{
+									++buf;
+									--len;
+								}
+								break;
 					default:
 						break;
 					}
@@ -169,7 +189,14 @@
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
+
+
+								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
+								pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
 								break;
+							case PARSE_HTTP_STATE_FIELD_CONTENT:
+								break;
+
 
 							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
 							default:
@@ -186,6 +213,9 @@
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
+
+								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
+								pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
 								break;
 
 							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
@@ -253,7 +283,7 @@
 
 								case PARSE_HTTP_STATE_REQUEST_HTTP_VER:
 									PARSE_SUBMODE_INIT_SEEKSTRING(pact ,http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
-									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_VERSION_REQUEST;
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER;
 									break;
 
 								case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
@@ -261,16 +291,34 @@
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID;
 									break;
 
+
 								case PARSE_HTTP_STATE_FIELD:
+
+									pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
 									switch(pact->mode_data.http.descriptor)
 									{
+
 									case HTTP_DESC_CONTENT_LENGTH:
-										PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
-										pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH;
+										if(pact->content_length==-1)
+										{
+											PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
+											pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH;
+										}
+										else
+										{
+											pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+											DEBUG_PRINT_STR("CONTENT LENGTH FIELD ERROR");
+										}
 										break;
+									case HTTP_DESC_CONTENT_TYPE:
+											PARSE_SUBMODE_INIT_SEEKSTRING(pact, http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
+											pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_TYPE;
+										break;
+
 
 									default:
 										pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
+										pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
 										break;
 									}
 									break;
@@ -284,179 +332,6 @@
 						}
 					}
 				}
-/*
-	switch(pact->mode_data.http.state)
-	{
-	//Parse the methodstring
-	case PARSE_HTTP_STATE_METHSTR_BEGIN:
-		PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_methods,HTTP_METHODS_LEN," ");
-		pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_METHODSTR;
-	break;
-
-	//Call handler to check what to do with the methodstring
-	case PARSE_HTTP_STATE_METHSTR_METHODSTR:
-			if(pact->submode_result>=0)
-			{
-				pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
-				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_BCKSLSH0;
-				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
-			}
-			else
-			{
-				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-			}
-		break;
-
-	//Check for the backslash
-	case PARSE_HTTP_STATE_METHSTR_BCKSLSH0:
-			if(*buf=='/')
-			{
-				++buf;
-				--len;
-				PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_available_targets,HTTP_AVAILABLE_TARGETS_LEN," ");
-				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_TARGET;
-			}
-			else
-			{
-				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-			}
-		break;
-
-	 //Check Target
-		case PARSE_HTTP_STATE_METHSTR_TARGET:
-			if(pact->submode_result>=0)
-			{
-				pact->event=PARSE_EVENT_HTTP_TARGET_PARSED;
-				pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_HTTP;
-				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
-			}
-			else
-			{
-				pact->event=PARSE_EVENT_ERROR_404;
-			}
-			break;
-
-		//Compare HTTP
-		case PARSE_HTTP_STATE_METHSTR_HTTP:
-			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_stdtext,HTTP_HEADER_STDTEXT_LEN," \n");
-			pact->mode_data.http.state=PARSE_HTTP_STATE_METHSTR_LF;
-			break;
-
-		//Check HTTP and separator
-		case PARSE_HTTP_STATE_METHSTR_LF:
-				if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1)
-				{
-					if(*buf=='\n')
-					{
-						++buf;
-						--len;
-						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
-					}
-					else
-					{
-						pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-					}
-				}
-				else
-				{
-					pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-				}
-			break;
-
-
-		//Parse the descriptor
-		case PARSE_HTTP_STATE_DESCRIPTOR:
-			if(*buf=='\n')
-			{
-				++buf;
-				--len;
-				pact->submode_state=PARSE_SUBMODE_INIT;
-				pact->mode=PARSE_MODE_XML;
-				pact->mode_data.xml.state=PARSE_XML_INIT;
-				break;
-			}
-			PARSE_SUBMODE_INIT_SEEKSTRING(pact,http_header_descriptors, HTTP_HEADER_DESCRIPTORS_LEN,":\n");
-			pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
-			break;
-
-
-		case PARSE_HTTP_STATE_GET_FIELD_VALUE:
-
-			switch(pact->mode_data.http.descriptor)
-			{
-			case HTTP_DESC_CONTENT_LENGTH:
-				pact->mode_data.http.state=PARSE_HTTP_STATE_CONTENT_LENGTH;
-				PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
-				break;
-				//TODO Check for Content-Encoding / Content-type //Now we just guess we always get text/html
-			default:
-				PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
-				pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
-				break;
-			}
-		break;
-
-
-		//Checking if content type is supported
-		case PARSE_HTTP_STATE_CONTENT_TYPE:
-
-		break;
-
-		//Checking the content length parsing result
-		case PARSE_HTTP_STATE_CONTENT_LENGTH:
-			switch(pact->submode_result)
-			{
-			case NUMBERPARSE_ANOTHER_CHAR:
-				pact->content_length=pact->submode_data.numberParse.number;
-
-				if(*buf!=' ' && *buf!='\n')
-				{
-					pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH;
-				}
-				else
-				{
-					//printf("content-length: %i\n", pact->content_length);
-					PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
-					pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
-				}
-				break;
-			case NUMBERPARSE_MAX_FIGURES:
-				pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG;
-				break;
-			case NUMBERPARSE_ERROR_NONUMBER:
-				pact->event=PARSE_EVENT_ERROR_CONTENT_LENGTH;
-				break;
-			}
-		break;
-
-		//Check if we have a field to be parsed
-		case PARSE_HTTP_STATE_FIELD:
-			if(*buf==':')//check if separator was a :
-			{
-				++buf;
-				--len;
-					if(pact->submode_result>=0)
-					{
-						//Known Field
-						pact->mode_data.http.descriptor=pact->submode_result;
-						pact->mode_data.http.state=PARSE_HTTP_STATE_GET_FIELD_VALUE;
-						pact->event=PARSE_EVENT_HTTP_HEADER_FIELD;
-						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact," ",false);
-					}
-					else
-					{
-						//Skip unknown field
-						PARSE_SUBMODE_INIT_SKIPUNTILCHAR(pact,"\n",true);
-						pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR;
-					}
-			}
-			else
-			{
-				pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-			}
-			break;
-			}
-*/
 
 	#ifndef FORCE_INLINE
 		*len_ptr=len;

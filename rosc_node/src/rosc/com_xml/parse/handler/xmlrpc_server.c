@@ -71,7 +71,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		break;
 
 	case PARSE_EVENT_TAG_INSIDE:
-
 		switch(pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 		case XML_TAG_METHODNAME:
@@ -82,22 +81,22 @@ void xmlrpc_server_handler(parse_act_t * pact)
 				data->content_is_mandatory=true;
 			}
 		break;
+
 		case XML_TAG_VALUE:
 			//Number the current value tag (param)
-				if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
-				   pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
-				   pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
-				   pact->mode_data.xml.depth == 4)
-				{
-					DEBUG_PRINT(INT,"VALUE", data->value_number);
-					++data->value_number;
-					data->current_value_tag=data->value_number;
-				}
+			if(pact->mode_data.xml.tags[1]==XML_TAG_METHODCALL &&
+			   pact->mode_data.xml.tags[2]==XML_TAG_PARAMS &&
+			   pact->mode_data.xml.tags[3]==XML_TAG_PARAM &&
+			   pact->mode_data.xml.depth == 4)
+			{
+				DEBUG_PRINT(INT,"VALUE", data->value_number);
+				++data->value_number;
+				data->current_value_tag=data->value_number;
+			}
 			break;
 
 
 		case XML_TAG_STRING:
-
 			switch(data->current_value_tag)
 			{
 			//Numbers start with one! 0 stands for NO value tag

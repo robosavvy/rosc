@@ -110,7 +110,7 @@
 
 				if(pact->submode_result!=XML_TAG_CDATA)
 				{
-					pact->event=PARSE_EVENT_MALFORMED_XML;
+					pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 				}
 				else
 				{
@@ -150,7 +150,7 @@
 							case PARSE_XML_QMTAG_EXPECT_CLOSE:
 							case PARSE_XML_TAG_START:
 							case PARSE_XML_ATTRIBUTE_WAIT_EQUAL:
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 							case PARSE_XML_INNER_CONTENT:
 								pact->mode_data.xml.state=PARSE_XML_INNER;
@@ -173,7 +173,7 @@
 						}
 						else
 						{
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 						}
 						break;
 					case PARSE_XML_COMMENT:
@@ -185,7 +185,7 @@
 					case PARSE_XML_INNER_CONTENT:
 						break;
 					default:
-						pact->event=PARSE_EVENT_MALFORMED_XML;
+						pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 						break;
 					}
 					break;
@@ -213,7 +213,7 @@
 							case PARSE_XML_COMMENT_END_2ND_DASH:
 
 							default:
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 								break;
 
 						}
@@ -229,7 +229,7 @@
 							case XML_TAG_TYPE_EXCLAMATION_MARK:
 								break;
 							case XML_TAG_TYPE_QUESTION_MARK:
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 							case XML_TAG_TYPE_NORMAL:
 								if(pact->mode_data.xml.depth!=__XML_MAX_DEPTH__)
@@ -286,7 +286,7 @@
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						}
 
@@ -305,7 +305,7 @@
 							else
 							{
 								DEBUG_PRINT_STR("NEGATIVE LVL!!! MALFORMED!");
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							}
 						}
 						//DEBUG_PRINT(INT,"DEPTH",pact->mode_data.xml.depth);
@@ -338,7 +338,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 						break;
 					}
 					break;
@@ -349,7 +349,7 @@
 							if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_EXCLAMATION_MARK)
 							pact->mode_data.xml.state=PARSE_XML_COMMENT_START_1ST_DASH;
 							else
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						case PARSE_XML_COMMENT_START_1ST_DASH:
 							DEBUG_PRINT_STR("COMMENT START");
@@ -377,7 +377,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 					}
 					break;
@@ -402,7 +402,7 @@
 							}
 							else
 							{
-								pact->event=PARSE_EVENT_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							}
 							break;
 						case PARSE_XML_CDATA_FIRST_BRACKET:
@@ -416,7 +416,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 						break;
 					}
 					break;
@@ -444,7 +444,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						break;
 					}
@@ -472,7 +472,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						break;
 					}
@@ -503,7 +503,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						break;
 
@@ -558,7 +558,7 @@
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
 							break;
 						break;
 					}
