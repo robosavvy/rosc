@@ -28,6 +28,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		data->fetch_content=false;
 		data->content_is_mandatory=false;
 		data->content_cnt=0;
+		pact->mode_data.http.content_type_text_xml_found=false;
 		break;
 
 	case PARSE_EVENT_NONE:

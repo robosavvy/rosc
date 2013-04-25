@@ -100,6 +100,46 @@
 							}
 							break;
 
+
+						case PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER:
+							if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1 )
+							{
+								DEBUG_PRINT_STR("Version found...");
+								pact->mode_data.http.state=PARSE_HTTP_STATE_RESPONSE_CODE;
+							}
+							else
+							{
+								DEBUG_PRINT_STR("ERROR! RESPONSE HTTP Version unknown");
+								pact->event=PARSE_EVENT_ERROR_VERSION_NOT_SUPPORTED_505;
+							}
+							break;
+
+						case PARSE_HTTP_SUB_CHECK_RESPONSE_CODE:
+							switch(pact->submode_result)
+							{
+								case NUMBERPARSE_ANOTHER_CHAR:
+								if(*buf==' ')
+								{
+									DEBUG_PRINT(INT,"Code of HTTP Response", pact->submode_data.numberParse.number);
+									pact->event=PARSE_EVENT_HTTP_RESPONSE_CODE;
+									pact->mode_data.http.state=PARSE_HTTP_STATE_RESPONSE_STRING;
+								}
+								else
+								{
+									pact->event=PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE;
+								}
+								break;
+
+								case NUMBERPARSE_ERROR_NONUMBER:
+									pact->event=PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE;
+								break;
+
+								case NUMBERPARSE_MAX_FIGURES:
+									pact->event=PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE;
+								break;
+							}
+							break;
+
 						case PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID:
 							if(pact->submode_result>=0)
 							{
@@ -193,11 +233,13 @@
 								is_field_content=true;
 								break;
 
+
 							case PARSE_HTTP_STATE_FIELD_CONTENT:
 								break;
 
+							case PARSE_HTTP_STATE_RESPONSE_STRING:
+								break;
 
-							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
 							default:
 								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
 								break;
@@ -218,6 +260,10 @@
 							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
 								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
 								break;
+
+							case PARSE_HTTP_STATE_RESPONSE_STRING:
+								break;
+
 							default:
 								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
 								break;
@@ -233,6 +279,8 @@
 								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
 								break;
 
+							case PARSE_HTTP_STATE_RESPONSE_STRING:
+								break;
 
 							default:
 								break;
@@ -245,6 +293,7 @@
 							case PARSE_HTTP_STATE_FIELD:
 							case PARSE_HTTP_STATE_FIELD_CONTENT:
 							case PARSE_HTTP_STATE_HEADLINE_WAIT_END:
+							case PARSE_HTTP_STATE_RESPONSE_STRING:
 								pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END;
 								break;
 
@@ -258,13 +307,16 @@
 								pact->mode_data.xml.state=PARSE_XML_INIT;
 								break;
 
+
+
+
+
+							case PARSE_HTTP_STATE_RESPONSE_CODE:
 							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
-								DEBUG_PRINT_STR("ERROR: Line feed between Field and field separator(http parser)");
 								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-								PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 								break;
 
-							default:
+							default: //TODO ^^ merge with above???
 								break;
 							}
 							break;
@@ -281,6 +333,17 @@
 								case PARSE_HTTP_STATE_REQUEST_HTTP_VER:
 									PARSE_SUBMODE_INIT_SEEKSTRING(pact ,http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER;
+									break;
+
+								case PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact ,http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER;
+									break;
+
+
+								case PARSE_HTTP_STATE_RESPONSE_CODE:
+									PARSE_SUBMODE_INIT_NUMBERPARSE(pact,3);
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_RESPONSE_CODE;
 									break;
 
 								case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:

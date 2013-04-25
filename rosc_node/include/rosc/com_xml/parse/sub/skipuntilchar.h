@@ -34,7 +34,7 @@
 
 #include <rosc/com_xml/parse/parser_structure.h>
 
-
+//TODO DELETE THIS SUBMODE
 #define PARSE_SUBMODE_INIT_SKIPUNTILCHAR(PARSE_STRUCT, SEP, NEGATIVE)\
 				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPUNTILCHAR;\
 				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\

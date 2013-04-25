@@ -26,6 +26,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 			break;
 		case XMLRPC_CLIENT:
 			pact->mode_data.http.state=PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
+			pact->handler_fkt=(parse_handler_fct_cast) &xmlrpc_client_handler;
 			break;
 		default:
 			break;
