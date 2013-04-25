@@ -77,13 +77,14 @@ extern const char *rpc_xml_slave_methodnames[];
 /**
  * Length of the string array http_header_descriptors
  */
-#define HTTP_HEADER_DESCRIPTORS_LEN 	7
+#define HTTP_HEADER_DESCRIPTORS_LEN 	8
 
 /**
  * Macro for inserting standard http header descriptors string numbers into any enum
  */
 #define __HTTP_HEADER_DESCRIPTORS(ENUM) \
-	 ENUM ## _DESC_ACCEPTED_ENCODING, \
+	 ENUM ## _DESC_ACCEPT_ENCODING, \
+	 ENUM ## _DESC_CONTENT_ENCODING, \
 	 ENUM ## _DESC_CONTENT_TYPE, \
 	 ENUM ## _DESC_CONTENT_LENGTH, \
 	 ENUM ## _DESC_DATE, \
@@ -95,24 +96,6 @@ extern const char *rpc_xml_slave_methodnames[];
  * This array contains the strings for standard http header descriptors
  */
 extern const char *http_header_descriptors[];
-
-
-/**
- * Length of the string array http_header_content_types
- */
-#define HTTP_HEADER_CONTENT_TYPES_LEN 	2
-
-/**
- * Macro for inserting contains known content types string numbers into any enum
- */
-#define __HTTP_HEADER_CONTENT_TYPES(ENUM) \
-	 ENUM ## _CONTENT_GZIP, \
-	 ENUM ## _CONTENT_TEXT_HTML
-
-/**
- * This array contains the strings for contains known content types
- */
-extern const char *http_header_content_types[];
 
 
 /**

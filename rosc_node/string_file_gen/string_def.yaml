@@ -101,9 +101,10 @@ http_header_descriptors:
         User-Agent: USER_AGENT,
         Date,
         Host,
-        Content-Type: CONTENT_TYPE,
-        Content-length: CONTENT_LENGTH,
-        Accepted-Encoding
+        Content-Type,
+        Content-length,
+        Content-Encoding,
+        Accept-Encoding
   }
   
 #Standard Strings for header generator
@@ -122,18 +123,6 @@ http_header_stdtext:
     'http://':HTTP_URL_HEAD,
     'OK'
   }
-
-#Expectable content types (not only supported)
-http_header_content_types:
-  comment:
-    'contains known content types'
-  defineShort:
-    'CONTENT'
-  stringlist: {
-    'gzip',
-    'text/html'
-  }
-
 
 #Method strings
 http_methods:

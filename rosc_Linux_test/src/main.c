@@ -30,6 +30,7 @@ char *test_call_message=
 		"Accept-Encoding: gzip\n"
 		"User-Agent: xmlrpclib.py/1.0.1 (by www.pythonware.com)\n"
 		"Content-Type: text/xml\n"
+//		"Content-Encoding: gzip\n"
 		"Content-length: 339\n"
 		"\n" //157
 		"<?xml version='1.0'?>\n"

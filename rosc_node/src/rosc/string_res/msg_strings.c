@@ -38,19 +38,14 @@ const char *rpc_xml_slave_methodnames[] =
 
 const char *http_header_descriptors[] =
 {
-	"Accepted-Encoding",
+	"Accept-Encoding",
+	"Content-Encoding",
 	"Content-Type",
 	"Content-length",
 	"Date",
 	"Host",
 	"Server",
 	"User-Agent"
-};
-
-const char *http_header_content_types[] =
-{
-	"gzip",
-	"text/html"
 };
 
 const char *rpc_xml_stdtext[] =

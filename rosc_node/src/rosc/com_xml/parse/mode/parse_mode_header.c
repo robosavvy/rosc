@@ -51,6 +51,7 @@
 		while(len>0 && pact->event  == PARSE_EVENT_NONE &&
 					   pact->submode== PARSE_SUBMODE_NONE)
 		{
+			bool is_field_content=false;
 				/*
 				 *	Handling substate results
 				 */
@@ -189,11 +190,9 @@
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
-
-
-								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
-								pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
+								is_field_content=true;
 								break;
+
 							case PARSE_HTTP_STATE_FIELD_CONTENT:
 								break;
 
@@ -213,10 +212,8 @@
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
-
-								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
-								pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
-								break;
+								 is_field_content=true;
+										break;
 
 							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
 								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
@@ -291,40 +288,59 @@
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID;
 									break;
 
-
 								case PARSE_HTTP_STATE_FIELD:
-
-									pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
-									switch(pact->mode_data.http.descriptor)
-									{
-
-									case HTTP_DESC_CONTENT_LENGTH:
-										if(pact->content_length==-1)
-										{
-											PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
-											pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH;
-										}
-										else
-										{
-											pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
-											DEBUG_PRINT_STR("CONTENT LENGTH FIELD ERROR");
-										}
-										break;
-									case HTTP_DESC_CONTENT_TYPE:
-											PARSE_SUBMODE_INIT_SEEKSTRING(pact, http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
-											pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_TYPE;
-										break;
-
-
-									default:
-										pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
-										pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
-										break;
-									}
+									is_field_content=true;
 									break;
 							}
 							break;
 						}
+
+
+						//special external state for field content
+						//must be external due to it's size and need to be placed in multiple positions
+						if(is_field_content)
+						{
+							DEBUG_PRINT_STR("CONTENT_START");
+							pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
+
+
+							switch(pact->mode_data.http.descriptor)
+							{
+
+							case HTTP_DESC_CONTENT_ENCODING:
+								/* NO ENCODING IS SUPPORTED->ERROR 415*/
+								pact->event=PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING;
+								break;
+
+
+							case HTTP_DESC_CONTENT_LENGTH:
+								if(pact->content_length==-1)
+								{
+									PARSE_SUBMODE_INIT_NUMBERPARSE(pact,4);
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH;
+								}
+								else
+								{
+									pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
+									DEBUG_PRINT_STR("CONTENT LENGTH FIELD ERROR");
+								}
+								break;
+							case HTTP_DESC_CONTENT_TYPE:
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact, http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
+									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_TYPE;
+								break;
+
+
+							default:
+								pact->event=PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT;
+								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD_CONTENT;
+								break;
+							}
+						}
+
+
+
+
 						if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_CONTENT_START)
 						{
 							buf++;
