@@ -37,8 +37,8 @@ typedef enum
 	PARSE_XML_CDATA,
 	PARSE_XML_CDATA_START,
 	PARSE_XML_CDATA_EXPECT_OPEN_BRACKET,
-	PARSE_XML_CDATA_FIRST_BRACKET, //TODO RENAME _CLOSE_
-	PARSE_XML_CDATA_SECOND_BRACKET,//TODO RENAME _CLOSE_
+	PARSE_XML_CDATA_FIRST_CLOSE_BRACKET,
+	PARSE_XML_CDATA_SECOND_CLOSE_BRACKET,
 	PARSE_XML_QMTAG_EXPECT_CLOSE,
 	PARSE_XML_COMMENT_START_1ST_DASH,
 	PARSE_XML_COMMENT,
@@ -100,35 +100,34 @@ parse_xml_tag_type_t;
  */
 typedef enum
 {
-	//Errors
-	PARSE_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG=-1,
-	PARSE_EVENT_ERROR_CONTENT_LENGTH=-2,
-	PARSE_EVENT_ERROR_NOT_FOUND_404=-3,
-	PARSE_EVENT_ERROR_VERSION_NOT_SUPPORTED_505=-4,
-	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST=-5,
-	PARSE_EVENT_ERROR_LENGTH_REQUIRED=-6,
-	PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED=-7,
-	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE=-8,
-	PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING=-9,
-	PARSE_EVENT_ERROR_XML_DEPTH=-10,
-	PARSE_EVENT_ERROR_MALFORMED_XML=-11,
-	PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE=-12,
+	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG=-100,//!< PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG means the content exceeds the specified max lenght
+	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH,              //!< PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH means that the content length is now available
+	PARSE_EVENT_ERROR_HTTP_NOT_FOUND,                   //!< PARSE_EVENT_ERROR_HTTP_NOT_FOUND means that the target/action/url was not found in the string array (code: 404)
+	PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED,       //!< PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED means that the HTTP version is not supported (code: 505)
+	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST,                 //!< PARSE_EVENT_ERROR_HTTP_BAD_REQUEST means that something is wrong inside the http header
+	PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED,             //!< PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED means that now length was given in the http header
+	PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED,          //!< PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED means that the given method string did not match any of those in the string array
+	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE,                //!< PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE means that the content type given in http header is not supported
+	PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING,            //!< PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
+	PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE,                //!< PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE means that something is wrong in the received response
+	PARSE_EVENT_ERROR_XML_DEPTH,                        //!< PARSE_EVENT_ERROR_XML_DEPTH means that the depth of the current xml document is too depth to be handled
+	PARSE_EVENT_ERROR_XML_MALFORMED,                    //!< PARSE_EVENT_ERROR_XML_MALFORMED means that something inside the xml document is wrong
 
 
-	PARSE_EVENT_NONE=0,
-	PARSE_EVENT_HANDLER_INIT,
-	PARSE_EVENT_HTTP_METHOD_PARSED,
-	PARSE_EVENT_HTTP_ACTION_PARSED,
-	PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT,
-	PARSE_EVENT_HTTP_RESPONSE_CODE,
+	PARSE_EVENT_NONE=0,                                 //!< PARSE_EVENT_NONE means that there is no event atm.
+
+	PARSE_EVENT_HANDLER_INIT,                           //!< PARSE_EVENT_HANDLER_INIT can be used to initialize the handlers data storage
+	PARSE_EVENT_HTTP_METHOD_PARSED,                     //!< PARSE_EVENT_HTTP_METHOD_PARSED means that the method string of the http header was parsed
+	PARSE_EVENT_HTTP_ACTION_PARSED,                     //!< PARSE_EVENT_HTTP_ACTION_PARSED means that the action (url, uri string) was parsed
+
+	PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT,              //!< PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT means that the http parser reached content inside a http field
+	PARSE_EVENT_HTTP_RESPONSE_CODE,                     //!< PARSE_EVENT_HTTP_RESPONSE_CODE means that the response code is now available (client)
 
 	//XML
-	PARSE_EVENT_TAG,
-	PARSE_EVENT_INSIDE_TAG,
-	PARSE_EVENT_TAG_INSIDE,
-	PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED,
-
-	PARSE_EVENT_CONTENT_START,
+	PARSE_EVENT_XML_TAG,                                //!< PARSE_EVENT_XML_TAG means that a xml tag is found and the parser is now after the tag string
+	PARSE_EVENT_XML_INSIDE_TAG,                         //!< PARSE_EVENT_XML_INSIDE_TAG means that the parser entered the tag and is now after the '>'
+	PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED,    //!< PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED means that the submode called from the handler is finished
+	PARSE_EVENT_XML_CONTENT_START,                      //!< PARSE_EVENT_XML_CONTENT_START means that the parser found content inside a tag and now is at its beginning
 }parse_event_t;
 
 
@@ -158,21 +157,21 @@ typedef enum
 typedef enum
 {
 	/*Special states for parsing a request (server)*/
-	PARSE_HTTP_STATE_REQUEST_METHOD,
-	PARSE_HTTP_STATE_REQUEST_ACTION,
-	PARSE_HTTP_STATE_REQUEST_HTTP_VER,
+	PARSE_HTTP_STATE_REQUEST_METHOD,          //!< PARSE_HTTP_STATE_REQUEST_METHOD, in this state the parser expects the method string of a request
+	PARSE_HTTP_STATE_REQUEST_ACTION,          //!< PARSE_HTTP_STATE_REQUEST_ACTION, in this state the parser expects the action string of a request
+	PARSE_HTTP_STATE_REQUEST_HTTP_VER,        //!< PARSE_HTTP_STATE_REQUEST_HTTP_VER, in this state the parser expects the http version of a request
 
 	/*Special states for parsing a response (client)*/
-	PARSE_HTTP_STATE_RESPONSE_HTTP_VER,
-	PARSE_HTTP_STATE_RESPONSE_CODE,
-	PARSE_HTTP_STATE_RESPONSE_STRING,
+	PARSE_HTTP_STATE_RESPONSE_HTTP_VER,       //!< PARSE_HTTP_STATE_RESPONSE_HTTP_VER, in this state the parser expects the http version of a response
+	PARSE_HTTP_STATE_RESPONSE_CODE,           //!< PARSE_HTTP_STATE_RESPONSE_CODE, in this state the parser expects the http response code
+	PARSE_HTTP_STATE_RESPONSE_STRING,         //!< PARSE_HTTP_STATE_RESPONSE_STRING, in this state the parser waits for a line feed
 
 	/*Common states*/
-	PARSE_HTTP_STATE_HEADLINE_WAIT_END,
-	PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END,
-	PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR,
-	PARSE_HTTP_STATE_FIELD,
-	PARSE_HTTP_STATE_FIELD_CONTENT,
+	PARSE_HTTP_STATE_HEADLINE_WAIT_END,       //!< PARSE_HTTP_STATE_HEADLINE_WAIT_END
+	PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END,//!< PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END
+	PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR,    //!< PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR
+	PARSE_HTTP_STATE_FIELD,                   //!< PARSE_HTTP_STATE_FIELD
+	PARSE_HTTP_STATE_FIELD_CONTENT,           //!< PARSE_HTTP_STATE_FIELD_CONTENT
 }parse_http_state_t;
 
 
@@ -269,7 +268,7 @@ typedef struct parse_act_t
 		struct
 		{
 			uint16_t depth;	//!< depth stores the depth of the current location of the parser
-			uint32_t processed_bytes; //!<
+			uint32_t processed_bytes; //!< currently processed bytes of the xml part (updated after each chunk)
 			parse_xml_tags_t current_tag; //!< current_tag contains the current known xml tag
 			parse_xml_tag_type_t tag_type; //!< normal, ! or ? tag.
 			parse_xml_attrib_t attribute; //!< shows the attribute if inside an attribute otherwise XML_ATTRIBUTE_NONE

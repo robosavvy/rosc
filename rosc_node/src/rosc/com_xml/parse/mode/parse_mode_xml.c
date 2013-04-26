@@ -80,7 +80,7 @@
 				else
 				{
 					pact->mode_data.xml.current_tag=pact->submode_result;
-					pact->event=PARSE_EVENT_TAG;
+					pact->event=PARSE_EVENT_XML_TAG;
 				}
 
 				if(pact->submode_result==XML_TAG_TYPE_CDATA)
@@ -110,7 +110,7 @@
 
 				if(pact->submode_result!=XML_TAG_CDATA)
 				{
-					pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+					pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 				}
 				else
 				{
@@ -141,8 +141,8 @@
 								pact->mode_data.xml.state=PARSE_XML_COMMENT;
 								break;
 
-							case PARSE_XML_CDATA_FIRST_BRACKET:
-							case PARSE_XML_CDATA_SECOND_BRACKET:
+							case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+							case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 								pact->mode_data.xml.state=PARSE_XML_CDATA;
 								break;
 
@@ -150,7 +150,7 @@
 							case PARSE_XML_QMTAG_EXPECT_CLOSE:
 							case PARSE_XML_TAG_START:
 							case PARSE_XML_ATTRIBUTE_WAIT_EQUAL:
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 							case PARSE_XML_INNER_CONTENT:
 								pact->mode_data.xml.state=PARSE_XML_INNER;
@@ -173,19 +173,19 @@
 						}
 						else
 						{
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 						}
 						break;
 					case PARSE_XML_COMMENT:
 						break;
 					case PARSE_XML_INNER:
-						pact->event=PARSE_EVENT_CONTENT_START;
+						pact->event=PARSE_EVENT_XML_CONTENT_START;
 						pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 						break;
 					case PARSE_XML_INNER_CONTENT:
 						break;
 					default:
-						pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+						pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 						break;
 					}
 					break;
@@ -203,8 +203,8 @@
 								pact->mode_data.xml.state=PARSE_XML_TAG_START;
 								break;
 
-							case PARSE_XML_CDATA_FIRST_BRACKET:
-							case PARSE_XML_CDATA_SECOND_BRACKET:
+							case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+							case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 								pact->mode_data.xml.state=PARSE_XML_CDATA;
 								break;
 
@@ -213,7 +213,7 @@
 							case PARSE_XML_COMMENT_END_2ND_DASH:
 
 							default:
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 								break;
 
 						}
@@ -229,20 +229,19 @@
 							case XML_TAG_TYPE_EXCLAMATION_MARK:
 								break;
 							case XML_TAG_TYPE_QUESTION_MARK:
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 							case XML_TAG_TYPE_NORMAL:
 								if(pact->mode_data.xml.depth!=__XML_MAX_DEPTH__)
 								{
 									pact->mode_data.xml.depth++;
 									pact->mode_data.xml.tags[pact->mode_data.xml.depth]=pact->mode_data.xml.current_tag;
-									pact->event=PARSE_EVENT_TAG_INSIDE;
+									pact->event=PARSE_EVENT_XML_INSIDE_TAG;
 								}
 								else
 								{
 									pact->event=PARSE_EVENT_ERROR_XML_DEPTH;
 									DEBUG_PRINT_STR("XML ERROR! TOO DEEP!");
-									PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
 								}
 								break;
 							case XML_TAG_TYPE_CLOSE:
@@ -256,7 +255,7 @@
 								else
 								{
 									DEBUG_PRINT_STR("XML ERROR! XML INVALID!"); //TODO Error Handling
-									PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+									pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 								}
 								break;
 
@@ -281,12 +280,12 @@
 						case PARSE_XML_CDATA:
 							break;
 
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						}
 
@@ -305,10 +304,10 @@
 							else
 							{
 								DEBUG_PRINT_STR("NEGATIVE LVL!!! MALFORMED!");
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							}
 						}
-						//DEBUG_PRINT(INT,"DEPTH",pact->mode_data.xml.depth);
+
 					break;
 				case '/':
 					switch(pact->mode_data.xml.state)
@@ -327,18 +326,18 @@
 								pact->mode_data.xml.state=PARSE_XML_COMMENT;
 							break;
 
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 						break;
 					}
 					break;
@@ -349,7 +348,7 @@
 							if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_EXCLAMATION_MARK)
 							pact->mode_data.xml.state=PARSE_XML_COMMENT_START_1ST_DASH;
 							else
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						case PARSE_XML_COMMENT_START_1ST_DASH:
 							DEBUG_PRINT_STR("COMMENT START");
@@ -366,18 +365,18 @@
 							break;
 						case PARSE_XML_ATTRIBUTE_INSIDE_QUOTES_ATTRIB:
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 					}
 					break;
@@ -402,21 +401,21 @@
 							}
 							else
 							{
-								pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+								pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							}
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 						break;
 					}
 					break;
@@ -433,18 +432,18 @@
 						case PARSE_XML_COMMENT_END_2ND_DASH:
 								pact->mode_data.xml.state=PARSE_XML_COMMENT;
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						break;
 					}
@@ -461,18 +460,18 @@
 						case PARSE_XML_ATTRIBUTE_WAIT_EQUAL:
 							pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_WAIT_VAL_BOUND;
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						break;
 					}
@@ -492,18 +491,18 @@
 						case PARSE_XML_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB:
 							pact->mode_data.xml.state=PARSE_XML_TAG;
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						break;
 
@@ -514,15 +513,15 @@
 					switch(pact->mode_data.xml.state)
 					{
 					case PARSE_XML_CDATA:
-						pact->mode_data.xml.state=PARSE_XML_CDATA_FIRST_BRACKET;
+						pact->mode_data.xml.state=PARSE_XML_CDATA_FIRST_CLOSE_BRACKET;
 						break;
-					case PARSE_XML_CDATA_FIRST_BRACKET:
-						pact->mode_data.xml.state=PARSE_XML_CDATA_SECOND_BRACKET;
+					case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						pact->mode_data.xml.state=PARSE_XML_CDATA_SECOND_CLOSE_BRACKET;
 						break;
-					case PARSE_XML_CDATA_SECOND_BRACKET: //if ]]]
+					case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET: //if ]]]
 						break;
 					case PARSE_XML_INNER:
-						pact->event=PARSE_EVENT_CONTENT_START;
+						pact->event=PARSE_EVENT_XML_CONTENT_START;
 						pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 						break;
 					case PARSE_XML_INNER_CONTENT:
@@ -547,18 +546,18 @@
 						case PARSE_XML_ATTRIBUTE_INSIDE_QUOTES_ATTRIB:
 							pact->mode_data.xml.state=PARSE_XML_TAG;
 							break;
-						case PARSE_XML_CDATA_FIRST_BRACKET:
-						case PARSE_XML_CDATA_SECOND_BRACKET:
+						case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+						case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 							pact->mode_data.xml.state=PARSE_XML_CDATA;
 							break;
 						case PARSE_XML_INNER:
-							pact->event=PARSE_EVENT_CONTENT_START;
+							pact->event=PARSE_EVENT_XML_CONTENT_START;
 							pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 							break;
 						case PARSE_XML_INNER_CONTENT:
 							break;
 						default:
-							pact->event=PARSE_EVENT_ERROR_MALFORMED_XML;
+							pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 							break;
 						break;
 					}
@@ -592,12 +591,12 @@
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_ATTRIBUTE_ID;
 						 PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_attribute_strings,RPC_XML_ATTRIBUTE_STRINGS_LEN," []=\"\'/<>?!");
 						break;
-					case PARSE_XML_CDATA_FIRST_BRACKET:
-					case PARSE_XML_CDATA_SECOND_BRACKET:
+					case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
+					case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
 						pact->mode_data.xml.state=PARSE_XML_CDATA;
 						break;
 					case PARSE_XML_INNER:
-						pact->event=PARSE_EVENT_CONTENT_START;
+						pact->event=PARSE_EVENT_XML_CONTENT_START;
 						pact->mode_data.xml.state=PARSE_XML_INNER_CONTENT;
 						break;
 					case PARSE_XML_INNER_CONTENT:
@@ -607,7 +606,7 @@
 					}
 					break;
 				}
-				if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_CONTENT_START)
+				if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_XML_CONTENT_START)
 				{
 					buf++;
 					len--;

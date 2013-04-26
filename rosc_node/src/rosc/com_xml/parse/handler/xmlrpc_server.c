@@ -9,8 +9,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 	 * Check events
 	 */
 
-
-
 	if(pact->event<0)
 	{
 		DEBUG_PRINT_STR("ERROR !\n");
@@ -35,7 +33,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		DEBUG_PRINT(STR, "ERROR! this state should never be reached",  "PARSE_EVENT_NONE");
 		break;
 
-	case PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
+	case PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED:
 		DEBUG_PRINT_STR("SUBMODE_FINISHED_FOR_HANDLER");
 		switch (pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
@@ -71,7 +69,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
-	case PARSE_EVENT_TAG_INSIDE:
+	case PARSE_EVENT_XML_INSIDE_TAG:
 		switch(pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 		case XML_TAG_METHODNAME:
@@ -106,6 +104,8 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			case 3:
 				data->fetch_content=true;
 				break;
+			default:
+				break;
 			}
 				break;
 
@@ -117,7 +117,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 
 
-	case PARSE_EVENT_CONTENT_START:
+	case PARSE_EVENT_XML_CONTENT_START:
 		DEBUG_PRINT_STR("CONTENT!!!");
 
 		//Check if we have multiple content inside that tag (which is not allowed)
@@ -163,7 +163,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 
 
-	case PARSE_EVENT_TAG:
+	case PARSE_EVENT_XML_TAG:
 		#ifdef __DEBUG__PRINTS__
 		{
 			unsigned int i=pact->mode_data.xml.depth;

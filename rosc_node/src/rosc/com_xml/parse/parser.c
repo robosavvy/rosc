@@ -140,7 +140,7 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 		{
 			if(pact->submode_state==PARSE_SUBMODE_FINISHED)
 			{
-				pact->event=PARSE_EVENT_HANDLER_CALLED_SUBMODE_FINISHED;
+				pact->event=PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED;
 				pact->submode_by_handler=false;
 				pact->submode=PARSE_SUBMODE_NONE;
 			}

@@ -83,7 +83,7 @@
 							else
 							{
 								DEBUG_PRINT_STR("ERROR! HTTP Action unknown");
-								pact->event=PARSE_EVENT_ERROR_NOT_FOUND_404;
+								pact->event=PARSE_EVENT_ERROR_HTTP_NOT_FOUND;
 							}
 						break;
 
@@ -96,7 +96,7 @@
 							else
 							{
 								DEBUG_PRINT_STR("ERROR! HTTP Version unknown");
-								pact->event=PARSE_EVENT_ERROR_VERSION_NOT_SUPPORTED_505;
+								pact->event=PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED;
 							}
 							break;
 
@@ -110,7 +110,7 @@
 							else
 							{
 								DEBUG_PRINT_STR("ERROR! RESPONSE HTTP Version unknown");
-								pact->event=PARSE_EVENT_ERROR_VERSION_NOT_SUPPORTED_505;
+								pact->event=PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED;
 							}
 							break;
 
@@ -300,7 +300,7 @@
 							case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
 								if(pact->content_length<0)
 								{
-									pact->event=PARSE_EVENT_ERROR_LENGTH_REQUIRED;
+									pact->event=PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED;
 								}
 								pact->submode_state=PARSE_SUBMODE_INIT;
 								pact->mode=PARSE_MODE_XML;
@@ -404,7 +404,7 @@
 
 
 
-						if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_CONTENT_START)
+						if(pact->submode==PARSE_SUBMODE_NONE && len>0 && pact->event!=PARSE_EVENT_XML_CONTENT_START)
 						{
 							buf++;
 							len--;
