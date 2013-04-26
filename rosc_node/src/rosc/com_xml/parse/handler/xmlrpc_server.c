@@ -1,19 +1,144 @@
 #include <rosc/com_xml/parse/handler/xmlrpc_server.h>
 #include <rosc/com_xml/parse/sub/subs.h>
 
+void xmlrpc_server_handler_n(parse_act_t * pact)
+{
+	xmlrpc_server_data_t* data=(xmlrpc_server_data_t*)pact->handler_data_storage;
+	switch(pact->event)
+	{
+
+		case PARSE_EVENT_HANDLER_INIT:
+			DEBUG_PRINT_STR("EVENT_HANDLER_INIT_SERVER");
+			data->method=HTTP_METHOD_NOT_SET;
+			data->rpcmethod=SLAVE_METHOD_NAME_NOT_SET;
+			data->value_number=0;
+			data->fetch_content=false;
+			data->content_is_mandatory=false;
+			data->content_cnt=0;
+			pact->mode_data.http.content_type_text_xml_found=false;
+		break;
+
+		case PARSE_EVENT_HTTP_METHOD_PARSED:
+				data->method=pact->submode_result;
+				break;
+
+
+		case PARSE_EVENT_HTTP_ACTION_PARSED:
+			if(pact->submode_result <0) //Do we have that target?
+			{
+				DEBUG_PRINT(STR, "not found 404 !",  "PARSE_EVENT_METHOD");
+			}
+			else
+			{
+				data->target=pact->submode_result;
+				switch(data->target)
+				{
+				case HTTP_ACTION_ROOT:
+					if(data->method==HTTP_METHOD_POST)
+					{
+					}
+					else
+					{
+						//TODO ERROR Forbidden
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+					}
+				case HTTP_ACTION_TEST:
+					if(data->method==HTTP_METHOD_GET)
+					{
+					}
+					else
+					{
+						//TODO ERROR Method not allowed
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+					}
+				}
+			}
+			break;
+
+		case PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT:
+
+			break;
+
+		case PARSE_EVENT_XML_TAG:
+
+			break;
+
+		case PARSE_EVENT_XML_INSIDE_TAG:
+
+			break;
+
+		case PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED:
+
+			break;
+
+		case PARSE_EVENT_XML_CONTENT_START:
+
+			break;
+
+
+
+
+		/*
+		 * ERROR EVENT HANDLING
+		 */
+
+		case PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_NOT_FOUND:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_BAD_REQUEST:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE:
+
+			break;
+
+		case PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING:
+
+			break;
+
+		case PARSE_EVENT_ERROR_XML_DEPTH:
+
+			break;
+
+		case PARSE_EVENT_ERROR_XML_MALFORMED:
+
+			break;
+
+
+
+		case PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE:
+		case PARSE_EVENT_HTTP_RESPONSE_CODE:
+		default:
+			break;
+	}
+}
+
 
 void xmlrpc_server_handler(parse_act_t * pact)
 {
 	xmlrpc_server_data_t* data=(xmlrpc_server_data_t*)pact->handler_data_storage;
-	/*
-	 * Check events
-	 */
-
-	if(pact->event<0)
-	{
-		DEBUG_PRINT_STR("ERROR !\n");
-		//exit(1);
-	}
 
 	switch(pact->event)
 	{
@@ -54,10 +179,14 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 	case PARSE_EVENT_HTTP_METHOD_PARSED:
-		data->method=pact->submode_result;
 		if(pact->submode_result <0) //Do we have that method?
 		{
 			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+		}
+		else
+		{
+			data->method=pact->submode_result;
 		}
 		break;
 
@@ -175,12 +304,6 @@ void xmlrpc_server_handler(parse_act_t * pact)
 					printf("   ");
 				}
 		}
-
-//		if(pact->event==PARSE_EVENT_TAG_CONTENT)
-//		{
-//			printf("->\n");
-//			break;
-//		}
 
 		if(pact->mode_data.xml.tag_type==XML_TAG_TYPE_CLOSE)
 		{

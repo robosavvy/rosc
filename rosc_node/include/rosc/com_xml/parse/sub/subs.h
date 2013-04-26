@@ -35,6 +35,5 @@
     #include <rosc/com_xml/parse/sub/numberparse.h>
 	#include <rosc/com_xml/parse/sub/parseurl.h>
 	#include <rosc/com_xml/parse/sub/seekstring.h>
-	#include <rosc/com_xml/parse/sub/skipuntilchar.h>
 	#include <rosc/com_xml/parse/sub/skipwholemessage.h>
 #endif /* SUBS_H_ */

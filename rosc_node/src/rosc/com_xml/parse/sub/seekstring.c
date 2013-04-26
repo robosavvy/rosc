@@ -19,7 +19,7 @@
 	 * All the parameters are stored in the parsers struct, to be able
 	 * to stream the parsing content.
 	 *
-	 * @param buf	  the input buffer
+	 * @param buf_ptr  the input buffer
 	 * @param len_ptr the lenght of the current input buffer
 	 * @param pact    the parsers struct
 	 */

@@ -150,7 +150,7 @@
 							{
 								DEBUG_PRINT_STR("Unknown Descriptor...");
 							}
-							pact->mode_data.http.state=PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR;
+							pact->mode_data.http.state=PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR;
 							break;
 						case PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH:
 
@@ -257,7 +257,7 @@
 								 is_field_content=true;
 										break;
 
-							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
+							case PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
 								pact->mode_data.http.state=PARSE_HTTP_STATE_FIELD;
 								break;
 
@@ -312,7 +312,7 @@
 
 
 							case PARSE_HTTP_STATE_RESPONSE_CODE:
-							case PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR:
+							case PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
 								pact->event=PARSE_EVENT_ERROR_HTTP_BAD_REQUEST;
 								break;
 

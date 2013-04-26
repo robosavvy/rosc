@@ -18,24 +18,35 @@ typedef struct xmlrpc_server_data_t
 	bool content_is_mandatory;
 	uint32_t content_cnt;
 
-	char caller_id[__NODENAME_MAX_LEN__];
+
+	uint8_t respond_code;
+
+	bool error_message;
+
 	union
 	{
 		struct
 		{
+			char caller_id[__NODENAME_MAX_LEN__];
 			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
 		}paramUpdate;
 
 		struct
 		{
+			char caller_id[__NODENAME_MAX_LEN__];
 			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
 		}publisherUpdate;
 
 		struct
 		{
+			char caller_id[__NODENAME_MAX_LEN__];
 			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
 		}requestTopic;
-	}rpcmethodData;
+
+	};
+
+
+
 }xmlrpc_server_data_t;
 
 

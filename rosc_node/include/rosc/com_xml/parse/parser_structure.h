@@ -5,6 +5,7 @@
 #define PARSER_STRUCTURE_H_
 
 #include <rosc/string_res/msg_strings.h>
+#include <rosc/system/eth.h>
 #include <rosc/rosc.h>
 
 
@@ -100,34 +101,34 @@ parse_xml_tag_type_t;
  */
 typedef enum
 {
-	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG=-100,//!< PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG means the content exceeds the specified max lenght
-	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH,              //!< PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH means that the content length is now available
-	PARSE_EVENT_ERROR_HTTP_NOT_FOUND,                   //!< PARSE_EVENT_ERROR_HTTP_NOT_FOUND means that the target/action/url was not found in the string array (code: 404)
-	PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED,       //!< PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED means that the HTTP version is not supported (code: 505)
-	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST,                 //!< PARSE_EVENT_ERROR_HTTP_BAD_REQUEST means that something is wrong inside the http header
-	PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED,             //!< PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED means that now length was given in the http header
-	PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED,          //!< PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED means that the given method string did not match any of those in the string array
-	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE,                //!< PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE means that the content type given in http header is not supported
-	PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING,            //!< PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
-	PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE,                //!< PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE means that something is wrong in the received response
-	PARSE_EVENT_ERROR_XML_DEPTH,                        //!< PARSE_EVENT_ERROR_XML_DEPTH means that the depth of the current xml document is too depth to be handled
-	PARSE_EVENT_ERROR_XML_MALFORMED,                    //!< PARSE_EVENT_ERROR_XML_MALFORMED means that something inside the xml document is wrong
+	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG=-100,//!< means the content exceeds the specified max lenght
+	PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH,              //!< means that the content length is now available
+	PARSE_EVENT_ERROR_HTTP_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
+	PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
+	PARSE_EVENT_ERROR_HTTP_BAD_REQUEST,                 //!< means that something is wrong inside the http header
+	PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED,             //!< means that now length was given in the http header
+	PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
+	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE,                //!< means that the content type given in http header is not supported
+	PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING,            //!< means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
+	PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE,                //!< means that something is wrong in the received response
+	PARSE_EVENT_ERROR_XML_DEPTH,                        //!< means that the depth of the current xml document is too depth to be handled
+	PARSE_EVENT_ERROR_XML_MALFORMED,                    //!< means that something inside the xml document is wrong
 
 
-	PARSE_EVENT_NONE=0,                                 //!< PARSE_EVENT_NONE means that there is no event atm.
+	PARSE_EVENT_NONE=0,                                 //!< means that there is no event atm.
 
-	PARSE_EVENT_HANDLER_INIT,                           //!< PARSE_EVENT_HANDLER_INIT can be used to initialize the handlers data storage
-	PARSE_EVENT_HTTP_METHOD_PARSED,                     //!< PARSE_EVENT_HTTP_METHOD_PARSED means that the method string of the http header was parsed
-	PARSE_EVENT_HTTP_ACTION_PARSED,                     //!< PARSE_EVENT_HTTP_ACTION_PARSED means that the action (url, uri string) was parsed
+	PARSE_EVENT_HANDLER_INIT,                           //!< can be used to initialize the handlers data storage
+	PARSE_EVENT_HTTP_METHOD_PARSED,                     //!< means that the method string of the http header was parsed
+	PARSE_EVENT_HTTP_ACTION_PARSED,                     //!< means that the action (url, uri string) was parsed
 
-	PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT,              //!< PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT means that the http parser reached content inside a http field
-	PARSE_EVENT_HTTP_RESPONSE_CODE,                     //!< PARSE_EVENT_HTTP_RESPONSE_CODE means that the response code is now available (client)
+	PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT,              //!< means that the http parser reached content inside a http field
+	PARSE_EVENT_HTTP_RESPONSE_CODE,                     //!< means that the response code is now available (client)
 
 	//XML
-	PARSE_EVENT_XML_TAG,                                //!< PARSE_EVENT_XML_TAG means that a xml tag is found and the parser is now after the tag string
-	PARSE_EVENT_XML_INSIDE_TAG,                         //!< PARSE_EVENT_XML_INSIDE_TAG means that the parser entered the tag and is now after the '>'
-	PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED,    //!< PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED means that the submode called from the handler is finished
-	PARSE_EVENT_XML_CONTENT_START,                      //!< PARSE_EVENT_XML_CONTENT_START means that the parser found content inside a tag and now is at its beginning
+	PARSE_EVENT_XML_TAG,                                //!< means that a xml tag is found and the parser is now after the tag string
+	PARSE_EVENT_XML_INSIDE_TAG,                         //!< means that the parser entered the tag and is now after the '>'
+	PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED,    //!< means that the submode called from the handler is finished
+	PARSE_EVENT_XML_CONTENT_START,                      //!< means that the parser found content inside a tag and now is at its beginning
 }parse_event_t;
 
 
@@ -157,37 +158,38 @@ typedef enum
 typedef enum
 {
 	/*Special states for parsing a request (server)*/
-	PARSE_HTTP_STATE_REQUEST_METHOD,          //!< PARSE_HTTP_STATE_REQUEST_METHOD, in this state the parser expects the method string of a request
-	PARSE_HTTP_STATE_REQUEST_ACTION,          //!< PARSE_HTTP_STATE_REQUEST_ACTION, in this state the parser expects the action string of a request
-	PARSE_HTTP_STATE_REQUEST_HTTP_VER,        //!< PARSE_HTTP_STATE_REQUEST_HTTP_VER, in this state the parser expects the http version of a request
+	PARSE_HTTP_STATE_REQUEST_METHOD,          //!< in this state the parser expects the method string of a request
+	PARSE_HTTP_STATE_REQUEST_ACTION,          //!< in this state the parser expects the action string of a request
+	PARSE_HTTP_STATE_REQUEST_HTTP_VER,        //!< in this state the parser expects the http version of a request
 
 	/*Special states for parsing a response (client)*/
-	PARSE_HTTP_STATE_RESPONSE_HTTP_VER,       //!< PARSE_HTTP_STATE_RESPONSE_HTTP_VER, in this state the parser expects the http version of a response
-	PARSE_HTTP_STATE_RESPONSE_CODE,           //!< PARSE_HTTP_STATE_RESPONSE_CODE, in this state the parser expects the http response code
-	PARSE_HTTP_STATE_RESPONSE_STRING,         //!< PARSE_HTTP_STATE_RESPONSE_STRING, in this state the parser waits for a line feed
+	PARSE_HTTP_STATE_RESPONSE_HTTP_VER,       //!< in this state the parser expects the http version of a response
+	PARSE_HTTP_STATE_RESPONSE_CODE,           //!< in this state the parser expects the http response code
+	PARSE_HTTP_STATE_RESPONSE_STRING,         //!< in this state the parser waits for a line feed
 
 	/*Common states*/
-	PARSE_HTTP_STATE_HEADLINE_WAIT_END,       //!< PARSE_HTTP_STATE_HEADLINE_WAIT_END
-	PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END,//!< PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END
-	PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR,    //!< PARSE_HTTP_DESCRIPTOR_FIELD_SEPARATOR
-	PARSE_HTTP_STATE_FIELD,                   //!< PARSE_HTTP_STATE_FIELD
-	PARSE_HTTP_STATE_FIELD_CONTENT,           //!< PARSE_HTTP_STATE_FIELD_CONTENT
+	PARSE_HTTP_STATE_HEADLINE_WAIT_END,       //!< in this state the parser waits for a line feed at the end of a requests headline
+	PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END,//!< in this state the parser expects the start of a new field or a linefeed for the header end
+	PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR,    //!< in this state the parser waits for a double point and only accepts spaces
+	PARSE_HTTP_STATE_FIELD,                   //!< this state is reached after the parser finds a double point after the field name
+	PARSE_HTTP_STATE_FIELD_CONTENT,           //!< this state is entered by the parser if it finds content inside a header field
 }parse_http_state_t;
 
-
+/**
+ * This
+ */
 typedef enum
 {
-	PARSE_HTTP_SUB_STATE_NONE,
-	PARSE_HTTP_SUB_CHECK_METHOD,
-	PARSE_HTTP_SUB_CHECK_ACTION,
-	PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER,
-	PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID,
-	PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH,
-	PARSE_HTTP_SUB_CHECK_CONTENT_TYPE,
-	PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER,
-	PARSE_HTTP_SUB_CHECK_RESPONSE_CODE,
-	PARSE_HTTP_SUB_CHECK_RESPONSE_STATE,
-
+	PARSE_HTTP_SUB_STATE_NONE,             //!< PARSE_HTTP_SUB_STATE_NONE
+	PARSE_HTTP_SUB_CHECK_METHOD,           //!< PARSE_HTTP_SUB_CHECK_METHOD
+	PARSE_HTTP_SUB_CHECK_ACTION,           //!< PARSE_HTTP_SUB_CHECK_ACTION
+	PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER, //!< PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER
+	PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID,    //!< PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID
+	PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH,   //!< PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH
+	PARSE_HTTP_SUB_CHECK_CONTENT_TYPE,     //!< PARSE_HTTP_SUB_CHECK_CONTENT_TYPE
+	PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER,//!< PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER
+	PARSE_HTTP_SUB_CHECK_RESPONSE_CODE,    //!< PARSE_HTTP_SUB_CHECK_RESPONSE_CODE
+	PARSE_HTTP_SUB_CHECK_RESPONSE_STATE,   //!< PARSE_HTTP_SUB_CHECK_RESPONSE_STATE
 }parse_http_sub_state_t;
 
 
@@ -206,12 +208,12 @@ typedef enum
  */
 typedef enum
 {
-	PARSE_SUBMODE_NONE,            //!< PARSE_SUBMODE_NONE means that no submode is active
-	PARSE_SUBMODE_SEEKSTRING,      //!< PARSE_SUBMODE_SEEKSTRING means that the parser currently seeks a string inside an array
-	PARSE_SUBMODE_NUMBERPARSE,     //!< PARSE_SUBMODE_NUMBERPARSE means that currently the number parser is in operation
-	PARSE_SUBMODE_COPY2BUFFER,     //!< PARSE_SUBMODE_COPY2BUFFER means that currently a string is copied into another location
-	PARSE_SUBMODE_SKIPUNTILCHAR,   //!< PARSE_SUBMODE_SKIPUNTILCHAR means that currently everything is skipped till a specified char is received
-	PARSE_SUBMODE_SKIPWHOLEMESSAGE,//!< PARSE_SUBMODE_SKIPWHOLEMESSAGE means that the parser is currently skipping the whole message
+	PARSE_SUBMODE_NONE,            //!< means that no submode is active
+	PARSE_SUBMODE_SEEKSTRING,      //!< means that the parser currently seeks a string inside an array
+	PARSE_SUBMODE_NUMBERPARSE,     //!< means that currently the number parser is in operation
+	PARSE_SUBMODE_COPY2BUFFER,     //!< means that currently a string is copied into another location
+	PARSE_SUBMODE_SKIPUNTILCHAR,   //!< means that currently everything is skipped till a specified char is received
+	PARSE_SUBMODE_SKIPWHOLEMESSAGE,//!< means that the parser is currently skipping the whole message
 }parse_submode_t;
 
 
@@ -220,9 +222,9 @@ typedef enum
  */
 typedef enum
 {
-	PARSE_SUBMODE_INIT,    //!< PARSE_SUBMODE_INIT means it was not initialized yet
-	PARSE_SUBMODE_RUNNING, //!< PARSE_SUBMODE_RUNNING means that the submode is running
-	PARSE_SUBMODE_FINISHED,//!< PARSE_SUBMODE_FINISHED means that the submode has finshed
+	PARSE_SUBMODE_INIT,    //!< means it was not initialized yet
+	PARSE_SUBMODE_RUNNING, //!< means that the submode is running
+	PARSE_SUBMODE_FINISHED,//!< means that the submode has finshed
 }parse_submode_state_t;
 
 
@@ -234,6 +236,9 @@ typedef enum
  */
 typedef struct parse_act_t
 {
+
+	port_id_t port_id; //!< This contains the port ID of the port the server/client is connected to
+
 	void (*handler_fkt)(void *); //!< This function handles the parser events
 	void *handler_data_storage;	//!< This is a pointer for different handlers data storage
 	int32_t content_length; //!< xml_length stores the length parsed from the http header
@@ -246,8 +251,6 @@ typedef struct parse_act_t
 	int16_t submode_result;	//!< contains the result code from each submode when finished
 	bool submode_by_handler; //!< needs to be set when the submode is started by the handler function
 	parse_event_t event; //!< tells the handler function what currently has happened.
-
-
 
 
 	/**
@@ -311,17 +314,11 @@ typedef struct parse_act_t
 
 		struct
 		{
-			char* chrs; //!< chrs to skip/ to stop skip, according to negative
-			bool negative; //!< negative, if true the chars inside chrs will stop skipping
-			char fndchr; //!< the chr which was found
-		}skipUntilChr;
-
-		struct
-		{
 			char hostname_ip_char[__HOSTNAME_MAX_LEN__]; //!< The text form of the hostname/IP
 			uint16_t curLen; //!< curLen The current size of the copied chars
 			uint16_t IPv6[8];//!< storage for an IPv6 address
 			uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
+			uint16_t port; //!< storage for a port number
 			parse_url_match_t what; //!< what specifies what kind of address is given
 		}parseURL;
 

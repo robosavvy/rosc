@@ -122,15 +122,6 @@ void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact)
 						#endif
 					break;
 
-				case PARSE_SUBMODE_SKIPUNTILCHAR:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "sub/skipuntilchar.c"
-							#undef ENABLE_C
-						#else
-							skipuntilchar(&buf, &len, pact);
-						#endif
-					break;
 				default:
 					break;
 			}
