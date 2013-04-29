@@ -38,7 +38,8 @@
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/ROScNode Library/src_and_inc/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/lib/syslinux/com32/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.942998728" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -54,13 +55,17 @@
 								<option id="gnu.both.asm.option.include.paths.1947853572" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/"/>
 									<listOptionValue builtIn="false" value="/opt/ros/groovy/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_sys_linux_x86/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_node/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rosc_example_messages/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.649192722" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="examples/example_msg_generation.c|rosCnode/msg_strings_OLD.h|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src_and_inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -107,7 +112,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="rosCnode/msg_strings_OLD.h|examples/example_msg_generation.c|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src_and_inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -172,7 +178,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="rosCnode/msg_strings_OLD.h|examples/example_msg_generation.c|examples/msg_generation.c|examples/rpcmsg_generation.c|rosCnode/msg_strings_OLD.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src_and_inc"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="include"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -195,14 +202,14 @@
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.309036014;cdt.managedbuild.config.gnu.exe.release.309036014.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.1423663781;cdt.managedbuild.tool.gnu.c.compiler.input.1167362789">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.601067584;cdt.managedbuild.config.gnu.exe.debug.601067584.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.2121412901;cdt.managedbuild.tool.gnu.c.compiler.input.942998728">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.309036014;cdt.managedbuild.config.gnu.exe.release.309036014.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.1423663781;cdt.managedbuild.tool.gnu.c.compiler.input.1167362789">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

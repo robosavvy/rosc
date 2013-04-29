@@ -16,9 +16,9 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   #If the string can't be used as enum declaration in C, you 
                   #can specifiy a replacement for it after a : like 
                   #shown in the next variable definition                  
-                  '?xml':XMLDEF,
-                  '!--':COMMENT,
-                  '![CDATA[':CDDATA,
+                  'xml':XMLDEF,
+                  '--':COMMENT,
+                  'CDATA',
                   boolean,
                   data,
                   fault,
@@ -33,21 +33,22 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   struct,
                   value,
                   array,
-                  
+                  i4,
               }
 
 
 #Known Attributes strings XML
 rpc_xml_attribute_strings:
   comment: 
-    'standard attributes for XMLRPC (None available just a "dummy" for the parser)'
+    'standard attributes for XMLRPC'
   defineShort:
     'ATTRIBUTE'
   stringlist: {
-    dummy
+    version
   }
 
 #Standard strings for XMLRPC
+#TODO maybe move strings of master API to another array, requires generator update
 rpc_xml_stdtext:
   comment:
     'standard XMLRPC text pieces'
@@ -56,18 +57,38 @@ rpc_xml_stdtext:
   stringlist: {
       '<?xml version=\"1.0\"?>': XML_DEF,
       Error code, 
-      hasParam,
-      registerPublisher,
-      registerSubscriber,
-      requestTopic,
       '/tcp_keepalive': TCP_KEEPALIVE,
       'http://': HTTP_URL_HEAD,
+      TCPROS,
+      'rosrpc://': ROSRPC_URL_HEAD,
+      registerPublisher,
+      registerSubscriber,
       unregisterPublisher,
       unregisterSubscriber,
+      registerService,
+      unregisterService,
+      hasParam,
+      requestTopic,
   }
 
-
-
+#Method names for RPC
+rpc_xml_slave_methodnames:
+  comment:
+    'Strings for known methods of the slave api'
+  defineShort:
+    'METHOD_NAME'
+  stringlist: {
+      getBusStats,
+      getBusInfo,
+      getMasterUri,
+      shutdown,
+      getPid,
+      getSubscriptions,
+      getPublications,
+      paramUpdate,
+      publisherUpdate,
+      requestTopic,
+  }
 
 #Standard descriptors for headers
 http_header_descriptors:
@@ -80,9 +101,10 @@ http_header_descriptors:
         User-Agent: USER_AGENT,
         Date,
         Host,
-        Content-Type: CONTENT_TYPE,
-        Content-length: CONTENT_LENGTH,
-        Accepted-Encoding
+        Content-Type,
+        Content-length,
+        Content-Encoding,
+        Accept-Encoding
   }
   
 #Standard Strings for header generator
@@ -102,18 +124,6 @@ http_header_stdtext:
     'OK'
   }
 
-#Expectable content types (not only supported)
-http_header_content_types:
-  comment:
-    'contains known content types'
-  defineShort:
-    'CONTENT'
-  stringlist: {
-    'gzip',
-    'text/html'
-  }
-
-
 #Method strings
 http_methods:
   comment:
@@ -126,12 +136,12 @@ http_methods:
   }
 
 
-#Available targets
-http_available_targets:
+#Available actions
+http_available_actions:
   comment:
-    'contains available targets for http requests'
+    'contains available actions for http requests'
   defineShort:
-    'TARGET'
+    'ACTION'
   stringlist: {
     '':ROOT,
     'test'
@@ -147,6 +157,19 @@ parse_separators:
     '/. \n': METHOD,
     '\n:': HTTP_HEADER,
     '</>\n \"=': XML 
+  }
+
+ #xml rpc boolean
+xml_rpc_boolean_strings:
+  comment:
+    'possible strings for representing boolean in xml rpc'
+  defineShort:
+    'BOOLEAN'
+  stringlist: {
+    '1': ONE,
+    '0': ZERO,
+    'true': 'TRUE',
+    'false': 'FALSE',
   }
   
     

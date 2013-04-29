@@ -24,28 +24,45 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * system_spec.h
+ * rosc.h
  *
- *  Created on: 26.01.2013
+ *  Created on: 20.01.2013
  *      Author: Christian Holl
  */
 
-#ifndef _SYSTEM_SPEC_H_
-#define _SYSTEM_SPEC_H_
+#ifndef ROSC_SPIN_H_
+#define ROSC_SPIN_H_
+
+#include <rosc/debug/debug_out.h>
+#include <rosc/system/spec.h>
+#include <rosc/system/types.h>
+
+#ifndef __HOSTNAME_MAX_LEN__
+	#warning __HOSTNAME_MAX_LEN__ undefined! Automatically set to 50.
+	#define __HOSTNAME_MAX_LEN__ 50
+#endif
+
+#ifndef __NODENAME_MAX_LEN__
+	#warning __NODENAME_MAX_LEN__ undefined! Automatically set to 50.
+	#define __NODENAME_MAX_LEN__ 50
+#endif
+
+#ifndef __ROS_PARAMETER_MAX_LEN__
+	#warning __ROS_PARAMETER_MAX_LEN__ undefined! Automatically set to 50.
+	#define __ROS_PARAMETER_MAX_LEN__ 50
+#endif
+
+
+#ifdef __SYSTEM_HAS_MALLOC__
+#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK!
+#endif
+
+
+#include <rosc/system/setup.h>
+#include <rosc/system/rosc_spin.h>
+#include <rosc/system/rosc_init.h>
+#include <rosc/com_ifaces/iface_setup.h>
 
 
 
-#define __HOSTNAME_MAX_LEN__ 46 //minimum 46 bytes, storing a IPv6 Address in characters
-#define __NODENAME_MAX_LEN__ 50
-#define __PORT_MAXIMUM__     8
-#define __ROS_PARAMETER_MAX_LEN__ 50
-#define __INPUT_BUFFER_SIZE__ 256
-#define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
-#define __SYSTEM_HAS_OS__
-#define __SYSTEM_NEEDS_CON_ACCEPT__
-
-//#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
-
-
-
-#endif /*_SYSTEM_SPEC_H_*/
+#endif /* ROSC_SPIN_H_ */
