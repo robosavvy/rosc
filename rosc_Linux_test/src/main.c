@@ -78,7 +78,7 @@ int main()
 	int buffersize=1;
 	parse_act_t pact;
 
-#if(1)
+#if(0)
 	char *msg=test_request_message;
 	xmlrpc_server_data_t server_data;
 	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);

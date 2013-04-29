@@ -34,10 +34,7 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 				switch(data->target)
 				{
 				case HTTP_ACTION_ROOT:
-					if(data->method==HTTP_METHOD_POST)
-					{
-					}
-					else
+					if(data->method!=HTTP_METHOD_POST)
 					{
 						//TODO ERROR Forbidden
 						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
@@ -45,6 +42,7 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 				case HTTP_ACTION_TEST:
 					if(data->method==HTTP_METHOD_GET)
 					{
+						//TODO Create Test Answer
 					}
 					else
 					{
