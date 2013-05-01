@@ -24,6 +24,8 @@
 #include <rosc/examplepack/exmsg.h>
 #include <rosc/com_xml/parse/parser.h>
 
+#include <rosc/com_ifaces/iface.h>
+
 char *test_request_message=
 		"POST / HTTP/1.1\n"
 		"Host: sncn-10:53556\n"
@@ -72,7 +74,19 @@ char *test_response_message=
 		"</params>\n"
 		"</methodResponse>";
 
+
 int main()
+{
+
+
+
+
+
+	return 0;
+}
+
+
+int main_xmlrpctest()
 {
 	int rlen;
 	int buffersize=1;

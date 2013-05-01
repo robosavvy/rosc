@@ -31,7 +31,7 @@
  */
 
 #include <rosc/system/types.h>
-#include <rosc/com_ifaces/iface_setup.h>
+#include <rosc/com_ifaces/iface.h>
 
 #ifndef EXMSG_H_
 #define EXMSG_H_
