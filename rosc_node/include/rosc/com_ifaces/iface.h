@@ -67,10 +67,9 @@ typedef struct iface_t
 
 
 void init_hub_node();
-
 void registerInterface_static(iface_t *interface, const char *interfacename, const iface_definition_t* iface_def);
-
 void unregisterInterface(iface_t *interface);
+
 
 
 #endif /* IFACE_H_ */
