@@ -62,7 +62,7 @@ typedef struct
 
 
 #define FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
-	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = {MARSHALLING_CMD_BOOL,MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT8), __BYTES_SIZE, MARSHALLING_CMD_UNDEF_ARRAY(MARSHALLING_CMD_UINT16),__WORDS_SIZE}
+	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = {IFACE_DEFINITION_BOOL,IFACE_DEFINITION_UNDEF_ARRAY(IFACE_DEFINITION_UINT8), __BYTES_SIZE, IFACE_DEFINITION_UNDEF_ARRAY(IFACE_DEFINITION_UINT16),__WORDS_SIZE}
 
 #define FIXED_SIZE_EXAMPLEPACK_EXMSG_STRUCT(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
 		typedef struct\
@@ -83,7 +83,30 @@ typedef struct
 		} examplepack_exmsg_structfixed_##__STRUCTNAME;\
 		FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME)
 
+/*
+ *
+ * NOTE
+ *
+typedef struct
+{
+	char a;
+	uint32_t b;
+	uint8_t c;
+	char d[5];
+	int e[9];
+}acme_t;
 
+const union
+{
+acme_t __struct;
+char __bytes[sizeof(acme_t)];
+}acme_padding_identifier_array={{0xFF,0xFFFFFFFF,0xFF,{0xFF},{0xFFFFFFFF}}};
+ *
+ *
+ * Initialize iface.
+ * On arrays only the first element will be initialized
+ *
+ */
 
 
 #endif /* EXMSG_H_ */

@@ -1,6 +1,8 @@
 #ifndef IFACE_H_
 #define IFACE_H_
 
+#include <rosc/system/ports.h>
+
 typedef enum
 {
 	IFACE_DEFINITION_TYPE_XMLRPC_SERVER,
@@ -61,8 +63,8 @@ typedef struct iface_t
 {
 	iface_type_t type;
 	char* name;
-	//port_id_t port;
 	struct iface_t* next;
+	void (*init_mem_function) (void* data);
 }iface_t;
 
 

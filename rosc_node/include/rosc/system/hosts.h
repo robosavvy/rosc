@@ -12,7 +12,7 @@
 
 typedef unsigned char ip_address_t[4];
 typedef int16_t port_id_t;
-typedef uint16_t port_t;
+
 
 
 #ifdef __SYSTEM_HAS_MALLOC__
@@ -55,7 +55,7 @@ typedef struct
 	host_type_t host_type;//!< Type of Host Master, Current System, Another Machine
 	ip_address_t host_ip; //!< IP Address
 	hostname_t host_name; //!< Hostname
-	port_t xmlrpc_port;   //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
+	uint16_t xmlrpc_port;   //!< Port setting xmlrpc ports stores the xmlrpc port...
 }host_info_t;
 
 extern host_info_t host_list[];
