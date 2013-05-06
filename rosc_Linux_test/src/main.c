@@ -72,15 +72,6 @@ char *test_response_message=
 		"</methodResponse>";
 
 
-int main()
-{
-
-
-
-
-	return 0;
-}
-
 
 
 
@@ -93,7 +84,7 @@ int main_xmlrpctest()
 	int buffersize=1;
 	parse_act_t pact;
 
-#if(0)
+#if(1)
 	char *msg=test_request_message;
 	xmlrpc_server_data_t server_data;
 	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
@@ -118,6 +109,15 @@ int main_xmlrpctest()
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
 		xmlrpc_parse(msg+i*len,len,&pact);
 	}
+
+	return 0;
+}
+
+int main()
+{
+
+
+	 main_xmlrpctest();
 
 	return 0;
 }

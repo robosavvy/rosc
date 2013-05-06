@@ -6,6 +6,7 @@
 
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/system/eth.h>
+#include <rosc/system/ports.h>
 #include <rosc/rosc.h>
 
 
@@ -237,7 +238,7 @@ typedef enum
 typedef struct parse_act_t
 {
 
-	port_id_t port_id; //!< This contains the port ID of the port the server/client is connected to
+	struct port_t* port; //!< This contains the port ID of the port the server/client is connected to
 
 	void (*handler_fkt)(void *); //!< This function handles the parser events
 	void *handler_data_storage;	//!< This is a pointer for different handlers data storage

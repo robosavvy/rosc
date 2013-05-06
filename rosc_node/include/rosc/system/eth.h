@@ -36,7 +36,7 @@
 #include <rosc/system/types.h>
 #include <rosc/system/setup.h>
 
-
+#include <rosc/system/hosts.h>
 
 /**
  * This function opens a port for listening.
