@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  seekstring.h created by Christian Holl on 20.03.2013
+ *  seekstring.h created by Christian Holl
  */
 
 #ifndef SEEKSTRING_H_

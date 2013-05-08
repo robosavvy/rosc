@@ -26,9 +26,8 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  parse_mode_xml.c created by Christian Holl on 28.03.2013
+ *  parse_mode_xml.c created by Christian Holl
  */
-
 
 #ifndef FORCE_INLINE
 	#ifndef ENABLE_C

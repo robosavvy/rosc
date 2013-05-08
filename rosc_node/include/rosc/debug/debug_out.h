@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  debug_out.h created by Christian Holl on 28.03.2013
+ *  debug_out.h created by Christian Holl
  */
 
 #ifndef DEBUG_OUT_H_
