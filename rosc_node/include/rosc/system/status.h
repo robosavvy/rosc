@@ -26,84 +26,42 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  endian.h created by Christian Holl
+ *  status.h created by Christian Holl
  */
 
-#ifndef ENDIAN_H_
-#define ENDIAN_H_
-
-#include <rosc/system/types.h>
-
-typedef struct
-{
-	union
-	{
-		int8_t INT8;
-		signed char int8_t_B[sizeof(int8_t)];
-	};
-	union
-	{
-		int16_t INT16;
-		signed char int16_t_B[sizeof(int16_t)];
-	};
-	union
-	{
-		int32_t INT32;
-		signed char int32_t_B[sizeof(int32_t)];
-	};
-	union
-	{
-		int64_t INT64;
-		signed char int64_t_B[sizeof(int64_t)];
-	};
-	union
-	{
-		uint8_t UINT8;
-		signed char uint8_t_B[sizeof(uint8_t)];
-	};
-	union
-	{
-		uint16_t UINT16;
-		signed char uint16_t_B[sizeof(uint16_t)];
-	};
-	union
-	{
-		uint32_t UINT32;
-		signed char uint32_t_B[sizeof(uint32_t)];
-	};
-	union
-	{
-		uint64_t UINT64;
-		signed char uint64_t_B[sizeof(uint64_t)];
-	};
-
-	union
-	{
-		float32_t FLOAT32;
-		signed char float32_t_B[sizeof(float32_t)];
-	};
-	union
-	{
-		float64_t FLOAT64;
-		signed char float64_t_B[sizeof(float64_t)];
-	};
-	union
-	{
-		bool BOOL;
-		signed char bool_B[sizeof(bool)];
-	};
-} endian_t;
-
-
-
-
-
+#ifndef STATUS_H_
+#define STATUS_H_
 
 /**
- * Contains byte order corrections
+ * This contains the error severity
  */
-extern const endian_t* const system_byte_order;
+typedef enum
+{
+	STATUS_INFO,   //!< an Info Message
+	STATUS_WARNING,//!< Warning just a warning
+	STATUS_ERROR,  //!< Error which isn't so serious
+	STATUS_FATAL,  //!< Error can't be fixed at runtime -> System failure handler (default while(1))
+}status_type_t;
 
-void rosc_init_endian();
+#ifndef HAS_ERROR_REPORTING
+	#define ROSC_INFO(MSG)
+	#define ROSC_WARNING(MSG)
+	#define ROSC_ERROR(MSG)
+	#define ROSC_FATAL(MSG) while(1);
+#else
+	extern report(const char *,status_type_t status);
 
-#endif /* ENDIAN_H_ */
+	#define ROSC_INFO(MSG)\
+		report(MSG, STATUS_INFO);
+
+	#define ROSC_WARNING(MSG)\
+		report(MSG, STATUS_WARNING);
+
+	#define ROSC_ERROR(MSG)\
+		report(MSG, STATUS_ERROR);
+
+	#define ROSC_FATAL(MSG)\
+		report(MSG,STATUS_FATAL);
+#endif
+
+#endif /* STATUS_H_ */

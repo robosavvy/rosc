@@ -173,8 +173,9 @@ int main_xmlrpctest()
 int main()
 {
 
+	rosc_init();
 
-	 main_xmlrpctest();
+	//main_xmlrpctest();
 
 	return 0;
 }
