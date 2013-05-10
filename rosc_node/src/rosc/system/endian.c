@@ -30,118 +30,70 @@
  */
 
 #include <rosc/system/endian.h>
+#include <rosc/system/status.h>
+#include <rosc/debug/debug_out.h>
 
-typedef enum
-{
-	ENDIAN_INT8,
-	ENDIAN_INT16,
-	ENDIAN_INT32,
-	ENDIAN_INT64,
-	ENDIAN_UINT8,
-	ENDIAN_UINT16,
-	ENDIAN_UINT32,
-	ENDIAN_UINT64,
-	ENDIAN_FLOAT32,
-	ENDIAN_FLOAT64,
-	ENDIAN_BOOL,
-	ENDIAN_END,
-} endian_init_state_t;
 
 static endian_t __system_byte_order =
 {
-{ 0x01 },
 { 0x0201 },
 { 0x04030201 },
 { 0x0807060504030201 },
-
-{ 0x01 },
-{ 0x0201 },
-{ 0x04030201 },
-{ 0x0807060504030201 },
-
-{ 0x7ffffffb },
-{ 0x0807060504030201 },
-
-{ 0x01 }, };
+};
 
 const endian_t* const system_byte_order = &__system_byte_order;
 
 void rosc_init_endian()
 {
-	if (sizeof(char) != 1)
+	if (sizeof(uint8_t) != 1 &&
+		sizeof(uint16_t) != 2 &&
+		sizeof(uint32_t) != 4 &&
+		sizeof(uint64_t) != 8)
 	{
-
-		while (1)
-			;
+		ROSC_FATAL("One or more data types do not have the expected byte size!");
 	}
 
-	int i;
-	signed char *currentByteAccess;
-	unsigned int currentByteSize;
-	endian_init_state_t state;
-
-	for (state = ENDIAN_INT8; state < ENDIAN_END; ++state)
+	uint8_t size;
+	uint8_t shift=0;
+	int8_t *currentByteAccess;
+	for(size=2;size<=8;size<<=1)
 	{
-		switch (state)
+		switch(size)
 		{
-		case ENDIAN_INT8:
-			currentByteAccess=__system_byte_order.int8_t_B;
-			currentByteSize=sizeof(int8_t);
+		case 2:
+			currentByteAccess=__system_byte_order.SIZE_2_B;
 			break;
-		case ENDIAN_INT16:
-			currentByteAccess=__system_byte_order.int16_t_B;
-			currentByteSize=sizeof(int16_t);
+		case 4:
+			currentByteAccess=__system_byte_order.SIZE_4_B;
 			break;
-		case ENDIAN_INT32:
-			currentByteAccess=__system_byte_order.int32_t_B;
-			currentByteSize=sizeof(int32_t);
+		case 8:
+			currentByteAccess=__system_byte_order.SIZE_8_B;
 			break;
-		case ENDIAN_INT64:
-			currentByteAccess=__system_byte_order.int64_t_B;
-			currentByteSize=sizeof(int64_t);
-			break;
-		case ENDIAN_UINT8:
-			currentByteAccess=__system_byte_order.uint8_t_B;
-			currentByteSize=sizeof(uint8_t);
-			break;
-		case ENDIAN_UINT16:
-			currentByteAccess=__system_byte_order.uint16_t_B;
-			currentByteSize=sizeof(uint16_t);
-			break;
-		case ENDIAN_UINT32:
-			currentByteAccess=__system_byte_order.uint32_t_B;
-			currentByteSize=sizeof(uint32_t);
-			break;
-		case ENDIAN_UINT64:
-			currentByteAccess=__system_byte_order.uint64_t_B;
-			currentByteSize=sizeof(uint64_t);
-			break;
-
-		case ENDIAN_FLOAT32:
-			currentByteAccess=__system_byte_order.float32_t_B;
-			currentByteSize=sizeof(float32_t);
-			break;
-		case ENDIAN_FLOAT64:
-			currentByteAccess=__system_byte_order.float64_t_B;
-			currentByteSize=sizeof(float64_t);
-			break;
-
-		case ENDIAN_BOOL:
-			currentByteAccess=__system_byte_order.bool_B;
-			currentByteSize=sizeof(bool);
-			break;
-
-		case ENDIAN_END:
 		default:
-			currentByteSize=0;
-
+			ROSC_FATAL("Unexpected state in rosc_init_endian size switch!")
 			break;
 		}
 
-		for(i=0;i<currentByteSize;++i)
+		int i;
+		DEBUG_PRINT(INT,"Size",size);
+		for(i=0;i<size;++i)
 		{
-			printf("%i ",(signed int)currentByteAccess[i]);
+			if(currentByteAccess>0 &&
+			   currentByteAccess[i]<=8)
+			{
+				currentByteAccess[i]-=i+1;
+
+				DEBUG_PRINT(INT,"Endian New Byte Shift",currentByteAccess[i]);
+			}
+			else
+			{
+				ROSC_FATAL("Byte Endian information is not in the specified range");
+			}
 		}
-		printf("\n");
+
 	}
+
+
+
+
 }

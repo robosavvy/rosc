@@ -34,76 +34,45 @@
 
 #include <rosc/system/types.h>
 
+/**
+ * This type of the struct stores the byte order for each
+ * common type of the system, when the values are initialized
+ * with like for example 0x0807060504030201 for 8 bytes.
+ */
 typedef struct
 {
 	union
 	{
-		int8_t INT8;
-		signed char int8_t_B[sizeof(int8_t)];
+		uint16_t SIZE_2;
+		int8_t SIZE_2_B[sizeof(uint16_t)];
 	};
 	union
 	{
-		int16_t INT16;
-		signed char int16_t_B[sizeof(int16_t)];
+		uint32_t SIZE_4;
+		int8_t SIZE_4_B[sizeof(uint32_t)];
 	};
 	union
 	{
-		int32_t INT32;
-		signed char int32_t_B[sizeof(int32_t)];
-	};
-	union
-	{
-		int64_t INT64;
-		signed char int64_t_B[sizeof(int64_t)];
-	};
-	union
-	{
-		uint8_t UINT8;
-		signed char uint8_t_B[sizeof(uint8_t)];
-	};
-	union
-	{
-		uint16_t UINT16;
-		signed char uint16_t_B[sizeof(uint16_t)];
-	};
-	union
-	{
-		uint32_t UINT32;
-		signed char uint32_t_B[sizeof(uint32_t)];
-	};
-	union
-	{
-		uint64_t UINT64;
-		signed char uint64_t_B[sizeof(uint64_t)];
-	};
-
-	union
-	{
-		float32_t FLOAT32;
-		signed char float32_t_B[sizeof(float32_t)];
-	};
-	union
-	{
-		float64_t FLOAT64;
-		signed char float64_t_B[sizeof(float64_t)];
-	};
-	union
-	{
-		bool BOOL;
-		signed char bool_B[sizeof(bool)];
+		uint64_t SIZE_8;
+		int8_t SIZE_8_B[sizeof(uint64_t)];
 	};
 } endian_t;
 
-
-
-
-
-
 /**
- * Contains byte order corrections
+ * Contains byte order corrections for the communication
+ * byte order (little endian) to the endian format of the
+ * system. To convert the adress from system to communication
+ * byte order do for each byte chrptr+SIZE_X_B[byte_number]
+ * and for the other direction chrptr-SIZE_X_B[byte_number]
  */
 extern const endian_t* const system_byte_order;
 
+/**
+ * This function initializes the variable
+ * which is linked to the system_byte_order.
+ *
+ * @TODO Make rosc_init_endian replaceable for really weired compilers...
+ */
 void rosc_init_endian();
 
 #endif /* ENDIAN_H_ */
