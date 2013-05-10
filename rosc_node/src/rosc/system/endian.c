@@ -54,7 +54,6 @@ void rosc_init_endian()
 	}
 
 	uint8_t size;
-	uint8_t shift=0;
 	int8_t *currentByteAccess;
 	for(size=2;size<=8;size<<=1)
 	{
@@ -82,8 +81,6 @@ void rosc_init_endian()
 			   currentByteAccess[i]<=8)
 			{
 				currentByteAccess[i]-=i+1;
-
-				DEBUG_PRINT(INT,"Endian New Byte Shift",currentByteAccess[i]);
 			}
 			else
 			{
