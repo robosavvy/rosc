@@ -100,7 +100,7 @@ typedef struct iface_t
 }iface_t;
 
 
-void init_hub_node();
+void initInterfaceList();
 void registerInterface_static(iface_t *interface, const char *interfacename, const iface_definition_t* iface_def);
 void unregisterInterface(iface_t *interface);
 

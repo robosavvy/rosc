@@ -27,16 +27,4 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>external_sources/rosc_node_src</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/rosc_node/src</locationURI>
-		</link>
-		<link>
-			<name>external_sources/rosc_sys_linux_x86_src</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/rosc_sys_linux_x86/src</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
