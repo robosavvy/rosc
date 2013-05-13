@@ -6,3 +6,5 @@ Its long-term goal is to become a hardened, efficient and highly portable implem
 making it a good choice for use in industrial applications or product development.
 
 rosc is not yet available for use, but under heavy development, please be patient for the first release.
+
+<b>If you want to look at the already existing code, just have a look at the branches! (dev, feature_XXX)</b>
