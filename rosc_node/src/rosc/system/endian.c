@@ -26,20 +26,71 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipwholemessage.h created by Christian Holl
+ *  endian.c created by Christian Holl
  */
 
-#ifndef SKIPWHOLEMESSAGE_H_
-#define SKIPWHOLEMESSAGE_H_
+#include <rosc/system/endian.h>
+#include <rosc/system/status.h>
+#include <rosc/debug/debug_out.h>
 
-#include <rosc/com_xml/parse/parser_structure.h>
-#include <rosc/system/types.h>
 
-#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(PARSE_STRUCT)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPWHOLEMESSAGE
+static endian_t __system_byte_order =
+{
+{ 0x0201 },
+{ 0x04030201 },
+{ 0x0807060504030201 },
+};
 
-#ifndef FORCE_INLINE
-	void skipwholemessage(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
-#endif
+const endian_t* const system_byte_order = &__system_byte_order;
 
-#endif /* SKIPWHOLEMESSAGE_H_ */
+void rosc_init_endian()
+{
+	if (sizeof(uint8_t) != 1 &&
+		sizeof(uint16_t) != 2 &&
+		sizeof(uint32_t) != 4 &&
+		sizeof(uint64_t) != 8)
+	{
+		ROSC_FATAL("One or more data types do not have the expected byte size!");
+	}
+
+	uint8_t size;
+	int8_t *currentByteAccess;
+	for(size=2;size<=8;size<<=1)
+	{
+		switch(size)
+		{
+		case 2:
+			currentByteAccess=__system_byte_order.SIZE_2_B;
+			break;
+		case 4:
+			currentByteAccess=__system_byte_order.SIZE_4_B;
+			break;
+		case 8:
+			currentByteAccess=__system_byte_order.SIZE_8_B;
+			break;
+		default:
+			ROSC_FATAL("Unexpected state in rosc_init_endian size switch!")
+			break;
+		}
+
+		int i;
+		DEBUG_PRINT(INT,"Size",size);
+		for(i=0;i<size;++i)
+		{
+			if(currentByteAccess>0 &&
+			   currentByteAccess[i]<=8)
+			{
+				currentByteAccess[i]-=i+1;
+			}
+			else
+			{
+				ROSC_FATAL("Byte Endian information is not in the specified range");
+			}
+		}
+
+	}
+
+
+
+
+}

@@ -43,7 +43,7 @@
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
 #define __SYSTEM_HAS_OS__
 #define __SYSTEM_NEEDS_CON_ACCEPT__
-
+#define PORTS_STATIC_MAX_NUMBER 8  //TODO change this to dynamic, just for testing in the beginning
 //#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
 
 

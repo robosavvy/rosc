@@ -3,13 +3,13 @@
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met:
+ *	modification, are permitted provided that the following conditions are met: 
  *
  *	1. Redistributions of source code must retain the above copyright notice, this
- *	   list of conditions and the following disclaimer.
+ *	   list of conditions and the following disclaimer. 
  *	2. Redistributions in binary form must reproduce the above copyright notice,
  *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
+ *     and/or other materials provided with the distribution. 
  *
  *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -23,24 +23,45 @@
  *	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *	The views and conclusions contained in the software and documentation are those
- *	of the authors and should not be interpreted as representing official policies,
+ *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_client.h created by Christian Holl
+ *  status.h created by Christian Holl
  */
 
-#ifndef XMLRPC_CLIENT_H_
-#define XMLRPC_CLIENT_H_
+#ifndef STATUS_H_
+#define STATUS_H_
 
-#include <rosc/com_xml/parse/parser_structure.h>
-
-
-typedef struct xmlrpc_client_data_t
+/**
+ * This contains the error severity
+ */
+typedef enum
 {
-	char test[12];
-}xmlrpc_client_data_t;
+	STATUS_INFO,   //!< an Info Message
+	STATUS_WARNING,//!< Warning just a warning
+	STATUS_ERROR,  //!< Error which isn't so serious
+	STATUS_FATAL,  //!< Error can't be fixed at runtime -> System failure handler (default while(1))
+}status_type_t;
 
-void xmlrpc_client_handler(parse_act_t * pact);
+#ifndef HAS_ERROR_REPORTING
+	#define ROSC_INFO(MSG)
+	#define ROSC_WARNING(MSG)
+	#define ROSC_ERROR(MSG)
+	#define ROSC_FATAL(MSG) while(1);
+#else
+	extern report(const char *,status_type_t status);
 
+	#define ROSC_INFO(MSG)\
+		report(MSG, STATUS_INFO);
 
-#endif /* XMLRPC_CLIENT_H_ */
+	#define ROSC_WARNING(MSG)\
+		report(MSG, STATUS_WARNING);
+
+	#define ROSC_ERROR(MSG)\
+		report(MSG, STATUS_ERROR);
+
+	#define ROSC_FATAL(MSG)\
+		report(MSG,STATUS_FATAL);
+#endif
+
+#endif /* STATUS_H_ */

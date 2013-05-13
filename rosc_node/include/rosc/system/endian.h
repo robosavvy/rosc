@@ -26,20 +26,53 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipwholemessage.h created by Christian Holl
+ *  endian.h created by Christian Holl
  */
 
-#ifndef SKIPWHOLEMESSAGE_H_
-#define SKIPWHOLEMESSAGE_H_
+#ifndef ENDIAN_H_
+#define ENDIAN_H_
 
-#include <rosc/com_xml/parse/parser_structure.h>
 #include <rosc/system/types.h>
 
-#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(PARSE_STRUCT)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPWHOLEMESSAGE
+/**
+ * This type of the struct stores the byte order for each
+ * common type of the system, when the values are initialized
+ * with like for example 0x0807060504030201 for 8 bytes.
+ */
+typedef struct
+{
+	union
+	{
+		uint16_t SIZE_2;
+		int8_t SIZE_2_B[sizeof(uint16_t)];
+	};
+	union
+	{
+		uint32_t SIZE_4;
+		int8_t SIZE_4_B[sizeof(uint32_t)];
+	};
+	union
+	{
+		uint64_t SIZE_8;
+		int8_t SIZE_8_B[sizeof(uint64_t)];
+	};
+} endian_t;
 
-#ifndef FORCE_INLINE
-	void skipwholemessage(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
-#endif
+/**
+ * Contains byte order corrections for the communication
+ * byte order (little endian) to the endian format of the
+ * system. To convert the adress from system to communication
+ * byte order do for each byte chrptr+SIZE_X_B[byte_number]
+ * and for the other direction chrptr-SIZE_X_B[byte_number]
+ */
+extern const endian_t* const system_byte_order;
 
-#endif /* SKIPWHOLEMESSAGE_H_ */
+/**
+ * This function initializes the variable
+ * which is linked to the system_byte_order.
+ *
+ * @TODO Make rosc_init_endian replaceable for really weired compilers...
+ */
+void rosc_init_endian();
+
+#endif /* ENDIAN_H_ */

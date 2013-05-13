@@ -1,52 +1,48 @@
 /*
- * ports.c
+ *	Copyright (c) 2013, Synapticon GmbH
+ *	All rights reserved.
  *
- *  Created on: 04.02.2013
- *      Author: cyborg-x1
+ *	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *
+ *	1. Redistributions of source code must retain the above copyright notice, this
+ *	   list of conditions and the following disclaimer.
+ *	2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *	DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *	ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *	The views and conclusions contained in the software and documentation are those
+ *	of the authors and should not be interpreted as representing official policies,
+ *	either expressed or implied, of the FreeBSD Project.
+ *
+ *  ports.c created by Christian Holl
  */
 
 #include <rosc/system/ports.h>
-#include <string.h>
-#include <stdio.h>//TODO Remove
+#include <rosc/system/spec.h>
 
-port_info ports_info[__PORT_MAXIMUM__];
 
-port_id_t listenPort(port_t port, port_user_type_t port_user_type, port_uin_t port_user_number)
-{
-	int id=__listenPort(port);
+#ifndef __SYSTEM_HAS_MALLOC__
+	#ifndef PORTS_STATIC_MAX_NUMBER
+		#error No port setting macro defined, define PORTS_DYNAMIC or PORTS_STATIC_MAX_NUMBER <maximal ports>
+		#pragma message("nagnagnag" ".")
+	#endif
+#endif
 
-	if(id>0)
-	{
-		if(id<__PORT_MAXIMUM__)
-		{
-			ports_info[id].port_user_type = port_user_type;
-			ports_info[id].user_number = port_user_number;
-		}
-		else
-		{
-			id= -1000;
-		}
-	}
-	return id;
-}
+#ifndef __SYSTEM_HAS_MALLOC__
+	#ifndef	__BIGGEST_MESSAGE_TYPE_SIZE__
+		#define __BIGGEST_MESSAGE_TYPE_SIZE__ sizeof(parse_act_t)
+	#endif
+#endif
 
-void closePort(port_id_t port_id)
-{
-	if(port_id>=0 && port_id<__PORT_MAXIMUM__)
-	{
-		ports_info[port_id].port_user_type = PORT_USER_TYPE_UNUSED;
-	}
-	else
-	{
-		DEBUG_PRINT(INT,"Error! Can not close port id",  port_id);
-	}
-}
-
-inline void ports_info_init()
-{
-	int i=0;
-	for (i = 0; i < __PORT_MAXIMUM__; ++i)
-	{
-		memset(ports_info,0,sizeof(port_info)*__PORT_MAXIMUM__);
-	}
-}

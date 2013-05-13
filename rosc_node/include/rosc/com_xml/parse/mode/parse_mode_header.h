@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  parse_mode_header.h created by Christian Holl on 22.03.2013
+ *  parse_mode_header.h created by Christian Holl
  */
 
 #ifndef PARSE_MODE_HEADER_H_

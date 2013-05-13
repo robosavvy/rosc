@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  parse_mode_xml.h created by Christian Holl on 28.03.2013
+ *  parse_mode_xml.h created by Christian Holl
  */
 
 #ifndef PARSE_MODE_XML_H_

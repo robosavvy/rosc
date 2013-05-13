@@ -26,21 +26,49 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_client.h created by Christian Holl
+ *  iface.c created by Christian Holl
  */
 
-#ifndef XMLRPC_CLIENT_H_
-#define XMLRPC_CLIENT_H_
+#include <rosc/com_ifaces/iface.h>
 
-#include <rosc/com_xml/parse/parser_structure.h>
+static iface_t interface_list_hub;
 
 
-typedef struct xmlrpc_client_data_t
+void initInterfaceList()
 {
-	char test[12];
-}xmlrpc_client_data_t;
+	interface_list_hub.type=IFACE_TYPE_LIST_HUB;
+	interface_list_hub.name=0;
+	interface_list_hub.next=0;
+}
 
-void xmlrpc_client_handler(parse_act_t * pact);
+
+void registerInterface_static(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
+{
+	iface_t* cur=&interface_list_hub;
+	//Go to the end of the list
+	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+	if(cur->next != interface && cur->next == 0)
+	{
+		cur->next=interface;
+	}
+
+}
 
 
-#endif /* XMLRPC_CLIENT_H_ */
+void removeInterface_static(iface_t *interface)
+{
+	iface_t* cur=&interface_list_hub;
+	iface_t* last;
+	//Go to the entry of the list
+	while(cur && cur != interface)
+	{
+		last=cur;
+		cur=cur->next;
+	}
+
+	if(cur==interface)
+	{
+		last->next=cur->next;
+	}
+}

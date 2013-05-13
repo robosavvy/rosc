@@ -1,8 +1,32 @@
 /*
- * hosts.h
+ *	Copyright (c) 2013, Synapticon GmbH
+ *	All rights reserved.
  *
- *  Created on: 03.02.2013
- *      Author: cyborg-x1
+ *	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *
+ *	1. Redistributions of source code must retain the above copyright notice, this
+ *	   list of conditions and the following disclaimer.
+ *	2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ *	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *	DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ *	ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ *	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ *	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *	The views and conclusions contained in the software and documentation are those
+ *	of the authors and should not be interpreted as representing official policies,
+ *	either expressed or implied, of the FreeBSD Project.
+ *
+ *  hosts.h created by Christian Holl
  */
 
 #ifndef HOSTS_H_
@@ -12,7 +36,7 @@
 
 typedef unsigned char ip_address_t[4];
 typedef int16_t port_id_t;
-typedef uint16_t port_t;
+
 
 
 #ifdef __SYSTEM_HAS_MALLOC__
@@ -55,7 +79,7 @@ typedef struct
 	host_type_t host_type;//!< Type of Host Master, Current System, Another Machine
 	ip_address_t host_ip; //!< IP Address
 	hostname_t host_name; //!< Hostname
-	port_t xmlrpc_port;   //!< Port setting for master xmlrpc or current node xmlrpc port, unused for other node types
+	uint16_t xmlrpc_port;   //!< Port setting xmlrpc ports stores the xmlrpc port...
 }host_info_t;
 
 extern host_info_t host_list[];

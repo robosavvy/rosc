@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  subs.h created by Christian Holl on 03.04.2013
+ *  subs.h created by Christian Holl
  */
 
 #ifndef SUBS_H_

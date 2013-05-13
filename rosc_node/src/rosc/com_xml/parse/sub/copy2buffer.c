@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  copy2buffer.c created by Christian Holl on 20.03.2013
+ *  copy2buffer.c created by Christian Holl
  */
 
 #ifndef FORCE_INLINE
