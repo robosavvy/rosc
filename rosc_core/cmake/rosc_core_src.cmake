@@ -2,22 +2,24 @@ message(STATUS "Getting rosc sources...")
 
 #all sources of rosc_core
 SET(ROSC_CORE_SOURCES
-src/rosc/system/rosc_spin.c
-src/rosc/system/ports.c
-src/rosc/system/system.c
-src/rosc/system/rosc_init.c
-src/rosc/string_res/msg_strings.c
-src/rosc/com_xml/parse/handler/xmlrpc_server.c
-src/rosc/com_xml/parse/handler/xmlrpc_client.c
-src/rosc/com_xml/parse/sub/copy2buffer.c
-src/rosc/com_xml/parse/sub/seekstring.c
-src/rosc/com_xml/parse/sub/skipwholemessage.c
-src/rosc/com_xml/parse/sub/numberparse.c
-src/rosc/com_xml/parse/sub/parseurl.c
-src/rosc/com_xml/parse/parser.c
-src/rosc/com_xml/parse/mode/parse_mode_xml.c
-src/rosc/com_xml/parse/mode/parse_mode_header.c
-src/rosc/com_xml/msg_gen.c
+./src/rosc/system/endian.c
+./src/rosc/system/rosc_spin.c
+./src/rosc/system/ports.c
+./src/rosc/system/system.c
+./src/rosc/system/rosc_init.c
+./src/rosc/string_res/msg_strings.c
+./src/rosc/com_xml/parse/handler/xmlrpc_server.c
+./src/rosc/com_xml/parse/handler/xmlrpc_client.c
+./src/rosc/com_xml/parse/sub/copy2buffer.c
+./src/rosc/com_xml/parse/sub/seekstring.c
+./src/rosc/com_xml/parse/sub/skipwholemessage.c
+./src/rosc/com_xml/parse/sub/numberparse.c
+./src/rosc/com_xml/parse/sub/parseurl.c
+./src/rosc/com_xml/parse/parser.c
+./src/rosc/com_xml/parse/mode/parse_mode_xml.c
+./src/rosc/com_xml/parse/mode/parse_mode_header.c
+./src/rosc/com_xml/msg_gen.c
+./src/rosc/com_iface/iface.c
 )
 
 
