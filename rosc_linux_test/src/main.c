@@ -170,7 +170,9 @@ int main_xmlrpctest()
 	return 0;
 }
 
-
+//The memory definitions for
+//the size of all port buffers
+//for the biggest available message
 STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	char justatestsize[23];
 STATIC_SYSTEM_MESSAGE_TYPE_LIST_END

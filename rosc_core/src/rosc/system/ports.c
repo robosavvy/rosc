@@ -37,9 +37,13 @@
 		#error No port setting macro defined, define PORTS_DYNAMIC or PORTS_STATIC_MAX_NUMBER <maximal ports>
 	#endif
 
+	//Memory for the port structs itself
 	static port_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER+1];
+
+	//point the hub pointer to the first array entry
 	port_t* const port_list_hub=&__port_mem_reservation[0];
 
+	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
 	extern uint8_t *rosc_static_port_mem;
 	extern const uint8_t rosc_static_port_mem_size;
 
@@ -54,6 +58,7 @@
 
 void rosc_ports_init()
 {
+	//Init list hub
 	port_list_hub->data=0;
 	port_list_hub->interface=0;
 	port_list_hub->socket_id=0;
@@ -62,6 +67,7 @@ void rosc_ports_init()
 	port_list_hub->state=PORT_STATE_UNUSABLE;
 	port_list_hub->next=0;
 
+	//Init for static systems on
 	#ifndef __SYSTEM_HAS_MALLOC__
 		int i;
 		for(i=1;i<PORTS_STATIC_MAX_NUMBER+1;++i)
