@@ -32,7 +32,24 @@
 #ifndef ROSINIT_H_
 #define ROSINIT_H_
 
-void rosc_init();
+#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
+#ifndef  __SYSTEM_HAS_MALLOC__
+	#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
+		typedef struct\
+		{\
+			union\
+			{
+
+	#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
+			};\
+		}rosc_port_memory_size_def_t;\
+		const uint8_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
+		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
+		uint8_t *rosc_static_port_mem=(uint8_t *)__rosc_static_port_mem;
+#endif
+
+void rosc_init_static(uint32_t port_mem_size);
 
 #endif /* ROSINIT_H_ */

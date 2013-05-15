@@ -171,7 +171,9 @@ int main_xmlrpctest()
 }
 
 
-
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
+	char justatestsize[23];
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 int main()
 {

@@ -35,38 +35,48 @@
 #include <rosc/com_ifaces/iface.h>
 #include <rosc/com_xml/parse/parser_structure.h>
 
-#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
-	typedef struct\
-	{\
-		union\
-		{\
-			parse_act_t parser_act_size_placeholder;\
 
-
-#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
-		};\
-	}static_system_general_port_handler_storage_t;
 
 
 
 typedef enum
 {
+	PORT_TYPE_HUB,
 	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING_CONNECTED,
+	PORT_TYPE_INCOMING,
 	PORT_TYPE_INCOMING_ACCEPT,
 	PORT_TYPE_OUTGOING,
 }port_type_t;
 
-typedef struct
+typedef enum
+{
+	PORT_STATE_UNUSABLE,
+	PORT_STATE_CLOSED,
+	PORT_STATE_LISTEN,
+	PORT_STATE_OUTGOING,
+	PORT_STATE_INCOMING,
+}port_state_t;
+
+
+typedef struct port_t
 {
 	uint16_t port_number;
 	struct iface_t* interface;
 	void *data;
 	uint32_t socket_id;
+	port_type_t type;
+	port_state_t state;
+	struct port_t *next;
 }port_t;
 
 
 
+#ifndef  __SYSTEM_HAS_MALLOC__
+	void __rosc_ports_init_static(uint32_t size);
+
+#else
+	//TODO rosc_ports_init() for malloc
+#endif
 
 
 #endif /* PORTS_H_ */
