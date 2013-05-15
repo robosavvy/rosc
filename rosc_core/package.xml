@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>rosc_core</name>
+  <version>0.0.0</version>
+  <description>The rosc_core package</description>
+  <maintainer email="choll@synapticon.com">Christian Holl</maintainer>
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/rosc</url>
+  <url type="website">http://github.com/synapticon/rosc</url>
+  <author email="choll@synapticon.com">Christian Holl</author>
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

@@ -35,3 +35,16 @@
 
 #XMOS xe files
 *.xe
+
+/gtest/
+/catkin/
+/catkin_generated/
+/CATKIN_IGNORE
+/CMakeCache.txt
+/CMakeFiles/
+/cmake_install.cmake
+/.cproject
+/devel/
+/Makefile
+/.project
+/test_results

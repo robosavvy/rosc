@@ -50,7 +50,7 @@
 
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
-#include <rosc/examplepack/exmsg.h>
+//#include <rosc/examplepack/exmsg.h>
 #include <rosc/com_xml/parse/parser.h>
 
 #include <rosc/com_ifaces/iface.h>
@@ -153,7 +153,7 @@ int main_xmlrpctest()
 
 	for(rlen=0;msg[rlen]!=0;rlen++);
 
-	//printf("Test Message Length: %i\n",rlen);
+	printf("Test Message Length: %i\n",rlen);
 
 	int i;
 	for(i=0;rlen-i*buffersize+buffersize>0;i++)
