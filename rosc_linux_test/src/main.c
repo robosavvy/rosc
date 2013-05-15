@@ -175,7 +175,7 @@ int main_xmlrpctest()
 
 int main()
 {
-
+	printf("\n\nExecute --> rosc_linux_test\n\n");
 	rosc_init();
 
 	//main_xmlrpctest();
