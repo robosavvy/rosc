@@ -100,8 +100,8 @@ typedef struct iface_t
 }iface_t;
 
 
-void initInterfaceList();
-void registerInterface_static(iface_t *interface, const char *interfacename, const iface_definition_t* iface_def);
+void rosc_init_interface_list();
+void register_interface_static(iface_t *interface, const char *interfacename, const iface_definition_t* iface_def);
 void unregisterInterface(iface_t *interface);
 
 

@@ -30,11 +30,12 @@
  */
 
 #include <rosc/com_ifaces/iface.h>
+#include <rosc/system/spec.h>
 
 static iface_t interface_list_hub;
 
 
-void initInterfaceList()
+void rosc_init_interface_list()
 {
 	interface_list_hub.type=IFACE_TYPE_LIST_HUB;
 	interface_list_hub.name=0;
@@ -42,7 +43,7 @@ void initInterfaceList()
 }
 
 
-void registerInterface_static(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
+void register_interface_static(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
 {
 	iface_t* cur=&interface_list_hub;
 	//Go to the end of the list
@@ -52,11 +53,10 @@ void registerInterface_static(iface_t *interface, const char *topic_service_name
 	{
 		cur->next=interface;
 	}
-
 }
 
 
-void removeInterface_static(iface_t *interface)
+void remove_interface_static(iface_t *interface)
 {
 	iface_t* cur=&interface_list_hub;
 	iface_t* last;
