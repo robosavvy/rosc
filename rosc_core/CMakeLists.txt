@@ -28,7 +28,7 @@ find_package(catkin REQUIRED)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
-#   FILES
+#   FILES 
 #   Service1.srv
 #   Service2.srv
 # )
@@ -39,6 +39,8 @@ find_package(catkin REQUIRED)
 #   std_msgs  # Or other packages containing msgs
 # )
 
+
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -48,11 +50,11 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES rosc_core
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+   INCLUDE_DIRS include
+  # LIBRARIES rosc_core
+  # CATKIN_DEPENDS other_catkin_pkg
+  CFG_EXTRAS rosc_core_src.cmake #pointing to cmake/rosc_core_src
+)  
 
 ###########
 ## Build ##
@@ -60,7 +62,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
 # add_library(rosc_core

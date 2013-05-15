@@ -4,7 +4,7 @@ project(rosc_sys_linux_x86)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED rosc_core)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -48,11 +48,14 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES rosc_sys_linux_x86
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
+ 
+
+
 
 ###########
 ## Build ##
@@ -60,12 +63,14 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
+#message(STATUS ${ROSC_CORE_SOURCES})
 ## Declare a cpp library
-# add_library(rosc_sys_linux_x86
-#   src/${PROJECT_NAME}/rosc_sys_linux_x86.cpp
-# )
+  add_library(rosc_sys_linux_x86
+   src/system_linux.c
+   ${ROSC_CORE_SOURCES}
+)
 
 ## Declare a cpp executable
 # add_executable(rosc_sys_linux_x86_node src/rosc_sys_linux_x86_node.cpp)
