@@ -43,7 +43,7 @@ void rosc_init_interface_list()
 }
 
 
-void register_interface_static(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
+void register_interface(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
 {
 	iface_t* cur=&interface_list_hub;
 	//Go to the end of the list
@@ -56,7 +56,7 @@ void register_interface_static(iface_t *interface, const char *topic_service_nam
 }
 
 
-void remove_interface_static(iface_t *interface)
+void unregister_interface(iface_t *interface)
 {
 	iface_t* cur=&interface_list_hub;
 	iface_t* last;
