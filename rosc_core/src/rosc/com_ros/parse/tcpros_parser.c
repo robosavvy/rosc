@@ -28,14 +28,14 @@
  *
  *  tcpros_parser.c created by Christian Holl
  */
-#include <rosc/com_ros/parse/tcpros_parser.h>
+#include <rosc/com_ros/parse/ros_parser.h>
 
-void rostcp_parse_act_init(rostcp_parse_act_t *pact, tcpros_type_t type, void * handler_data_storage)
+void ros_parse_act_init(ros_parse_act_t *pact, ros_type_t type, void * handler_data_storage)
 {
 
 }
 
-void rostcp_parse(char *buf, uint32_t len, rostcp_parse_act_t* pact)
+void ros_parse(char *buf, uint32_t len, ros_parse_act_t* pact)
 {
 
 }

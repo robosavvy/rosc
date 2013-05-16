@@ -200,5 +200,24 @@ xml_rpc_boolean_strings:
     'true': 'TRUE',
     'false': 'FALSE',
   }
-  
+ 
+#ros protocol field ids
+ros_field_strings:
+  comment:
+    'field id strings for the ros protocol'
+  defineShort:
+    'ROS_FIELD'
+  stringlist: {
+    message_definition,
+    callerid,
+    topic,
+    md5sum,
+    type,
+    service,
+    tcp_nodelay,
+    latching,
+    persistent,
+    error,
+  }
+ 
     

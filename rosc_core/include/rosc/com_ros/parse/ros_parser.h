@@ -29,8 +29,8 @@
  *  tcpros_parser.h created by Christian Holl
  */
 
-#ifndef TCPROS_PARSER_H_
-#define TCPROS_PARSER_H_
+#ifndef ROS_PARSER_H_
+#define ROS_PARSER_H_
 
 /**
  * Specifies the type of the tcpros parser for
@@ -44,15 +44,16 @@ typedef enum
 	SERVICE_SERVER,  //!< SERVICE_SERVER
 	ROSRPC_SERVER,   //!< ROSRPC_SERVER
 	ROSRPC_CLIENT,   //!< ROSRPC_CLIENT
-}tcpros_type_t;
+}ros_type_t;
 
 typedef struct
 {
 
-}rostcp_parse_act_t;
+	void (*submode_function)(char **buf_ptr, uint32_t *len_ptr, void *submode_data_storage);
+}ros_parse_act_t;
 
-void rostcp_parse_act_init(rostcp_parse_act_t *pact, tcpros_type_t type, void * handler_data_storage);
+void ros_parse_act_init(ros_parse_act_t *pact, ros_type_t type, void * handler_data_storage);
 
-void rostcp_parse(char *buf, uint32_t len, rostcp_parse_act_t* pact);
+void ros_parse(char *buf, uint32_t len, ros_parse_act_t* pact);
 
 #endif /* TCPROS_PARSER_H_ */

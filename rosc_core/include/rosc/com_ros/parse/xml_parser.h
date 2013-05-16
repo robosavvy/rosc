@@ -29,8 +29,8 @@
  *  xml_parser.h created by Christian Holl
  */
 
-#ifndef PARSER_H_
-#define PARSER_H_
+#ifndef _XML_PARSER_H_
+#define _XML_PARSER_H_
 
 #include <rosc/com_ros/parse/xml_parser_structure.h>
 #include <rosc/com_ros/parse/handler/xmlrpc_server.h>
@@ -47,4 +47,4 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 
 void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact);
 
-#endif /* PARSER_H_ */
+#endif /* _XML_PARSER_H_ */
