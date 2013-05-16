@@ -26,57 +26,17 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ports.h created by Christian Holl
+ *  parseurl.h created by Christian Holl
  */
-#ifndef PORTS_H_
-#define PORTS_H_
 
-#include <inttypes.h>
-#include <rosc/com_ifaces/iface.h>
+#ifndef PARSEURL_H_
+#define PARSEURL_H_
+
 #include <rosc/com_ros/parse/xml_parser_structure.h>
 
 
-
-
-
-typedef enum
-{
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}port_type_t;
-
-typedef enum
-{
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
-}port_state_t;
-
-
-typedef struct port_t
-{
-	uint16_t port_number;
-	struct iface_t* interface;
-	void *data;
-	uint32_t socket_id;
-	port_type_t type;
-	port_state_t state;
-	struct port_t *next;
-}port_t;
-
-
-
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
-
-#else
-	//TODO rosc_ports_init() for malloc
+#ifndef FORCE_INLINE
+	void parseurl(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
-
-#endif /* PORTS_H_ */
+#endif /* PARSEURL_H_ */

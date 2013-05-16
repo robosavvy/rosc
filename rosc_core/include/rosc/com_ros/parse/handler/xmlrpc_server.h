@@ -26,57 +26,61 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ports.h created by Christian Holl
+ *  xmlrpc_server.h created by Christian Holl
  */
-#ifndef PORTS_H_
-#define PORTS_H_
 
-#include <inttypes.h>
-#include <rosc/com_ifaces/iface.h>
+#ifndef XMLRPC_SERVER_H_
+#define XMLRPC_SERVER_H_
+
 #include <rosc/com_ros/parse/xml_parser_structure.h>
+#include <rosc/com_ros/parse/handler/xmlrpc_string_id.h>
 
 
 
-
-
-typedef enum
+typedef struct xmlrpc_server_data_t
 {
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}port_type_t;
-
-typedef enum
-{
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
-}port_state_t;
+	xmlrpc_server_method_t method;
+	xmlrpc_server_target_t target;
+	xmlrpc_slave_api_method_t rpcmethod;
+	uint8_t value_number;
+	uint32_t current_value_tag;
+	uint8_t array_value;
+	bool fetch_content;
+	bool content_is_mandatory;
+	uint32_t content_cnt;
 
 
-typedef struct port_t
-{
-	uint16_t port_number;
-	struct iface_t* interface;
-	void *data;
-	uint32_t socket_id;
-	port_type_t type;
-	port_state_t state;
-	struct port_t *next;
-}port_t;
+	uint8_t respond_code;
+
+	bool error_message;
+
+	union
+	{
+		struct
+		{
+			char caller_id[__NODENAME_MAX_LEN__];
+			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
+		}paramUpdate;
+
+		struct
+		{
+			char caller_id[__NODENAME_MAX_LEN__];
+			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
+		}publisherUpdate;
+
+		struct
+		{
+			char caller_id[__NODENAME_MAX_LEN__];
+			char parameter_key[__ROS_PARAMETER_MAX_LEN__];
+		}requestTopic;
+
+	};
 
 
 
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
-
-#else
-	//TODO rosc_ports_init() for malloc
-#endif
+}xmlrpc_server_data_t;
 
 
-#endif /* PORTS_H_ */
+void xmlrpc_server_handler(parse_act_t * pact);
+
+#endif /* XMLRPC_SERVER_H_ */

@@ -3,13 +3,13 @@
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met:
+ *	modification, are permitted provided that the following conditions are met: 
  *
  *	1. Redistributions of source code must retain the above copyright notice, this
- *	   list of conditions and the following disclaimer.
+ *	   list of conditions and the following disclaimer. 
  *	2. Redistributions in binary form must reproduce the above copyright notice,
  *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
+ *     and/or other materials provided with the distribution. 
  *
  *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -23,60 +23,25 @@
  *	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *	The views and conclusions contained in the software and documentation are those
- *	of the authors and should not be interpreted as representing official policies,
+ *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ports.h created by Christian Holl
+ *  parse_mode_xml.h created by Christian Holl
  */
-#ifndef PORTS_H_
-#define PORTS_H_
 
-#include <inttypes.h>
-#include <rosc/com_ifaces/iface.h>
+#ifndef PARSE_MODE_XML_H_
+#define PARSE_MODE_XML_H_
+
 #include <rosc/com_ros/parse/xml_parser_structure.h>
+#include <rosc/com_ros/parse/sub/subs.h>
 
 
+#define PARSE_MODE_INIT_XML()\
 
 
-
-typedef enum
-{
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}port_type_t;
-
-typedef enum
-{
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
-}port_state_t;
-
-
-typedef struct port_t
-{
-	uint16_t port_number;
-	struct iface_t* interface;
-	void *data;
-	uint32_t socket_id;
-	port_type_t type;
-	port_state_t state;
-	struct port_t *next;
-}port_t;
-
-
-
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
-
-#else
-	//TODO rosc_ports_init() for malloc
+#ifndef FORCE_INLINE
+	void parse_mode_xml(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
 #endif
 
 
-#endif /* PORTS_H_ */
+#endif /* PARSE_MODE_XML_H_ */

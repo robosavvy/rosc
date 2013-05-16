@@ -51,7 +51,7 @@
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
 //#include <rosc/examplepack/exmsg.h>
-#include <rosc/com_xml/parse/parser.h>
+#include <rosc/com_ros/parse/xml_parser.h>
 
 #include <rosc/com_ifaces/iface.h>
 

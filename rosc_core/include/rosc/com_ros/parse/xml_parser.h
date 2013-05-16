@@ -26,57 +26,25 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ports.h created by Christian Holl
+ *  xml_parser.h created by Christian Holl
  */
-#ifndef PORTS_H_
-#define PORTS_H_
 
-#include <inttypes.h>
-#include <rosc/com_ifaces/iface.h>
+#ifndef PARSER_H_
+#define PARSER_H_
+
 #include <rosc/com_ros/parse/xml_parser_structure.h>
-
-
-
+#include <rosc/com_ros/parse/handler/xmlrpc_server.h>
+#include <rosc/com_ros/parse/handler/xmlrpc_client.h>
 
 
 typedef enum
 {
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}port_type_t;
+	XMLRPC_SERVER,
+	XMLRPC_CLIENT
+}xmlrpc_parser_type_t;
 
-typedef enum
-{
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
-}port_state_t;
+void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * handler_data_storage);
 
+void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact);
 
-typedef struct port_t
-{
-	uint16_t port_number;
-	struct iface_t* interface;
-	void *data;
-	uint32_t socket_id;
-	port_type_t type;
-	port_state_t state;
-	struct port_t *next;
-}port_t;
-
-
-
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
-
-#else
-	//TODO rosc_ports_init() for malloc
-#endif
-
-
-#endif /* PORTS_H_ */
+#endif /* PARSER_H_ */
