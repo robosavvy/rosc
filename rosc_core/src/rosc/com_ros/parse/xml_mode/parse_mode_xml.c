@@ -37,7 +37,7 @@
 	#include <rosc/com_ros/parse/xml_parser_structure.h>
 	#include <rosc/com_ros/parse/xml_parser.h>
 	#include <rosc/string_res/msg_strings.h>
-	#include <rosc/com_ros/parse/mode/parse_mode_xml.h>
+	#include <rosc/com_ros/parse/xml_mode/parse_mode_xml.h>
 
 #endif
 

@@ -31,8 +31,8 @@
 
 #include <rosc/system/types.h>
 #include <rosc/com_ros/parse/xml_parser.h>
-#include <rosc/com_ros/parse/mode/parse_mode_xml.h>
-#include <rosc/com_ros/parse/mode/parse_mode_header.h>
+#include <rosc/com_ros/parse/xml_mode/parse_mode_xml.h>
+#include <rosc/com_ros/parse/xml_mode/parse_mode_header.h>
 #include <rosc/com_ros/parse/sub/subs.h>
 
 

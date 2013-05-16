@@ -10,8 +10,8 @@ src/rosc/com_ros/parse/sub/seekstring.c
 src/rosc/com_ros/parse/sub/skipwholemessage.c
 src/rosc/com_ros/parse/sub/numberparse.c
 src/rosc/com_ros/parse/sub/parseurl.c
-src/rosc/com_ros/parse/mode/parse_mode_xml.c
-src/rosc/com_ros/parse/mode/parse_mode_header.c
+src/rosc/com_ros/parse/xml_mode/parse_mode_xml.c
+src/rosc/com_ros/parse/xml_mode/parse_mode_header.c
 src/rosc/com_ros/generate/xml_msg_gen.c
 src/rosc/system/endian.c
 src/rosc/system/rosc_spin.c

@@ -33,7 +33,7 @@
 	#ifndef ENABLE_C
 		#define ENABLE_C
 	#endif
-	#include <rosc/com_ros/parse/mode/parse_mode_header.h>
+	#include <rosc/com_ros/parse/xml_mode/parse_mode_header.h>
 	#include <rosc/com_ros/parse/handler/xmlrpc_string_id.h>
 	#include <rosc/com_ros/parse/sub/subs.h>
 #endif
