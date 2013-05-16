@@ -67,6 +67,22 @@ typedef struct
 #pragma pack(pop)
 
 
+//NOTE: iface.h definition
+//typedef struct iface_t
+//{
+//	iface_type_t type;
+//	char* name;	//!< This is the topic / server name of the interface
+//	struct iface_t* next;
+//	iface_definition_t* const def;
+//	iface_state_t state;
+//}iface_t;
+#ifndef __SYSTEM_HAS_MALLOC__
+	#define ROSC_PUBLISHER()\
+			{IFACE_TYPE_TOPIC_PUBLISHER,0,}
+#else
+	//TODO iface creation function
+#endif
+
 #define FIXED_SIZE_EXAMPLEPACK_EXMSG_CMD_ARRAY(__STRUCTNAME,__BYTES_SIZE, __WORDS_SIZE)\
 	const uint32_t examplepack_exmsg_cmd_##__STRUCTNAME##_fixed[]  = {IFACE_DEFINITION_BOOL,IFACE_DEFINITION_UNDEF_ARRAY(IFACE_DEFINITION_UINT8), __BYTES_SIZE, IFACE_DEFINITION_UNDEF_ARRAY(IFACE_DEFINITION_UINT16),__WORDS_SIZE}
 

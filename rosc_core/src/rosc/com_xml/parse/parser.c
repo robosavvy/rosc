@@ -29,7 +29,7 @@
  *  parser.c created by Christian Holl
  */
 
-#include <stdio.h>
+#include <rosc/system/types.h>
 #include <rosc/com_xml/parse/parser.h>
 #include <rosc/com_xml/parse/mode/parse_mode_xml.h>
 #include <rosc/com_xml/parse/mode/parse_mode_header.h>

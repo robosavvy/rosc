@@ -32,6 +32,7 @@
 #include <rosc/system/endian.h>
 #include <rosc/system/status.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/system/types.h>
 
 
 static endian_t __system_byte_order =
