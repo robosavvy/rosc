@@ -6,4 +6,4 @@ making it a good choice for use in industrial applications or product developmen
 
 rosc is not yet available for use, but under heavy development, please be patient for the first release.
 
-<b>If you want to look at the already existing code, just have a look at the branches! (dev, feature_XXX)</b>
+<b>Have a look at the branches!</b>
