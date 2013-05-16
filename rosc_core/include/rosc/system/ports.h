@@ -32,8 +32,8 @@
 #define PORTS_H_
 
 #include <inttypes.h>
-#include <rosc/com_ifaces/iface.h>
-#include <rosc/com_xml/parse/parser_structure.h>
+#include <rosc/system/iface.h>
+#include <rosc/msg_parsers/xml_parser_structure.h>
 
 
 

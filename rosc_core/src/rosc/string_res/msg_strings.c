@@ -102,6 +102,20 @@ const char *http_available_actions[] =
 	"test"
 };
 
+const char *ros_field_strings[] =
+{
+	"callerid",
+	"error",
+	"latching",
+	"md5sum",
+	"message_definition",
+	"persistent",
+	"service",
+	"tcp_nodelay",
+	"topic",
+	"type"
+};
+
 const char *parse_separators[] =
 {
 	"/. \n",

@@ -30,11 +30,11 @@
  */
 
 #include <rosc/system/rosc_init.h>
-#include <rosc/com_ifaces/iface.h>
+#include <rosc/system/iface.h>
 #include <rosc/system/ports.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/endian.h>
-#include <rosc/com_ifaces/iface_setup.h>
+#include <rosc/system/iface.h>
 
 
 

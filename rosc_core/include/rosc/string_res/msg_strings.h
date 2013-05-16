@@ -177,6 +177,32 @@ extern const char *http_available_actions[];
 
 
 /**
+ * Length of the string array ros_field_strings
+ */
+#define ROS_FIELD_STRINGS_LEN 	10
+
+/**
+ * Macro for inserting field id strings for the ros protocol string numbers into any enum
+ */
+#define __ROS_FIELD_STRINGS(ENUM) \
+	 ENUM ## _ROS_FIELD_CALLERID, \
+	 ENUM ## _ROS_FIELD_ERROR, \
+	 ENUM ## _ROS_FIELD_LATCHING, \
+	 ENUM ## _ROS_FIELD_MD5SUM, \
+	 ENUM ## _ROS_FIELD_MESSAGE_DEFINITION, \
+	 ENUM ## _ROS_FIELD_PERSISTENT, \
+	 ENUM ## _ROS_FIELD_SERVICE, \
+	 ENUM ## _ROS_FIELD_TCP_NODELAY, \
+	 ENUM ## _ROS_FIELD_TOPIC, \
+	 ENUM ## _ROS_FIELD_TYPE
+
+/**
+ * This array contains the strings for field id strings for the ros protocol
+ */
+extern const char *ros_field_strings[];
+
+
+/**
  * Length of the string array parse_separators
  */
 #define PARSE_SEPARATORS_LEN 	3

@@ -60,7 +60,7 @@
 #include <rosc/system/setup.h>
 #include <rosc/system/rosc_spin.h>
 #include <rosc/system/rosc_init.h>
-#include <rosc/com_ifaces/iface.h>
+#include <rosc/system/iface.h>
 
 
 
