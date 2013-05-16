@@ -1,27 +1,10 @@
 message(STATUS "Getting rosc sources...")
 
-#all sources of rosc_core
-SET(ROSC_CORE_SOURCES
-src/rosc/com_ros/parse/handler/xmlrpc_server.c
-src/rosc/com_ros/parse/handler/xmlrpc_client.c
-src/rosc/com_ros/parse/xml_parser.c
-src/rosc/com_ros/parse/sub/copy2buffer.c
-src/rosc/com_ros/parse/sub/seekstring.c
-src/rosc/com_ros/parse/sub/skipwholemessage.c
-src/rosc/com_ros/parse/sub/numberparse.c
-src/rosc/com_ros/parse/sub/parseurl.c
-src/rosc/com_ros/parse/xml_mode/parse_mode_xml.c
-src/rosc/com_ros/parse/xml_mode/parse_mode_header.c
-src/rosc/com_ros/generate/xml_msg_gen.c
-src/rosc/system/endian.c
-src/rosc/system/rosc_spin.c
-src/rosc/system/ports.c
-src/rosc/system/system.c
-src/rosc/system/rosc_init.c
-src/rosc/string_res/msg_strings.c
-src/rosc/com_iface/iface.c
-)
+#update the current sources list in the next include
+execute_process(COMMAND python ${CMAKE_CURRENT_LIST_DIR}/../code_gen/refreshFiles.py)
 
+#all sources of rosc_core
+include(${CMAKE_CURRENT_LIST_DIR}/rosc_core_src_list.cmake)
 
 SET(ROSC_CORE_DIR ${CMAKE_CURRENT_LIST_DIR}/..) #get the current file directory
 #message(STATUS "rosc_core directory is:" ${ROSC_CORE_DIR})
