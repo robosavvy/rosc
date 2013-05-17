@@ -43,7 +43,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 
 	pact->event=PARSE_EVENT_NONE;
 
-	pact->submode=PARSE_SUBMODE_NONE;
+	//pact->submode=PARSE_SUBMODE_NONE;
 	pact->submode_by_handler=false;
 	pact->event=PARSE_EVENT_HANDLER_INIT;
 	pact->content_length=-1;
@@ -79,7 +79,7 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 			pact->mode_data.xml.processed_bytes=len;
 		}
 
-		if((pact->submode==PARSE_SUBMODE_NONE) || (pact->submode_state==PARSE_SUBMODE_FINISHED))
+		if((pact->submode==0))
 		{
 			if(!pact->submode_by_handler)
 			{
@@ -111,62 +111,20 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 		}
 		else
 		{
-			switch (pact->submode)
+			if(pact->submode)
 			{
-				case PARSE_SUBMODE_COPY2BUFFER:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "sub/copy2buffer.c"
-							#undef ENABLE_C
-						#else
-							copy2buffer(&buf, &len, pact);
-						#endif
-					break;
+				if(pact->submode(&buf, &len, pact->submode_data))
+				{
+					pact->submode=0;
+					if(pact->submode_by_handler)
+					{
+						pact->event=PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED;
+					}
+				}
 
-				case PARSE_SUBMODE_NUMBERPARSE:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "sub/numberparse.c"
-							#undef ENABLE_C
-						#else
-							numberparse(&buf, &len, pact);
-						#endif
-					break;
-
-				case PARSE_SUBMODE_SEEKSTRING:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "sub/seekstring.c"
-							#undef ENABLE_C
-						#else
-							seekstring(&buf, &len, pact);
-						#endif
-					break;
-
-				case PARSE_SUBMODE_SKIPWHOLEMESSAGE:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "sub/skipwholemessage.c"
-							#undef ENABLE_C
-						#else
-							skipwholemessage(&buf, &len, pact);
-						#endif
-					break;
-
-				default:
-					break;
 			}
 		}
 
-		if(pact->submode_by_handler)
-		{
-			if(pact->submode_state==PARSE_SUBMODE_FINISHED)
-			{
-				pact->event=PARSE_EVENT_XML_HANDLER_CALLED_SUBMODE_FINISHED;
-				pact->submode_by_handler=false;
-				pact->submode=PARSE_SUBMODE_NONE;
-			}
-		}
 		if(pact->event!=PARSE_EVENT_NONE)
 		{
 			if(pact->event<0)

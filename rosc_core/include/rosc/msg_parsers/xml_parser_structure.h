@@ -42,7 +42,14 @@
 
 #define __XML_MAX_DEPTH__ 20
 
-
+/**
+ * Subfunction data type
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ */
+typedef bool (*parser_submode_function_t)(char **buf_ptr, int32_t *len_ptr, void *data);
 
 
 /**
@@ -225,18 +232,18 @@ typedef enum
 }parse_mode_t;
 
 
-/**
- * This enum contains the states for the current submode
- */
-typedef enum
-{
-	PARSE_SUBMODE_NONE,            //!< means that no submode is active
-	PARSE_SUBMODE_SEEKSTRING,      //!< means that the parser currently seeks a string inside an array
-	PARSE_SUBMODE_NUMBERPARSE,     //!< means that currently the number parser is in operation
-	PARSE_SUBMODE_COPY2BUFFER,     //!< means that currently a string is copied into another location
-	PARSE_SUBMODE_SKIPUNTILCHAR,   //!< means that currently everything is skipped till a specified char is received
-	PARSE_SUBMODE_SKIPWHOLEMESSAGE,//!< means that the parser is currently skipping the whole message
-}parse_submode_t;
+//*
+// * This enum contains the states for the current submode
+// */
+//typedef enum
+//{
+//	PARSE_SUBMODE_NONE,            //!< means that no submode is active
+//	PARSE_SUBMODE_SEEKSTRING,      //!< means that the parser currently seeks a string inside an array
+//	PARSE_SUBMODE_NUMBERPARSE,     //!< means that currently the number parser is in operation
+//	PARSE_SUBMODE_COPY2BUFFER,     //!< means that currently a string is copied into another location
+//	PARSE_SUBMODE_SKIPUNTILCHAR,   //!< means that currently everything is skipped till a specified char is received
+//	PARSE_SUBMODE_SKIPWHOLEMESSAGE,//!< means that the parser is currently skipping the whole message
+//}submode_t;
 
 
 /**
@@ -267,9 +274,7 @@ typedef struct parse_act_t
 
 	uint32_t content_curChr; //!< xml_curChr keeps the current xml char number
 	parse_mode_t mode; //!< mode saves contains the current main mode, xml or http header parsing
-	parse_submode_t submode; //!< submode is the current sub mode the parser is using
-
-
+	parse_parser_submode_function_t submode; //!< this is the path to the current submode function, if it is not in use must be 0
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	int16_t submode_result;	//!< contains the result code from each submode when finished
@@ -310,10 +315,10 @@ typedef struct parse_act_t
 	 */
 	union
 	{
-		seekstring_data_t seekstring;
+		seekstring_data_t  seekstring;
 		numberparse_data_t numberparse;
 		copy2buffer_data_t copy2buffer;
-		parseurl_data_t parseurl;
+		parseurl_data_t    parseurl;
 	}submode_data;
 
 }parse_act_t;

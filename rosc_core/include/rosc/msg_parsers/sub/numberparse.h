@@ -35,7 +35,7 @@
 #include <rosc/system/types.h>
 
 #define PARSE_SUBMODE_INIT_NUMBERPARSE(SUBMODE_PTR,DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED)\
-		SUBMODE_PTR=(submode_t)&numberparse;\
+		SUBMODE_PTR=(parser_submode_function_t)&numberparse;\
 		DATA_STORAGE->negative_allowed=NEGATIVE_ALLOWED;\
 		DATA_STORAGE->cur_place=0;\
 		DATA_STORAGE->figure_max=FIGURE_MAX;

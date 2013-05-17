@@ -33,6 +33,7 @@
 #define PARSEURL_H_
 
 #include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 /**
  *	Contains the result states parse url submode
  */

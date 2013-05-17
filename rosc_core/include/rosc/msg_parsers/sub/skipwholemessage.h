@@ -34,7 +34,7 @@
 
 
 #define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
-		SUBMODE_PTR=(submode_t)&skipwholemessage;
+		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;
 
 /**
  * This function skips every incoming char which is in the buffer.

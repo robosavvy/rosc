@@ -31,6 +31,7 @@
 
 #ifndef SUBS_H_
 #define SUBS_H_
+	//Standard submode functions
 	#include <rosc/msg_parsers/sub/copy2buffer.h>
     #include <rosc/msg_parsers/sub/numberparse.h>
 	#include <rosc/msg_parsers/sub/parseurl.h>
