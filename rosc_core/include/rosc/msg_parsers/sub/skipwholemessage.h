@@ -32,14 +32,18 @@
 #ifndef SKIPWHOLEMESSAGE_H_
 #define SKIPWHOLEMESSAGE_H_
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
-#include <rosc/system/types.h>
 
-#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(PARSE_STRUCT)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_SKIPWHOLEMESSAGE
+#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
+		SUBMODE_PTR=(submode_t)&skipwholemessage;
 
-#ifndef FORCE_INLINE
-	void skipwholemessage(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
-#endif
+/**
+ * This function skips every incoming char which is in the buffer.
+ * It's used for skipping the message in case of errors.
+ *
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param unused not used by this function it needs no data storage..
+ */
+void skipwholemessage(char **buf, int32_t *len, void *unused);
 
 #endif /* SKIPWHOLEMESSAGE_H_ */

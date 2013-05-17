@@ -29,38 +29,16 @@
  *  skipwholemessage.c created by Christian Holl
  */
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
-	#include <rosc/msg_parsers/sub/skipwholemessage.h>
 
-#endif
+#include <rosc/msg_parsers/sub/skipwholemessage.h>
 
-
-#ifndef FORCE_INLINE
-	void skipwholemessage(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
-	 //work around for inlining the function
-#endif
-#ifdef ENABLE_C
+void skipwholemessage(char **buf, int32_t *len, void *unused)
 {
-	#ifndef FORCE_INLINE
-		int32_t len=*len_ptr;
-		char *buf=*buf_ptr;
-	#endif
-	while(len>0)
+	while(*len>0)
 	{
-		buf++;
-		len--;
+		++**buf;
+		--*len;
 	}
-	if(len==EOF)
-	{
-		pact->submode_state=1;
-	}
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
 }
-#endif
+
 
