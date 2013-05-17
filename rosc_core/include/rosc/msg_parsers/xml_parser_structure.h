@@ -42,16 +42,7 @@
 
 #define __XML_MAX_DEPTH__ 20
 
-/**
- *	Contains the result states parse url submode
- */
-typedef enum
-{
-	PARSE_URL_MATCH_HOSTNAME,   //!< PARSE_URL_MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
-	PARSE_URL_MATCH_IPv4,       //!< PARSE_URL_MATCH_IPv4 - means that the content is a IPv4 address
-	PARSE_URL_MATCH_IPv6,   	//!< PARSE_URL_MATCH_IPv6 - means that the content is a IPv6 address
-	PARSE_URL_MATCH_IPv6_RESOLV,//!< PARSE_URL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
-}parse_url_match_t;
+
 
 
 /**
@@ -330,25 +321,9 @@ typedef struct parse_act_t
 			char separator; //!< the separator which was found
 		}seekString;
 
-		struct
-		{
-			uint8_t cur_place; //!< cur_place stores the number of the current figure of the number
-			uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
-			uint32_t number; //!< contains the parsed number
-		}numberParse;
-
-		copy2Buffer_data_t copy2buffer_data;
-
-		struct
-		{
-			char hostname_ip_char[__HOSTNAME_MAX_LEN__]; //!< The text form of the hostname/IP
-			uint16_t curLen; //!< curLen The current size of the copied chars
-			uint16_t IPv6[8];//!< storage for an IPv6 address
-			uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
-			uint16_t port; //!< storage for a port number
-			parse_url_match_t what; //!< what specifies what kind of address is given
-		}parseURL;
-
+		numberparse_data_t numberparse;
+		copy2buffer_data_t copy2buffer;
+		parseurl_data_t parseurl;
 	}submode_data;
 
 }parse_act_t;

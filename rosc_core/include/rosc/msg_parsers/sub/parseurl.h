@@ -32,11 +32,40 @@
 #ifndef PARSEURL_H_
 #define PARSEURL_H_
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
 
+/**
+ *	Contains the result states parse url submode
+ */
+typedef enum
+{
+	PARSEURL_MATCH_HOSTNAME,//!< PARSEURL_MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
+	PARSEURL_MATCH_IPV4,    //!< PARSEURL_MATCH_IPv4 - means that the content is a IPv4 address
+	PARSEURL_MATCH_IPV6,   	//!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
+	PARSEURL_MATCH_IPv6_RESOLV,//!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
+}parseurl_match_t;
 
-#ifndef FORCE_INLINE
-	void parseurl(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
-#endif
+/**
+ * This struct stores the data for the parseurl submode
+ */
+typedef struct
+{
+	char hostname_ip_char[__HOSTNAME_MAX_LEN__]; //!< The text form of the hostname/IP
+	uint16_t cur_pos; //!< curLen The current size of the copied chars
+	uint16_t IPv6[8];//!< storage for an IPv6 address
+	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
+	uint16_t port; //!< storage for a port number
+	parse_url_match_t what; //!< what specifies what kind of address is given
+}parseurl_data_t;
+
+/**
+ * This function parses a URL from a stream
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ *
+ * @TODO implement parseurl, needs more state information, protocol string list etc...
+ */
+void parseurl(char **buf, int32_t *len, numberParse_data_t *data);
 
 #endif /* PARSEURL_H_ */

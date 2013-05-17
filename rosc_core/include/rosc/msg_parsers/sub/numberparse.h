@@ -58,7 +58,7 @@ typedef struct
 	uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
 	uint32_t number; //!< contains the parsed number after finished
 	numberparse_result_t result; //!< contains the result after the function finished
-}numberParse_data_t;
+}numberparse_data_t;
 
 /**
  * This function parses a number from a stream

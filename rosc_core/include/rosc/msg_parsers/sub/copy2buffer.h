@@ -53,7 +53,7 @@ typedef struct
 	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
 	char* endChrs; //!< chrs which will mark the end of the string
 	copy2buffer_result_t result; //!< stores the result of the submode
-}copy2Buffer_data_t;
+}copy2buffer_data_t;
 
 /**
  * This function copies data from a stream to a buffer.
