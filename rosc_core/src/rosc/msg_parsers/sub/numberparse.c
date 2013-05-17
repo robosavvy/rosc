@@ -29,70 +29,62 @@
  *  numberparse.c created by Christian Holl
  */
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
-
-	#include <rosc/msg_parsers/sub/numberparse.h>
-#endif
+#include <rosc/msg_parsers/sub/numberparse.h>
 
 
-#ifndef FORCE_INLINE
-	void numberparse(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
+
+
+bool numberparse(char **buf, int32_t *len, numberParse_data_t *data)
 	 //work around for inlining the function
-#endif
-#ifdef ENABLE_C
 {
-	#ifndef FORCE_INLINE
-			int32_t len=*len_ptr;
-			char *buf=*buf_ptr;
-	#endif
-
-	if(pact->submode_state==PARSE_SUBMODE_INIT)
+	while(*len > 0)
 	{
-		pact->submode_state=PARSE_SUBMODE_RUNNING;
-		pact->submode_data.numberParse.cur_place=0;
-		pact->submode_data.numberParse.number=0;
-	}
-	while(len > 0)
-	{
-		if(*buf>=48 && *buf<=57)
+		if(**buf>=48 && **buf<=57) //Check if char is a figure
 		{
-			if(pact->submode_data.numberParse.cur_place >= pact->submode_data.numberParse.figure_max)
+			if(data->cur_place == 0)
+				data->negative=false;
+			if(data->cur_place < data->figure_max)//Is the length still acceptable?
 			{
-				pact->submode_result=NUMBERPARSE_MAX_FIGURES;
-				break;
+				if(data->cur_place>0)
+					data->number*=10;//multiply current number by 10 to shift it left
+
+				data->number+=**buf-48; //convert char to integer
+				++data->cur_place;
+				++*buf;
+				--*len;
 			}
 			else
 			{
-				pact->submode_data.numberParse.number*=10;
-				pact->submode_data.numberParse.number+=*buf-48;
-				++pact->submode_data.numberParse.cur_place;
-				++buf;
-				--len;
+				data->result=NUMBERPARSE_MAX_FIGURES;
+				return true;
 			}
 		}
 		else
 		{
-			pact->submode_result=NUMBERPARSE_ANOTHER_CHAR;
-			pact->submode_state=PARSE_SUBMODE_FINISHED;
-			pact->submode=PARSE_SUBMODE_NONE;
+			if(data->cur_place == 0) //Are we still at the beginning?
+			{
+				if(**buf=='-' && data->negative_allowed) //Is it a negative number?
+				{
+					data->negative=true;
+					++*buf;
+					--*len;
+					break;
+				}
+				else
+				{
+					data->result=NUMBERPARSE_ERROR_NONUMBER;
+					return true;
+				}
+			}
+			else
+			{
+				data->result=NUMBERPARSE_ANOTHER_CHAR;
+				return true;
+			}
 			break;
 		}
 	}
-	if(pact->submode_result==NUMBERPARSE_ANOTHER_CHAR)
-	{
-		if(pact->submode_data.numberParse.cur_place == 0)
-		pact->submode_result=NUMBERPARSE_ERROR_NONUMBER;
-	}
-
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
-
-
+	return false;
 }
-#endif
+
 

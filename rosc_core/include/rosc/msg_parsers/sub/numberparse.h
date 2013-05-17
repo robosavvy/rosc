@@ -32,28 +32,41 @@
 #ifndef NUMBERPARSE_H_
 #define NUMBERPARSE_H_
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
-
-
-
-#define PARSE_SUBMODE_INIT_NUMBERPARSE(PARSE_STRUCT,MAX_FIGURES)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
-				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
-				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
-
-
+#define PARSE_SUBMODE_INIT_NUMBERPARSE(SUBMODE_PTR,DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED)\
+		SUBMODE_PTR=(submode_t)&numberparse;\
+		DATA_STORAGE->negative_allowed=NEGATIVE_ALLOWED;\
+		DATA_STORAGE->cur_place=0;\
+		DATA_STORAGE->figure_max=FIGURE_MAX;
+/**
+ * These are the result values of the number parse submode
+ */
 typedef enum
 {
-	NUMBERPARSE_MAX_FIGURES,
-	NUMBERPARSE_ANOTHER_CHAR,
-	NUMBERPARSE_ERROR_NONUMBER,
+	NUMBERPARSE_MAX_FIGURES,   //!< Means that the maximum amount of figures was reached
+	NUMBERPARSE_ANOTHER_CHAR,  //!< Means that the number ended through a char which is not a figure
+	NUMBERPARSE_ERROR_NONUMBER,//!< Means that there was no number to parse
 }numberparse_result_t;
 
+/**
+ * This struct stores the data for the numberParse submode
+ */
+typedef struct
+{
+	bool negative_allowed; //!< if true negative numbers are allowed
+	bool negative; //!< stores if there was a '-' in the beginning
+	uint8_t cur_place; //!< cur_place stores the number of the current figure of the number
+	uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
+	uint32_t number; //!< contains the parsed number after finished
+	numberparse_result_t result; //!< contains the result after the function finished
+}numberParse_data_t;
 
-
-
-#ifndef FORCE_INLINE
-	void numberparse(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
-#endif
+/**
+ * This function parses a number from a stream
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ */
+bool numberparse(char **buf, int32_t *len, numberParse_data_t *data);
 
 #endif /* NUMBERPARSE_H_ */
