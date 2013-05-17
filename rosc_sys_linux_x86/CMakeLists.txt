@@ -65,6 +65,9 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS} /usr/include)
 
+message(STATUS ${catkin_INCLUDE_DIRS})
+
+
 #message(STATUS ${ROSC_CORE_SOURCES})
 ## Declare a cpp library
   add_library(rosc_sys_linux_x86
@@ -77,6 +80,10 @@ get_target_property(rosc_sys_linux_x86_CFLAGS rosc_sys_linux_x86 COMPILE_FLAGS)
 set_target_properties(rosc_sys_linux_x86 PROPERTIES COMPILE_FLAGS "${CFLAGS} -D__DEBUG__PRINTS__")
 ####################################
 
+##Select Compiler###GCC##############
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/gcc)
+#####################################
 
 ## Declare a cpp executable
 # add_executable(rosc_sys_linux_x86_node src/rosc_sys_linux_x86_node.cpp)
