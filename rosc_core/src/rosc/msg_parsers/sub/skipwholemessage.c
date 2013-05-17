@@ -32,13 +32,14 @@
 
 #include <rosc/msg_parsers/sub/skipwholemessage.h>
 
-void skipwholemessage(char **buf, int32_t *len, void *unused)
+bool skipwholemessage(char **buf, int32_t *len, void *unused)
 {
 	while(*len>0)
 	{
 		++**buf;
 		--*len;
 	}
+	return false;
 }
 
 

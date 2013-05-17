@@ -34,7 +34,7 @@
 
 
 
-bool numberparse(char **buf, int32_t *len, numberParse_data_t *data)
+bool numberparse(char **buf, int32_t *len, numberparse_data_t *data)
 	 //work around for inlining the function
 {
 	while(*len > 0)

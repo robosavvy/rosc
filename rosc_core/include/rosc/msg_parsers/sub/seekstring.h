@@ -33,24 +33,41 @@
 #define SEEKSTRING_H_
 
 #include <rosc/system/types.h>
-#include <rosc/msg_parsers/xml_parser_structure.h>
 
-#define STRING_NOT_FOUND  -1
+/**
+ * This macro defines the result number if no string was found
+ * @fixme do this function without subtracting one from len...
+ */
+#define SEEKSTRING_STRING_NOT_FOUND  -1
 
+#define PARSE_SUBMODE_INIT_SEEKSTRING(SUBMODE_PTR, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS)\
+				SUBMODE_PTR=(submode_t)&skipwholemessage;\
+				DATA_STORAGE->stringlist=STRINGLIST;\
+				DATA_STORAGE->stringlist_len=STRINGLIST_LEN-1;\
+				DATA_STORAGE->endchrs=ENDCHRS;\
+				DATA_STORAGE->fit_min=0;\
+				DATA_STORAGE->fit_max=0;\
+				DATA_STORAGE->curChrPos=0;
 
-#define PARSE_SUBMODE_INIT_SEEKSTRING(PARSE_STRUCT,STRING_ARRAY,ARRAY_LEN,SEP)\
-				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_SEEKSTRING;\
-				PARSE_STRUCT->submode_data.seekString.stringlist=(char**)STRING_ARRAY;\
-				PARSE_STRUCT->submode_data.seekString.stringlist_len=ARRAY_LEN;\
-				PARSE_STRUCT->submode_data.seekString.endchrs=SEP
+typedef struct
+{
+	char **stringlist;	//!< The stringlist
+	char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
+	uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
+	uint16_t curChrPos;	//!< The char number since the start of seekString
+	uint16_t fit_min;	//!< The beginning of the range with possibly matching strings
+	uint16_t fit_max;	//!< The end of the range with possibly matching strings
+	uint16_t result;	//!< At finish this contains the number of the found string or SEEKSTRING_STRING_NOT_FOUND
+}seekstring_data_t;
 
-
-
-
-#ifndef FORCE_INLINE
-	void seekstring(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
-#endif
-
+/**
+ * This function seeks for a string from a stream inside a char array.
+ *
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ */
+bool seekstring(char **buf, int32_t *len, seekstring_data_t *data);
 
 #endif /* SEEKSTRING_H_ */

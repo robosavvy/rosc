@@ -43,7 +43,8 @@
  * @param buf A pointer to the storage of the buffer
  * @param len The variable pointing to the length variable of the current buffer
  * @param unused not used by this function it needs no data storage..
+ * @return This function will only return false because it can be only stopped by reseting the whole message handling
  */
-void skipwholemessage(char **buf, int32_t *len, void *unused);
+bool skipwholemessage(char **buf, int32_t *len, void *unused);
 
 #endif /* SKIPWHOLEMESSAGE_H_ */

@@ -32,6 +32,8 @@
 #ifndef NUMBERPARSE_H_
 #define NUMBERPARSE_H_
 
+#include <rosc/system/types.h>
+
 #define PARSE_SUBMODE_INIT_NUMBERPARSE(SUBMODE_PTR,DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED)\
 		SUBMODE_PTR=(submode_t)&numberparse;\
 		DATA_STORAGE->negative_allowed=NEGATIVE_ALLOWED;\
@@ -67,6 +69,6 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool numberparse(char **buf, int32_t *len, numberParse_data_t *data);
+bool numberparse(char **buf, int32_t *len, numberparse_data_t *data);
 
 #endif /* NUMBERPARSE_H_ */

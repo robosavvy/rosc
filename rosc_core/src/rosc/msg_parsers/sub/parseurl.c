@@ -31,7 +31,7 @@
 
 #include <rosc/msg_parsers/sub/parseurl.h>
 
-bool parseurl(char **buf, int32_t *len, numberParse_data_t *data)
+bool parseurl(char **buf, int32_t *len, parseurl_data_t *data)
 {
 
 }

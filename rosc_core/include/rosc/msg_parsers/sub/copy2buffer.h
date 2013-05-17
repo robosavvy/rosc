@@ -32,6 +32,7 @@
 #ifndef COPY2BUFFER_H_
 #define COPY2BUFFER_H_
 
+#include <rosc/system/types.h>
 
 #define PARSE_SUBMODE_INIT_COPY2BUFFER(SUBMODE_PTR,DATA_STORAGE,BUFFER, MAX_LEN, END_CHARS)\
 		SUBMODE_PTR=(submode_t)&copy2buffer;\
@@ -64,7 +65,7 @@ typedef struct
  *
  * @TODO Test!
  */
-bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data);
+bool copy2buffer(char **buf, int32_t *len, copy2buffer_data_t *data);
 
 
 #endif /* COPY2BUFFER_H_ */

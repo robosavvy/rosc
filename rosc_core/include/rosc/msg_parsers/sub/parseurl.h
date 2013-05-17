@@ -32,7 +32,7 @@
 #ifndef PARSEURL_H_
 #define PARSEURL_H_
 
-
+#include <rosc/system/types.h>
 /**
  *	Contains the result states parse url submode
  */
@@ -54,7 +54,7 @@ typedef struct
 	uint16_t IPv6[8];//!< storage for an IPv6 address
 	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
 	uint16_t port; //!< storage for a port number
-	parse_url_match_t what; //!< what specifies what kind of address is given
+	parseurl_match_t what; //!< what specifies what kind of address is given
 }parseurl_data_t;
 
 /**
@@ -66,6 +66,6 @@ typedef struct
  *
  * @TODO implement parseurl, needs more state information, protocol string list etc...
  */
-void parseurl(char **buf, int32_t *len, numberParse_data_t *data);
+void parseurl(char **buf, int32_t *len, parseurl_data_t *data);
 
 #endif /* PARSEURL_H_ */

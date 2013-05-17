@@ -38,7 +38,7 @@
 				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
 
 
-bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data)
+bool copy2buffer(char **buf, int32_t *len, copy2buffer_data_t *data)
 {
 	const char *sep=data->endChrs;
 	while(*len > 0)
