@@ -35,7 +35,7 @@ void ros_parse_act_init(ros_parse_act_t *pact, ros_type_t type, void * handler_d
 
 }
 
-void ros_parse(char *buf, uint32_t len, ros_parse_act_t* pact)
+void ros_parse(char *buf, int32_t len, ros_parse_act_t* pact)
 {
 
 }

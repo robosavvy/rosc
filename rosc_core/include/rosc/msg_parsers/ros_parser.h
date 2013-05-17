@@ -54,11 +54,11 @@ typedef enum
 typedef struct
 {
 
-	void (*submode_function)(char **buf_ptr, uint32_t *len_ptr, void *submode_data_storage);
+	void (*submode_function)(char **buf_ptr, int32_t *len_ptr, void *submode_data_storage);
 }ros_parse_act_t;
 
 void ros_parse_act_init(ros_parse_act_t *pact, ros_type_t type, void * handler_data_storage);
 
-void ros_parse(char *buf, uint32_t len, ros_parse_act_t* pact);
+void ros_parse(char *buf, int32_t len, ros_parse_act_t* pact);
 
 #endif /* TCPROS_PARSER_H_ */

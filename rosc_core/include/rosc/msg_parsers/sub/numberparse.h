@@ -50,7 +50,7 @@ typedef enum
 }numberparse_result_t;
 
 #ifndef FORCE_INLINE
-	void numberparse(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
+	void numberparse(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
 #endif
 
 #endif /* NUMBERPARSE_H_ */

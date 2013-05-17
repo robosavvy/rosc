@@ -71,12 +71,8 @@ typedef struct port_t
 
 
 
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
 
-#else
-	//TODO rosc_ports_init() for malloc
-#endif
+void rosc_ports_init();
 
 
 #endif /* PORTS_H_ */

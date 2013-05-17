@@ -135,3 +135,13 @@ target_link_libraries(rosc_linux_test_node
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+
+   
+
+foreach(entry ${ROSC_CORE_SOURCES})
+  list(APPEND ROSC_CORE_SOURCES_TMP ${ROSC_CORE_DIR}/${entry})
+endforeach(entry ${ROSC_CORE_SOURCES})
+
+execute_process(COMMAND clang ${ROSC_CORE_SOURCES} -I/usr/include -I/usr/include/x86_64-linux-gnu -I${rosc_core_INCLUDE_DIRS} -I${rosc_sys_linux_x86_INCLUDE_DIRS})

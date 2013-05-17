@@ -29,64 +29,51 @@
  *  copy2buffer.c created by Christian Holl
  */
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
 
-	#include <rosc/msg_parsers/sub/copy2buffer.h>
-#endif
+#include <rosc/msg_parsers/sub/copy2buffer.h>
 
-//FIXME 99% sure it will NOT work atm.
+#define COPY2BUFFER_INIT(DATA)\
+				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
+				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
+				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
 
-#ifndef FORCE_INLINE
-	void copy2buffer(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
-	 //work around for inlining the function
-#endif
-#ifdef ENABLE_C
+
+bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data)
 {
-	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
-			char *buf=*buf_ptr;
-	#endif
-
-	const char *sep=pact->submode_data.copy2Buffer.endChrs;
-	while(len > 0)
+	const char *sep=data->endChrs;
+	while(*len > 0)
 	{
 		bool isEndChar=false;
 		while(*sep!='\0')
 		{
-			if(*buf==*sep)
+			if(**buf==*sep)
 			{
 				isEndChar=true;
 				break;
 			}
 			++sep;
 		}
-		if((pact->submode_data.copy2Buffer.cur_pos+1<=pact->submode_data.copy2Buffer.max_len) && !isEndChar )
+
+		if((data->cur_pos<data->max_len) && !isEndChar )
 		{
-			pact->submode_data.copy2Buffer.buffer[pact->submode_data.copy2Buffer.cur_pos]=*buf;
-			pact->submode_data.copy2Buffer.cur_pos++;
-			len--;
-			buf++;
-		}
-		else if(isEndChar)
-		{
-			pact->submode_state=PARSE_SUBMODE_NONE;
-			pact->submode=PARSE_SUBMODE_NONE;
-			pact->submode_result=COPY2BUFFER_ENDCHR;
+			data->buffer[data->cur_pos]=**buf;
+			data->cur_pos++;
+
 		}
 		else
 		{
-			pact->submode_result=COPY2BUFFER_MAXLEN;
+			if(isEndChar)
+			{
+				data->result=COPY2BUFFER_ENDCHR;
+			}
+			else
+			{
+				data->result=COPY2BUFFER_MAXLEN;
+			}
+			return true; //Finished!
 		}
-		buf++;
-		len--;
 	}
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
+		return false; //Not finished yet
 }
-#endif
+
 

@@ -34,14 +34,33 @@
 
 #include <rosc/msg_parsers/xml_parser_structure.h>
 
+
 typedef enum
 {
-		COPY2BUFFER_ENDCHR,
-		COPY2BUFFER_MAXLEN,
+	COPY2BUFFER_ENDCHR,
+	COPY2BUFFER_MAXLEN,
 }copy2buffer_result_t;
 
-#ifndef FORCE_INLINE
-	void copy2buffer(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
-#endif
+typedef struct
+{
+	bool init;
+	char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
+	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
+	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
+	char* endChrs; //!< chrs which will mark the end of the string
+	copy2buffer_result_t result; //!< stores the result of the submode
+}copy2Buffer_data_t;
+
+/**
+ * This function copies data from a stream to a buffer.
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ *
+ * @TODO Test!
+ */
+bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data);
+
 
 #endif /* COPY2BUFFER_H_ */

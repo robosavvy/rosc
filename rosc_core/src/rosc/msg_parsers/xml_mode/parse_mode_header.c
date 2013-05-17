@@ -39,12 +39,12 @@
 #endif
 
 #ifndef FORCE_INLINE
-	void parse_mode_header(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
+	void parse_mode_header(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
-		uint32_t len=*len_ptr;
+		int32_t len=*len_ptr;
 		char *buf=*buf_ptr;
 	#endif
 
@@ -353,6 +353,9 @@
 
 								case PARSE_HTTP_STATE_FIELD:
 									is_field_content=true;
+									break;
+
+								default:
 									break;
 							}
 							break;

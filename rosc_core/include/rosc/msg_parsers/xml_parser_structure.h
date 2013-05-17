@@ -37,6 +37,7 @@
 #include <rosc/system/eth.h>
 #include <rosc/system/ports.h>
 #include <rosc/rosc.h>
+#include <rosc/system/types.h>
 
 
 #define __XML_MAX_DEPTH__ 20
@@ -276,6 +277,8 @@ typedef struct parse_act_t
 	uint32_t content_curChr; //!< xml_curChr keeps the current xml char number
 	parse_mode_t mode; //!< mode saves contains the current main mode, xml or http header parsing
 	parse_submode_t submode; //!< submode is the current sub mode the parser is using
+
+
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	int16_t submode_result;	//!< contains the result code from each submode when finished

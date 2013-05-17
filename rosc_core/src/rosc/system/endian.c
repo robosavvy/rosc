@@ -35,16 +35,16 @@
 #include <rosc/system/types.h>
 
 
-static endian_t __system_byte_order =
+static endian_t local_system_byte_order =
 {
 { 0x0201 },
 { 0x04030201 },
 { 0x0807060504030201 },
 };
 
-const endian_t* const system_byte_order = &__system_byte_order;
+const endian_t* const g_system_byte_order = &local_system_byte_order;
 
-void rosc_init_endian()
+void rosc_init_endian(void)
 {
 	if (sizeof(uint8_t) != 1 &&
 		sizeof(uint16_t) != 2 &&
@@ -61,13 +61,13 @@ void rosc_init_endian()
 		switch(size)
 		{
 		case 2:
-			currentByteAccess=__system_byte_order.SIZE_2_B;
+			currentByteAccess=local_system_byte_order.SIZE_2_B;
 			break;
 		case 4:
-			currentByteAccess=__system_byte_order.SIZE_4_B;
+			currentByteAccess=local_system_byte_order.SIZE_4_B;
 			break;
 		case 8:
-			currentByteAccess=__system_byte_order.SIZE_8_B;
+			currentByteAccess=local_system_byte_order.SIZE_8_B;
 			break;
 		default:
 			ROSC_FATAL("Unexpected state in rosc_init_endian size switch!")

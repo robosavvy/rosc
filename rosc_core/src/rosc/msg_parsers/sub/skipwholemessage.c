@@ -39,13 +39,13 @@
 
 
 #ifndef FORCE_INLINE
-	void skipwholemessage(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
+	void skipwholemessage(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
 	 //work around for inlining the function
 #endif
 #ifdef ENABLE_C
 {
 	#ifndef FORCE_INLINE
-		uint32_t len=*len_ptr;
+		int32_t len=*len_ptr;
 		char *buf=*buf_ptr;
 	#endif
 	while(len>0)

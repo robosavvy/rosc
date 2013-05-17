@@ -65,8 +65,6 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS} /usr/include)
 
-message(STATUS ${catkin_INCLUDE_DIRS})
-
 
 #message(STATUS ${ROSC_CORE_SOURCES})
 ## Declare a cpp library

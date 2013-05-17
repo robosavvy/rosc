@@ -45,6 +45,6 @@ typedef enum
 
 void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * handler_data_storage);
 
-void xmlrpc_parse(char *buf, uint32_t len, parse_act_t* pact);
+void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact);
 
 #endif /* _XML_PARSER_H_ */
