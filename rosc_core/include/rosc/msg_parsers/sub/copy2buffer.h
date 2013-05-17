@@ -32,8 +32,13 @@
 #ifndef COPY2BUFFER_H_
 #define COPY2BUFFER_H_
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
 
+#define PARSE_SUBMODE_INIT_COPY2BUFFER(SUBMODE_PTR,DATA_STORAGE,BUFFER, MAX_LEN, END_CHARS)\
+		SUBMODE_PTR=(submode_t)&copy2buffer;\
+		DATA_STORAGE->buffer=BUFFER;\
+		DATA_STORAGE->max_len=MAX_LEN;\
+		DATA_STORAGE->endChrs=END_CHARS;\
+		DATA_STORAGE->cur_pos=0;\
 
 typedef enum
 {
@@ -43,7 +48,6 @@ typedef enum
 
 typedef struct
 {
-	bool init;
 	char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
 	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
 	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.

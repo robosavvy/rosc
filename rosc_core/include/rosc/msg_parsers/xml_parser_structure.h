@@ -38,7 +38,7 @@
 #include <rosc/system/ports.h>
 #include <rosc/rosc.h>
 #include <rosc/system/types.h>
-
+#include <rosc/msg_parsers/sub/subs.h>
 
 #define __XML_MAX_DEPTH__ 20
 
@@ -337,13 +337,7 @@ typedef struct parse_act_t
 			uint32_t number; //!< contains the parsed number
 		}numberParse;
 
-		struct
-		{
-			char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
-			uint16_t cur_pos; //!< cur_pos stores the amount of already copied chars.
-			uint16_t max_len; //!< max_len is the maximum length to be used for the buffer.
-			char* endChrs; //!< chrs which will mark the end of the string
-		}copy2Buffer;
+		copy2Buffer_data_t copy2buffer_data;
 
 		struct
 		{

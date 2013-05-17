@@ -58,7 +58,8 @@ bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data)
 		{
 			data->buffer[data->cur_pos]=**buf;
 			data->cur_pos++;
-
+			++*buf;
+			--*len;
 		}
 		else
 		{
@@ -73,7 +74,7 @@ bool copy2buffer(char **buf, int32_t *len, copy2Buffer_data_t *data)
 			return true; //Finished!
 		}
 	}
-		return false; //Not finished yet
+	return false; //Not finished yet
 }
 
 

@@ -49,6 +49,9 @@ typedef enum
 	NUMBERPARSE_ERROR_NONUMBER,
 }numberparse_result_t;
 
+
+
+
 #ifndef FORCE_INLINE
 	void numberparse(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
 #endif
