@@ -42,14 +42,7 @@
 
 #define __XML_MAX_DEPTH__ 20
 
-/**
- * Subfunction data type
- * @param buf A pointer to the storage of the buffer
- * @param len The variable pointing to the length variable of the current buffer
- * @param data the function data storage, must be initialized in the beginning!
- * @return true when finished
- */
-typedef bool (*parser_submode_function_t)(char **buf_ptr, int32_t *len_ptr, void *data);
+typedef bool(*parser_submode_function_t)(char **buf_ptr, int32_t *len_ptr, void *data);
 
 
 /**
@@ -274,7 +267,7 @@ typedef struct parse_act_t
 
 	uint32_t content_curChr; //!< xml_curChr keeps the current xml char number
 	parse_mode_t mode; //!< mode saves contains the current main mode, xml or http header parsing
-	parse_parser_submode_function_t submode; //!< this is the path to the current submode function, if it is not in use must be 0
+	parser_submode_function_t submode;
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
 	int16_t submode_result;	//!< contains the result code from each submode when finished

@@ -113,7 +113,7 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 		{
 			if(pact->submode)
 			{
-				if(pact->submode(&buf, &len, pact->submode_data))
+				if(pact->submode(&buf, &len, (void *)&pact->submode_data))
 				{
 					pact->submode=0;
 					if(pact->submode_by_handler)

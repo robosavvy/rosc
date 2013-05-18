@@ -67,6 +67,6 @@ typedef struct
  *
  * @TODO implement parseurl, needs more state information, protocol string list etc...
  */
-void parseurl(char **buf, int32_t *len, parseurl_data_t *data);
+bool parseurl(char **buf, int32_t *len, parseurl_data_t *data);
 
 #endif /* PARSEURL_H_ */

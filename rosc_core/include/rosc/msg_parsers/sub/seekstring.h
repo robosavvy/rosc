@@ -33,6 +33,7 @@
 #define SEEKSTRING_H_
 
 #include <rosc/system/types.h>
+#include <rosc/debug/debug_out.h>
 
 /**
  * This macro defines the result number if no string was found
@@ -51,7 +52,7 @@
 
 typedef struct
 {
-	char **stringlist;	//!< The stringlist
+	const char **stringlist;	//!< The stringlist
 	char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
 	uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
 	uint16_t curChrPos;	//!< The char number since the start of seekString

@@ -32,6 +32,7 @@
 #ifndef SKIPWHOLEMESSAGE_H_
 #define SKIPWHOLEMESSAGE_H_
 
+#include <rosc/system/types.h>
 
 #define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
 		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;

@@ -68,7 +68,7 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 					if(data->method!=HTTP_METHOD_POST)
 					{
 						//TODO ERROR Forbidden
-						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 					}
 				case HTTP_ACTION_TEST:
 					if(data->method==HTTP_METHOD_GET)
@@ -78,7 +78,7 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 					else
 					{
 						//TODO ERROR Method not allowed
-						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+						PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 					}
 				}
 			}
@@ -200,7 +200,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 				else
 				{
 					DEBUG_PRINT_STR("MethodName not found!");
-					PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+					PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 				}
 				break;
 			default:
@@ -211,7 +211,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		if(pact->submode_result <0) //Do we have that method?
 		{
 			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
-			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 		}
 		else
 		{
@@ -283,7 +283,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		{
 			DEBUG_PRINT_STR("ERROR: Only single strings are allowed inside tags!!!");
 			//TODO ERROR!
-			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 			break;
 		}
 
@@ -297,11 +297,11 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			if(data->rpcmethod!=SLAVE_METHOD_NAME_NOT_SET) //Check if it was not set before
 			{
 				DEBUG_PRINT_STR("XML ERROR: MethodName already given before!");
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 				break;
 			}
 			pact->submode_by_handler=true;
-			PARSE_SUBMODE_INIT_SEEKSTRING(pact,rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>");
+			PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>");
 		}
 
 
@@ -341,7 +341,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 		if(pact->submode_result>=0)
 		{
-			DEBUG_PRINT_STR(pact->submode_data.seekString.stringlist[pact->submode_result]);
+			DEBUG_PRINT_STR((&pact->submode_data.seekstring)->stringlist[pact->submode_data.seekstring.result]);
 		}
 		else
 		{
@@ -354,7 +354,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		if(data->fetch_content && pact->mode_data.xml.tag_type != XML_TAG_TYPE_CLOSE)
 		{
 			DEBUG_PRINT_STR("Unexpected Tag Opening!");
-			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 		}
 
 		switch(pact->mode_data.xml.tag_type)
@@ -391,7 +391,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			DEBUG_PRINT_STR("<!>");
 			break;
 		case XML_TAG_TYPE_QUESTION_MARK:
-			DEBUG_PRINT(STR,"<?>",  pact->submode_data.seekString.stringlist[pact->submode_result]);
+			DEBUG_PRINT(STR,"<?>",  pact->submode_data.seekstring.stringlist[pact->submode_data.seekstring.result]);
 			break;
 		}
 		break;
