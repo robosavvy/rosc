@@ -127,9 +127,10 @@ bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 							break;
 
 						case PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID:
-							if(pact->submode_data.seekstring.result)
+							if(pact->submode_data.seekstring.result>0)
 							{
-								DEBUG_PRINT(STR,"Descriptor",http_header_descriptors[pact->submode_data.seekstring.result]);
+								DEBUG_PRINT(INT,"RESULT",pact->submode_data.seekstring.result);
+								DEBUG_PRINT(STR,"Descriptor", http_header_descriptors[pact->submode_data.seekstring.result]);
 								pact->mode_data.http.descriptor=pact->submode_data.seekstring.result;
 							}
 							else

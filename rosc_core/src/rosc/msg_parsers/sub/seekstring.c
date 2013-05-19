@@ -31,6 +31,9 @@
 
 #include <rosc/msg_parsers/sub/seekstring.h>
 
+
+///@todo Enhancement notice -- increase saved pointer instead of fit_min variable (decrease stringlist len by current number!)
+//decrease stringlist len instead of fit_max
 bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 {
 		while(*len > 0)
@@ -75,8 +78,27 @@ bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 				}
 				else //if the current char is no separator
 				{
-					//and does match the current buffer
+					bool match=false;
 					if(curChrStrLstE==curChrBuf)
+					{
+						match=true;
+					}
+					else if(!data->case_sensitive) //if it is not case sensitive
+					{
+						if(curChrBuf>=65 && curChrBuf<=90) //a-z
+						{
+							if(curChrStrLstE==curChrBuf+32)
+								match=true;
+						}
+						else if(curChrBuf>=97 && curChrBuf<=122) //A-Z
+						{
+							if(curChrStrLstE==curChrBuf-32)
+								match=true;
+						}
+					}
+
+					//and does match the current buffer
+					if(match)
 					{
 						//If this is the first match increase the first value to it
 						if(!found)

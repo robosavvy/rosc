@@ -83,7 +83,7 @@ char *test_response_message=
 		"HTTP/1.0 200 OK\n"
 		"Server: BaseHTTP/0.3 Python/2.7.3\n"
 		"Date: Thu, 25 Apr 2013 15:28:39 GMT\n"
-		"Content-type: text/xml\n"
+		"Content-Type: text/xml\n"
 		"Content-length: 303\n"
 		"\n"
 		"<?xml version='1.0'?>\n"
@@ -105,7 +105,7 @@ int main_xmlrpctest()
 	int buffersize=1;
 	parse_act_t pact;
 
-#if(1)
+#if(0)
 	char *msg=test_request_message;
 	xmlrpc_server_data_t server_data;
 	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
