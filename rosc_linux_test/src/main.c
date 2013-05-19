@@ -84,7 +84,7 @@ char *test_response_message=
 		"Server: BaseHTTP/0.3 Python/2.7.3\n"
 		"Date: Thu, 25 Apr 2013 15:28:39 GMT\n"
 		"Content-Type: text/xml\n"
-		"Content-length: 303\n"
+		"Content-LenGth: 303\n"
 		"\n"
 		"<?xml version='1.0'?>\n"
 		"<methodResponse>\n"

@@ -301,7 +301,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 				break;
 			}
 			pact->submode_by_handler=true;
-			PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>");
+			PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_slave_methodnames,RPC_XML_SLAVE_METHODNAMES_LEN," <>",true);
 		}
 
 

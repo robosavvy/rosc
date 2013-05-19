@@ -211,9 +211,9 @@ bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 							{
 							case PARSE_HTTP_STATE_REQUEST_ACTION:
 								pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_ACTION;
-								PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_available_actions,HTTP_AVAILABLE_ACTIONS_LEN," ");
-//								++*buf;
-//								--*len;
+								++*buf;
+								--*len;
+								PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_available_actions,HTTP_AVAILABLE_ACTIONS_LEN," ",true);
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
@@ -314,17 +314,17 @@ bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 							{
 								case PARSE_HTTP_STATE_REQUEST_METHOD:
 										pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_METHOD;
-										PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_methods,HTTP_METHODS_LEN," /\n.");
+										PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_methods,HTTP_METHODS_LEN," /\n.",true);
 								break;
 
 								case PARSE_HTTP_STATE_REQUEST_HTTP_VER:
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER;
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n",true);
 									break;
 
 								case PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER;
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n",true);
 									break;
 
 
@@ -335,7 +335,7 @@ bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 
 								case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID;
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN," :");
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN," :",false);
 									break;
 
 								case PARSE_HTTP_STATE_FIELD:
@@ -380,7 +380,7 @@ bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 								break;
 							case HTTP_DESC_CONTENT_TYPE:
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_TYPE;
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring), http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring), http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n",true);
 								break;
 
 

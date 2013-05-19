@@ -564,21 +564,21 @@ bool parse_mode_xml(char **buf, int32_t *len, parse_act_t *pact)
 
 					case PARSE_XML_CDATA_START:
 						pact->mode_data.xml.sub_state=PARSE_XML_SUB_CDATA_TAG_STRING;
-						PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!");
+						PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!",true);
 						break;
 					case PARSE_XML_TAG_START:
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_TAG_ID;
-						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!");
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!",true);
 					break;
 					case PARSE_XML_CLOSE_TAG_START:
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_TAG_ID;
 						 pact->mode_data.xml.tag_type=XML_TAG_TYPE_CLOSE;
-						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!");
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_tag_strings,RPC_XML_TAG_STRINGS_LEN," []=\"\'/<>?!",true);
 					break;
 
 					case PARSE_XML_TAG: //A non empty space inside a tag means, that we have a attribute.
 						 pact->mode_data.xml.sub_state=PARSE_XML_SUB_ATTRIBUTE_ID;
-						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_attribute_strings,RPC_XML_ATTRIBUTE_STRINGS_LEN," []=\"\'/<>?!");
+						 PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),rpc_xml_attribute_strings,RPC_XML_ATTRIBUTE_STRINGS_LEN," []=\"\'/<>?!",true);
 						 break;
 					case PARSE_XML_CDATA_FIRST_CLOSE_BRACKET:
 					case PARSE_XML_CDATA_SECOND_CLOSE_BRACKET:
