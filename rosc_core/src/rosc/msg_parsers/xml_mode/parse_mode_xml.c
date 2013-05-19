@@ -71,17 +71,17 @@
 			{
 			case PARSE_XML_SUB_TAG_ID:
 
-				if(pact->submode_result<0)
+				if(pact->submode_data.seekstring.result<0)
 				{
 					pact->mode_data.xml.current_tag=XML_TAG_UNKNOWN;
 				}
 				else
 				{
-					pact->mode_data.xml.current_tag=pact->submode_result;
+					pact->mode_data.xml.current_tag=pact->submode_data.seekstring.result;
 					pact->event=PARSE_EVENT_XML_TAG;
 				}
 
-				if(pact->submode_result==XML_TAG_TYPE_CDATA)
+				if(pact->submode_data.seekstring.result==XML_TAG_TYPE_CDATA)
 				{
 					pact->mode_data.xml.state=PARSE_XML_CDATA;
 				}
@@ -93,20 +93,20 @@
 
 			case PARSE_XML_SUB_ATTRIBUTE_ID:
 
-				if(pact->submode_result<0)
+				if(pact->submode_data.seekstring.result<0)
 				{
 					pact->mode_data.xml.attribute=XML_ATTRIBUTE_UNKNOWN;
 				}
 				else
 				{
-					pact->mode_data.xml.attribute=pact->submode_result;
+					pact->mode_data.xml.attribute=pact->submode_data.seekstring.result;
 				}
 				pact->mode_data.xml.state=PARSE_XML_ATTRIBUTE_WAIT_EQUAL;
 				break;
 
 			case PARSE_XML_SUB_CDATA_TAG_STRING:
 
-				if(pact->submode_result!=XML_TAG_CDATA)
+				if(pact->submode_data.seekstring.result!=XML_TAG_CDATA)
 				{
 					pact->event=PARSE_EVENT_ERROR_XML_MALFORMED;
 				}

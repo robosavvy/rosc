@@ -39,10 +39,13 @@ bool numberparse(char **buf, int32_t *len, numberparse_data_t *data)
 {
 	while(*len > 0)
 	{
+		if(data->cur_place == 0)
+		{
+			data->negative=false;
+			data->number=0;
+		}
 		if(**buf>=48 && **buf<=57) //Check if char is a figure
 		{
-			if(data->cur_place == 0)
-				data->negative=false;
 			if(data->cur_place < data->figure_max)//Is the length still acceptable?
 			{
 				if(data->cur_place>0)
@@ -63,7 +66,7 @@ bool numberparse(char **buf, int32_t *len, numberparse_data_t *data)
 		{
 			if(data->cur_place == 0) //Are we still at the beginning?
 			{
-				if(**buf=='-' && data->negative_allowed) //Is it a negative number?
+				if(**buf=='-' && data->negative_allowed)//Is it a negative number?
 				{
 					data->negative=true;
 					++*buf;

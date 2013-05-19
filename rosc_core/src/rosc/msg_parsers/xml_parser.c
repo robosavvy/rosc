@@ -41,6 +41,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 	pact->handler_data_storage=handler_data_storage;
 	pact->mode=PARSE_MODE_HEADER;
 
+	pact->submode=0;
 	pact->event=PARSE_EVENT_NONE;
 
 	//pact->submode=PARSE_SUBMODE_NONE;
@@ -129,7 +130,7 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 		{
 			if(pact->event<0)
 			{//On ERROR skip the whole message, notifiy handler
-				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact);
+				PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 			}
 			pact->handler_fkt(pact);
 			pact->event=PARSE_EVENT_NONE;

@@ -50,7 +50,7 @@
 #include <rosc/system/eth.h>
 #include <rosc/msg_parsers/xml_parser.h>
 #include <rosc/msg_parsers/ros_parser.h>
-/*
+
 char *test_request_message=
 		"POST / HTTP/1.1\n"
 		"Host: sncn-10:53556\n"
@@ -133,7 +133,7 @@ int main_xmlrpctest()
 
 	return 0;
 }
-*/
+
 
 // ///////////////////////
 //     ROSTCP Testing   //
@@ -277,8 +277,8 @@ int main()
 	printf("\n\nExecute --> rosc_linux_test\n\n");
 	rosc_init();
 
-	//main_xmlrpctest();
-	main_tcprostest();
+	main_xmlrpctest();
+	//main_tcprostest();
 	return 0;
 }
 

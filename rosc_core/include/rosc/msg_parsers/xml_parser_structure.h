@@ -270,7 +270,7 @@ typedef struct parse_act_t
 	parser_submode_function_t submode;
 
 	parse_submode_state_t submode_state; //!< is one when submode is finished
-	int16_t submode_result;	//!< contains the result code from each submode when finished
+	//int16_t submode_result;	//!< contains the result code from each submode when finished
 	bool submode_by_handler; //!< needs to be set when the submode is started by the handler function
 	parse_event_t event; //!< tells the handler function what currently has happened.
 

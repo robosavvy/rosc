@@ -50,18 +50,18 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 		break;
 
 		case PARSE_EVENT_HTTP_METHOD_PARSED:
-				data->method=pact->submode_result;
+				data->method=pact->submode_data.seekstring.result;
 				break;
 
 
 		case PARSE_EVENT_HTTP_ACTION_PARSED:
-			if(pact->submode_result <0) //Do we have that target?
+			if(pact->submode_data.seekstring.result<0) //Do we have that target?
 			{
 				DEBUG_PRINT(STR, "not found 404 !",  "PARSE_EVENT_METHOD");
 			}
 			else
 			{
-				data->target=pact->submode_result;
+				data->target=pact->submode_data.seekstring.result;
 				switch(data->target)
 				{
 				case HTTP_ACTION_ROOT:
@@ -192,9 +192,9 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		switch (pact->mode_data.xml.tags[pact->mode_data.xml.depth])
 		{
 			case XML_TAG_METHODNAME:
-				if(pact->submode_result>0)
+				if(pact->submode_data.seekstring.result>0)
 				{
-					data->rpcmethod=pact->submode_result;
+					data->rpcmethod=pact->submode_data.seekstring.result;
 					DEBUG_PRINT(STR, "MethodName", rpc_xml_slave_methodnames[data->rpcmethod]);
 				}
 				else
@@ -208,20 +208,20 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 	case PARSE_EVENT_HTTP_METHOD_PARSED:
-		if(pact->submode_result <0) //Do we have that method?
+		if(pact->submode_data.seekstring.result <0) //Do we have that method?
 		{
 			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
 			PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(pact->submode);
 		}
 		else
 		{
-			data->method=pact->submode_result;
+			data->method=pact->submode_data.seekstring.result;
 		}
 		break;
 
 	case PARSE_EVENT_HTTP_ACTION_PARSED:
-		data->target=pact->submode_result;
-		if(pact->submode_result <0) //Do we have that target?
+		data->target=pact->submode_data.seekstring.result;
+		if(pact->submode_data.seekstring.result <0) //Do we have that target?
 		{
 			DEBUG_PRINT(STR, "not found 404 !",  "PARSE_EVENT_METHOD");
 		}
@@ -339,7 +339,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			printf("/");
 		}
 
-		if(pact->submode_result>=0)
+		if(pact->submode_data.seekstring.result>=0)
 		{
 			DEBUG_PRINT_STR((&pact->submode_data.seekstring)->stringlist[pact->submode_data.seekstring.result]);
 		}

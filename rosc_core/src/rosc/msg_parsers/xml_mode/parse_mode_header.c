@@ -58,7 +58,7 @@
 					{
 
 					case PARSE_HTTP_SUB_CHECK_METHOD:
-						if(pact->submode_result>=0)
+						if(pact->submode_data.seekstring.result>=0)
 						{
 							DEBUG_PRINT_STR("->METHOD found");
 							pact->event=PARSE_EVENT_HTTP_METHOD_PARSED;
@@ -73,7 +73,7 @@
 
 
 						case PARSE_HTTP_SUB_CHECK_ACTION:
-							if(pact->submode_result>=0)
+							if(pact->submode_data.seekstring.result>=0)
 							{
 								DEBUG_PRINT_STR("->ACTION found...");
 								pact->event=PARSE_EVENT_HTTP_ACTION_PARSED;
@@ -87,7 +87,7 @@
 						break;
 
 						case PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER:
-							if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1 )
+							if(pact->submode_data.seekstring.result==HTTP_VAL_HTTP1_0 || pact->submode_data.seekstring.result==HTTP_VAL_HTTP1_1 )
 							{
 								DEBUG_PRINT_STR("Version found...");
 								pact->mode_data.http.state=PARSE_HTTP_STATE_HEADLINE_WAIT_END;
@@ -101,7 +101,7 @@
 
 
 						case PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER:
-							if(pact->submode_result==HTTP_VAL_HTTP1_0 || pact->submode_result==HTTP_VAL_HTTP1_1 )
+							if(pact->submode_data.seekstring.result==HTTP_VAL_HTTP1_0 || pact->submode_data.seekstring.result==HTTP_VAL_HTTP1_1 )
 							{
 								DEBUG_PRINT_STR("Version found...");
 								pact->mode_data.http.state=PARSE_HTTP_STATE_RESPONSE_CODE;
@@ -114,7 +114,7 @@
 							break;
 
 						case PARSE_HTTP_SUB_CHECK_RESPONSE_CODE:
-							switch(pact->submode_result)
+							switch(pact->submode_data.numberparse.result)
 							{
 								case NUMBERPARSE_ANOTHER_CHAR:
 								if(*buf==' ')
@@ -140,10 +140,10 @@
 							break;
 
 						case PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID:
-							if(pact->submode_result>=0)
+							if(pact->submode_data.seekstring.result)
 							{
-								DEBUG_PRINT(STR,"Descriptor",http_header_descriptors[pact->submode_result]);
-								pact->mode_data.http.descriptor=pact->submode_result;
+								DEBUG_PRINT(STR,"Descriptor",http_header_descriptors[pact->submode_data.seekstring.result]);
+								pact->mode_data.http.descriptor=pact->submode_data.seekstring.result;
 							}
 							else
 							{
@@ -153,7 +153,7 @@
 							break;
 						case PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH:
 
-							switch(pact->submode_result)
+							switch(pact->submode_data.numberparse.result)
 							{
 							case NUMBERPARSE_ANOTHER_CHAR:
 								if(*buf==' ' || *buf=='\n')
@@ -178,7 +178,7 @@
 							break;
 
 							case PARSE_HTTP_SUB_CHECK_CONTENT_TYPE:
-								if(pact->submode_result==HTTP_VAL_TEXT_XML)
+								if(pact->submode_data.seekstring.result==HTTP_VAL_TEXT_XML)
 								{
 									DEBUG_PRINT_STR("Found text/xml!");
 									pact->mode_data.http.content_type_text_xml_found=true;
@@ -410,6 +410,10 @@
 						{
 							buf++;
 							len--;
+						}
+						else
+						{
+							break;
 						}
 					}
 				}
