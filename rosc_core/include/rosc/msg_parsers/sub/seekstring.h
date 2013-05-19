@@ -45,10 +45,9 @@
 				DATA_STORAGE->stringlist=STRINGLIST;\
 				DATA_STORAGE->stringlist_len=STRINGLIST_LEN;\
 				DATA_STORAGE->endchrs=ENDCHRS;\
-				DATA_STORAGE->fit_min=0;\
-				DATA_STORAGE->fit_max=STRINGLIST_LEN;\
 				DATA_STORAGE->case_sensitive=CASE_SENSITIVE;\
 				DATA_STORAGE->curChrPos=0;\
+				DATA_STORAGE->result=0;\
 				return false;
 
 typedef struct
@@ -58,8 +57,6 @@ typedef struct
 	char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
 	uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
 	uint16_t curChrPos;	//!< The char number since the start of seekString
-	uint16_t fit_min;	//!< The beginning of the range with possibly matching strings
-	uint16_t fit_max;	//!< The end of the range with possibly matching strings
 	int16_t result;	//!< At finish this contains the number of the found string or SEEKSTRING_STRING_NOT_FOUND
 }seekstring_data_t;
 

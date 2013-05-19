@@ -341,7 +341,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 
 		if(pact->submode_data.seekstring.result>=0)
 		{
-			DEBUG_PRINT_STR((&pact->submode_data.seekstring)->stringlist[pact->submode_data.seekstring.result]);
+			DEBUG_PRINT_STR((&pact->submode_data.seekstring)->stringlist[0]);
 		}
 		else
 		{
@@ -391,7 +391,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 			DEBUG_PRINT_STR("<!>");
 			break;
 		case XML_TAG_TYPE_QUESTION_MARK:
-			DEBUG_PRINT(STR,"<?>",  pact->submode_data.seekstring.stringlist[pact->submode_data.seekstring.result]);
+			DEBUG_PRINT(STR,"<?>",  pact->submode_data.seekstring.stringlist[0]);
 			break;
 		}
 		break;

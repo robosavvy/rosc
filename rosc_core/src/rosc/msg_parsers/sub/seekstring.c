@@ -32,7 +32,6 @@
 #include <rosc/msg_parsers/sub/seekstring.h>
 
 
-///@todo Enhancement notice -- increase saved pointer instead of fit_min variable (decrease stringlist len by current number!)
 //decrease stringlist len instead of fit_max
 bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 {
@@ -47,95 +46,71 @@ bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 				if(curChrBuf==*sep)
 				{
 					curChrBuf='\0';
-					isSeparator=true;
 					break;
 				}
 				++sep;
 			}
 
-			//Seek for the current char inside of all strings at given position
-			bool found=false;//found at least one match
-			unsigned int StrLstE;//Contains the current string list entry to be checked
-			for(StrLstE=data->fit_min;StrLstE<data->fit_max;StrLstE++)
+
+			int8_t casechange=0; //will contain upper-lower case conversion when not case-sensitive and alphabetic char
+			if(!data->case_sensitive) //if it is not case sensitive
 			{
-				const char *ptr=*(data->stringlist+StrLstE);
-				char curChrStrLstE=*(ptr+data->curChrPos);
-
-				//If the current char inside the current entry of the string array is finished
-				if(curChrStrLstE == '\0')
+				if(curChrBuf>=65 && curChrBuf<=90) //a-z
 				{
-					if(isSeparator) //and the current char in the buffer is a separator as well
-					{
-						//write positive result
-						data->result=StrLstE;
-						found=true;
-					}
-					else //and no separator inside the buffer, the current value does not match
-					{
-						//so we skip this entry.
-						data->fit_min=StrLstE+1;
-					}
+					casechange=32;
 				}
-				else //if the current char is no separator
+				else if(curChrBuf>=97 && curChrBuf<=122) //A-Z
 				{
-					bool match=false;
-					if(curChrStrLstE==curChrBuf)
-					{
-						match=true;
-					}
-					else if(!data->case_sensitive) //if it is not case sensitive
-					{
-						if(curChrBuf>=65 && curChrBuf<=90) //a-z
-						{
-							if(curChrStrLstE==curChrBuf+32)
-								match=true;
-						}
-						else if(curChrBuf>=97 && curChrBuf<=122) //A-Z
-						{
-							if(curChrStrLstE==curChrBuf-32)
-								match=true;
-						}
-					}
-
-					//and does match the current buffer
-					if(match)
-					{
-						//If this is the first match increase the first value to it
-						if(!found)
-							data->fit_min=StrLstE;
-						found=true;
-					}
-					else //and does not match the current buffer
-					{
-						if(found) //and we found another suitable string before this one?
-						{
-							data->fit_max=StrLstE;
-							//if it does not match, it will not do any more -> string sorting is considered to be alphabetic!
-							break;
-						}
-						else
-						{
-							data->fit_min=StrLstE+1;
-						}
-					}
+					casechange=-32;
 				}
 			}
-			//If a separator is found inside the current iteration and the string was not found
-			//it is not inside the string array.
-			if(isSeparator)
+
+			bool found=false;//found at least one match
+			uint16_t newlen=0;//the new length of the string list, when finding a non-suitable after one or more suitable strings
+			//Find the first possibility in remaining strings on current place
+			while(data->stringlist_len>0 && data->stringlist_len>newlen)
 			{
-				if(!found)
+				if((*data->stringlist)[data->curChrPos]==curChrBuf ||
+				   (*data->stringlist)[data->curChrPos]==(curChrBuf+casechange))
 				{
-					DEBUG_PRINT_STR("UNKNOWN");
-					data->result=SEEKSTRING_STRING_NOT_FOUND;
+					found=true;
+					newlen++;
 				}
 				else
 				{
-					DEBUG_PRINT(STR,"SEEKSTRING",data->stringlist[data->result]);
+					if(!found)//If no suitable string was found before
+					{
+						++data->result; //Increase the current array number
+						++data->stringlist; //Increase the stringlist pointer
+						--data->stringlist_len; //deacrease stringlist length
+					}
+					else
+					{
+						//If something was found before at that place means that all strings
+						//after this one here are not suitable
+						data->stringlist_len=newlen;
+						break;
+					}
 				}
+			}
+			//If we have a separator the string must end here so
+			if(curChrBuf=='\0')
+			{
+
+				if(!found == true) //If found is not true here, the string is not inside the list
+				{
+					data->result=SEEKSTRING_STRING_NOT_FOUND;
+					DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
+				}
+				else
+				{
+					DEBUG_PRINT(STR,"SEEKSTRING RESULT: ",data->stringlist[0]);
+				}
+
+
+				//End
 				return true;
 			}
-
 			++*buf;
 			data->curChrPos++;
 			--*len;
