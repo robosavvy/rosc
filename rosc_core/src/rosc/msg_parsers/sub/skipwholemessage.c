@@ -36,7 +36,7 @@ bool skipwholemessage(char **buf, int32_t *len, void *unused)
 {
 	while(*len>0)
 	{
-		++**buf;
+		++*buf;
 		--*len;
 	}
 	return false;

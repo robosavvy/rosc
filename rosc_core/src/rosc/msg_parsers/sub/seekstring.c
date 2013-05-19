@@ -53,7 +53,7 @@ bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 			//Seek for the current char inside of all strings at given position
 			bool found=false;//found at least one match
 			unsigned int StrLstE;//Contains the current string list entry to be checked
-			for(StrLstE=data->fit_min;StrLstE<=data->fit_max;StrLstE++)
+			for(StrLstE=data->fit_min;StrLstE<data->fit_max;StrLstE++)
 			{
 				const char *ptr=*(data->stringlist+StrLstE);
 				char curChrStrLstE=*(ptr+data->curChrPos);
@@ -79,14 +79,15 @@ bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
 					if(curChrStrLstE==curChrBuf)
 					{
 						//If this is the first match increase the first value to it
-						if(!found)data->fit_min=StrLstE;
+						if(!found)
+							data->fit_min=StrLstE;
 						found=true;
 					}
 					else //and does not match the current buffer
 					{
 						if(found) //and we found another suitable string before this one?
 						{
-							data->fit_max=StrLstE-1;
+							data->fit_max=StrLstE;
 							//if it does not match, it will not do any more -> string sorting is considered to be alphabetic!
 							break;
 						}

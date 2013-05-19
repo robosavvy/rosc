@@ -37,14 +37,13 @@
 
 /**
  * This macro defines the result number if no string was found
- * @fixme do this function without subtracting one from len...
  */
 #define SEEKSTRING_STRING_NOT_FOUND  -1
 
 #define PARSE_SUBMODE_INIT_SEEKSTRING(SUBMODE_PTR, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS)\
 				SUBMODE_PTR=(parser_submode_function_t)&seekstring;\
 				DATA_STORAGE->stringlist=STRINGLIST;\
-				DATA_STORAGE->stringlist_len=STRINGLIST_LEN-1;\
+				DATA_STORAGE->stringlist_len=STRINGLIST_LEN;\
 				DATA_STORAGE->endchrs=ENDCHRS;\
 				DATA_STORAGE->fit_min=0;\
 				DATA_STORAGE->fit_max=STRINGLIST_LEN;\
