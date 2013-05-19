@@ -35,7 +35,8 @@
 #include <rosc/system/types.h>
 
 #define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
-		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;
+		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;\
+		return false;
 
 /**
  * This function skips every incoming char which is in the buffer.

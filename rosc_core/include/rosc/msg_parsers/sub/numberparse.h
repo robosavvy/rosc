@@ -38,7 +38,8 @@
 		SUBMODE_PTR=(parser_submode_function_t)&numberparse;\
 		DATA_STORAGE->negative_allowed=NEGATIVE_ALLOWED;\
 		DATA_STORAGE->cur_place=0;\
-		DATA_STORAGE->figure_max=FIGURE_MAX;
+		DATA_STORAGE->figure_max=FIGURE_MAX;\
+		return false;
 /**
  * These are the result values of the number parse submode
  */

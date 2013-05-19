@@ -29,26 +29,13 @@
  *  parse_mode_header.c created by Christian Holl
  */
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
-	#include <rosc/msg_parsers/xml_mode/parse_mode_header.h>
-	#include <rosc/msg_parsers/handler/xmlrpc_string_id.h>
-	#include <rosc/msg_parsers/sub/subs.h>
-#endif
+#include <rosc/msg_parsers/xml_mode/parse_mode_header.h>
+#include <rosc/msg_parsers/handler/xmlrpc_string_id.h>
+#include <rosc/msg_parsers/sub/subs.h>
 
-#ifndef FORCE_INLINE
-	void parse_mode_header(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
-#endif
-#ifdef ENABLE_C
+bool parse_mode_header(char **buf, int32_t *len, parse_act_t *pact)
 {
-	#ifndef FORCE_INLINE
-		int32_t len=*len_ptr;
-		char *buf=*buf_ptr;
-	#endif
-
-		while(len>0 && pact->event  == PARSE_EVENT_NONE)
+		while(*len>0 && pact->event  == PARSE_EVENT_NONE)
 		{
 			bool is_field_content=false;
 				/*
@@ -117,7 +104,7 @@
 							switch(pact->submode_data.numberparse.result)
 							{
 								case NUMBERPARSE_ANOTHER_CHAR:
-								if(*buf==' ')
+								if(**buf==' ')
 								{
 									DEBUG_PRINT(INT,"Code of HTTP Response", pact->submode_data.numberparse.number);
 									pact->event=PARSE_EVENT_HTTP_RESPONSE_CODE;
@@ -156,7 +143,7 @@
 							switch(pact->submode_data.numberparse.result)
 							{
 							case NUMBERPARSE_ANOTHER_CHAR:
-								if(*buf==' ' || *buf=='\n')
+								if(**buf==' ' || **buf=='\n')
 								{
 									pact->content_length=pact->submode_data.numberparse.number;
 									DEBUG_PRINT(INT,"Content Length is", pact->content_length);
@@ -194,10 +181,10 @@
 
 								//default chars will lead to reengage seekstring
 								//so we need to skip them here
-								if(*buf==',' || *buf==';')
+								if(**buf==',' || **buf==';')
 								{
-									++buf;
-									--len;
+									++*buf;
+									--*len;
 								}
 								break;
 					default:
@@ -216,16 +203,16 @@
 						/*
 						 * Parsing
 						 */
-						switch(*buf)
+						switch(**buf)
 						{
 						case '/':
 							switch(pact->mode_data.http.state)
 							{
 							case PARSE_HTTP_STATE_REQUEST_ACTION:
-								PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_available_actions,HTTP_AVAILABLE_ACTIONS_LEN," ");
 								pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_ACTION;
-								++buf;
-								--len;
+								PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_available_actions,HTTP_AVAILABLE_ACTIONS_LEN," ");
+//								++*buf;
+//								--*len;
 								break;
 
 							case PARSE_HTTP_STATE_FIELD:
@@ -325,29 +312,29 @@
 							switch(pact->mode_data.http.state)///@note Here is a lot of potential for saving memory by reducing setup cause it is always almost the same
 							{
 								case PARSE_HTTP_STATE_REQUEST_METHOD:
-										PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_methods,HTTP_METHODS_LEN," /\n.");
 										pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_METHOD;
+										PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_methods,HTTP_METHODS_LEN," /\n.");
 								break;
 
 								case PARSE_HTTP_STATE_REQUEST_HTTP_VER:
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_REQUEST_HTTP_VER;
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
 									break;
 
 								case PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_RESPONSE_HTTP_VER;
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," \n");
 									break;
 
 
 								case PARSE_HTTP_STATE_RESPONSE_CODE:
-									PARSE_SUBMODE_INIT_NUMBERPARSE(pact->submode,(&pact->submode_data.numberparse),3,false);
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_RESPONSE_CODE;
+									PARSE_SUBMODE_INIT_NUMBERPARSE(pact->submode,(&pact->submode_data.numberparse),3,false);
 									break;
 
 								case PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN," :");
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_DESCRIPTOR_ID;
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring),http_header_descriptors,HTTP_HEADER_DESCRIPTORS_LEN," :");
 									break;
 
 								case PARSE_HTTP_STATE_FIELD:
@@ -381,8 +368,8 @@
 							case HTTP_DESC_CONTENT_LENGTH:
 								if(pact->content_length==-1)
 								{
-									PARSE_SUBMODE_INIT_NUMBERPARSE(pact->submode,(&pact->submode_data.numberparse),4,0);
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_LENGTH;
+									PARSE_SUBMODE_INIT_NUMBERPARSE(pact->submode,(&pact->submode_data.numberparse),4,0);
 								}
 								else
 								{
@@ -391,8 +378,8 @@
 								}
 								break;
 							case HTTP_DESC_CONTENT_TYPE:
-									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring), http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
 									pact->mode_data.http.sub_state=PARSE_HTTP_SUB_CHECK_CONTENT_TYPE;
+									PARSE_SUBMODE_INIT_SEEKSTRING(pact->submode,(&pact->submode_data.seekstring), http_header_stdtext, HTTP_HEADER_STDTEXT_LEN," ,;\n");
 								break;
 
 
@@ -408,8 +395,8 @@
 
 						if(pact->submode==0 && len>0 && pact->event!=PARSE_EVENT_XML_CONTENT_START)
 						{
-							buf++;
-							len--;
+							++*buf;
+							--*len;
 						}
 						else
 						{
@@ -418,12 +405,7 @@
 					}
 				}
 
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
 }
-#endif
 
 
 

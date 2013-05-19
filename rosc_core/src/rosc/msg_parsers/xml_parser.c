@@ -66,7 +66,7 @@ void xmlrpc_parse_act_init(parse_act_t *pact, xmlrpc_parser_type_t type, void * 
 
 }
 
-void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
+bool xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 {
 	bool chunk_processed=false;
 	if(pact->mode == PARSE_MODE_XML)
@@ -134,6 +134,7 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 			}
 			pact->handler_fkt(pact);
 			pact->event=PARSE_EVENT_NONE;
+			pact->submode_by_handler=false;
 		}
 		if(len == 0)
 		{
@@ -143,7 +144,7 @@ void xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 			{
 				DEBUG_PRINT_STR("FINISHED!");
 //				while(1);
-				return;
+				return false;
 			}
 		}
 	}

@@ -40,7 +40,7 @@
 
 
 #ifndef FORCE_INLINE
-	void parse_mode_xml(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
+	bool parse_mode_xml(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
 #endif
 
 

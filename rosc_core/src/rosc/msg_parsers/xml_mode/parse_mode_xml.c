@@ -41,18 +41,9 @@
 
 #endif
 
-#ifndef FORCE_INLINE
-	void parse_mode_xml(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact)
-#endif
-#ifdef ENABLE_C
+
+bool parse_mode_xml(char **buf, int32_t *len, parse_act_t *pact)
 {
-	#ifndef FORCE_INLINE
-		int32_t len=*len_ptr;
-		char *buf=*buf_ptr;
-	#endif
-// ///////////////////////////////////////
-
-
 		if(pact->mode_data.xml.state==PARSE_XML_INIT)
 		{
 			pact->mode_data.xml.depth=0;
@@ -61,7 +52,7 @@
 			pact->mode_data.xml.sub_state=PARSE_XML_SUB_STATE_NONE;
 		}
 
-		while(len>0 && pact->event == PARSE_EVENT_NONE)
+		while(*len>0 && pact->event == PARSE_EVENT_NONE && pact->submode==0)
 		{
 
 
@@ -126,7 +117,7 @@
 			}
 			else
 			{
-				switch(*buf)
+				switch(**buf)
 				{
 				//the whitespace stuff ...
 				case '\t':
@@ -604,19 +595,13 @@
 					}
 					break;
 				}
-				if(pact->submode==0 && len>0 && pact->event!=PARSE_EVENT_XML_CONTENT_START)
+				if(pact->submode==0 &&*len>0 && pact->event!=PARSE_EVENT_XML_CONTENT_START)
 				{
-					buf++;
-					len--;
+					++*buf;
+					--*len;
 				}
 			}
 		}
 
-
-// ///////////////////////////////////////
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
 }
-#endif
+

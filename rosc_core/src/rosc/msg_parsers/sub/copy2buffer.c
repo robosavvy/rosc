@@ -35,7 +35,8 @@
 #define COPY2BUFFER_INIT(DATA)\
 				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
 				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
-				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
+				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES\
+				return false;
 
 
 bool copy2buffer(char **buf, int32_t *len, copy2buffer_data_t *data)

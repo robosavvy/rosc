@@ -47,7 +47,8 @@
 				DATA_STORAGE->endchrs=ENDCHRS;\
 				DATA_STORAGE->fit_min=0;\
 				DATA_STORAGE->fit_max=STRINGLIST_LEN;\
-				DATA_STORAGE->curChrPos=0;
+				DATA_STORAGE->curChrPos=0;\
+				return false;
 
 typedef struct
 {

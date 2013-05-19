@@ -40,6 +40,7 @@
 		DATA_STORAGE->max_len=MAX_LEN;\
 		DATA_STORAGE->endChrs=END_CHARS;\
 		DATA_STORAGE->cur_pos=0;\
+		return false;
 
 typedef enum
 {
