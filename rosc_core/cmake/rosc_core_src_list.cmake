@@ -1,5 +1,5 @@
 SET(ROSC_CORE_SOURCES
-src/rosc/msg_parsers/ros_parser.c
+src/rosc/msg_parsers/parser_frame.c
 src/rosc/msg_parsers/xml_parser.c
 src/rosc/msg_parsers/sub/skipwholemessage.c
 src/rosc/msg_parsers/sub/seekstring.c

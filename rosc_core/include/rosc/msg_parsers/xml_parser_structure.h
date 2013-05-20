@@ -287,7 +287,6 @@ typedef struct parse_act_t
 			parse_http_sub_state_t sub_state; //!< contains the substate of the http parser (analyzing results of submodes)
 			parse_http_desc_t descriptor; //!< descriptor contains the current known descriptor
 			uint8_t content_type_text_xml_found; //!< checks if the text/xml content type was found.
-
 		}http;
 
 		struct

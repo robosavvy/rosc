@@ -87,22 +87,10 @@ bool xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 				switch(pact->mode)
 				{
 				case PARSE_MODE_HEADER:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "mode/parse_mode_header.c"
-							#undef ENABLE_C
-						#else
-							parse_mode_header(&buf, &len, pact);
-						#endif
+						parse_mode_header(&buf, &len, pact);
 					break;
 				case PARSE_MODE_XML:
-						#ifdef FORCE_INLINE
-							#define ENABLE_C
-								#include "mode/parse_mode_xml.c"
-							#undef ENABLE_C
-						#else
-							parse_mode_xml(&buf, &len, pact);
-						#endif
+						parse_mode_xml(&buf, &len, pact);
 					break;
 				default:
 					//TODO Error
@@ -143,7 +131,6 @@ bool xmlrpc_parse(char *buf, int32_t len, parse_act_t* pact)
 			if(pact->mode==PARSE_MODE_XML && pact->mode_data.xml.processed_bytes == pact->content_length)
 			{
 				DEBUG_PRINT_STR("FINISHED!");
-//				while(1);
 				return false;
 			}
 		}

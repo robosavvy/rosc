@@ -49,7 +49,6 @@
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
 #include <rosc/msg_parsers/xml_parser.h>
-#include <rosc/msg_parsers/ros_parser.h>
 
 char *test_request_message=
 		"POST / HTTP/1.1\n"
@@ -138,7 +137,6 @@ int main_xmlrpctest()
 // ///////////////////////
 //     ROSTCP Testing   //
 // ///////////////////////
-#include <rosc/msg_parsers/ros_parser.h>
 
 
 unsigned char add_two_ints_rosrpc_query[] = {
@@ -203,18 +201,17 @@ int main_tcprostest()
 {
 	int rlen;
 	int buffersize=1;
-	ros_parse_act_t pact;
 
 #if(0)
 	unsigned char *msg=add_two_ints_rosrpc_query;
-	char server_data[10];
-	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_SERVER,&server_data);
-	rlen=sizeof(add_two_ints_rosrpc_query);
+//	char server_data[10];
+//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_SERVER,&server_data);
+//	rlen=sizeof(add_two_ints_rosrpc_query);
 #else
 	unsigned char *msg=add_two_ints_rosrpc_response;
-	char server_data[10];
-	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_CLIENT,&server_data);
-	rlen=sizeof(add_two_ints_rosrpc_response);
+//	char server_data[10];
+//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_CLIENT,&server_data);
+//	rlen=sizeof(add_two_ints_rosrpc_response);
 #endif
 
 
@@ -245,7 +242,7 @@ int main_tcprostest()
 		{
 			len=len-(i*buffersize-rlen);
 		}
-		ros_parse(msg+i*len,len,&pact);
+		//ros_parse(msg+i*len,len,&pact);
 	}
 
 	return 0;
