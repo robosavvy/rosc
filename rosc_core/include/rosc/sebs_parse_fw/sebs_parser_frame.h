@@ -38,11 +38,15 @@
 #define SEBS_PARSER_FRAME_H_
 
 #include <rosc/system/types.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
-#define SEBS_PARSE_FW_EVENT_NONE 0
-#define SEBS_PARSE_FW_EVENT_INIT -1
-#define SEBS_PARSE_FW_EVENT_HANDLER_CALL_FUNCTION_END -2
-#define SEBS_PARSE_FW_EVENT_LEN_SMALLER_ZERO -3
+#define SEBS_PARSE_EVENT_NONE 0
+#define SEBS_PARSE_EVENT_INIT -1
+#define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -2
+#define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -3
 
 /**
  * This is the type for a parser function

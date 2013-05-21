@@ -26,47 +26,27 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  copy2buffer.h created by Christian Holl
+ *  sebs_parse_skipwholemessage.h created by Christian Holl
  */
 
-#ifndef COPY2BUFFER_H_
-#define COPY2BUFFER_H_
+#ifndef SEBS_PARSE_SKIPWHOLEMESSAGE_H_
+#define SEBS_PARSE_SKIPWHOLEMESSAGE_H_
 
 #include <rosc/system/types.h>
 
-#define PARSE_SUBMODE_INIT_COPY2BUFFER(SUBMODE_PTR,DATA_STORAGE,BUFFER, MAX_LEN, END_CHARS)\
-		SUBMODE_PTR=(parser_submode_function_t)&copy2buffer;\
-		DATA_STORAGE->buffer=BUFFER;\
-		DATA_STORAGE->max_len=MAX_LEN;\
-		DATA_STORAGE->endChrs=END_CHARS;\
-		DATA_STORAGE->cur_pos=0;\
+#define PARSE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
+		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;\
 		return false;
 
-typedef enum
-{
-	COPY2BUFFER_ENDCHR,
-	COPY2BUFFER_MAXLEN,
-}copy2buffer_result_t;
-
-typedef struct
-{
-	char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
-	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
-	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
-	char* endChrs; //!< chrs which will mark the end of the string
-	copy2buffer_result_t result; //!< stores the result of the submode
-}copy2buffer_data_t;
-
 /**
- * This function copies data from a stream to a buffer.
+ * This function skips every incoming char which is in the buffer.
+ * It's used for skipping the message in case of errors.
+ *
  * @param buf A pointer to the storage of the buffer
  * @param len The variable pointing to the length variable of the current buffer
- * @param data the function data storage, must be initialized in the beginning!
- * @return true when finished
- *
- * @TODO Test!
+ * @param unused not used by this function it needs no data storage..
+ * @return This function will only return false because it can be only stopped by reseting the whole message handling
  */
-bool copy2buffer(char **buf, int32_t *len, copy2buffer_data_t *data);
+bool sebs_parse_skipwholemessage(char **buf, int32_t *len, void *unused);
 
-
-#endif /* COPY2BUFFER_H_ */
+#endif /* SEBS_PARSE_SKIPWHOLEMESSAGE_H_ */

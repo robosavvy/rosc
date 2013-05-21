@@ -26,53 +26,15 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *   sebs_parser_frame.c created by Christian Holl
+ *  sebs_parse_parseurl.c created by Christian Holl
  */
 
-#include <rosc/msg_parsers/sebs_parser_frame.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 
-void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
+bool sebs_parse_parseurl(char **buf, int32_t *len, sebs_parse_parseurl_data_t *data)
 {
-	/*
-	 * What if len < 0?
-	 * Network functions return len=-1 when connection was terminated for example.
-	 * in that case the handler function is called.
-	 */
-	if(len<0)data->event=SEBS_PARSE_FW_EVENT_LEN_SMALLER_ZERO;
 
-	/*
-	 * Handling the parser input
-	 */
-	do
-	{
-		if(data->event==SEBS_PARSE_FW_EVENT_NONE)
-		{
-			if(data->current_parser.parser_function)//current_function is not zero
-			{
-				//call parser
-				if(data->current_parser.parser_function(&buf, &len, data->current_parser.parser_data))
-				{
-					if(data->return_to_handler) //was current function called by handler?
-					{
-						data->event=SEBS_PARSE_FW_EVENT_HANDLER_CALL_FUNCTION_END;
-					}
-					else
-					{
-						data->current_parser.parser_function=data->next_parser.parser_function;
-						data->current_parser.parser_data=data->next_parser.parser_data;
-					}
-				}
-			}
-			else //current function is zero -> Event Init
-			{
-				data->event=SEBS_PARSE_FW_EVENT_INIT;
-			}
-		}
-		else //call handler
-		{
-			data->handler_function(data);
-			data->event=SEBS_PARSE_FW_EVENT_NONE;
-		}
-	}
-	while(len>0);
 }
+
+
+

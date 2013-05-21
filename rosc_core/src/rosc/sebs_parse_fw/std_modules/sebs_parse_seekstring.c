@@ -26,14 +26,14 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  seekstring.c created by Christian Holl
+ *  sebs_parse_seekstring.c created by Christian Holl
  */
 
-#include <rosc/msg_parsers/sub/seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
 
 //decrease stringlist len instead of fit_max
-bool seekstring(char **buf, int32_t *len, seekstring_data_t *data)
+bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data)
 {
 		while(*len > 0)
 		{

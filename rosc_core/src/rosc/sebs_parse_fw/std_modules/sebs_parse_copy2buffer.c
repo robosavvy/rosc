@@ -26,15 +26,49 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  subs.h created by Christian Holl
+ *  copy2buffer.c created by Christian Holl
  */
 
-#ifndef SUBS_H_
-#define SUBS_H_
-	//Standard submode functions
-	#include <rosc/msg_parsers/sub/copy2buffer.h>
-    #include <rosc/msg_parsers/sub/numberparse.h>
-	#include <rosc/msg_parsers/sub/parseurl.h>
-	#include <rosc/msg_parsers/sub/seekstring.h>
-	#include <rosc/msg_parsers/sub/skipwholemessage.h>
-#endif /* SUBS_H_ */
+
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
+
+bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_data_t *data)
+{
+	const char *sep=data->endChrs;
+	while(*len > 0)
+	{
+		bool isEndChar=false;
+		while(*sep!='\0')
+		{
+			if(**buf==*sep)
+			{
+				isEndChar=true;
+				break;
+			}
+			++sep;
+		}
+
+		if((data->cur_pos<data->max_len) && !isEndChar )
+		{
+			data->buffer[data->cur_pos]=**buf;
+			data->cur_pos++;
+			++*buf;
+			--*len;
+		}
+		else
+		{
+			if(isEndChar)
+			{
+				data->result=COPY2BUFFER_ENDCHR;
+			}
+			else
+			{
+				data->result=COPY2BUFFER_MAXLEN;
+			}
+			return true; //Finished!
+		}
+	}
+	return false; //Not finished yet
+}
+
+

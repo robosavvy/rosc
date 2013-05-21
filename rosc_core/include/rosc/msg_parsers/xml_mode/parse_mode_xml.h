@@ -33,14 +33,13 @@
 #define PARSE_MODE_XML_H_
 
 #include <rosc/msg_parsers/xml_parser_structure.h>
-#include <rosc/msg_parsers/sub/subs.h>
 
 
 #define PARSE_MODE_INIT_XML()\
 
 
 #ifndef FORCE_INLINE
-	bool parse_mode_xml(char **buf_ptr, int32_t *len_ptr, parse_act_t *pact);
+	bool parse_mode_xml(char **buf_ptr, int32_t *len, parse_act_t *pact);
 #endif
 
 

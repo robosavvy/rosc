@@ -26,56 +26,65 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  copy2buffer.c created by Christian Holl
+ *  sebs_parse_numberparse.c created by Christian Holl
  */
 
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
-#include <rosc/msg_parsers/sub/copy2buffer.h>
-
-#define COPY2BUFFER_INIT(DATA)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
-				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
-				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES\
-				return false;
-
-
-bool copy2buffer(char **buf, int32_t *len, copy2buffer_data_t *data)
+bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_data_t *data)
+	 //work around for inlining the function
 {
-	const char *sep=data->endChrs;
 	while(*len > 0)
 	{
-		bool isEndChar=false;
-		while(*sep!='\0')
+		if(data->cur_place == 0)
 		{
-			if(**buf==*sep)
-			{
-				isEndChar=true;
-				break;
-			}
-			++sep;
+			data->negative=false;
+			data->number=0;
 		}
+		if(**buf>=48 && **buf<=57) //Check if char is a figure
+		{
+			if(data->cur_place < data->figure_max)//Is the length still acceptable?
+			{
+				if(data->cur_place>0)
+					data->number*=10;//multiply current number by 10 to shift it left
 
-		if((data->cur_pos<data->max_len) && !isEndChar )
-		{
-			data->buffer[data->cur_pos]=**buf;
-			data->cur_pos++;
-			++*buf;
-			--*len;
-		}
-		else
-		{
-			if(isEndChar)
-			{
-				data->result=COPY2BUFFER_ENDCHR;
+				data->number+=**buf-48; //convert char to integer
+				++data->cur_place;
+				++*buf;
+				--*len;
 			}
 			else
 			{
-				data->result=COPY2BUFFER_MAXLEN;
+				data->result=NUMBERPARSE_MAX_FIGURES;
+				return true;
 			}
-			return true; //Finished!
+		}
+		else
+		{
+			if(data->cur_place == 0) //Are we still at the beginning?
+			{
+				if(**buf=='-' && data->negative_allowed)//Is it a negative number?
+				{
+					data->negative=true;
+					++*buf;
+					--*len;
+					break;
+				}
+				else
+				{
+					data->result=NUMBERPARSE_ERROR_NONUMBER;
+					return true;
+				}
+			}
+			else
+			{
+				data->result=NUMBERPARSE_ANOTHER_CHAR;
+				return true;
+			}
+			break;
 		}
 	}
-	return false; //Not finished yet
+	return false;
 }
 
 

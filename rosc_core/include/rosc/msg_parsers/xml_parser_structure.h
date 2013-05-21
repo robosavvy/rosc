@@ -33,12 +33,12 @@
 #ifndef PARSER_STRUCTURE_H_
 #define PARSER_STRUCTURE_H_
 
-#include <rosc/string_res/msg_strings.h>
-#include <rosc/system/eth.h>
-#include <rosc/system/ports.h>
-#include <rosc/rosc.h>
 #include <rosc/system/types.h>
-#include <rosc/msg_parsers/sub/subs.h>
+
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
 #define __XML_MAX_DEPTH__ 20
 
@@ -133,6 +133,8 @@ typedef enum
 	PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE,                //!< means that the content type given in http header is not supported
 	PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING,            //!< means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
 	PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE,                //!< means that something is wrong in the received response
+
+
 	PARSE_EVENT_ERROR_XML_DEPTH,                        //!< means that the depth of the current xml document is too depth to be handled
 	PARSE_EVENT_ERROR_XML_MALFORMED,                    //!< means that something inside the xml document is wrong
 

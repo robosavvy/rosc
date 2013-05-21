@@ -26,13 +26,13 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipwholemessage.c created by Christian Holl
+ *  sebs_parse_skipwholemessage.c created by Christian Holl
  */
 
 
-#include <rosc/msg_parsers/sub/skipwholemessage.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
-bool skipwholemessage(char **buf, int32_t *len, void *unused)
+bool sebs_parse_skipwholemessage(char **buf, int32_t *len, void *unused)
 {
 	while(*len>0)
 	{

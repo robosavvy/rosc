@@ -26,27 +26,48 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  skipwholemessage.h created by Christian Holl
+ *  sebs_parse_seekstring.h created by Christian Holl
  */
 
-#ifndef SKIPWHOLEMESSAGE_H_
-#define SKIPWHOLEMESSAGE_H_
+#ifndef SEBS_PARSE_SEEKSTRING_H_
+#define SEBS_PARSE_SEEKSTRING_H_
 
 #include <rosc/system/types.h>
-
-#define PARSE_SUBMODE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
-		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;\
-		return false;
+#include <rosc/debug/debug_out.h>
 
 /**
- * This function skips every incoming char which is in the buffer.
- * It's used for skipping the message in case of errors.
+ * This macro defines the result number if no string was found
+ */
+#define SEEKSTRING_STRING_NOT_FOUND  -1
+
+#define PARSE_INIT_SEEKSTRING(SUBMODE_PTR, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
+				SUBMODE_PTR=(parser_submode_function_t)&seekstring;\
+				DATA_STORAGE->stringlist=STRINGLIST;\
+				DATA_STORAGE->stringlist_len=STRINGLIST_LEN;\
+				DATA_STORAGE->endchrs=ENDCHRS;\
+				DATA_STORAGE->case_sensitive=CASE_SENSITIVE;\
+				DATA_STORAGE->curChrPos=0;\
+				DATA_STORAGE->result=0;\
+				return false;
+
+typedef struct
+{
+	const char **stringlist;	//!< The stringlist.
+	bool case_sensitive; //!< Defines if the string must be case sensitive.
+	char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
+	uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
+	uint16_t curChrPos;	//!< The char number since the start of seekString
+	int16_t result;	//!< At finish this contains the number of the found string or SEEKSTRING_STRING_NOT_FOUND
+}sebs_parse_seekstring_data_t;
+
+/**
+ * This function seeks for a string from a stream inside a char array.
  *
  * @param buf A pointer to the storage of the buffer
  * @param len The variable pointing to the length variable of the current buffer
- * @param unused not used by this function it needs no data storage..
- * @return This function will only return false because it can be only stopped by reseting the whole message handling
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
  */
-bool skipwholemessage(char **buf, int32_t *len, void *unused);
+bool seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data);
 
-#endif /* SKIPWHOLEMESSAGE_H_ */
+#endif /* SEBS_PARSE_SEEKSTRING_H_ */
