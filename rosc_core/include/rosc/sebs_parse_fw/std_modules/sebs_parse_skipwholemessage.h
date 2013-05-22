@@ -34,7 +34,7 @@
 
 #include <rosc/system/types.h>
 
-#define PARSE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
+#define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
 		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;\
 		return false;
 

@@ -46,9 +46,24 @@
 #include <fcntl.h>
 // /////////////////////////
 
+
+
+
+
+
+
+
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
-#include <rosc/msg_parsers/xml_parser.h>
+
+
+//The memory definitions for
+//the size of all port buffers
+//for the biggest available message
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
+	char justatestsize[23];
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
+
 
 char *test_request_message=
 		"POST / HTTP/1.1\n"
@@ -110,8 +125,8 @@ int main_xmlrpctest()
 	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
 #else
 	char *msg=test_response_message;
-	xmlrpc_client_data_t client_data;
-	xmlrpc_parse_act_init(&pact,XMLRPC_CLIENT,&client_data);
+//	xmlrpc_client_data_t client_data;
+//	xmlrpc_parse_act_init(&pact,XMLRPC_CLIENT,&client_data);
 #endif
 
 	for(rlen=0;msg[rlen]!=0;rlen++);
@@ -127,7 +142,7 @@ int main_xmlrpctest()
 			len=len-(i*buffersize-rlen);
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
-		xmlrpc_parse(msg+i*len,len,&pact);
+	//	xmlrpc_parse(msg+i*len,len,&pact);
 	}
 
 	return 0;
@@ -262,12 +277,6 @@ int main_tcprostest()
 
 
 
-//The memory definitions for
-//the size of all port buffers
-//for the biggest available message
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
-	char justatestsize[23];
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 int main()
 {

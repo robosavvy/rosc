@@ -60,8 +60,16 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 					}
 					else
 					{
-						data->current_parser.parser_function=data->next_parser.parser_function;
-						data->current_parser.parser_data=data->next_parser.parser_data;
+						//Switch current parser call and next
+						sebs_parser_call_t store;
+						store.parser_function=data->next_parser.parser_function;
+						store.parser_data=data->next_parser.parser_data;
+
+						data->next_parser.parser_function=data->current_parser.parser_function;
+						data->next_parser.parser_data=data->current_parser.parser_data;
+
+						data->current_parser.parser_function=store.parser_function;
+						data->current_parser.parser_data=store.parser_data;
 					}
 				}
 			}

@@ -40,15 +40,16 @@
  */
 #define SEEKSTRING_STRING_NOT_FOUND  -1
 
-#define PARSE_INIT_SEEKSTRING(SUBMODE_PTR, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
-				SUBMODE_PTR=(parser_submode_function_t)&seekstring;\
-				DATA_STORAGE->stringlist=STRINGLIST;\
-				DATA_STORAGE->stringlist_len=STRINGLIST_LEN;\
-				DATA_STORAGE->endchrs=ENDCHRS;\
-				DATA_STORAGE->case_sensitive=CASE_SENSITIVE;\
-				DATA_STORAGE->curChrPos=0;\
-				DATA_STORAGE->result=0;\
-				return false;
+#define SEBS_PARSE_INIT_SEEKSTRING(PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
+				PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
+				PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
+				DATA_STORAGE.stringlist=STRINGLIST;\
+				DATA_STORAGE.stringlist_len=STRINGLIST_LEN;\
+				DATA_STORAGE.endchrs=ENDCHRS;\
+				DATA_STORAGE.case_sensitive=CASE_SENSITIVE;\
+				DATA_STORAGE.curChrPos=0;\
+				DATA_STORAGE.result=0;\
+				return (false);
 
 typedef struct
 {
@@ -68,6 +69,6 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data);
+bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data);
 
 #endif /* SEBS_PARSE_SEEKSTRING_H_ */

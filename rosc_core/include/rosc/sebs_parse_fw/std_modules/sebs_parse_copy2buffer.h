@@ -54,7 +54,7 @@ typedef struct
 	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
 	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
 	char* endChrs; //!< chrs which will mark the end of the string
-	copy2buffer_result_t result; //!< stores the result of the submode
+	sebs_parse_copy2buffer_result_t result; //!< stores the result of the submode
 }sebs_parse_copy2buffer_data_t;
 
 /**
@@ -63,8 +63,6 @@ typedef struct
  * @param len The variable pointing to the length variable of the current buffer
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
- *
- * @TODO Test!
  */
 bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_data_t *data);
 

@@ -36,6 +36,7 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/string_res/msg_strings.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
 typedef enum
 {
@@ -97,7 +98,7 @@ typedef enum
 #define SEBS_PARSE_KNOWN_TAGS __RPC_XML_TAG_STRINGS(SEBS_PARSE_XML) //!< Tag Enum Entries
 #define SEBS_PARSE_KNOWN_TAGS_ARRAY rpc_xml_tag_strings //!< Tag String Array
 #define SEBS_PARSE_KNOWN_TAGS_ARRAY_LEN RPC_XML_TAG_STRINGS_LEN //!< Tag String Array Length
-#define SEBS_PARSE_KNOWN_ATTRIBUTES __RPC_XML_TAG_STRINGS(SEBS_PARSE_XML) //!< Attribute Enum Entries
+#define SEBS_PARSE_KNOWN_ATTRIBUTES __RPC_XML_ATTRIBUTE_STRINGS(SEBS_PARSE_XML) //!< Attribute Enum Entries
 #define SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY rpc_xml_attribute_strings //!< Attribute String Array
 #define SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY_LEN RPC_XML_ATTRIBUTE_STRINGS_LEN //!< Attribute String Array Length
 

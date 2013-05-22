@@ -34,6 +34,7 @@
 bool sebs_parse_parseurl(char **buf, int32_t *len, sebs_parse_parseurl_data_t *data)
 {
 
+	return false;
 }
 
 

@@ -59,8 +59,8 @@
 			};\
 		}rosc_port_memory_size_def_t;\
 		const uint8_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
-		uint8_t *rosc_static_port_mem=(uint8_t *)__rosc_static_port_mem;
+		rosc_port_memory_size_def_t x_rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
+		uint8_t *rosc_static_port_mem=(uint8_t *)x_rosc_static_port_mem;
 #endif
 
 /**

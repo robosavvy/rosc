@@ -55,7 +55,7 @@ typedef struct
 	uint16_t IPv6[8];//!< storage for an IPv6 address
 	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
 	uint16_t port; //!< storage for a port number
-	parseurl_match_t what; //!< what specifies what kind of address is given
+	sebs_parse_parseurl_match_t what; //!< what specifies what kind of address is given
 }sebs_parse_parseurl_data_t;
 
 /**
