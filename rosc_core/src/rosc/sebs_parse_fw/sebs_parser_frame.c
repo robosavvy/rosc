@@ -54,23 +54,22 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 				if(data->current_parser.parser_function(&buf, &len, data->current_parser.parser_data))
 				{
 					//was current function called by handler?
+					//set event
 					if(data->return_to_handler)
 					{
 						data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 					}
-					else
-					{
-						//Switch current parser call and next
-						sebs_parser_call_t store;
-						store.parser_function=data->next_parser.parser_function;
-						store.parser_data=data->next_parser.parser_data;
 
-						data->next_parser.parser_function=data->current_parser.parser_function;
-						data->next_parser.parser_data=data->current_parser.parser_data;
+					//Switch current parser call and next
+					sebs_parser_call_t store;
+					store.parser_function=data->next_parser.parser_function;
+					store.parser_data=data->next_parser.parser_data;
 
-						data->current_parser.parser_function=store.parser_function;
-						data->current_parser.parser_data=store.parser_data;
-					}
+					data->next_parser.parser_function=data->current_parser.parser_function;
+					data->next_parser.parser_data=data->current_parser.parser_data;
+
+					data->current_parser.parser_function=store.parser_function;
+					data->current_parser.parser_data=store.parser_data;
 				}
 			}
 			else //current function is zero -> Event Init
@@ -80,7 +79,21 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 		}
 		else //call handler
 		{
-			data->handler_function(data);
+			//if handler function returns with true
+			//
+			if(data->handler_function(data))
+			{
+				//Switch current parser call and next
+				sebs_parser_call_t store;
+				store.parser_function=data->next_parser.parser_function;
+				store.parser_data=data->next_parser.parser_data;
+
+				data->next_parser.parser_function=data->current_parser.parser_function;
+				data->next_parser.parser_data=data->current_parser.parser_data;
+
+				data->current_parser.parser_function=store.parser_function;
+				data->current_parser.parser_data=store.parser_data;
+			}
 			data->event=SEBS_PARSE_EVENT_NONE;
 		}
 	}

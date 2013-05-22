@@ -35,27 +35,6 @@
 #include <rosc/rosc.h>
 #include <rosc/string_res/msg_strings.h>
 
-	typedef enum
-	{
-		HTTP_METHOD_NOT_SET=-1,
-		__HTTP_METHODS(HTTP)
-	}xmlrpc_server_method_t;
-
-	typedef enum
-	{
-		__HTTP_AVAILABLE_ACTIONS(HTTP)
-	}xmlrpc_server_target_t;
-
-	typedef enum
-	{
-		__HTTP_HEADER_STDTEXT(HTTP)
-	}xmlrpc_server_stdtxt_t;
-
-
-	typedef enum
-	{
-		__HTTP_HEADER_DESCRIPTORS(HTTP)
-	}xmlrpc_header_descriptors_t;
 
 	typedef enum
 	{

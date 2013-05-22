@@ -32,7 +32,6 @@
 #ifndef XMLRPC_SERVER_H_
 #define XMLRPC_SERVER_H_
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
 #include <rosc/msg_parsers/handler/xmlrpc_string_id.h>
 
 

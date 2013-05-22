@@ -31,9 +31,9 @@
 #ifndef PORTS_H_
 #define PORTS_H_
 
-#include <inttypes.h>
+#include <rosc/system/types.h>
 #include <rosc/system/iface.h>
-#include <rosc/msg_parsers/xml_parser_structure.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
 
@@ -68,9 +68,6 @@ typedef struct port_t
 	port_state_t state;
 	struct port_t *next;
 }port_t;
-
-
-
 
 void rosc_ports_init();
 

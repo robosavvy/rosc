@@ -645,4 +645,5 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 			}
 		}
 	}
+	return false;
 }

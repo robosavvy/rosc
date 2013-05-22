@@ -40,16 +40,16 @@
  */
 #define SEEKSTRING_STRING_NOT_FOUND  -1
 
-#define SEBS_PARSE_INIT_SEEKSTRING(PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
-				PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
-				PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
+#define SEBS_PARSE_INIT_SEEKSTRING(NEXT_PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
+				NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
+				NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
 				DATA_STORAGE.stringlist=STRINGLIST;\
 				DATA_STORAGE.stringlist_len=STRINGLIST_LEN;\
 				DATA_STORAGE.endchrs=ENDCHRS;\
 				DATA_STORAGE.case_sensitive=CASE_SENSITIVE;\
 				DATA_STORAGE.curChrPos=0;\
 				DATA_STORAGE.result=0;\
-				return (false);
+				return (true);
 
 typedef struct
 {

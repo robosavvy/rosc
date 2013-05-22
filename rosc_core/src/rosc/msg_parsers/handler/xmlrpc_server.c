@@ -49,12 +49,12 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 			pact->mode_data.http.content_type_text_xml_found=false;
 		break;
 
-		case PARSE_EVENT_HTTP_METHOD_PARSED:
+		case SEBS_PARSE_EVENT_HTTP_METHOD_PARSED:
 				data->method=pact->submode_data.seekstring.result;
 				break;
 
 
-		case PARSE_EVENT_HTTP_ACTION_PARSED:
+		case SEBS_PARSE_EVENT_HTTP_ACTION_PARSED:
 			if(pact->submode_data.seekstring.result<0) //Do we have that target?
 			{
 				DEBUG_PRINT(STR, "not found 404 !",  "PARSE_EVENT_METHOD");
@@ -84,7 +84,7 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 			}
 			break;
 
-		case PARSE_EVENT_HTTP_HEADER_FIELD_CONTENT:
+		case SEBS_PARSE_EVENT_HTTP_HEADER_CONTENT:
 
 			break;
 
@@ -111,39 +111,39 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 		 * ERROR EVENT HANDLING
 		 */
 
-		case PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH_TOO_LONG:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH_TOO_LONG:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_CONTENT_LENGTH:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_NOT_FOUND:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_NOT_FOUND:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_VERSION_NOT_SUPPORTED:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_VERSION_NOT_SUPPORTED:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_BAD_REQUEST:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_LENGTH_REQUIRED:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_LENGTH_REQUIRED:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_METHOD_NOT_ALLOWED:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_METHOD_NOT_ALLOWED:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_CONTENT_TYPE:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_TYPE:
 
 			break;
 
-		case PARSE_EVENT_ERROR_HTTP_CONTENT_ENCODING:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_ENCODING:
 
 			break;
 
@@ -157,8 +157,8 @@ void xmlrpc_server_handler_n(parse_act_t * pact)
 
 
 
-		case PARSE_EVENT_ERROR_HTTP_BAD_RESPONSE:
-		case PARSE_EVENT_HTTP_RESPONSE_CODE:
+		case SEBS_PARSE_EVENT_HTTP_ERROR_BAD_RESPONSE:
+		case SEBS_PARSE_EVENT_HTTP_RESPONSE_CODE:
 		default:
 			break;
 	}
@@ -207,7 +207,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 				break;
 		}
 		break;
-	case PARSE_EVENT_HTTP_METHOD_PARSED:
+	case SEBS_PARSE_EVENT_HTTP_METHOD_PARSED:
 		if(pact->submode_data.seekstring.result <0) //Do we have that method?
 		{
 			DEBUG_PRINT(STR, "ERROR Method not supported 501 Cannot process request!",  "PARSE_EVENT_METHOD");
@@ -219,7 +219,7 @@ void xmlrpc_server_handler(parse_act_t * pact)
 		}
 		break;
 
-	case PARSE_EVENT_HTTP_ACTION_PARSED:
+	case SEBS_PARSE_EVENT_HTTP_ACTION_PARSED:
 		data->target=pact->submode_data.seekstring.result;
 		if(pact->submode_data.seekstring.result <0) //Do we have that target?
 		{

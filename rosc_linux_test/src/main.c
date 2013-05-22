@@ -117,7 +117,7 @@ int main_xmlrpctest()
 {
 	int rlen;
 	int buffersize=1;
-	parse_act_t pact;
+//	parse_act_t pact;
 
 #if(0)
 	char *msg=test_request_message;
