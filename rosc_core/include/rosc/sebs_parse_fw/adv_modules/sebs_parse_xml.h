@@ -39,50 +39,50 @@
 
 typedef enum
 {
-	SEBS_PARSE_XML_INIT,
-	SEBS_PARSE_XML_ROOT,
-	SEBS_PARSE_XML_INNER,
-	SEBS_PARSE_XML_TAG_START,
-	SEBS_PARSE_XML_TAG,
-	SEBS_PARSE_XML_CLOSE_TAG_START,
-	SEBS_PARSE_XML_EXPECT_SELFCLOSE_TAG_END,
-	SEBS_PARSE_XML_CDATA,
-	SEBS_PARSE_XML_CDATA_START,
-	SEBS_PARSE_XML_CDATA_EXPECT_OPEN_BRACKET,
-	SEBS_PARSE_XML_CDATA_FIRST_CLOSE_BRACKET,
-	SEBS_PARSE_XML_CDATA_SECOND_CLOSE_BRACKET,
-	SEBS_PARSE_XML_QMTAG_EXPECT_CLOSE,
-	SEBS_PARSE_XML_COMMENT_START_1ST_DASH,
-	SEBS_PARSE_XML_COMMENT,
-	SEBS_PARSE_XML_COMMENT_END_1ST_DASH,
-	SEBS_PARSE_XML_COMMENT_END_2ND_DASH,
-	SEBS_PARSE_XML_ATTRIBUTE_WAIT_EQUAL,
-	SEBS_PARSE_XML_ATTRIBUTE_WAIT_VAL_BOUND,
-	SEBS_PARSE_XML_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB,
-	SEBS_PARSE_XML_ATTRIBUTE_INSIDE_QUOTES_ATTRIB,
-	SEBS_PARSE_XML_INNER_CONTENT,
-}sebs_parse_xml_state_t;
+	SEBS_PARSE_XML_STATE_INIT,
+	SEBS_PARSE_XML_STATE_ROOT,
+	SEBS_PARSE_XML_STATE_INNER,
+	SEBS_PARSE_XML_STATE_TAG_START,
+	SEBS_PARSE_XML_STATE_TAG,
+	SEBS_PARSE_XML_STATE_CLOSE_TAG_START,
+	SEBS_PARSE_XML_STATE_EXPECT_SELFCLOSE_TAG_END,
+	SEBS_PARSE_XML_STATE_CDATA,
+	SEBS_PARSE_XML_STATE_CDATA_START,
+	SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET,
+	SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET,
+	SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET,
+	SEBS_PARSE_XML_STATE_QMTAG_EXPECT_CLOSE,
+	SEBS_PARSE_XML_STATE_COMMENT_START_1ST_DASH,
+	SEBS_PARSE_XML_STATE_COMMENT,
+	SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH,
+	SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH,
+	SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL,
+	SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND,
+	SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB,
+	SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB,
+	SEBS_PARSE_XML_STATE_INNER_CONTENT,
+} sebs_parse_xml_state_t;
 
 typedef enum
 {
-	SEBS_PARSE_XML_SUB_STATE_NONE,
-	SEBS_PARSE_XML_SUB_TAG_ID,
-	SEBS_PARSE_XML_SUB_ATTRIBUTE_ID,
-	SEBS_PARSE_XML_SUB_COMMENT_END_1ST_DASH,
-	SEBS_PARSE_XML_SUB_COMMENT_END_2ND_DASH,
-	SEBS_PARSE_XML_SUB_CDATA_TAG_STRING,
-}sebs_parse_xml_sub_state_t;
+	SEBS_PARSE_XML_SUBSTATE_NONE,
+	SEBS_PARSE_XML_SUBSTATE_TAG_ID,
+	SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID,
+	SEBS_PARSE_XML_SUBSTATE_COMMENT_END_1ST_DASH,
+	SEBS_PARSE_XML_SUBSTATE_COMMENT_END_2ND_DASH,
+	SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING,
+} sebs_parse_xml_sub_state_t;
 
 typedef enum
 {
-	SEBS_PARSE_XML_EVENT_NONE=SEBS_PARSE_EVENT_NONE,         //!< means that there is no event atm.
-	SEBS_PARSE_XML_EVENT_ERROR_DEPTH,                        //!< means that the depth of the current xml document is too depth to be handled
-	SEBS_PARSE_XML_EVENT_MALFORMED,                    		 //!< means that something inside the xml document is wrong
-	SEBS_PARSE_XML_EVENT_TAG,                                //!< means that a xml tag is found and the parser is now after the tag string
-	SEBS_PARSE_XML_EVENT_INSIDE_TAG,                         //!< means that the parser entered the tag and is now after the '>'
-	SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED,    //!< means that the submode called from the handler is finished
-	SEBS_PARSE_XML_EVENT_CONTENT_START,                      //!< means that the parser found content inside a tag and now is at its beginning
-}sebs_parse_xml_event_t;
+	SEBS_PARSE_XML_EVENT_NONE = SEBS_PARSE_EVENT_NONE, //!< means that there is no event atm.
+	SEBS_PARSE_XML_EVENT_ERROR_DEPTH, //!< means that the depth of the current xml document is too depth to be handled
+	SEBS_PARSE_XML_EVENT_ERROR_MALFORMED, //!< means that something inside the xml document is wrong
+	SEBS_PARSE_XML_EVENT_TAG, //!< means that a xml tag is found and the parser is now after the tag string
+	SEBS_PARSE_XML_EVENT_INSIDE_TAG, //!< means that the parser entered the tag and is now after the '>'
+	SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED, //!< means that the submode called from the handler is finished
+	SEBS_PARSE_XML_EVENT_CONTENT_START, //!< means that the parser found content inside a tag and now is at its beginning
+} sebs_parse_xml_event_t;
 
 typedef enum
 {
@@ -92,8 +92,37 @@ typedef enum
 	SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK,
 	SEBS_PARSE_XML_TAG_TYPE_COMMENT,
 	SEBS_PARSE_XML_TAG_TYPE_CDATA,
-}
-sebs_parse_xml_tag_type_t;
+} sebs_parse_xml_tag_type_t;
+
+#define SEBS_PARSE_KNOWN_TAGS __RPC_XML_TAG_STRINGS(SEBS_PARSE_XML) //!< Tag Enum Entries
+#define SEBS_PARSE_KNOWN_TAGS_ARRAY rpc_xml_tag_strings //!< Tag String Array
+#define SEBS_PARSE_KNOWN_TAGS_ARRAY_LEN RPC_XML_TAG_STRINGS_LEN //!< Tag String Array Length
+#define SEBS_PARSE_KNOWN_ATTRIBUTES __RPC_XML_TAG_STRINGS(SEBS_PARSE_XML) //!< Attribute Enum Entries
+#define SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY rpc_xml_attribute_strings //!< Attribute String Array
+#define SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY_LEN RPC_XML_ATTRIBUTE_STRINGS_LEN //!< Attribute String Array Length
+
+/**
+ * XML Tags
+ * This enum contains the number for each known tag
+ */
+typedef enum
+{
+	SEBS_PARSE_XML_TAG_UNKNOWN = -2,
+	SEBS_PARSE_XML_TAG_NONE = -1,
+	SEBS_PARSE_KNOWN_TAGS
+	//!< imports all string numbers from autogenerated file
+} parse_xml_tags_t;
+
+/**
+ * XML Attributes
+ */
+typedef enum
+{
+	SEBS_PARSE_XML_ATTRIBUTE_UNKNOWN = -2,
+	SEBS_PARSE_XML_ATTRIBUTE_NONE = -1,
+	SEBS_PARSE_KNOWN_ATTRIBUTES
+	//!< imports all string numbers from autogenerated file
+} parse_xml_attrib_t;
 
 typedef struct
 {
@@ -103,26 +132,25 @@ typedef struct
 	 */
 	sebs_parser_data_t* parser_data;
 
-	uint16_t depth;						  //!< depth stores the depth of the current location of the parser
-	uint32_t processed_bytes; 			  //!< currently processed bytes of the xml part (updated after each chunk)
-	uint16_t current_tag; 				  //!< current_tag contains the current known xml tag
+	uint16_t depth;	//!< depth stores the depth of the current location of the parser
+	uint32_t processed_bytes; //!< currently processed bytes of the xml part (updated after each chunk)
+	uint16_t current_tag; 	//!< current_tag contains the current known xml tag
 	sebs_parse_xml_tag_type_t tag_type;   //!< normal, ! or ? tag.
-	uint16_t attribute; 	  			  //!< shows the attribute if inside an attribute otherwise -1
-	sebs_parse_xml_state_t state; 		  //!< contains the current state of the xml parser
+	parse_xml_attrib_t attribute; //!< shows the attribute if inside an attribute otherwise -1
+	sebs_parse_xml_state_t state; //!< contains the current state of the xml parser
 	sebs_parse_xml_sub_state_t sub_state; //!< gives additional state information
-	uint16_t tags[SEBS_XML_MAX_DEPTH];    //!< array for checking tag validity
+	parse_xml_tags_t tags[SEBS_PARSE_XML_MAX_DEPTH]; //!< array for checking tag validity
 
 	union
 	{
 		sebs_parse_copy2buffer_data_t copy2buffer;
 		sebs_parse_numberparse_result_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
-	}std_func_data;
-}sebs_parse_xml_data_t;
+	} std_func_data;
+} sebs_parse_xml_data_t;
 
 #ifndef FORCE_INLINE
-	bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data);
+bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data);
 #endif
-
 
 #endif /* SEBS_PARSE_MODE_XML_H_ */
