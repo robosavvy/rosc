@@ -46,14 +46,22 @@ bool xmlrpc_server(xmlrpc_server_data_t *data, void** parser_data_ptr)
 		//Select http header parser as current called function on incoming data
 		data->parser_data.current_parser.parser_function=(sebs_parse_function_t)&sebs_parse_http;
 		data->parser_data.current_parser.parser_data=&data->main_module_data;
-
-
+		data->parser_data.return_to_handler=false;
 
 		data->main_module_data.http.content_length=-1;
 		data->main_module_data.http.descriptor;
 		data->main_module_data.http.state=SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
 		data->main_module_data.http.substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
 		data->main_module_data.http.parser_data=&data->parser_data;
+
+		data->main_module_data.http.descriptors=xmlrpc_http_descriptors;
+		data->main_module_data.http.descriptors_len=XMLRPC_HTTP_DESCRIPTORS_LEN;
+
+		data->main_module_data.http.actions=xmlrpc_http_actions;
+		data->main_module_data.http.actions_len=XMLRPC_HTTP_ACTIONS_LEN;
+
+		data->main_module_data.http.methods=xmlrpc_http_methods;
+		data->main_module_data.http.methods_len=XMLRPC_HTTP_METHODS_LEN;
 
 		//Event = 0
 		data->parser_data.event=0;

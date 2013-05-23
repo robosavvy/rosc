@@ -120,7 +120,7 @@ rpc_xml_slave_methodnames:
   }
 
 #Standard descriptors for headers
-http_header_descriptors:
+xmlrpc_http_descriptors:
   comment:
     'standard http header descriptors'
   defineShort:
@@ -154,7 +154,7 @@ http_header_stdtext:
   }
 
 #Method strings
-http_methods:
+xmlrpc_http_methods:
   comment:
     'method strings'
   defineShort:
@@ -166,7 +166,7 @@ http_methods:
 
 
 #Available actions
-http_available_actions:
+xmlrpc_http_actions:
   comment:
     'contains available actions for http requests'
   defineShort:
@@ -176,20 +176,8 @@ http_available_actions:
     'test'
   }
 
-#Seperators for parsing
-parse_separators:
-  comment:
-    'seperators for parsing different pieces of a XMLRPC message'
-  defineShort:
-    'SEP'
-  stringlist: {
-    '/. \n': METHOD,
-    '\n:': HTTP_HEADER,
-    '</>\n \"=': XML 
-  }
-
  #xml rpc boolean
-xml_rpc_boolean_strings:
+xmlrpc_xml_boolean_strings:
   comment:
     'possible strings for representing boolean in xml rpc'
   defineShort:

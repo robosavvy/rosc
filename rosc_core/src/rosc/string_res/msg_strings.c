@@ -66,7 +66,21 @@ const char *rpc_xml_slave_methodnames[] =
 	"shutdown"
 };
 
-const char *http_header_descriptors[] =
+const char *xmlrpc_xml_boolean_strings[] =
+{
+	"0",
+	"1",
+	"false",
+	"true"
+};
+
+const char *xmlrpc_http_methods[] =
+{
+	"GET",
+	"POST"
+};
+
+const char *xmlrpc_http_descriptors[] =
 {
 	"Accept-Encoding",
 	"Content-Encoding",
@@ -76,30 +90,6 @@ const char *http_header_descriptors[] =
 	"Host",
 	"Server",
 	"User-Agent"
-};
-
-const char *rpc_xml_stdtext[] =
-{
-	"/tcp_keepalive",
-	"<?xml version=\"1.0\"?>",
-	"Error code",
-	"TCPROS",
-	"hasParam",
-	"http://",
-	"registerPublisher",
-	"registerService",
-	"registerSubscriber",
-	"requestTopic",
-	"rosrpc://",
-	"unregisterPublisher",
-	"unregisterService",
-	"unregisterSubscriber"
-};
-
-const char *http_available_actions[] =
-{
-	"",
-	"test"
 };
 
 const char *ros_field_strings[] =
@@ -114,13 +104,6 @@ const char *ros_field_strings[] =
 	"tcp_nodelay",
 	"topic",
 	"type"
-};
-
-const char *parse_separators[] =
-{
-	"/. \n",
-	"</>\n \"=",
-	"\n:"
 };
 
 const char *rpc_xml_tag_strings[] =
@@ -145,17 +128,27 @@ const char *rpc_xml_tag_strings[] =
 	"xml"
 };
 
-const char *http_methods[] =
+const char *rpc_xml_stdtext[] =
 {
-	"GET",
-	"POST"
+	"/tcp_keepalive",
+	"<?xml version=\"1.0\"?>",
+	"Error code",
+	"TCPROS",
+	"hasParam",
+	"http://",
+	"registerPublisher",
+	"registerService",
+	"registerSubscriber",
+	"requestTopic",
+	"rosrpc://",
+	"unregisterPublisher",
+	"unregisterService",
+	"unregisterSubscriber"
 };
 
-const char *xml_rpc_boolean_strings[] =
+const char *xmlrpc_http_actions[] =
 {
-	"0",
-	"1",
-	"false",
-	"true"
+	"",
+	"test"
 };
 

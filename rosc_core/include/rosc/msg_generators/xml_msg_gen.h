@@ -28,7 +28,7 @@
  *
  *  msg_gen.h created by Christian Holl
  */
-
+#if 0
 /**
  *  TODO CHANGE DOCUMENTATION FOR NEW FUNCTION
  *  @example rpcmsg_generation.c
@@ -229,7 +229,7 @@ typedef enum
 	/**
 	 * Values specifying most used standard field descriptors
 	 */
-	__HTTP_HEADER_DESCRIPTORS(HTTP_HEADER_GEN), //!< Places the available standard descriptor numbers inside this enum
+	__HTTP_DESCRIPTORS(HTTP_HEADER_GEN), //!< Places the available standard descriptor numbers inside this enum
 
 	/**
 	 * This specifies to use a text in the custom text array as descriptor
@@ -304,3 +304,4 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 
 
 #endif /* MSG_GEN_H_ */
+#endif

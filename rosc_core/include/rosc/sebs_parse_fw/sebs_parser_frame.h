@@ -43,6 +43,12 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
+
+
+#define SEBS_PARSE_HANDLER_FUNCTION_CALL()\\
+		return_to_handler
+
+
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
 #define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2

@@ -42,6 +42,26 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
+
+
+typedef enum
+{
+	__XMLRPC_HTTP_DESCRIPTORS(XMLRPC)
+}xmlrpc_header_descriptors_t;
+
+typedef enum
+{
+	__XMLRPC_HTTP_ACTIONS(XMLRPC)
+}xmlrpc_server_actions_t;
+
+typedef enum
+{
+	HTTP_METHOD_NOT_SET=-1,
+	__XMLRPC_HTTP_METHODS(XMLRPC)
+}xmlrpc_server_method_t;
+
+
+
 typedef struct
 {
 

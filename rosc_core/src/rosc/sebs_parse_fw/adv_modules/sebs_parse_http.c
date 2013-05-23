@@ -33,7 +33,6 @@
 
 bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 {
-
 	while (*len > 0 && data->parser_data->event == SEBS_PARSE_EVENT_NONE)
 	{
 		bool is_field_content = false;
@@ -146,48 +145,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			}
 			data->state = SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR;
 			break;
-		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_CONTENT_LENGTH:
 
-			switch (data->std_func_data.numberparse.result)
-			{
-			case NUMBERPARSE_ANOTHER_CHAR:
-				if (**buf == ' ' || **buf == '\n')
-				{
-					data->content_length =
-							data->std_func_data.numberparse.number;
-					DEBUG_PRINT(INT,"Content Length is", data->content_length);
-				}
-				else
-				{
-					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
-				}
-				break;
-			case NUMBERPARSE_ERROR_NONUMBER:
-				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
-				break;
-			case NUMBERPARSE_MAX_FIGURES:
-				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
-				break;
-
-			}
-
-			break;
-
-		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_CONTENT_TYPE:
-			if (data->std_func_data.seekstring.result == HTTP_VAL_TEXT_XML)
-				data->parser_data->event = SEBS_PARSE_EVENT_HTTP_CONTENT_TYPE;
-
-			//default chars will lead to reengage seekstring
-			//so we need to skip them here
-			if (**buf == ',' || **buf == ';')
-			{
-				++*buf;
-				--*len;
-			}
-			break;
 		default:
 			break;
 		}
@@ -215,7 +173,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 					--*len;
 					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							http_available_actions, HTTP_AVAILABLE_ACTIONS_LEN,
+							data->actions, data->actions_len,
 							" ", true)
 					;
 					break;
@@ -319,8 +277,8 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				case SEBS_PARSE_HTTP_STATE_REQUEST_METHOD:
 					data->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
 					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
-							data->std_func_data.seekstring, http_methods,
-							HTTP_METHODS_LEN, " /\n.", true)
+							data->std_func_data.seekstring, data->methods,
+							data->methods_len, " /\n.", true)
 					;
 					break;
 
@@ -355,8 +313,8 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_DESCRIPTOR_ID;
 					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							http_header_descriptors,
-							HTTP_HEADER_DESCRIPTORS_LEN, " :", false)
+							data->descriptors,
+							data->descriptors_len, " :", false)
 					;
 					break;
 
@@ -376,47 +334,9 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			{
 				DEBUG_PRINT_STR("CONTENT_START");
 				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
-
-				switch (data->descriptor)
-				{
-
-				case HTTP_DESC_CONTENT_ENCODING:
-					/* NO ENCODING IS SUPPORTED->ERROR 415*/
-					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_ENCODING;
-					break;
-
-				case HTTP_DESC_CONTENT_LENGTH:
-					if (data->content_length == -1)
-					{
-						data->substate =
-								SEBS_PARSE_HTTP_SUBSTATE_CHECK_CONTENT_LENGTH;
-						SEBS_PARSE_INIT_NUMBERPARSE(
-								data->parser_data->next_parser,
-								data->std_func_data.numberparse, 4, 0);
-					}
-					else
-					{
-						data->parser_data->event =
-								SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
-						DEBUG_PRINT_STR("CONTENT LENGTH FIELD ERROR");
-					}
-					break;
-				case HTTP_DESC_CONTENT_TYPE:
-					data->substate =
-							SEBS_PARSE_HTTP_SUBSTATE_CHECK_CONTENT_TYPE;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
-							data->std_func_data.seekstring, http_header_stdtext,
-							HTTP_HEADER_STDTEXT_LEN, " ,;\n", true)
-					;
-					break;
-
-				default:
-					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_HEADER_CONTENT;
-					data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
-					break;
-				}
+				data->parser_data->event =
+						SEBS_PARSE_EVENT_HTTP_HEADER_CONTENT;
+				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
 			}
 
 			if (len > 0)
