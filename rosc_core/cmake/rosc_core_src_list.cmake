@@ -13,8 +13,7 @@ src/rosc/system/ports.c
 src/rosc/system/iface.c
 src/rosc/system/system.c
 src/rosc/system/rosc_init.c
+src/rosc/com/xmlrpc_server.c
 src/rosc/msg_generators/xml_msg_gen.c
 src/rosc/string_res/msg_strings.c
-#src/rosc/msg_parsers/handler/xmlrpc_server.c
-#src/rosc/msg_parsers/handler/xmlrpc_client.c
 )

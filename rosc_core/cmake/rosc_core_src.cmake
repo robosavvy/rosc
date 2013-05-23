@@ -1,7 +1,7 @@
 message(STATUS "Getting rosc sources...")
 
 #update the current sources list in the next include
-#execute_process(COMMAND python ${CMAKE_CURRENT_LIST_DIR}/../code_gen/refreshFiles.py)
+execute_process(COMMAND python ${CMAKE_CURRENT_LIST_DIR}/../code_gen/refreshFiles.py)
 
 #all sources of rosc_core
 include(${CMAKE_CURRENT_LIST_DIR}/rosc_core_src_list.cmake)

@@ -31,6 +31,13 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function)
+{
+	sebs_parser_call_t *parser_data_ptr=(sebs_parser_call_t*)1;
+	handler_function(handler_data,&parser_data_ptr);
+	return (parser_data_ptr);
+}
+
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 {
 	/*
@@ -38,64 +45,60 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	 * Network functions return len=-1 when connection was terminated for example.
 	 * in that case the handler function is called.
 	 */
-	if(len<0)data->event=SEBS_PARSE_EVENT_LEN_SMALLER_ZERO;
+	if (len < 0)
+		data->event = SEBS_PARSE_EVENT_LEN_SMALLER_ZERO;
 
 	/*
 	 * Handling the parser input
 	 */
 	do
 	{
-		if(data->event==SEBS_PARSE_EVENT_NONE)
+		if (data->event == SEBS_PARSE_EVENT_NONE)
 		{
-			//current_function is not zero
-			if(data->current_parser.parser_function)
+			//call parser
+			if (data->current_parser.parser_function(&buf, &len,
+					data->current_parser.parser_data))
 			{
-				//call parser
-				if(data->current_parser.parser_function(&buf, &len, data->current_parser.parser_data))
+				//was current function called by handler?
+				//set event
+				if (data->return_to_handler)
 				{
-					//was current function called by handler?
-					//set event
-					if(data->return_to_handler)
-					{
-						data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
-					}
-
-					//Switch current parser call and next
-					sebs_parser_call_t store;
-					store.parser_function=data->next_parser.parser_function;
-					store.parser_data=data->next_parser.parser_data;
-
-					data->next_parser.parser_function=data->current_parser.parser_function;
-					data->next_parser.parser_data=data->current_parser.parser_data;
-
-					data->current_parser.parser_function=store.parser_function;
-					data->current_parser.parser_data=store.parser_data;
+					data->event = SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 				}
-			}
-			else //current function is zero -> Event Init
-			{
-				data->event=SEBS_PARSE_EVENT_INIT;
+
+				//Switch current parser call and next
+				sebs_parser_call_t store;
+				store.parser_function = data->next_parser.parser_function;
+				store.parser_data = data->next_parser.parser_data;
+
+				data->next_parser.parser_function =
+						data->current_parser.parser_function;
+				data->next_parser.parser_data =
+						data->current_parser.parser_data;
+
+				data->current_parser.parser_function = store.parser_function;
+				data->current_parser.parser_data = store.parser_data;
 			}
 		}
 		else //call handler
 		{
 			//if handler function returns with true
-			//
-			if(data->handler_function(data))
+			if (data->handler_function(data, 0))//The 0 here is to disable the init.
 			{
 				//Switch current parser call and next
 				sebs_parser_call_t store;
-				store.parser_function=data->next_parser.parser_function;
-				store.parser_data=data->next_parser.parser_data;
+				store.parser_function = data->next_parser.parser_function;
+				store.parser_data = data->next_parser.parser_data;
 
-				data->next_parser.parser_function=data->current_parser.parser_function;
-				data->next_parser.parser_data=data->current_parser.parser_data;
+				data->next_parser.parser_function =
+						data->current_parser.parser_function;
+				data->next_parser.parser_data =
+						data->current_parser.parser_data;
 
-				data->current_parser.parser_function=store.parser_function;
-				data->current_parser.parser_data=store.parser_data;
+				data->current_parser.parser_function = store.parser_function;
+				data->current_parser.parser_data = store.parser_data;
 			}
-			data->event=SEBS_PARSE_EVENT_NONE;
+			data->event = SEBS_PARSE_EVENT_NONE;
 		}
-	}
-	while(len>0);
+	} while (len > 0);
 }

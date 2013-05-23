@@ -47,15 +47,9 @@
 // /////////////////////////
 
 
-
-
-
-
-
-
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
-
+//#include <rosc/sebs_parse_fw>
 
 //The memory definitions for
 //the size of all port buffers
@@ -113,24 +107,31 @@ char *test_response_message=
 		"</params>\n"
 		"</methodResponse>";
 
+
+#include <rosc/com/xmlrpc_server.h>
+
+typedef bool (*sebs_parse_handler_function_t)(void *data, void** parser_data_ptr);
 int main_xmlrpctest()
 {
 	int rlen;
 	int buffersize=1;
 //	parse_act_t pact;
 
-#if(0)
+#if(1)
 	char *msg=test_request_message;
-	xmlrpc_server_data_t server_data;
-	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
+
 #else
 	char *msg=test_response_message;
-//	xmlrpc_client_data_t client_data;
-//	xmlrpc_parse_act_init(&pact,XMLRPC_CLIENT,&client_data);
+
 #endif
 
-	for(rlen=0;msg[rlen]!=0;rlen++);
+	xmlrpc_server_data_t handler_data;
+	sebs_parser_data_t* parser_data;
+	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc_server);
 
+
+
+	for(rlen=0;msg[rlen]!=0;rlen++);
 	printf("Test Message Length: %i\n",rlen);
 
 	int i;
@@ -143,10 +144,30 @@ int main_xmlrpctest()
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
 	//	xmlrpc_parse(msg+i*len,len,&pact);
+		sebs_parser_frame(msg+i*len,len,parser_data);
 	}
 
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ///////////////////////
@@ -277,11 +298,18 @@ int main_tcprostest()
 
 
 
-
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 int main()
 {
 	printf("\n\nExecute --> rosc_linux_test\n\n");
-	rosc_init();
+
+
+
+
+
+
+
+	//rosc_init();
 
 	main_xmlrpctest();
 	//main_tcprostest();

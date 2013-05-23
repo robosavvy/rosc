@@ -44,25 +44,22 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
 #define SEBS_PARSE_EVENT_NONE 0
-#define SEBS_PARSE_EVENT_INIT -1
-#define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -2
-#define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -3
+#define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
+#define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2
 
-/**
- * This is the type for a parser function
- * @param buf Pointer to the buffer-pointer of the parser_frame it increases the buffer-pointer every time a char was parsed
- * @param len Pointer to the length information of the parser_frame, it will be decreased every time a char was analyzed
- * @param data Pointer to the data storage for the current parser function
- */
+
 typedef bool (*sebs_parse_function_t)(char **buf, int32_t *len_ptr, void *data);
 
 /**
  * This struct stores a parser function and the data location for calling it
  */
-typedef struct {
+typedef struct
+{
 	sebs_parse_function_t parser_function; //!< Parser-function to be called
 	void* parser_data; //!< Parser data to call the parser function with
 } sebs_parser_call_t;
+
+
 
 /**
  * This struct stores the current data for the parser
@@ -70,7 +67,8 @@ typedef struct {
  * the link inside the handler_data must point on to the
  * handler_data storing the current parser_data_t.
  */
-typedef struct sebs_parser_data_t {
+typedef struct sebs_parser_data_t
+{
 	/**
 	 * This is the function with its data
 	 * called by the parser normally
@@ -93,8 +91,7 @@ typedef struct sebs_parser_data_t {
 	 * which are supplied with the pointer
 	 * to parser_data_t
 	 */
-	uint32_t event;
-
+	int32_t event;
 
 	/**
 	 * When set to true and the current parsing function returns true,
@@ -113,10 +110,19 @@ typedef struct sebs_parser_data_t {
 	/**
 	 * This is the handler function which is called every time, when an event occurs
 	 * @param data The data for the handler function
-	 * @return True if the handler calls a simple function
+	 * @param init this field is to be used with parser_init, if not zero,
+	 * 		  the hander_data outputing the parser_data pointer in that variable,
+	 * 		  it can also used for additional init data for the handler...
+	 * @return True if the handler called a function
 	 */
-	bool (*handler_function)(struct sebs_parser_data_t *data);
+	bool (*handler_function)(void *data, void** parser_data);
 } sebs_parser_data_t;
+
+
+typedef bool (*sebs_parse_handler_function_t)(void *data, void** init_in_parser_data_out);
+
+
+sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);
 
 /**
  * This is the base function for the streaming parsers
