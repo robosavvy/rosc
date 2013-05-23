@@ -139,7 +139,7 @@ typedef struct
 	sebs_parse_xml_tag_type_t tag_type;   //!< normal, ! or ? tag.
 	parse_xml_attrib_t attribute; //!< shows the attribute if inside an attribute otherwise -1
 	sebs_parse_xml_state_t state; //!< contains the current state of the xml parser
-	sebs_parse_xml_sub_state_t sub_state; //!< gives additional state information
+	sebs_parse_xml_sub_state_t substate; //!< gives additional state information
 	parse_xml_tags_t tags[SEBS_PARSE_XML_MAX_DEPTH]; //!< array for checking tag validity
 
 	union

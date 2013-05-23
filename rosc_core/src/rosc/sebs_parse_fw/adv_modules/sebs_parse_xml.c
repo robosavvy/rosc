@@ -38,14 +38,14 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 		data->depth = 0;
 		data->current_tag = SEBS_PARSE_XML_TAG_NONE;
 		data->state = SEBS_PARSE_XML_STATE_ROOT;
-		data->sub_state =SEBS_PARSE_XML_SUBSTATE_NONE;
+		data->substate =SEBS_PARSE_XML_SUBSTATE_NONE;
 	}
 	while (*len > 0 && data->parser_data->event == SEBS_PARSE_EVENT_NONE)
 	{
 
 		//Are we inside a substate (awaiting "reply" from subfunction_state?)
 		//If yes, in which one?
-		switch (data->sub_state)
+		switch (data->substate)
 		{
 		case SEBS_PARSE_XML_SUBSTATE_TAG_ID:
 
@@ -100,9 +100,9 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 			break;
 		}
 
-		if (data->sub_state !=SEBS_PARSE_XML_SUBSTATE_NONE)
+		if (data->substate !=SEBS_PARSE_XML_SUBSTATE_NONE)
 		{
-			data->sub_state =SEBS_PARSE_XML_SUBSTATE_NONE;
+			data->substate =SEBS_PARSE_XML_SUBSTATE_NONE;
 		}
 		else
 		{
@@ -582,7 +582,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_START:
-					data->sub_state =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
+					data->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
 					SEBS_PARSE_INIT_SEEKSTRING(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
@@ -591,7 +591,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 							true);
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->sub_state =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
+					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					SEBS_PARSE_INIT_SEEKSTRING(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
@@ -601,7 +601,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 
 				case SEBS_PARSE_XML_STATE_CLOSE_TAG_START:
-					data->sub_state =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
+					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_CLOSE;
 					SEBS_PARSE_INIT_SEEKSTRING(
 							data->parser_data->next_parser,
@@ -612,7 +612,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 
 				case SEBS_PARSE_XML_STATE_TAG: //A non empty space inside a tag means, that we have a attribute.
-					data->sub_state =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
+					data->substate =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
 					SEBS_PARSE_INIT_SEEKSTRING(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,

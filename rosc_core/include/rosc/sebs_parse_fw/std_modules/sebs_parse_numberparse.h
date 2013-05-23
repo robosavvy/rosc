@@ -35,7 +35,7 @@
 #include <rosc/system/types.h>
 
 #define SEBS_PARSE_INIT_NUMBERPARSE(NEXT_PARSER_DATA, DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED)\
-		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
+		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_numberparse;\
 		NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.negative_allowed=NEGATIVE_ALLOWED;\
 		DATA_STORAGE.cur_place=0;\

@@ -63,6 +63,35 @@ bool xmlrpc_server(xmlrpc_server_data_t *data, void** parser_data_ptr)
 		return (false);
 	}
 
+
+	switch(data->parser_data.event)
+	{
+	case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH:
+
+
+	case SEBS_PARSE_EVENT_HTTP_HEADER_END:
+		DEBUG_PRINT_STR("HEADER END!");
+		data->parser_data.current_parser.parser_function=(sebs_parse_function_t)&sebs_parse_xml;
+		data->parser_data.current_parser.parser_data=&data->main_module_data;
+
+		data->main_module_data.xml.current_tag;
+		data->main_module_data.xml.depth=0;
+		data->main_module_data.xml.processed_bytes=0;
+		data->main_module_data.xml.state=SEBS_PARSE_XML_STATE_ROOT;
+		data->main_module_data.xml.substate=SEBS_PARSE_XML_SUBSTATE_NONE;
+		data->main_module_data.xml.tag_type=SEBS_PARSE_XML_TAG_NONE;
+
+
+		data->main_module_data.http.parser_data=&data->parser_data;
+
+
+		break;
+	default:
+		break;
+
+	}
+
+
 	return(false);
 }
 

@@ -419,9 +419,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				}
 			}
 
-			if (len > 0
-					&& data->parser_data->event
-							!= SEBS_PARSE_EVENT_HTTP_HEADER_END)
+			if (len > 0)
 			{
 				++*buf;
 				--*len;
