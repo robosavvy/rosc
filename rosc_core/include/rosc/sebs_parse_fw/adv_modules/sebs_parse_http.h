@@ -56,7 +56,7 @@
 		HTTP_DATA.actions=ACTIONS;\
 		HTTP_DATA.actions_len=ACTIONS_LEN;\
 		HTTP_DATA.methods=METHODS;\
-		HTTP_DATA.methods_len=METHODS_LEN;
+		HTTP_DATA.methods_len=METHODS_LEN
 
 
 /**

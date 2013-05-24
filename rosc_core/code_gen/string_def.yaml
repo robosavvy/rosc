@@ -31,7 +31,7 @@
 #
 #  strHCgen.py created by Christian Holl
 
-rpc_xml_tag_strings: # <- This is the variable name for the 
+xmlrpc_tag_strings: # <- This is the variable name for the 
                      # created string variable 
                      # and the defines for the enum
                      # DO ONLY USE C CONFORM WRITINGS FOR VARIABLES!!!
@@ -46,8 +46,6 @@ rpc_xml_tag_strings: # <- This is the variable name for the
                   #can specifiy a replacement for it after a : like 
                   #shown in the next variable definition                  
                   'xml':XMLDEF,
-                  '--':COMMENT,
-                  'CDATA',
                   boolean,
                   data,
                   fault,
@@ -67,7 +65,7 @@ rpc_xml_tag_strings: # <- This is the variable name for the
 
 
 #Known Attributes strings XML
-rpc_xml_attribute_strings:
+xmlrpc_attribute_strings:
   comment: 
     'standard attributes for XMLRPC'
   defineShort:
@@ -78,7 +76,7 @@ rpc_xml_attribute_strings:
 
 #Standard strings for XMLRPC
 #TODO maybe move strings of master API to another array, requires generator update
-rpc_xml_stdtext:
+xmlrpc_stdtext:
   comment:
     'standard XMLRPC text pieces'
   defineShort:
@@ -101,7 +99,7 @@ rpc_xml_stdtext:
   }
 
 #Method names for RPC
-rpc_xml_slave_methodnames:
+xmlrpc_slave_methodnames:
   comment:
     'Strings for known methods of the slave api'
   defineShort:

@@ -34,9 +34,9 @@
 
 #include <rosc/system/types.h>
 
-#define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(SUBMODE_PTR)\
-		SUBMODE_PTR=(parser_submode_function_t)&skipwholemessage;\
-		return false;
+#define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(NEXT_PARSER_FUNC)\
+		NEXT_PARSER_FUNC=(parser_submode_function_t)&skipwholemessage;\
+		return true
 
 /**
  * This function skips every incoming char which is in the buffer.

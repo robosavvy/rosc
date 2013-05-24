@@ -35,11 +35,6 @@
  */           
 #include <rosc/string_res/msg_strings.h> 
 
-const char *rpc_xml_attribute_strings[] =
-{
-	"version"
-};
-
 const char *http_header_stdtext[] =
 {
 	"BaseHTTP/ROSc-NodeLib",
@@ -52,32 +47,53 @@ const char *http_header_stdtext[] =
 	"text/xml"
 };
 
-const char *rpc_xml_slave_methodnames[] =
+const char *xmlrpc_stdtext[] =
 {
-	"getBusInfo",
-	"getBusStats",
-	"getMasterUri",
-	"getPid",
-	"getPublications",
-	"getSubscriptions",
-	"paramUpdate",
-	"publisherUpdate",
+	"/tcp_keepalive",
+	"<?xml version=\"1.0\"?>",
+	"Error code",
+	"TCPROS",
+	"hasParam",
+	"http://",
+	"registerPublisher",
+	"registerService",
+	"registerSubscriber",
 	"requestTopic",
-	"shutdown"
+	"rosrpc://",
+	"unregisterPublisher",
+	"unregisterService",
+	"unregisterSubscriber"
 };
 
-const char *xmlrpc_xml_boolean_strings[] =
+const char *xmlrpc_attribute_strings[] =
 {
-	"0",
-	"1",
-	"false",
-	"true"
+	"version"
 };
 
 const char *xmlrpc_http_methods[] =
 {
 	"GET",
 	"POST"
+};
+
+const char *xmlrpc_tag_strings[] =
+{
+	"array",
+	"boolean",
+	"data",
+	"fault",
+	"i4",
+	"int",
+	"member",
+	"methodCall",
+	"methodName",
+	"methodResponse",
+	"param",
+	"params",
+	"string",
+	"struct",
+	"value",
+	"xml"
 };
 
 const char *xmlrpc_http_descriptors[] =
@@ -106,49 +122,31 @@ const char *ros_field_strings[] =
 	"type"
 };
 
-const char *rpc_xml_tag_strings[] =
+const char *xmlrpc_slave_methodnames[] =
 {
-	"--",
-	"CDATA",
-	"array",
-	"boolean",
-	"data",
-	"fault",
-	"i4",
-	"int",
-	"member",
-	"methodCall",
-	"methodName",
-	"methodResponse",
-	"param",
-	"params",
-	"string",
-	"struct",
-	"value",
-	"xml"
-};
-
-const char *rpc_xml_stdtext[] =
-{
-	"/tcp_keepalive",
-	"<?xml version=\"1.0\"?>",
-	"Error code",
-	"TCPROS",
-	"hasParam",
-	"http://",
-	"registerPublisher",
-	"registerService",
-	"registerSubscriber",
+	"getBusInfo",
+	"getBusStats",
+	"getMasterUri",
+	"getPid",
+	"getPublications",
+	"getSubscriptions",
+	"paramUpdate",
+	"publisherUpdate",
 	"requestTopic",
-	"rosrpc://",
-	"unregisterPublisher",
-	"unregisterService",
-	"unregisterSubscriber"
+	"shutdown"
 };
 
 const char *xmlrpc_http_actions[] =
 {
 	"",
 	"test"
+};
+
+const char *xmlrpc_xml_boolean_strings[] =
+{
+	"0",
+	"1",
+	"false",
+	"true"
 };
 

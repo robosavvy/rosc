@@ -34,70 +34,68 @@
 
 #include <rosc/com/xmlrpc_server.h>
 
+
 bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 {
-	if(in_type_out_parser_data!=0
-	   ||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO)//If not null lets init the stuff
+
+	DEBUG_PRINT_STR("EVENT!\n");
+
+	if (in_type_out_parser_data
+			!= 0 ||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
 	{
 
-		SEBS_PARSE_HTTP_INIT(0, data->parser_data, data->parser_data.current_parser,
-				data->main_module_data.http, xmlrpc_http_descriptors,
-				XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
-				XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
-				XMLRPC_HTTP_METHODS_LEN);
+		SEBS_PARSE_HTTP_INIT(0, data->parser_data,
+				data->parser_data.current_parser, data->main_module_data.http,
+				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
+				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
+				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
 
-
-		xmlrpc_init_t* type = (xmlrpc_init_t*)*in_type_out_parser_data;
-		if(1)//(*type==XMLRPC_SERVER)
+		xmlrpc_init_t* type = (xmlrpc_init_t*) *in_type_out_parser_data;
+		if (1) //(*type==XMLRPC_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
-			data->main_module_data.http.state=SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
+			data->main_module_data.http.state =
+					SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
-			data->main_module_data.http.state=SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
+			data->main_module_data.http.state =
+					SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
 		}
 
-		data->parser_data.event=SEBS_PARSE_EVENT_NONE;
-		data->parser_data.handler_function=(sebs_parse_handler_function_t)&xmlrpc;
-
-
+		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
+		data->parser_data.handler_function =
+				(sebs_parse_handler_function_t) &xmlrpc;
 
 		//Event = 0
-		data->parser_data.event=0;
+		data->parser_data.event = 0;
 
 		//set pointer to parser data
-		*in_type_out_parser_data=&data->parser_data;
+		*in_type_out_parser_data = &data->parser_data;
 
 		return (false);
 	}
 
-
-	switch(data->parser_data.event)
+	switch (data->parser_data.event)
 	{
 	case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH:
 
-
 	case SEBS_PARSE_EVENT_HTTP_HEADER_END:
 		DEBUG_PRINT_STR("HEADER END!");
-		data->parser_data.current_parser.parser_function=(sebs_parse_function_t)&sebs_parse_xml;
-		data->parser_data.current_parser.parser_data=&data->main_module_data.xml;
 
-		data->main_module_data.xml.current_tag;
-		data->main_module_data.xml.depth=0;
-		data->main_module_data.xml.processed_bytes=0;
-		data->main_module_data.xml.state=SEBS_PARSE_XML_STATE_ROOT;
-		data->main_module_data.xml.substate=SEBS_PARSE_XML_SUBSTATE_NONE;
-		data->main_module_data.xml.tag_type=SEBS_PARSE_XML_TAG_NONE;
+		SEBS_PARSE_XML_INIT(data->parser_data.current_parser,&data->parser_data,
+				data->main_module_data.xml, xmlrpc_tag_strings,
+				XMLRPC_TAG_STRINGS_LEN, xmlrpc_attribute_strings,
+				XMLRPC_TAG_STRINGS_LEN)
+		;
 
-		data->main_module_data.xml.parser_data=&data->parser_data;
+		data->main_module_data.xml.parser_data = &data->parser_data;
 		break;
 	default:
 		break;
 	}
-	return(false);
+	return (false);
 }
-
 
 #endif /* XMLRPC_SERVER_C_ */

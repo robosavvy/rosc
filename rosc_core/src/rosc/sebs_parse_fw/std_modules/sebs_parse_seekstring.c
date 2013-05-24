@@ -109,11 +109,11 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 
 
 				//End
-				return true;
+				return (true);
 			}
 			++*buf;
 			data->curChrPos++;
 			--*len;
 		}
-		return false;
+		return (false);
 }

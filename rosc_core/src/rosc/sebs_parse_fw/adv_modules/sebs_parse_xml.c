@@ -33,13 +33,7 @@
 
 bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 {
-	if (data->state ==SEBS_PARSE_XML_STATE_INIT)
-	{
-		data->depth = 0;
-		data->current_tag = SEBS_PARSE_XML_TAG_NONE;
-		data->state = SEBS_PARSE_XML_STATE_ROOT;
-		data->substate =SEBS_PARSE_XML_SUBSTATE_NONE;
-	}
+
 	while (*len > 0 && data->parser_data->event == SEBS_PARSE_EVENT_NONE)
 	{
 
@@ -51,7 +45,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 			if (data->std_func_data.seekstring.result < 0)
 			{
-				data->current_tag = SEBS_PARSE_XML_TAG_UNKNOWN;
+				data->current_tag = -1;
 			}
 			else
 			{
@@ -74,7 +68,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 			if (data->std_func_data.seekstring.result < 0)
 			{
-				data->attribute = SEBS_PARSE_XML_ATTRIBUTE_UNKNOWN;
+				data->attribute = -1;
 			}
 			else
 			{
@@ -86,7 +80,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 		case SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING:
 
 			if (data->std_func_data.seekstring.result
-					!= SEBS_PARSE_XML_TAG_CDATA)
+					!= 0)
 			{
 				data->parser_data->event = SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 			}
@@ -281,7 +275,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				if (data->state !=SEBS_PARSE_XML_STATE_COMMENT
 						&& data->state !=SEBS_PARSE_XML_STATE_CDATA)
 				{
-					data->current_tag = SEBS_PARSE_XML_TAG_NONE;
+					data->current_tag = -1;
 					if (data->depth == 0)
 					{
 						data->state =SEBS_PARSE_XML_STATE_ROOT;
@@ -583,11 +577,12 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 				case SEBS_PARSE_XML_STATE_CDATA_START:
 					data->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
+					static const char* cdata_str="CDATA";
 					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY_LEN, " []=\"\'/<>?!",
+							&cdata_str,
+							1, " []=\"\'/<>?!",
 							true);
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
@@ -595,8 +590,8 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY_LEN, " []=\"\'/<>?!",
+							data->tag_strings,
+							data->tag_strings_len, " []=\"\'/<>?!",
 							true);
 					break;
 
@@ -606,8 +601,8 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY,
-							SEBS_PARSE_KNOWN_TAGS_ARRAY_LEN, " []=\"\'/<>?!",
+							data->tag_strings,
+							data->tag_strings_len, " []=\"\'/<>?!",
 							true);
 					break;
 
@@ -616,8 +611,8 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
-							SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY,
-							SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY_LEN,
+							data->attribute_strings,
+							data->attribute_strings_len,
 							" []=\"\'/<>?!", true);
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
@@ -645,5 +640,5 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 			}
 		}
 	}
-	return false;
+	return (false);
 }

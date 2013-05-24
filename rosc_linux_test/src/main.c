@@ -70,6 +70,8 @@ char *test_request_message=
 		"\n" //157
 		"<?xml version='1.0'?>\n"
 		"<methodCall>\n"
+		"<![CDATA[Inhalt]]]]>"
+		"<!-- narf narf -->"
 		"<methodName>publisherUpdate</methodName>\n"
 		"<params>\n"
 		"<param>\n"
@@ -146,7 +148,7 @@ int main_xmlrpctest()
 		sebs_parser_frame(msg+i*len,len,parser_data);
 	}
 
-	return 0;
+	return (0);
 }
 
 
@@ -280,7 +282,7 @@ int main_tcprostest()
 		//ros_parse(msg+i*len,len,&pact);
 	}
 
-	return 0;
+	return (0);
 }
 
 
@@ -312,7 +314,7 @@ int main()
 
 	main_xmlrpctest();
 	//main_tcprostest();
-	return 0;
+	return (0);
 }
 
 
