@@ -35,11 +35,6 @@
  */           
 #include <rosc/string_res/msg_strings.h> 
 
-const char *rpc_xml_attribute_strings[] =
-{
-	"version"
-};
-
 const char *http_header_stdtext[] =
 {
 	"BaseHTTP/ROSc-NodeLib",
@@ -52,33 +47,7 @@ const char *http_header_stdtext[] =
 	"text/xml"
 };
 
-const char *rpc_xml_slave_methodnames[] =
-{
-	"getBusInfo",
-	"getBusStats",
-	"getMasterUri",
-	"getPid",
-	"getPublications",
-	"getSubscriptions",
-	"paramUpdate",
-	"publisherUpdate",
-	"requestTopic",
-	"shutdown"
-};
-
-const char *http_header_descriptors[] =
-{
-	"Accept-Encoding",
-	"Content-Encoding",
-	"Content-Type",
-	"Content-length",
-	"Date",
-	"Host",
-	"Server",
-	"User-Agent"
-};
-
-const char *rpc_xml_stdtext[] =
+const char *xmlrpc_stdtext[] =
 {
 	"/tcp_keepalive",
 	"<?xml version=\"1.0\"?>",
@@ -96,37 +65,19 @@ const char *rpc_xml_stdtext[] =
 	"unregisterSubscriber"
 };
 
-const char *http_available_actions[] =
+const char *xmlrpc_attribute_strings[] =
 {
-	"",
-	"test"
+	"version"
 };
 
-const char *ros_field_strings[] =
+const char *xmlrpc_http_methods[] =
 {
-	"callerid",
-	"error",
-	"latching",
-	"md5sum",
-	"message_definition",
-	"persistent",
-	"service",
-	"tcp_nodelay",
-	"topic",
-	"type"
+	"GET",
+	"POST"
 };
 
-const char *parse_separators[] =
+const char *xmlrpc_tag_strings[] =
 {
-	"/. \n",
-	"</>\n \"=",
-	"\n:"
-};
-
-const char *rpc_xml_tag_strings[] =
-{
-	"--",
-	"CDATA",
 	"array",
 	"boolean",
 	"data",
@@ -145,13 +96,53 @@ const char *rpc_xml_tag_strings[] =
 	"xml"
 };
 
-const char *http_methods[] =
+const char *xmlrpc_http_descriptors[] =
 {
-	"GET",
-	"POST"
+	"Accept-Encoding",
+	"Content-Encoding",
+	"Content-Type",
+	"Content-length",
+	"Date",
+	"Host",
+	"Server",
+	"User-Agent"
 };
 
-const char *xml_rpc_boolean_strings[] =
+const char *ros_field_strings[] =
+{
+	"callerid",
+	"error",
+	"latching",
+	"md5sum",
+	"message_definition",
+	"persistent",
+	"service",
+	"tcp_nodelay",
+	"topic",
+	"type"
+};
+
+const char *xmlrpc_slave_methodnames[] =
+{
+	"getBusInfo",
+	"getBusStats",
+	"getMasterUri",
+	"getPid",
+	"getPublications",
+	"getSubscriptions",
+	"paramUpdate",
+	"publisherUpdate",
+	"requestTopic",
+	"shutdown"
+};
+
+const char *xmlrpc_http_actions[] =
+{
+	"",
+	"test"
+};
+
+const char *xmlrpc_xml_boolean_strings[] =
 {
 	"0",
 	"1",

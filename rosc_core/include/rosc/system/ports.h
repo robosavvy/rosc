@@ -31,9 +31,9 @@
 #ifndef PORTS_H_
 #define PORTS_H_
 
-#include <inttypes.h>
+#include <rosc/system/types.h>
 #include <rosc/system/iface.h>
-#include <rosc/msg_parsers/xml_parser_structure.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
 
@@ -69,14 +69,7 @@ typedef struct port_t
 	struct port_t *next;
 }port_t;
 
-
-
-#ifndef  __SYSTEM_HAS_MALLOC__
-	void __rosc_ports_init_static(uint32_t size);
-
-#else
-	//TODO rosc_ports_init() for malloc
-#endif
+void rosc_ports_init();
 
 
 #endif /* PORTS_H_ */

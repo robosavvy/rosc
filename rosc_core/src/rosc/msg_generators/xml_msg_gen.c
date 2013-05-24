@@ -1,3 +1,4 @@
+#if 0
 /*
  *	Copyright (c) 2013, Synapticon GmbH
  *	All rights reserved.
@@ -62,6 +63,7 @@ typedef enum
 //Example: Combine string array pointer accesses
 send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_gen_array, const http_head_gen_command* http_gen_array, const char **custom_string_array)
 {
+#if 0
 	XML_SM_SEND_State xml_state=XML_SM_OPTAIN_XML_SIZE;
 	HTTP_SEND_LEN_State http_state=HTTP_SEND_CONTENT_LEN_DESC;
 	const char *outstring;
@@ -332,5 +334,7 @@ send_status_t sendXMLMessage(port_id_t portID, const ros_rpc_gen_command* xml_ge
 
 	}
 	return SEND_STATUS_OK;
-}
 
+#endif
+}
+#endif

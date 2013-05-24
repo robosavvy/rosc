@@ -65,7 +65,7 @@ typedef struct
  * byte order do for each byte chrptr+SIZE_X_B[byte_number]
  * and for the other direction chrptr-SIZE_X_B[byte_number]
  */
-extern const endian_t* const system_byte_order;
+extern const endian_t* const g_system_byte_order;
 
 /**
  * This function initializes the variable
@@ -73,6 +73,6 @@ extern const endian_t* const system_byte_order;
  *
  * @TODO Make rosc_init_endian replaceable for really weired compilers...
  */
-void rosc_init_endian();
+void rosc_init_endian(void);
 
 #endif /* ENDIAN_H_ */

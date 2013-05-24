@@ -26,17 +26,16 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_client.c created by Christian Holl
+ *  sebs_parse_parseurl.c created by Christian Holl
  */
 
-#include <rosc/msg_parsers/handler/xmlrpc_client.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 
-
-#include <stdio.h>
-void xmlrpc_client_handler(parse_act_t * pact)
+bool sebs_parse_parseurl(char **buf, int32_t *len, sebs_parse_parseurl_data_t *data)
 {
-	if(pact->event<0)
-	{
-		DEBUG_PRINT_STR("ERROR EVENT!");
-	}
+
+	return false;
 }
+
+
+

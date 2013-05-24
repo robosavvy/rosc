@@ -26,73 +26,27 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  numberparse.c created by Christian Holl
+ *  sebs_parse_skipwholemessage.h created by Christian Holl
  */
 
-#ifndef FORCE_INLINE
-	#ifndef ENABLE_C
-		#define ENABLE_C
-	#endif
+#ifndef SEBS_PARSE_SKIPWHOLEMESSAGE_H_
+#define SEBS_PARSE_SKIPWHOLEMESSAGE_H_
 
-	#include <rosc/msg_parsers/sub/numberparse.h>
-#endif
+#include <rosc/system/types.h>
 
+#define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(NEXT_PARSER_FUNC)\
+		NEXT_PARSER_FUNC=(parser_submode_function_t)&skipwholemessage;\
+		return true
 
-#ifndef FORCE_INLINE
-	void numberparse(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact)
-	 //work around for inlining the function
-#endif
-#ifdef ENABLE_C
-{
-	#ifndef FORCE_INLINE
-			uint32_t len=*len_ptr;
-			char *buf=*buf_ptr;
-	#endif
+/**
+ * This function skips every incoming char which is in the buffer.
+ * It's used for skipping the message in case of errors.
+ *
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param unused not used by this function it needs no data storage..
+ * @return This function will only return false because it can be only stopped by reseting the whole message handling
+ */
+bool sebs_parse_skipwholemessage(char **buf, int32_t *len, void *unused);
 
-	if(pact->submode_state==PARSE_SUBMODE_INIT)
-	{
-		pact->submode_state=PARSE_SUBMODE_RUNNING;
-		pact->submode_data.numberParse.cur_place=0;
-		pact->submode_data.numberParse.number=0;
-	}
-	while(len > 0)
-	{
-		if(*buf>=48 && *buf<=57)
-		{
-			if(pact->submode_data.numberParse.cur_place >= pact->submode_data.numberParse.figure_max)
-			{
-				pact->submode_result=NUMBERPARSE_MAX_FIGURES;
-				break;
-			}
-			else
-			{
-				pact->submode_data.numberParse.number*=10;
-				pact->submode_data.numberParse.number+=*buf-48;
-				++pact->submode_data.numberParse.cur_place;
-				++buf;
-				--len;
-			}
-		}
-		else
-		{
-			pact->submode_result=NUMBERPARSE_ANOTHER_CHAR;
-			pact->submode_state=PARSE_SUBMODE_FINISHED;
-			pact->submode=PARSE_SUBMODE_NONE;
-			break;
-		}
-	}
-	if(pact->submode_result==NUMBERPARSE_ANOTHER_CHAR)
-	{
-		if(pact->submode_data.numberParse.cur_place == 0)
-		pact->submode_result=NUMBERPARSE_ERROR_NONUMBER;
-	}
-
-	#ifndef FORCE_INLINE
-		*len_ptr=len;
-		*buf_ptr=buf;
-	#endif
-
-
-}
-#endif
-
+#endif /* SEBS_PARSE_SKIPWHOLEMESSAGE_H_ */

@@ -26,31 +26,65 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  numberparse.h created by Christian Holl
+ *  sebs_parse_numberparse.c created by Christian Holl
  */
 
-#ifndef NUMBERPARSE_H_
-#define NUMBERPARSE_H_
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
-#include <rosc/msg_parsers/xml_parser_structure.h>
-
-
-
-#define PARSE_SUBMODE_INIT_NUMBERPARSE(PARSE_STRUCT,MAX_FIGURES)\
-				PARSE_STRUCT->submode=PARSE_SUBMODE_NUMBERPARSE;\
-				PARSE_STRUCT->submode_state=PARSE_SUBMODE_INIT;\
-				PARSE_STRUCT->submode_data.numberParse.figure_max=MAX_FIGURES
-
-
-typedef enum
+bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_data_t *data)
+	 //work around for inlining the function
 {
-	NUMBERPARSE_MAX_FIGURES,
-	NUMBERPARSE_ANOTHER_CHAR,
-	NUMBERPARSE_ERROR_NONUMBER,
-}numberparse_result_t;
+	while(*len > 0)
+	{
+		if(data->cur_place == 0)
+		{
+			data->negative=false;
+			data->number=0;
+		}
+		if(**buf>=48 && **buf<=57) //Check if char is a figure
+		{
+			if(data->cur_place < data->figure_max)//Is the length still acceptable?
+			{
+				if(data->cur_place>0)
+					data->number*=10;//multiply current number by 10 to shift it left
 
-#ifndef FORCE_INLINE
-	void numberparse(char **buf_ptr, uint32_t *len_ptr, parse_act_t *pact);
-#endif
+				data->number+=**buf-48; //convert char to integer
+				++data->cur_place;
+				++*buf;
+				--*len;
+			}
+			else
+			{
+				data->result=NUMBERPARSE_MAX_FIGURES;
+				return true;
+			}
+		}
+		else
+		{
+			if(data->cur_place == 0) //Are we still at the beginning?
+			{
+				if(**buf=='-' && data->negative_allowed)//Is it a negative number?
+				{
+					data->negative=true;
+					++*buf;
+					--*len;
+					break;
+				}
+				else
+				{
+					data->result=NUMBERPARSE_ERROR_NONUMBER;
+					return true;
+				}
+			}
+			else
+			{
+				data->result=NUMBERPARSE_ANOTHER_CHAR;
+				return true;
+			}
+			break;
+		}
+	}
+	return false;
+}
 
-#endif /* NUMBERPARSE_H_ */
+

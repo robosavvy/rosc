@@ -46,11 +46,19 @@
 #include <fcntl.h>
 // /////////////////////////
 
+
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
-#include <rosc/msg_parsers/xml_parser.h>
-#include <rosc/msg_parsers/ros_parser.h>
-/*
+//#include <rosc/sebs_parse_fw>
+
+//The memory definitions for
+//the size of all port buffers
+//for the biggest available message
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
+	char justatestsize[23];
+STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
+
+
 char *test_request_message=
 		"POST / HTTP/1.1\n"
 		"Host: sncn-10:53556\n"
@@ -62,6 +70,8 @@ char *test_request_message=
 		"\n" //157
 		"<?xml version='1.0'?>\n"
 		"<methodCall>\n"
+		"<![CDATA[Inhalt]]]]>"
+		"<!-- narf narf -->"
 		"<methodName>publisherUpdate</methodName>\n"
 		"<params>\n"
 		"<param>\n"
@@ -83,8 +93,8 @@ char *test_response_message=
 		"HTTP/1.0 200 OK\n"
 		"Server: BaseHTTP/0.3 Python/2.7.3\n"
 		"Date: Thu, 25 Apr 2013 15:28:39 GMT\n"
-		"Content-type: text/xml\n"
-		"Content-length: 303\n"
+		"Content-Type: text/xml\n"
+		"Content-LenGth: 303\n"
 		"\n"
 		"<?xml version='1.0'?>\n"
 		"<methodResponse>\n"
@@ -99,24 +109,30 @@ char *test_response_message=
 		"</params>\n"
 		"</methodResponse>";
 
+
+#include <rosc/com/xmlrpc_server.h>
+
 int main_xmlrpctest()
 {
 	int rlen;
 	int buffersize=1;
-	parse_act_t pact;
+//	parse_act_t pact;
 
 #if(1)
 	char *msg=test_request_message;
-	xmlrpc_server_data_t server_data;
-	xmlrpc_parse_act_init(&pact,XMLRPC_SERVER,&server_data);
+
 #else
 	char *msg=test_response_message;
-	xmlrpc_client_data_t client_data;
-	xmlrpc_parse_act_init(&pact,XMLRPC_CLIENT,&client_data);
+
 #endif
 
-	for(rlen=0;msg[rlen]!=0;rlen++);
+	xmlrpc_server_data_t handler_data;
+	sebs_parser_data_t* parser_data;
+	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc);
 
+
+
+	for(rlen=0;msg[rlen]!=0;rlen++);
 	printf("Test Message Length: %i\n",rlen);
 
 	int i;
@@ -128,17 +144,36 @@ int main_xmlrpctest()
 			len=len-(i*buffersize-rlen);
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
-		xmlrpc_parse(msg+i*len,len,&pact);
+	//	xmlrpc_parse(msg+i*len,len,&pact);
+		sebs_parser_frame(msg+i*len,len,parser_data);
 	}
 
-	return 0;
+	return (0);
 }
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ///////////////////////
 //     ROSTCP Testing   //
 // ///////////////////////
-#include <rosc/msg_parsers/ros_parser.h>
 
 
 unsigned char add_two_ints_rosrpc_query[] = {
@@ -203,18 +238,17 @@ int main_tcprostest()
 {
 	int rlen;
 	int buffersize=1;
-	ros_parse_act_t pact;
 
 #if(0)
 	unsigned char *msg=add_two_ints_rosrpc_query;
-	char server_data[10];
-	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_SERVER,&server_data);
-	rlen=sizeof(add_two_ints_rosrpc_query);
+//	char server_data[10];
+//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_SERVER,&server_data);
+//	rlen=sizeof(add_two_ints_rosrpc_query);
 #else
 	unsigned char *msg=add_two_ints_rosrpc_response;
-	char server_data[10];
-	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_CLIENT,&server_data);
-	rlen=sizeof(add_two_ints_rosrpc_response);
+//	char server_data[10];
+//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_CLIENT,&server_data);
+//	rlen=sizeof(add_two_ints_rosrpc_response);
 #endif
 
 
@@ -245,10 +279,10 @@ int main_tcprostest()
 		{
 			len=len-(i*buffersize-rlen);
 		}
-		ros_parse(msg+i*len,len,&pact);
+		//ros_parse(msg+i*len,len,&pact);
 	}
 
-	return 0;
+	return (0);
 }
 
 
@@ -265,21 +299,22 @@ int main_tcprostest()
 
 
 
-//The memory definitions for
-//the size of all port buffers
-//for the biggest available message
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
-	char justatestsize[23];
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
-
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 int main()
 {
 	printf("\n\nExecute --> rosc_linux_test\n\n");
-	rosc_init();
 
-	//main_xmlrpctest();
-	main_tcprostest();
-	return 0;
+
+
+
+
+
+
+	//rosc_init();
+
+	main_xmlrpctest();
+	//main_tcprostest();
+	return (0);
 }
 
 

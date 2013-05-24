@@ -26,41 +26,45 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_string_id.h created by Christian Holl
+ *  sebs_parse_copy2buffer.h created by Christian Holl
  */
 
-#ifndef XMLRPC_STRING_ID_H_
-#define XMLRPC_STRING_ID_H_
+#ifndef SEBS_PARSE_COPY2BUFFER_H_
+#define SEBS_PARSE_COPY2BUFFER_H_
 
-#include <rosc/rosc.h>
-#include <rosc/string_res/msg_strings.h>
+#include <rosc/system/types.h>
 
-	typedef enum
-	{
-		HTTP_METHOD_NOT_SET=-1,
-		__HTTP_METHODS(HTTP)
-	}xmlrpc_server_method_t;
+#define SEBS_PARSE_COPY2BUFFER_INIT(NEXT_PARSER_DATA,COPY2BUFFER_DATA, BUFFER, MAX_LEN, END_CHARS)\
+		NEXT_PARSER_DATA=(parser_submode_function_t)&copy2buffer;\
+		COPY2BUFFER_DATA->buffer=BUFFER;\
+		COPY2BUFFER_DATA->max_len=MAX_LEN;\
+		COPY2BUFFER_DATA->endChrs=END_CHARS;\
+		COPY2BUFFER_DATA->cur_pos=0;\
+		return false
 
-	typedef enum
-	{
-		__HTTP_AVAILABLE_ACTIONS(HTTP)
-	}xmlrpc_server_target_t;
+typedef enum
+{
+	COPY2BUFFER_ENDCHR,
+	COPY2BUFFER_MAXLEN,
+}sebs_parse_copy2buffer_result_t;
 
-	typedef enum
-	{
-		__HTTP_HEADER_STDTEXT(HTTP)
-	}xmlrpc_server_stdtxt_t;
+typedef struct
+{
+	char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
+	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
+	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
+	char* endChrs; //!< chrs which will mark the end of the string
+	sebs_parse_copy2buffer_result_t result; //!< stores the result of the submode
+}sebs_parse_copy2buffer_data_t;
+
+/**
+ * This function copies data from a stream to a buffer.
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ */
+bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_data_t *data);
 
 
-	typedef enum
-	{
-		__HTTP_HEADER_DESCRIPTORS(HTTP)
-	}xmlrpc_header_descriptors_t;
-
-	typedef enum
-	{
-		SLAVE_METHOD_NAME_NOT_SET=-1,
-		__RPC_XML_SLAVE_METHODNAMES(SLAVE)
-	}xmlrpc_slave_api_method_t;
-
-#endif /* XMLRPC_STRING_ID_H_ */
+#endif /* SEBS_PARSE_COPY2BUFFER_H_ */

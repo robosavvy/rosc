@@ -135,3 +135,5 @@ target_link_libraries(rosc_linux_test_node
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+execute_process(COMMAND clang ${ROSC_CORE_SOURCES} ${CMAKE_CURRENT_LIST_DIR}/src/main.c -I/usr/include -I/usr/include/x86_64-linux-gnu -I${rosc_core_INCLUDE_DIRS} -I${rosc_sys_linux_x86_INCLUDE_DIRS})

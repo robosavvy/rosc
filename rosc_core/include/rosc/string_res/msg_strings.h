@@ -38,23 +38,6 @@
 
 
 /**
- * Length of the string array rpc_xml_attribute_strings
- */
-#define RPC_XML_ATTRIBUTE_STRINGS_LEN 	1
-
-/**
- * Macro for inserting standard attributes for XMLRPC string numbers into any enum
- */
-#define __RPC_XML_ATTRIBUTE_STRINGS(ENUM) \
-	 ENUM ## _ATTRIBUTE_VERSION
-
-/**
- * This array contains the strings for standard attributes for XMLRPC
- */
-extern const char *rpc_xml_attribute_strings[];
-
-
-/**
  * Length of the string array http_header_stdtext
  */
 #define HTTP_HEADER_STDTEXT_LEN 	8
@@ -79,64 +62,14 @@ extern const char *http_header_stdtext[];
 
 
 /**
- * Length of the string array rpc_xml_slave_methodnames
+ * Length of the string array xmlrpc_stdtext
  */
-#define RPC_XML_SLAVE_METHODNAMES_LEN 	10
-
-/**
- * Macro for inserting Strings for known methods of the slave api string numbers into any enum
- */
-#define __RPC_XML_SLAVE_METHODNAMES(ENUM) \
-	 ENUM ## _METHOD_NAME_GETBUSINFO, \
-	 ENUM ## _METHOD_NAME_GETBUSSTATS, \
-	 ENUM ## _METHOD_NAME_GETMASTERURI, \
-	 ENUM ## _METHOD_NAME_GETPID, \
-	 ENUM ## _METHOD_NAME_GETPUBLICATIONS, \
-	 ENUM ## _METHOD_NAME_GETSUBSCRIPTIONS, \
-	 ENUM ## _METHOD_NAME_PARAMUPDATE, \
-	 ENUM ## _METHOD_NAME_PUBLISHERUPDATE, \
-	 ENUM ## _METHOD_NAME_REQUESTTOPIC, \
-	 ENUM ## _METHOD_NAME_SHUTDOWN
-
-/**
- * This array contains the strings for Strings for known methods of the slave api
- */
-extern const char *rpc_xml_slave_methodnames[];
-
-
-/**
- * Length of the string array http_header_descriptors
- */
-#define HTTP_HEADER_DESCRIPTORS_LEN 	8
-
-/**
- * Macro for inserting standard http header descriptors string numbers into any enum
- */
-#define __HTTP_HEADER_DESCRIPTORS(ENUM) \
-	 ENUM ## _DESC_ACCEPT_ENCODING, \
-	 ENUM ## _DESC_CONTENT_ENCODING, \
-	 ENUM ## _DESC_CONTENT_TYPE, \
-	 ENUM ## _DESC_CONTENT_LENGTH, \
-	 ENUM ## _DESC_DATE, \
-	 ENUM ## _DESC_HOST, \
-	 ENUM ## _DESC_SERVER, \
-	 ENUM ## _DESC_USER_AGENT
-
-/**
- * This array contains the strings for standard http header descriptors
- */
-extern const char *http_header_descriptors[];
-
-
-/**
- * Length of the string array rpc_xml_stdtext
- */
-#define RPC_XML_STDTEXT_LEN 	14
+#define XMLRPC_STDTEXT_LEN 	14
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
  */
-#define __RPC_XML_STDTEXT(ENUM) \
+#define __XMLRPC_STDTEXT(ENUM) \
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
@@ -155,25 +88,98 @@ extern const char *http_header_descriptors[];
 /**
  * This array contains the strings for standard XMLRPC text pieces
  */
-extern const char *rpc_xml_stdtext[];
+extern const char *xmlrpc_stdtext[];
 
 
 /**
- * Length of the string array http_available_actions
+ * Length of the string array xmlrpc_attribute_strings
  */
-#define HTTP_AVAILABLE_ACTIONS_LEN 	2
+#define XMLRPC_ATTRIBUTE_STRINGS_LEN 	1
 
 /**
- * Macro for inserting contains available actions for http requests string numbers into any enum
+ * Macro for inserting standard attributes for XMLRPC string numbers into any enum
  */
-#define __HTTP_AVAILABLE_ACTIONS(ENUM) \
-	 ENUM ## _ACTION_ROOT, \
-	 ENUM ## _ACTION_TEST
+#define __XMLRPC_ATTRIBUTE_STRINGS(ENUM) \
+	 ENUM ## _ATTRIBUTE_VERSION
 
 /**
- * This array contains the strings for contains available actions for http requests
+ * This array contains the strings for standard attributes for XMLRPC
  */
-extern const char *http_available_actions[];
+extern const char *xmlrpc_attribute_strings[];
+
+
+/**
+ * Length of the string array xmlrpc_http_methods
+ */
+#define XMLRPC_HTTP_METHODS_LEN 	2
+
+/**
+ * Macro for inserting method strings string numbers into any enum
+ */
+#define __XMLRPC_HTTP_METHODS(ENUM) \
+	 ENUM ## _METHOD_GET, \
+	 ENUM ## _METHOD_POST
+
+/**
+ * This array contains the strings for method strings
+ */
+extern const char *xmlrpc_http_methods[];
+
+
+/**
+ * Length of the string array xmlrpc_tag_strings
+ */
+#define XMLRPC_TAG_STRINGS_LEN 	16
+
+/**
+ * Macro for inserting standard XMLRPC tags string numbers into any enum
+ */
+#define __XMLRPC_TAG_STRINGS(ENUM) \
+	 ENUM ## _TAG_ARRAY, \
+	 ENUM ## _TAG_BOOLEAN, \
+	 ENUM ## _TAG_DATA, \
+	 ENUM ## _TAG_FAULT, \
+	 ENUM ## _TAG_I4, \
+	 ENUM ## _TAG_INT, \
+	 ENUM ## _TAG_MEMBER, \
+	 ENUM ## _TAG_METHODCALL, \
+	 ENUM ## _TAG_METHODNAME, \
+	 ENUM ## _TAG_METHODRESPONSE, \
+	 ENUM ## _TAG_PARAM, \
+	 ENUM ## _TAG_PARAMS, \
+	 ENUM ## _TAG_STRING, \
+	 ENUM ## _TAG_STRUCT, \
+	 ENUM ## _TAG_VALUE, \
+	 ENUM ## _TAG_XMLDEF
+
+/**
+ * This array contains the strings for standard XMLRPC tags
+ */
+extern const char *xmlrpc_tag_strings[];
+
+
+/**
+ * Length of the string array xmlrpc_http_descriptors
+ */
+#define XMLRPC_HTTP_DESCRIPTORS_LEN 	8
+
+/**
+ * Macro for inserting standard http header descriptors string numbers into any enum
+ */
+#define __XMLRPC_HTTP_DESCRIPTORS(ENUM) \
+	 ENUM ## _DESCRIPTOR_ACCEPT_ENCODING, \
+	 ENUM ## _DESCRIPTOR_CONTENT_ENCODING, \
+	 ENUM ## _DESCRIPTOR_CONTENT_TYPE, \
+	 ENUM ## _DESCRIPTOR_CONTENT_LENGTH, \
+	 ENUM ## _DESCRIPTOR_DATE, \
+	 ENUM ## _DESCRIPTOR_HOST, \
+	 ENUM ## _DESCRIPTOR_SERVER, \
+	 ENUM ## _DESCRIPTOR_USER_AGENT
+
+/**
+ * This array contains the strings for standard http header descriptors
+ */
+extern const char *xmlrpc_http_descriptors[];
 
 
 /**
@@ -203,85 +209,58 @@ extern const char *ros_field_strings[];
 
 
 /**
- * Length of the string array parse_separators
+ * Length of the string array xmlrpc_slave_methodnames
  */
-#define PARSE_SEPARATORS_LEN 	3
+#define XMLRPC_SLAVE_METHODNAMES_LEN 	10
 
 /**
- * Macro for inserting seperators for parsing different pieces of a XMLRPC message string numbers into any enum
+ * Macro for inserting Strings for known methods of the slave api string numbers into any enum
  */
-#define __PARSE_SEPARATORS(ENUM) \
-	 ENUM ## _SEP_METHOD, \
-	 ENUM ## _SEP_XML, \
-	 ENUM ## _SEP_HTTP_HEADER
+#define __XMLRPC_SLAVE_METHODNAMES(ENUM) \
+	 ENUM ## _METHOD_NAME_GETBUSINFO, \
+	 ENUM ## _METHOD_NAME_GETBUSSTATS, \
+	 ENUM ## _METHOD_NAME_GETMASTERURI, \
+	 ENUM ## _METHOD_NAME_GETPID, \
+	 ENUM ## _METHOD_NAME_GETPUBLICATIONS, \
+	 ENUM ## _METHOD_NAME_GETSUBSCRIPTIONS, \
+	 ENUM ## _METHOD_NAME_PARAMUPDATE, \
+	 ENUM ## _METHOD_NAME_PUBLISHERUPDATE, \
+	 ENUM ## _METHOD_NAME_REQUESTTOPIC, \
+	 ENUM ## _METHOD_NAME_SHUTDOWN
 
 /**
- * This array contains the strings for seperators for parsing different pieces of a XMLRPC message
+ * This array contains the strings for Strings for known methods of the slave api
  */
-extern const char *parse_separators[];
-
-
-/**
- * Length of the string array rpc_xml_tag_strings
- */
-#define RPC_XML_TAG_STRINGS_LEN 	18
-
-/**
- * Macro for inserting standard XMLRPC tags string numbers into any enum
- */
-#define __RPC_XML_TAG_STRINGS(ENUM) \
-	 ENUM ## _TAG_COMMENT, \
-	 ENUM ## _TAG_CDATA, \
-	 ENUM ## _TAG_ARRAY, \
-	 ENUM ## _TAG_BOOLEAN, \
-	 ENUM ## _TAG_DATA, \
-	 ENUM ## _TAG_FAULT, \
-	 ENUM ## _TAG_I4, \
-	 ENUM ## _TAG_INT, \
-	 ENUM ## _TAG_MEMBER, \
-	 ENUM ## _TAG_METHODCALL, \
-	 ENUM ## _TAG_METHODNAME, \
-	 ENUM ## _TAG_METHODRESPONSE, \
-	 ENUM ## _TAG_PARAM, \
-	 ENUM ## _TAG_PARAMS, \
-	 ENUM ## _TAG_STRING, \
-	 ENUM ## _TAG_STRUCT, \
-	 ENUM ## _TAG_VALUE, \
-	 ENUM ## _TAG_XMLDEF
-
-/**
- * This array contains the strings for standard XMLRPC tags
- */
-extern const char *rpc_xml_tag_strings[];
+extern const char *xmlrpc_slave_methodnames[];
 
 
 /**
- * Length of the string array http_methods
+ * Length of the string array xmlrpc_http_actions
  */
-#define HTTP_METHODS_LEN 	2
+#define XMLRPC_HTTP_ACTIONS_LEN 	2
 
 /**
- * Macro for inserting method strings string numbers into any enum
+ * Macro for inserting contains available actions for http requests string numbers into any enum
  */
-#define __HTTP_METHODS(ENUM) \
-	 ENUM ## _METHOD_GET, \
-	 ENUM ## _METHOD_POST
+#define __XMLRPC_HTTP_ACTIONS(ENUM) \
+	 ENUM ## _ACTION_ROOT, \
+	 ENUM ## _ACTION_TEST
 
 /**
- * This array contains the strings for method strings
+ * This array contains the strings for contains available actions for http requests
  */
-extern const char *http_methods[];
+extern const char *xmlrpc_http_actions[];
 
 
 /**
- * Length of the string array xml_rpc_boolean_strings
+ * Length of the string array xmlrpc_xml_boolean_strings
  */
-#define XML_RPC_BOOLEAN_STRINGS_LEN 	4
+#define XMLRPC_XML_BOOLEAN_STRINGS_LEN 	4
 
 /**
  * Macro for inserting possible strings for representing boolean in xml rpc string numbers into any enum
  */
-#define __XML_RPC_BOOLEAN_STRINGS(ENUM) \
+#define __XMLRPC_XML_BOOLEAN_STRINGS(ENUM) \
 	 ENUM ## _BOOLEAN_ZERO, \
 	 ENUM ## _BOOLEAN_ONE, \
 	 ENUM ## _BOOLEAN_FALSE, \
@@ -290,7 +269,7 @@ extern const char *http_methods[];
 /**
  * This array contains the strings for possible strings for representing boolean in xml rpc
  */
-extern const char *xml_rpc_boolean_strings[];
+extern const char *xmlrpc_xml_boolean_strings[];
 
 
 #endif /* MSG_STRINGS_H_ */
