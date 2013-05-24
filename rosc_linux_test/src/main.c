@@ -110,7 +110,6 @@ char *test_response_message=
 
 #include <rosc/com/xmlrpc_server.h>
 
-typedef bool (*sebs_parse_handler_function_t)(void *data, void** parser_data_ptr);
 int main_xmlrpctest()
 {
 	int rlen;
@@ -127,7 +126,7 @@ int main_xmlrpctest()
 
 	xmlrpc_server_data_t handler_data;
 	sebs_parser_data_t* parser_data;
-	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc_server);
+	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc);
 
 
 

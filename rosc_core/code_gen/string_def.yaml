@@ -124,7 +124,7 @@ xmlrpc_http_descriptors:
   comment:
     'standard http header descriptors'
   defineShort:
-    'DESC'
+    'DESCRIPTOR'
   stringlist: {
         Server,
         User-Agent: USER_AGENT,

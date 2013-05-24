@@ -29,6 +29,9 @@
  *  sebs_parse_http.c created by Christian Holl
  */
 
+
+
+
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 
 bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
@@ -68,7 +71,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Action unknown");
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_NOT_FOUND;
+						SEBS_PARSE_EVENT_HTTP_ERROR_ACTION_NOT_FOUND;
 			}
 			break;
 
@@ -171,7 +174,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 					data->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_ACTION;
 					++*buf;
 					--*len;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							data->actions, data->actions_len,
 							" ", true)
@@ -255,7 +258,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 								SEBS_PARSE_EVENT_HTTP_ERROR_LENGTH_REQUIRED;
 					}
 					data->parser_data->event = SEBS_PARSE_EVENT_HTTP_HEADER_END;
-					return false;
+					return (false);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
@@ -276,7 +279,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				{
 				case SEBS_PARSE_HTTP_STATE_REQUEST_METHOD:
 					data->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
 							data->std_func_data.seekstring, data->methods,
 							data->methods_len, " /\n.", true)
 					;
@@ -285,7 +288,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				case SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER:
 					data->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_REQUEST_HTTP_VER;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
 							data->std_func_data.seekstring, http_header_stdtext,
 							HTTP_HEADER_STDTEXT_LEN, " \n", true)
 					;
@@ -294,7 +297,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
 					data->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_HTTP_VER;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
 							data->std_func_data.seekstring, http_header_stdtext,
 							HTTP_HEADER_STDTEXT_LEN, " \n", true)
 					;
@@ -303,7 +306,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
 					data->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE;
-					SEBS_PARSE_INIT_NUMBERPARSE(
+					SEBS_PARSE_NUMBERPARSE_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.numberparse, 3, false);
 					break;
@@ -311,7 +314,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
 					data->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_DESCRIPTOR_ID;
-					SEBS_PARSE_INIT_SEEKSTRING(data->parser_data->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							data->descriptors,
 							data->descriptors_len, " :", false)

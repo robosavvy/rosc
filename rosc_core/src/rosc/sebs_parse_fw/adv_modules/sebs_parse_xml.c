@@ -583,7 +583,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 				case SEBS_PARSE_XML_STATE_CDATA_START:
 					data->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
-					SEBS_PARSE_INIT_SEEKSTRING(
+					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							SEBS_PARSE_KNOWN_TAGS_ARRAY,
@@ -592,7 +592,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
 					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
-					SEBS_PARSE_INIT_SEEKSTRING(
+					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							SEBS_PARSE_KNOWN_TAGS_ARRAY,
@@ -603,7 +603,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				case SEBS_PARSE_XML_STATE_CLOSE_TAG_START:
 					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_CLOSE;
-					SEBS_PARSE_INIT_SEEKSTRING(
+					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							SEBS_PARSE_KNOWN_TAGS_ARRAY,
@@ -613,7 +613,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 				case SEBS_PARSE_XML_STATE_TAG: //A non empty space inside a tag means, that we have a attribute.
 					data->substate =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
-					SEBS_PARSE_INIT_SEEKSTRING(
+					SEBS_PARSE_SEEKSTRING_INIT(
 							data->parser_data->next_parser,
 							data->std_func_data.seekstring,
 							SEBS_PARSE_KNOWN_ATTRIBUTES_ARRAY,

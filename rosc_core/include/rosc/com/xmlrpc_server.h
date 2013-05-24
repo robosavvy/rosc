@@ -43,20 +43,37 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
 
-
 typedef enum
 {
+	XMLRPC_SERVER=1,
+	XMLRPC_CLIENT=2
+}xmlrpc_init_t;
+
+/**
+ * Creating the enum for descriptor usage by hander function
+ */
+typedef enum
+{
+
+	XMLRPC_DESCRIPTOR_UNKNOWN=-1,
 	__XMLRPC_HTTP_DESCRIPTORS(XMLRPC)
 }xmlrpc_header_descriptors_t;
 
+/**
+ * Creating the enum for action usage by hander function
+ */
 typedef enum
 {
+	XMLRPC_ACTION_UNKNOWN=-1,
 	__XMLRPC_HTTP_ACTIONS(XMLRPC)
 }xmlrpc_server_actions_t;
 
+/**
+ * Creating the enum for method usage by hander function
+ */
 typedef enum
 {
-	HTTP_METHOD_NOT_SET=-1,
+	XMLRPC_METHOD_UNKNOWN=-1,
 	__XMLRPC_HTTP_METHODS(XMLRPC)
 }xmlrpc_server_method_t;
 
@@ -81,6 +98,6 @@ typedef struct
 
 }xmlrpc_server_data_t;
 
-bool xmlrpc_server(xmlrpc_server_data_t *data, void** parser_data_ptr);
+bool xmlrpc(xmlrpc_server_data_t *data, void** parser_data_ptr);
 
 #endif /* XMLRPC_H_ */

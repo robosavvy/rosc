@@ -39,6 +39,26 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
+
+#define SEBS_PARSE_HTTP_REQUEST_HEAD SEBS_PARSE_HTTP_STATE_REQUEST_METHOD
+#define SEBS_PARSE_HTTP_RESPONSE_HEAD SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER
+
+///@todo document SEBS_PARSE_HTTP_INIT
+#define SEBS_PARSE_HTTP_INIT(PARSE_WHAT, PARSER_DATA, PARSER_CALL, HTTP_DATA, DESCRIPTORS, DESCRIPTORS_LEN, ACTIONS, ACTIONS_LEN, METHODS, METHODS_LEN)\
+		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_http;\
+		PARSER_CALL.parser_data=&HTTP_DATA;\
+		HTTP_DATA.content_length=-1;\
+		HTTP_DATA.state=PARSE_WHAT;\
+		HTTP_DATA.substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;\
+		HTTP_DATA.parser_data=&PARSER_DATA;\
+		HTTP_DATA.descriptors=DESCRIPTORS;\
+		HTTP_DATA.descriptors_len=DESCRIPTORS_LEN;\
+		HTTP_DATA.actions=ACTIONS;\
+		HTTP_DATA.actions_len=ACTIONS_LEN;\
+		HTTP_DATA.methods=METHODS;\
+		HTTP_DATA.methods_len=METHODS_LEN;
+
+
 /**
  * Maximum allowed header length (can be unlimited, technically)
  */
@@ -51,7 +71,7 @@ typedef enum
 {
 	SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH_TOO_LONG=-100,//!< means the content exceeds the specified max lenght
 	SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH,              //!< means that the content length is now available
-	SEBS_PARSE_EVENT_HTTP_ERROR_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
+	SEBS_PARSE_EVENT_HTTP_ERROR_ACTION_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
 	SEBS_PARSE_EVENT_HTTP_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
 	SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
 	SEBS_PARSE_EVENT_HTTP_ERROR_LENGTH_REQUIRED,             //!< means that now length was given in the http header
@@ -106,20 +126,6 @@ typedef enum
 	SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE,    //!< SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE
 	SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_STATE,   //!< SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_STATE
 }sebs_parse_http_substate_t;
-
-
-/**
- * This enum contains the number of each known http method
- */
-
-
-
-/**
- * Contains the header descriptors
- */
-
-
-
 
 
 typedef enum

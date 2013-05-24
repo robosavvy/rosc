@@ -151,14 +151,14 @@ extern const char *xmlrpc_http_methods[];
  * Macro for inserting standard http header descriptors string numbers into any enum
  */
 #define __XMLRPC_HTTP_DESCRIPTORS(ENUM) \
-	 ENUM ## _DESC_ACCEPT_ENCODING, \
-	 ENUM ## _DESC_CONTENT_ENCODING, \
-	 ENUM ## _DESC_CONTENT_TYPE, \
-	 ENUM ## _DESC_CONTENT_LENGTH, \
-	 ENUM ## _DESC_DATE, \
-	 ENUM ## _DESC_HOST, \
-	 ENUM ## _DESC_SERVER, \
-	 ENUM ## _DESC_USER_AGENT
+	 ENUM ## _DESCRIPTOR_ACCEPT_ENCODING, \
+	 ENUM ## _DESCRIPTOR_CONTENT_ENCODING, \
+	 ENUM ## _DESCRIPTOR_CONTENT_TYPE, \
+	 ENUM ## _DESCRIPTOR_CONTENT_LENGTH, \
+	 ENUM ## _DESCRIPTOR_DATE, \
+	 ENUM ## _DESCRIPTOR_HOST, \
+	 ENUM ## _DESCRIPTOR_SERVER, \
+	 ENUM ## _DESCRIPTOR_USER_AGENT
 
 /**
  * This array contains the strings for standard http header descriptors

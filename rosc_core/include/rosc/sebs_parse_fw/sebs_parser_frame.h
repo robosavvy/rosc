@@ -125,8 +125,8 @@ typedef struct sebs_parser_data_t
 } sebs_parser_data_t;
 
 
-typedef bool (*sebs_parse_handler_function_t)(void *data, void** init_in_parser_data_out);
 
+typedef bool (*sebs_parse_handler_function_t)(void *data, void** init_in_parser_data_out);
 
 sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);
 

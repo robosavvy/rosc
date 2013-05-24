@@ -38,6 +38,21 @@
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
+//
+//#define SEBS_PARSE_XML_INIT(PARSER_CALL,PARSER_DATA)
+//		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_xml;\
+//		PARSER_CALL.parser_data=&PARSER_DATA;\
+//
+//		PARSER_DATA.current_tag;\
+//		PARSER_DATA.depth=0;\
+//		PARSER_DATA.processed_bytes=0;\
+//		PARSER_DATA.state=SEBS_PARSE_XML_STATE_ROOT;\
+//		PARSER_DATA.substate=SEBS_PARSE_XML_SUBSTATE_NONE;\
+//		PARSER_DATA.tag_type=SEBS_PARSE_XML_TAG_NONE;\
+//		PARSER_DATA.parser_data=&data->parser_data;
+
+
+
 typedef enum
 {
 	SEBS_PARSE_XML_STATE_INIT,
