@@ -33,16 +33,15 @@
 #define XMLRPC_SERVER_C_
 
 #include <rosc/com/xmlrpc_server.h>
-
+#include <rosc/system/status.h>
 
 bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 {
 
-	DEBUG_PRINT_STR("EVENT!\n");
-
 	if (in_type_out_parser_data
-			!= 0 ||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
+			!= 0||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
 	{
+		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
 		SEBS_PARSE_HTTP_INIT(0, data->parser_data,
 				data->parser_data.current_parser, data->main_module_data.http,
@@ -67,6 +66,7 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
 		data->parser_data.handler_function =
 				(sebs_parse_handler_function_t) &xmlrpc;
+		data->xmlrpc_state = XMLRPC_STATE_HTTP;
 
 		//Event = 0
 		data->parser_data.event = 0;
@@ -79,22 +79,124 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 
 	switch (data->parser_data.event)
 	{
-	case SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH:
-
-	case SEBS_PARSE_EVENT_HTTP_HEADER_END:
-		DEBUG_PRINT_STR("HEADER END!");
-
-		SEBS_PARSE_XML_INIT(data->parser_data.current_parser,&data->parser_data,
-				data->main_module_data.xml, xmlrpc_tag_strings,
-				XMLRPC_TAG_STRINGS_LEN, xmlrpc_attribute_strings,
-				XMLRPC_TAG_STRINGS_LEN)
-		;
-
-		data->main_module_data.xml.parser_data = &data->parser_data;
+	case SEBS_PARSE_EVENT_LEN_SMALLER_ZERO:
+		DEBUG_PRINT_STR("---FRAME-->DAFUQ? SHOULDN'T COME HERE, SEBS_PARSE_EVENT_LEN_SMALLER_ZERO");
+		//Should never get here... -> reset is above
 		break;
+	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
+		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END");
+		//Do result processing here...
+		break;
+
 	default:
 		break;
 	}
+
+	if (data->xmlrpc_state == XMLRPC_STATE_HTTP)
+	{
+		sebs_parse_http_event_t http_event =
+				(sebs_parse_http_event_t) data->parser_data.event;
+		switch (http_event)
+		{
+
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_ACTION_PARSED:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT");
+			break;
+		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
+			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE");
+			break;
+
+		case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
+			DEBUG_PRINT_STR("HEADER END!");
+			data->xmlrpc_state=XMLRPC_STATE_XML;
+			SEBS_PARSE_XML_INIT(data->parser_data.current_parser,
+					&data->parser_data, data->main_module_data.xml,
+					xmlrpc_tag_strings, XMLRPC_TAG_STRINGS_LEN,
+					xmlrpc_attribute_strings, XMLRPC_TAG_STRINGS_LEN)
+			;
+
+			data->main_module_data.xml.parser_data = &data->parser_data;
+			break;
+		default:
+			break;
+		}
+	}
+	else if (data->xmlrpc_state == XMLRPC_STATE_XML)
+	{
+		sebs_parse_xml_event_t xml_event =
+				(sebs_parse_xml_event_t) data->parser_data.event;
+		switch (xml_event)
+		{
+		case SEBS_PARSE_XML_EVENT_NONE:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_NONE ");
+			break;
+		case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ERROR_DEPTH ");
+			break;
+		case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ERROR_MALFORMED ");
+			break;
+		case SEBS_PARSE_XML_EVENT_TAG:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_TAG ");
+			break;
+		case SEBS_PARSE_XML_EVENT_INSIDE_TAG:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_INSIDE_TAG ");
+			break;
+		case SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED ");
+			break;
+		case SEBS_PARSE_XML_EVENT_CONTENT_START:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CONTENT_START ");
+			break;
+		default:
+			DEBUG_PRINT_STR("---XML-------->UNKNOWN XML EVENT!");
+			break;
+
+		}
+	}
+	else
+	{
+		ROSC_FATAL("xmlrpc_state value unexpected!");
+	}
+
+
+
 	return (false);
 }
 

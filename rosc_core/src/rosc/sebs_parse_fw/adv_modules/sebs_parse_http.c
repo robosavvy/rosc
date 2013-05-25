@@ -48,7 +48,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			if (data->std_func_data.seekstring.result >= 0)
 			{
 				DEBUG_PRINT_STR("->METHOD found");
-				data->parser_data->event = SEBS_PARSE_EVENT_HTTP_METHOD_PARSED;
+				data->parser_data->event = SEBS_PARSE_HTTP_EVENT_METHOD_PARSED;
 
 				data->state = SEBS_PARSE_HTTP_STATE_REQUEST_ACTION;
 			}
@@ -56,7 +56,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Method unknown");
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_METHOD_NOT_ALLOWED;
+						SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED;
 			}
 			break;
 
@@ -64,14 +64,14 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			if (data->std_func_data.seekstring.result >= 0)
 			{
 				DEBUG_PRINT_STR("->ACTION found...");
-				data->parser_data->event = SEBS_PARSE_EVENT_HTTP_ACTION_PARSED;
+				data->parser_data->event = SEBS_PARSE_HTTP_EVENT_ACTION_PARSED;
 				data->state = SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Action unknown");
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_ACTION_NOT_FOUND;
+						SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND;
 			}
 			break;
 
@@ -86,7 +86,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Version unknown");
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_VERSION_NOT_SUPPORTED;
+						SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED;
 			}
 			break;
 
@@ -101,7 +101,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			{
 				DEBUG_PRINT_STR("ERROR! RESPONSE HTTP Version unknown");
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_VERSION_NOT_SUPPORTED;
+						SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED;
 			}
 			break;
 
@@ -113,24 +113,24 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				{
 					DEBUG_PRINT(INT,"Code of HTTP Response", data->std_func_data.numberparse.number);
 					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_RESPONSE_CODE;
+							SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE;
 					data->state = SEBS_PARSE_HTTP_STATE_RESPONSE_STRING;
 				}
 				else
 				{
 					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_BAD_RESPONSE;
+							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				}
 				break;
 
 			case NUMBERPARSE_ERROR_NONUMBER:
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_BAD_RESPONSE;
+						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;
 
 			case NUMBERPARSE_MAX_FIGURES:
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_ERROR_BAD_RESPONSE;
+						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;
 			}
 			break;
@@ -193,7 +193,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 
 				default:
 					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
+							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
 					break;
 				}
 				break;
@@ -218,7 +218,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 
 				default:
 					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
+							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
 					break;
 
 				}
@@ -255,16 +255,16 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 					if (data->content_length < 0)
 					{
 						data->parser_data->event =
-								SEBS_PARSE_EVENT_HTTP_ERROR_LENGTH_REQUIRED;
+								SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED;
 					}
-					data->parser_data->event = SEBS_PARSE_EVENT_HTTP_HEADER_END;
+					data->parser_data->event = SEBS_PARSE_HTTP_EVENT_HEADER_END;
 					return (false);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
 					data->parser_data->event =
-							SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST;
+							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
 					break;
 
 				default: //TODO ^^ merge with above???
@@ -338,7 +338,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				DEBUG_PRINT_STR("CONTENT_START");
 				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
 				data->parser_data->event =
-						SEBS_PARSE_EVENT_HTTP_HEADER_CONTENT;
+						SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT;
 				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
 			}
 

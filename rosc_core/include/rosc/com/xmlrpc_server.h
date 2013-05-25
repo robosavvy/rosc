@@ -34,6 +34,7 @@
 
 
 #include <rosc/system/spec.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
@@ -48,6 +49,12 @@ typedef enum
 	XMLRPC_SERVER=1,
 	XMLRPC_CLIENT=2
 }xmlrpc_init_t;
+
+typedef enum
+{
+	XMLRPC_STATE_HTTP,
+	XMLRPC_STATE_XML,
+}xmlrpc_state_t;
 
 /**
  * Creating the enum for descriptor usage by hander function
@@ -104,6 +111,7 @@ typedef enum
 typedef struct
 {
 	sebs_parser_data_t parser_data;
+	xmlrpc_state_t xmlrpc_state;
 	union
 	{
 		sebs_parse_http_data_t http;

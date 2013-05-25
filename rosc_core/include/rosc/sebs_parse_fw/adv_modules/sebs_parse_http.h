@@ -69,25 +69,25 @@
  */
 typedef enum
 {
-	SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH_TOO_LONG=-100,//!< means the content exceeds the specified max lenght
-	SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_LENGTH,              //!< means that the content length is now available
-	SEBS_PARSE_EVENT_HTTP_ERROR_ACTION_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
-	SEBS_PARSE_EVENT_HTTP_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
-	SEBS_PARSE_EVENT_HTTP_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
-	SEBS_PARSE_EVENT_HTTP_ERROR_LENGTH_REQUIRED,             //!< means that now length was given in the http header
-	SEBS_PARSE_EVENT_HTTP_ERROR_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
-	SEBS_PARSE_EVENT_HTTP_CONTENT_TYPE,                		 //!< means that a content type was found
-	SEBS_PARSE_EVENT_HTTP_HEADER_END,						 //!< means that the function reached the end
-	SEBS_PARSE_EVENT_HTTP_ERROR_CONTENT_ENCODING,            //!< means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
-	SEBS_PARSE_EVENT_HTTP_ERROR_BAD_RESPONSE,                //!< means that something is wrong in the received response
+	SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG=-100,//!< means the content exceeds the specified max lenght
+	SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH,              //!< means that the content length is now available
+	SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
+	SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
+	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
+	SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED,             //!< means that now length was given in the http header
+	SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
+	SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE,                		 //!< means that a content type was found
+	SEBS_PARSE_HTTP_EVENT_HEADER_END,						 //!< means that the function reached the end
+	SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING,            //!< means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
+	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE,                //!< means that something is wrong in the received response
 
-	SEBS_PARSE_EVENT_HTTP_METHOD_PARSED,                     //!< means that the method string of the http header was parsed
-	SEBS_PARSE_EVENT_HTTP_ACTION_PARSED,                     //!< means that the action (url, uri string) was parsed
+	SEBS_PARSE_HTTP_EVENT_METHOD_PARSED,                     //!< means that the method string of the http header was parsed
+	SEBS_PARSE_HTTP_EVENT_ACTION_PARSED,                     //!< means that the action (url, uri string) was parsed
 
-	SEBS_PARSE_EVENT_HTTP_HEADER_CONTENT,	                 //!< means that the http parser reached content inside a http field
-	SEBS_PARSE_EVENT_HTTP_RESPONSE_CODE,                     //!< means that the response code is now available (client)
+	SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT,	                 //!< means that the http parser reached content inside a http field
+	SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE,                     //!< means that the response code is now available (client)
 
-}sebs_parse_event_t;
+}sebs_parse_http_event_t;
 
 /**
  * Definition of the main states of the http parser.
