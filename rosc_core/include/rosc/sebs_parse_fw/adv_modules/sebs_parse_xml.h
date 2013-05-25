@@ -98,6 +98,9 @@ typedef enum
 	SEBS_PARSE_XML_EVENT_INSIDE_TAG, //!< means that the parser entered the tag and is now after the '>'
 	SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED, //!< means that the submode called from the handler is finished
 	SEBS_PARSE_XML_EVENT_CONTENT_START, //!< means that the parser found content inside a tag and now is at its beginning
+	SEBS_PARSE_XML_EVENT_CDATA, //!< means that at this point a CDATA container starts
+	SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE, //!< means that at this point there is attribute content of a apostrophe(') limited attribute
+	SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES, //!< means that at this point there is attribute content of a quotes(") limited attribute
 } sebs_parse_xml_event_t;
 
 typedef enum

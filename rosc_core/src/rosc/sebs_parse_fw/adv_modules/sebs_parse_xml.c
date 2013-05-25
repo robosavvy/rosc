@@ -79,16 +79,14 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 		case SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING:
 
-			if (data->std_func_data.seekstring.result
-					!= 0)
-			{
-				data->parser_data->event = SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
-			}
-			else
+			if (data->std_func_data.seekstring.result == 0)
 			{
 				data->state =SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET;
 			}
-			data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL;
+			else
+			{
+				data->parser_data->event = SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
+			}
 			break;
 		default:
 			break;
@@ -137,19 +135,18 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				switch (data->state)
 				{
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->state =SEBS_PARSE_XML_STATE_CDATA_START;
-					break;
-				case SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET:
-					if (data->tag_type
-							== SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK)
+					if(data->tag_type==SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK)
 					{
-						data->state =SEBS_PARSE_XML_STATE_CDATA;
+						data->state=SEBS_PARSE_XML_STATE_CDATA_START;
 					}
 					else
 					{
-						data->parser_data->event =
-								SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
+						data->parser_data->event=SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					}
+					break;
+				case SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET:
+						data->state =SEBS_PARSE_XML_STATE_CDATA;
+						data->parser_data->event=SEBS_PARSE_XML_EVENT_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
@@ -264,7 +261,14 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					if(data->depth==0)
+					{
+						data->state=SEBS_PARSE_XML_STATE_INNER;
+					}
+					else
+					{
+						data->state=SEBS_PARSE_XML_STATE_ROOT;
+					}
 					break;
 				default:
 					data->parser_data->event =
@@ -484,6 +488,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND:
 					data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB;
+					data->parser_data->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE;
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB:
 					data->state =SEBS_PARSE_XML_STATE_TAG;
@@ -542,6 +547,7 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND:
 					data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB;
+					data->parser_data->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES;
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB:
 					data->state =SEBS_PARSE_XML_STATE_TAG;

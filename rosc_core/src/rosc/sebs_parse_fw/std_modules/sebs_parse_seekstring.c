@@ -51,7 +51,6 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 				++sep;
 			}
 
-
 			int8_t casechange=0; //will contain upper-lower case conversion when not case-sensitive and alphabetic char
 			if(!data->case_sensitive) //if it is not case sensitive
 			{
@@ -96,18 +95,15 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 			//If we have a separator the string must end here so
 			if(curChrBuf=='\0')
 			{
-
-				if(!found == true) //If found is not true here, the string is not inside the list
+				if(found) //If found is not true here, the string is not inside the list
+				{
+					DEBUG_PRINT(STR,"SEEKSTRING RESULT", data->stringlist[0]);
+				}
+				else
 				{
 					data->result=SEEKSTRING_STRING_NOT_FOUND;
 					DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
 				}
-				else
-				{
-					DEBUG_PRINT(STR,"SEEKSTRING RESULT",data->stringlist[0]);
-				}
-
-
 				//End
 				return (true);
 			}

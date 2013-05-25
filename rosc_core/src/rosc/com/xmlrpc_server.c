@@ -163,6 +163,16 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 				(sebs_parse_xml_event_t) data->parser_data.event;
 		switch (xml_event)
 		{
+
+		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE ");
+			break;
+		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES ");
+			break;
+		case SEBS_PARSE_XML_EVENT_CDATA:
+			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CDATA ");
+			break;
 		case SEBS_PARSE_XML_EVENT_NONE:
 			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_NONE ");
 			break;
@@ -187,7 +197,6 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 		default:
 			DEBUG_PRINT_STR("---XML-------->UNKNOWN XML EVENT!");
 			break;
-
 		}
 	}
 	else
