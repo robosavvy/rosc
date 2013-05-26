@@ -95,7 +95,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			DEBUG_PRINT_STR(".......................................................................................");
 			break;
 		case XMLRPC_RESULT_CONTENT_LENGTH:
-				if(data->main_module_data.http.std_func_data.numberparse.result==NUMBERPARSE_ANOTHER_CHAR)
+				if(data->main_module_data.http.std_func_data.numberparse.result==SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 				{
 					DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->main_module_data.http.std_func_data.numberparse.number);
 					return false;

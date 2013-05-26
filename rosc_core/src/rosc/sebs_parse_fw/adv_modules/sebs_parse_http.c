@@ -108,7 +108,7 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE:
 			switch (data->std_func_data.numberparse.result)
 			{
-			case NUMBERPARSE_ANOTHER_CHAR:
+			case SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR:
 				if (**buf == ' ')
 				{
 					DEBUG_PRINT(INT,"Code of HTTP Response", data->std_func_data.numberparse.number);
@@ -123,12 +123,12 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				}
 				break;
 
-			case NUMBERPARSE_ERROR_NONUMBER:
+			case SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER:
 				data->parser_data->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;
 
-			case NUMBERPARSE_MAX_FIGURES:
+			case SEBS_PARSE_NUMBERPARSE_MAX_FIGURES:
 				data->parser_data->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;

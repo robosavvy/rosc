@@ -55,7 +55,7 @@ bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_dat
 			}
 			else
 			{
-				data->result=NUMBERPARSE_MAX_FIGURES;
+				data->result=SEBS_PARSE_NUMBERPARSE_MAX_FIGURES;
 				return true;
 			}
 		}
@@ -72,13 +72,14 @@ bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_dat
 				}
 				else
 				{
-					data->result=NUMBERPARSE_ERROR_NONUMBER;
+					data->result=SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER;
 					return true;
 				}
 			}
 			else
 			{
-				data->result=NUMBERPARSE_ANOTHER_CHAR;
+				data->result=SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR;
+				data->last_byte=**buf;
 				return true;
 			}
 			break;

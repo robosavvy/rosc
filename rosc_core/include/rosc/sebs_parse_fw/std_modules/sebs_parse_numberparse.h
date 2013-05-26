@@ -47,9 +47,9 @@
  */
 typedef enum
 {
-	NUMBERPARSE_MAX_FIGURES,   //!< Means that the maximum amount of figures was reached
-	NUMBERPARSE_ANOTHER_CHAR,  //!< Means that the number ended through a char which is not a figure
-	NUMBERPARSE_ERROR_NONUMBER,//!< Means that there was no number to parse
+	SEBS_PARSE_NUMBERPARSE_MAX_FIGURES,   //!< Means that the maximum amount of figures was reached
+	SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR,  //!< Means that the number ended through a char which is not a figure
+	SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER,//!< Means that there was no number to parse
 }sebs_parse_numberparse_result_t;
 
 /**
@@ -62,6 +62,7 @@ typedef struct
 	uint8_t cur_place; //!< cur_place stores the number of the current figure of the number
 	uint8_t figure_max; //!< figure_max stores the maximum of figures to be allowed
 	uint32_t number; //!< contains the parsed number after finished
+	uint8_t last_byte; //!< contains the byte if result is ANOTHER_CHAR
 	sebs_parse_numberparse_result_t result; //!< contains the result after the function finished
 }sebs_parse_numberparse_data_t;
 
