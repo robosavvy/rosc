@@ -28,6 +28,8 @@
  *
  *  main.c created by Christian Holl
  */
+
+
 // /////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,7 +128,7 @@ int main_xmlrpctest()
 
 #endif
 
-	xmlrpc_server_data_t handler_data;
+	xmlrpc_data_t handler_data;
 	sebs_parser_data_t* parser_data;
 	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc);
 
@@ -286,29 +288,10 @@ int main_tcprostest()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 int main()
 {
 	printf("\n\nExecute --> rosc_linux_test\n\n");
-
-
-
-
-
-
 
 	//rosc_init();
 

@@ -35,7 +35,8 @@
 #include <rosc/com/xmlrpc_server.h>
 #include <rosc/system/status.h>
 
-bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
+
+bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 {
 
 	if (in_type_out_parser_data
@@ -63,10 +64,12 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 					SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
 		}
 
+		data->parser_data.return_to_handler = false;
 		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
 		data->parser_data.handler_function =
 				(sebs_parse_handler_function_t) &xmlrpc;
 		data->xmlrpc_state = XMLRPC_STATE_HTTP;
+		data->result_handling = XMLRPC_RESULT_NONE;
 
 		//Event = 0
 		data->parser_data.event = 0;
@@ -85,7 +88,26 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 		break;
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
 		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END");
-		//Do result processing here...
+
+		switch(data->result_handling)
+		{
+		case XMLRPC_RESULT_NONE:
+			DEBUG_PRINT_STR(".......................................................................................");
+			break;
+		case XMLRPC_RESULT_CONTENT_LENGTH:
+				if(data->main_module_data.http.std_func_data.numberparse.result==NUMBERPARSE_ANOTHER_CHAR)
+				{
+					DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->main_module_data.http.std_func_data.numberparse.number);
+					return false;
+				}
+				else
+				{
+
+				}
+			break;
+		}
+		data->result_handling=XMLRPC_RESULT_NONE;
+		while(1);
 		break;
 
 	default:
@@ -137,6 +159,15 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 			break;
 		case SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT");
+			switch(data->main_module_data.http.descriptor)
+			{
+			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
+					data->result_handling=XMLRPC_RESULT_CONTENT_LENGTH;
+					SEBS_PARSE_NUMBERPARSE_INIT(data->parser_data.next_parser,
+												data->main_module_data.http.std_func_data.numberparse,3,false);
+				break;
+			}
+
 			break;
 		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE");
@@ -203,9 +234,6 @@ bool xmlrpc(xmlrpc_server_data_t *data, void** in_type_out_parser_data)
 	{
 		ROSC_FATAL("xmlrpc_state value unexpected!");
 	}
-
-
-
 	return (false);
 }
 

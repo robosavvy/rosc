@@ -55,18 +55,18 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	{
 		if (data->event == SEBS_PARSE_EVENT_NONE)
 		{
-			//call parser
+			//call current parser function
 			if (data->current_parser.parser_function(&buf, &len,
 					data->current_parser.parser_data))
 			{
 				//was current function called by handler?
-				//set event
 				if (data->return_to_handler)
 				{
+					//set event
 					data->event = SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 				}
 
-				//Switch current parser call and next
+				//Switch current parser call and next parser call
 				sebs_parser_call_t store;
 				store.parser_function = data->next_parser.parser_function;
 				store.parser_data = data->next_parser.parser_data;
@@ -85,7 +85,10 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 			//if handler function returns with true
 			if (data->handler_function(data, 0))//The 0 here is to disable the init.
 			{
-				//Switch current parser call and next
+				//Handler started a function ...
+				data->return_to_handler=true;
+
+				//Switch current parser call and next parser call
 				sebs_parser_call_t store;
 				store.parser_function = data->next_parser.parser_function;
 				store.parser_data = data->next_parser.parser_data;
@@ -98,6 +101,13 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 				data->current_parser.parser_function = store.parser_function;
 				data->current_parser.parser_data = store.parser_data;
 			}
+			else
+			{
+				//No function was started by handler so ...
+				data->return_to_handler=false;
+			}
+
+			//Clear any event
 			data->event = SEBS_PARSE_EVENT_NONE;
 		}
 	} while (len > 0);

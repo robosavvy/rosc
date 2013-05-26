@@ -263,11 +263,9 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
+				default:
 					data->parser_data->event =
 							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
-					break;
-
-				default: //TODO ^^ merge with above???
 					break;
 				}
 				break;
@@ -342,7 +340,9 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
 			}
 
-			if (len > 0)
+			//We need to exclude header content event here because the first byte of the content
+			//would be skipped for a subfunction called by the handler!
+			if (len > 0 && data->parser_data->event != SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT)
 			{
 				++*buf;
 				--*len;
