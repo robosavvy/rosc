@@ -118,16 +118,17 @@ typedef enum
 
 typedef struct
 {
+
 	sebs_parser_data_t parser_data;
 	xmlrpc_state_t xmlrpc_state;
 	xmlrpc_result_handling_t result_handling;
+	sebs_parse_parseurl_data_t parseurl;
 	union
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
 	}main_module_data;
 
-	sebs_parse_parseurl_data_t parseurl;
 }xmlrpc_data_t;
 
 

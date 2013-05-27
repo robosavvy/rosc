@@ -40,13 +40,31 @@ sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_func
 
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 {
+	//pointing to current length and buffer for the handler
+	data->len=&len;
+	data->buf=&buf;
+
 	/*
 	 * What if len < 0?
 	 * Network functions return len=-1 when connection was terminated for example.
 	 * in that case the handler function is called.
 	 */
 	if (len < 0)
+	{
 		data->event = SEBS_PARSE_EVENT_LEN_SMALLER_ZERO;
+		data->call_len=0;
+	}
+	else
+	{
+		data->call_len=len;
+		if(data->security_len != 0)
+		{
+			if((data->overall_len+data->call_len) > data->security_len)
+			{
+				data->event=SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE;
+			}
+		}
+	}
 
 	/*
 	 * Handling the parser input
@@ -110,5 +128,7 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 			//Clear any event
 			data->event = SEBS_PARSE_EVENT_NONE;
 		}
+		data->overall_len+=data->call_len-len;
 	} while (len > 0);
+
 }

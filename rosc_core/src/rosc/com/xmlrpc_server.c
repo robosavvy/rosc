@@ -39,6 +39,7 @@
 bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 {
 
+
 	if (in_type_out_parser_data
 			!= 0||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
 	{
@@ -64,14 +65,14 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 					SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
 		}
 
-		data->parser_data.return_to_handler = false;
-		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
-		data->parser_data.handler_function =
-				(sebs_parse_handler_function_t) &xmlrpc;
 		data->xmlrpc_state = XMLRPC_STATE_HTTP;
 		data->result_handling = XMLRPC_RESULT_NONE;
 
-		//Event = 0
+		data->parser_data.return_to_handler = false;
+		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
+		data->parser_data.handler_function = (sebs_parse_handler_function_t) &xmlrpc;
+		data->parser_data.overall_len=0;
+		data->parser_data.security_len=1024;
 		data->parser_data.event = 0;
 
 		//set pointer to parser data
@@ -92,7 +93,6 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		switch(data->result_handling)
 		{
 		case XMLRPC_RESULT_NONE:
-			DEBUG_PRINT_STR(".......................................................................................");
 			break;
 		case XMLRPC_RESULT_CONTENT_LENGTH:
 				if(data->main_module_data.http.std_func_data.numberparse.result==SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
@@ -105,7 +105,14 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 
 				}
 			break;
+
+		default:
+			break;
 		}
+		case SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE:
+				DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE");
+				return false;
+				break;
 		data->result_handling=XMLRPC_RESULT_NONE;
 		while(1);
 		break;

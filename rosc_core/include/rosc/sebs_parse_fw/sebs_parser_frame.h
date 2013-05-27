@@ -52,7 +52,7 @@
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
 #define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2
-
+#define SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE -3
 
 typedef bool (*sebs_parse_function_t)(char **buf, int32_t *len_ptr, void *data);
 
@@ -122,6 +122,42 @@ typedef struct sebs_parser_data_t
 	 * @return True if the handler called a function
 	 */
 	bool (*handler_function)(void *data, void** parser_data);
+
+	/**
+	 * Message Size Limit
+	 * This specifies a message size limit, when it is reached the event
+	 * SEBS_PARSE_EVENT_SIZE_REACHED is set.
+	 *
+	 * The length is checked at the beginning by adding up buffer length
+	 * to a variable at the entry of the function.
+	 *
+	 * If the variable is set to zero, this feature is disabled.
+	 */
+	uint32_t security_len;
+
+	/**
+	 * The current length of the input buffer
+	 * can be used to calculate the parsed overall length.
+	 * overall_len + call_len - len
+	 */
+	uint32_t call_len;
+
+	/**
+	 * The current length of the processed message
+	 * (updates after finishing the current buffer content)
+	 */
+	uint32_t overall_len;
+
+
+	/**
+	 * Pointer of the current input buffer
+	 */
+	char **buf;
+
+	/**
+	 * The current length variable
+	 */
+	uint32_t *len;
 } sebs_parser_data_t;
 
 
