@@ -45,7 +45,7 @@
 /**
  * Macro for inserting some standard values for http headers string numbers into any enum
  */
-#define __HTTP_HEADER_STDTEXT(ENUM) \
+#define HTTP_HEADER_STDTEXT(ENUM) \
 	 ENUM ## _VAL_BASEHTTP_ROSC_NODELIB, \
 	 ENUM ## _VAL_HTTP1_0, \
 	 ENUM ## _VAL_HTTP1_1, \
@@ -69,7 +69,7 @@ extern const char *http_header_stdtext[];
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
  */
-#define __XMLRPC_STDTEXT(ENUM) \
+#define XMLRPC_STDTEXT(ENUM) \
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
@@ -99,7 +99,7 @@ extern const char *xmlrpc_stdtext[];
 /**
  * Macro for inserting standard attributes for XMLRPC string numbers into any enum
  */
-#define __XMLRPC_ATTRIBUTE_STRINGS(ENUM) \
+#define XMLRPC_ATTRIBUTE_STRINGS(ENUM) \
 	 ENUM ## _ATTRIBUTE_VERSION
 
 /**
@@ -116,7 +116,7 @@ extern const char *xmlrpc_attribute_strings[];
 /**
  * Macro for inserting method strings string numbers into any enum
  */
-#define __XMLRPC_HTTP_METHODS(ENUM) \
+#define XMLRPC_HTTP_METHODS(ENUM) \
 	 ENUM ## _METHOD_GET, \
 	 ENUM ## _METHOD_POST
 
@@ -134,7 +134,7 @@ extern const char *xmlrpc_http_methods[];
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
  */
-#define __XMLRPC_TAG_STRINGS(ENUM) \
+#define XMLRPC_TAG_STRINGS(ENUM) \
 	 ENUM ## _TAG_ARRAY, \
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \
@@ -166,7 +166,7 @@ extern const char *xmlrpc_tag_strings[];
 /**
  * Macro for inserting standard http header descriptors string numbers into any enum
  */
-#define __XMLRPC_HTTP_DESCRIPTORS(ENUM) \
+#define XMLRPC_HTTP_DESCRIPTORS(ENUM) \
 	 ENUM ## _DESCRIPTOR_ACCEPT_ENCODING, \
 	 ENUM ## _DESCRIPTOR_CONTENT_ENCODING, \
 	 ENUM ## _DESCRIPTOR_CONTENT_TYPE, \
@@ -190,7 +190,7 @@ extern const char *xmlrpc_http_descriptors[];
 /**
  * Macro for inserting field id strings for the ros protocol string numbers into any enum
  */
-#define __ROS_FIELD_STRINGS(ENUM) \
+#define ROS_FIELD_STRINGS(ENUM) \
 	 ENUM ## _ROS_FIELD_CALLERID, \
 	 ENUM ## _ROS_FIELD_ERROR, \
 	 ENUM ## _ROS_FIELD_LATCHING, \
@@ -216,17 +216,17 @@ extern const char *ros_field_strings[];
 /**
  * Macro for inserting Strings for known methods of the slave api string numbers into any enum
  */
-#define __XMLRPC_SLAVE_METHODNAMES(ENUM) \
-	 ENUM ## _METHOD_NAME_GETBUSINFO, \
-	 ENUM ## _METHOD_NAME_GETBUSSTATS, \
-	 ENUM ## _METHOD_NAME_GETMASTERURI, \
-	 ENUM ## _METHOD_NAME_GETPID, \
-	 ENUM ## _METHOD_NAME_GETPUBLICATIONS, \
-	 ENUM ## _METHOD_NAME_GETSUBSCRIPTIONS, \
-	 ENUM ## _METHOD_NAME_PARAMUPDATE, \
-	 ENUM ## _METHOD_NAME_PUBLISHERUPDATE, \
-	 ENUM ## _METHOD_NAME_REQUESTTOPIC, \
-	 ENUM ## _METHOD_NAME_SHUTDOWN
+#define XMLRPC_SLAVE_METHODNAMES(ENUM) \
+	 ENUM ## _METHODNAME_GETBUSINFO, \
+	 ENUM ## _METHODNAME_GETBUSSTATS, \
+	 ENUM ## _METHODNAME_GETMASTERURI, \
+	 ENUM ## _METHODNAME_GETPID, \
+	 ENUM ## _METHODNAME_GETPUBLICATIONS, \
+	 ENUM ## _METHODNAME_GETSUBSCRIPTIONS, \
+	 ENUM ## _METHODNAME_PARAMUPDATE, \
+	 ENUM ## _METHODNAME_PUBLISHERUPDATE, \
+	 ENUM ## _METHODNAME_REQUESTTOPIC, \
+	 ENUM ## _METHODNAME_SHUTDOWN
 
 /**
  * This array contains the strings for Strings for known methods of the slave api
@@ -242,7 +242,7 @@ extern const char *xmlrpc_slave_methodnames[];
 /**
  * Macro for inserting contains available actions for http requests string numbers into any enum
  */
-#define __XMLRPC_HTTP_ACTIONS(ENUM) \
+#define XMLRPC_HTTP_ACTIONS(ENUM) \
 	 ENUM ## _ACTION_ROOT, \
 	 ENUM ## _ACTION_TEST
 
@@ -260,7 +260,7 @@ extern const char *xmlrpc_http_actions[];
 /**
  * Macro for inserting possible strings for representing boolean in xml rpc string numbers into any enum
  */
-#define __XMLRPC_XML_BOOLEAN_STRINGS(ENUM) \
+#define XMLRPC_XML_BOOLEAN_STRINGS(ENUM) \
 	 ENUM ## _BOOLEAN_ZERO, \
 	 ENUM ## _BOOLEAN_ONE, \
 	 ENUM ## _BOOLEAN_FALSE, \

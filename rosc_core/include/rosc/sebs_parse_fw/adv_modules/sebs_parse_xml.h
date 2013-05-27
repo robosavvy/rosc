@@ -38,6 +38,8 @@
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
+
+
 ///@todo document SEBS_PARSE_HTTP_INIT
 #define SEBS_PARSE_XML_INIT(PARSER_CALL, PARSER_DATA, XML_DATA, TAGS, TAGS_LEN, ATTRIBUTES, ATTRIBUTES_LEN)\
 		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_xml;\
@@ -46,7 +48,7 @@
 		XML_DATA.processed_bytes=0;\
 		XML_DATA.state=SEBS_PARSE_XML_STATE_ROOT;\
 		XML_DATA.substate=SEBS_PARSE_XML_SUBSTATE_NONE;\
-		XML_DATA.tag_type=ROSC_XMLRPC_TAG_NONE_UNKNOWN;\
+		XML_DATA.tag_type=SEBS_PARSE_UNKNOWN;\
 		XML_DATA.tag_strings=TAGS;\
 		XML_DATA.tag_strings_len=TAGS_LEN;\
 		XML_DATA.attribute_strings=ATTRIBUTES;\
@@ -150,8 +152,8 @@ typedef struct
 	} std_func_data;
 } sebs_parse_xml_data_t;
 
-#ifndef FORCE_INLINE
+
 bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data);
-#endif
+
 
 #endif /* SEBS_PARSE_MODE_XML_H_ */

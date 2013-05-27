@@ -35,10 +35,11 @@
 #include <rosc/system/types.h>
 #include <rosc/debug/debug_out.h>
 
+
 /**
  * This macro defines the result number if no string was found
  */
-#define SEEKSTRING_STRING_NOT_FOUND  -1
+#define SEBS_PARSE_SEEKSTRING_NOT_FOUND  -1
 
 #define SEBS_PARSE_SEEKSTRING_INIT(NEXT_PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
 				NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
