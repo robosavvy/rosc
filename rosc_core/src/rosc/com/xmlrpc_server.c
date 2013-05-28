@@ -98,23 +98,20 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 	switch (data->parser_data.event)
 	{
 	case SEBS_PARSE_EVENT_LEN_SMALLER_ZERO:
-		DEBUG_PRINT_STR("---FRAME-->DAFUQ? SHOULDN'T COME HERE, SEBS_PARSE_EVENT_LEN_SMALLER_ZERO");
 		//Should never get here... -> reset is above
 		break;
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
-		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END");
-
 		switch (data->result_handling)
 		{
 		case XMLRPC_RESULT_NONE:
 			break;
 		case XMLRPC_RESULT_CONTENT_LENGTH:
-			if (data->http.std_func_data.numberparse.result
+			if (data->http.numberparse.result
 					== SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 			{
-				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->http.std_func_data.numberparse.number);
+				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->http.numberparse.number);
 				data->xml_length =
-						data->http.std_func_data.numberparse.number;
+						data->http.numberparse.number;
 				return false;
 			}
 			else
@@ -126,6 +123,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		default:
 			break;
 		}
+		break;
 	case SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE:
 		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE");
 		return false;
@@ -138,6 +136,11 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 	default:
 		break;
 	}
+
+
+
+
+
 
 	/* *******************
 	 * Handle HTTP Events*
@@ -168,15 +171,15 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",data->http.std_func_data.seekstring.result);
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",data->http.seekstring.result);
 			data->method =
-					data->http.std_func_data.seekstring.result;
+					data->http.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_ACTION_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",data->http.std_func_data.seekstring.result);
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",data->http.seekstring.result);
 			data->action =
-					data->http.std_func_data.seekstring.result;
+					data->http.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT:
@@ -186,14 +189,21 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
 				data->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
 				SEBS_PARSE_NUMBERPARSE_INIT(data->parser_data.next_parser,
-						data->http.std_func_data.numberparse,
+						data->http.numberparse,
 						3, false);
 				break;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
-			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE");
+				if(data->http.numberparse.result==SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
+				{
+					data->http_response_code=data->http.numberparse.number;
+				}
+				else
+				{
+					//TODO Error -- Header Parsing
+				}
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
@@ -229,7 +239,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 
 		case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
 		case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
-			DEBUG_PRINT_STR("---XML--------> ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1elf");
+
 			break;
 
 		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE:
@@ -238,13 +248,13 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			break;
 
 		case SEBS_PARSE_XML_EVENT_CDATA:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CDATA ");
+
 			//Is this used anywhere? Some JSON somewhere I remember... but where?
 			break;
 
 
 		case SEBS_PARSE_XML_EVENT_TAG:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_TAG ");
+
 			if(data->xml.tag_type==SEBS_PARSE_XML_TAG_TYPE_CLOSE)
 			{
 				switch(data->xml.tags[data->xml.depth])
@@ -302,7 +312,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 					break;
 				}
 			}
-			DEBUG_PRINT(INT,"TAG_STATE_VALUE",data->tag_state);
+
 			break;
 
 
@@ -361,41 +371,42 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 					}
 					break;
 
-
-
 			default:
 				break;
 			}
-			DEBUG_PRINT(INT,"TAG_STATE_VALUE",data->tag_state);
+
 			break;
 
 		case SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED ");
+
 			break;
 
 		case SEBS_PARSE_XML_EVENT_CONTENT_START:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CONTENT_START ");
-
 			switch(data->xml.tags[data->xml.depth])
 			{
 
 			case XMLRPC_TAG_METHODNAME:
-				if(data->xml.state==SEBS_PARSE_XML_STATE_ROOT)
+				if(data->xml.depth==2)
 				{
-
+					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data.next_parser,
+								data->xml.seekstring,
+								xmlrpc_slave_methodnames,XMLRPC_SLAVE_METHODNAMES_LEN,"<,:>/",true);
+					data->method=data->xml.seekstring.result;
 				}
-
+				break;
 			default:
-
 				break;
 			}
-
-
-
 			break;
 
+
+			//FETCH DATA HERE
+
+
+
+
+
 		default:
-			DEBUG_PRINT_STR("---XML-------->UNKNOWN XML EVENT!");
 			break;
 		}
 	}

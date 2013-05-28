@@ -128,7 +128,6 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 			//Clear any event
 			data->event = SEBS_PARSE_EVENT_NONE;
 		}
-		data->overall_len+=data->call_len-len;
 	} while (len > 0);
-
+		data->overall_len+=data->call_len;
 }

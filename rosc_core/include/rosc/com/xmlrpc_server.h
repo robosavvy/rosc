@@ -110,6 +110,7 @@ typedef enum
 {
 	XMLRPC_RESULT_NONE,
 	XMLRPC_RESULT_CONTENT_LENGTH,
+	XMLRPC_RESULT_METHOD_NAME,
 }xmlrpc_result_handling_t;
 
 typedef enum
@@ -159,6 +160,7 @@ typedef struct
 
 
 	//HTTP variables
+
 	uint16_t http_response_code; //!<saves the response code
 	xmlrpc_server_method_t method; //!< the method requested
 	xmlrpc_server_actions_t action; //!< the action requested

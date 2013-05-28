@@ -159,7 +159,7 @@ typedef struct
 	{
 		sebs_parse_numberparse_data_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
-	}std_func_data;
+	};
 }sebs_parse_http_data_t;
 
 
