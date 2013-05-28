@@ -32,6 +32,7 @@
 #ifndef XMLRPC_H_
 #define XMLRPC_H_
 
+#define XMLRPC_MAX_ARRAY_NESTING 3
 
 #include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
@@ -48,7 +49,7 @@ typedef enum
 {
 	XMLRPC_SERVER=1,
 	XMLRPC_CLIENT=2
-}xmlrpc_init_t;
+}xmlrpc_type_t;
 
 typedef enum
 {
@@ -117,12 +118,44 @@ typedef enum
     XMLRPC_SLAVE_METHODNAMES(XMLRPC),
 }xmlrpc_ros_methods;
 
+typedef enum
+{
+	XMLRPC_TAG_STATE_NONE,
+	XMLRPC_TAG_STATE_METHODRC, //<! inside methodCall or methodResponse tag
+	XMLRPC_TAG_STATE_PARAMS,
+	XMLRPC_TAG_STATE_PARAM,
+	XMLRPC_TAG_STATE_VALUE,
+}
+xmlrpc_tag_state_t;
+
+typedef enum
+{
+	XMLRPC_TYPE_TAG_NONE,
+	XMLRPC_TYPE_TAG_BOOLEAN,
+	XMLRPC_TYPE_TAG_STRING,
+	XMLRPC_TYPE_TAG_INT,
+	XMLRPC_TYPE_TAG_DOUBLE,
+}xmlrpc_type_tag_t;
+
+typedef enum
+{
+	XMLRPC_ARRAY_STATE_NONE,
+	XMLRPC_ARRAY_STATE_ARRAY,
+	XMLRPC_ARRAY_STATE_DATA,
+	XMLRPC_ARRAY_STATE_VALUE,
+}xmlrpc_array_state_t;
+
+
+
 typedef struct
 {
 	sebs_parser_data_t parser_data; //!< parser_data
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
+
+
+	xmlrpc_type_t xmlrpc_type;
 
 
 	//HTTP variables
@@ -134,8 +167,13 @@ typedef struct
 	//XML variables
 	uint32_t xml_length;	//!< storage for the xml length from the header
 	uint32_t xml_message_start;	//!< marks where the xml message starts
-	uint8_t value_no; //!< number of the value
 
+	xmlrpc_tag_state_t tag_state;
+	xmlrpc_type_tag_t type_tag;
+	uint8_t param_no; //!< number of the param tag
+	uint32_t array_level;
+	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING];
+	xmlrpc_array_state_t array_state;
 
 #ifdef __SYSTEM_HAS_MALLOC__
 #error there is stuff todo
@@ -148,7 +186,7 @@ typedef struct
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
-	}main_module_data;
+	};
 
 	sebs_parse_parseurl_data_t parseurl;
 

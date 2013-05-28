@@ -46,23 +46,25 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
 		SEBS_PARSE_HTTP_INIT(0, data->parser_data,
-				data->parser_data.current_parser, data->main_module_data.http,
+				data->parser_data.current_parser, data->http,
 				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
 				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
 				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
 
-		xmlrpc_init_t* type = (xmlrpc_init_t*) *in_type_out_parser_data;
+		xmlrpc_type_t* type = (xmlrpc_type_t*) *in_type_out_parser_data;
 		if (1) //(*type==XMLRPC_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
-			data->main_module_data.http.state =
+			data->http.state =
 					SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
+			data->xmlrpc_type=XMLRPC_SERVER;
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
-			data->main_module_data.http.state =
+			data->http.state =
 					SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
+			data->xmlrpc_type=XMLRPC_CLIENT;
 		}
 
 		data->xmlrpc_state = XMLRPC_STATE_HTTP;
@@ -70,14 +72,19 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 
 		data->parser_data.return_to_handler = false;
 		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
-		data->parser_data.handler_function =
-				(sebs_parse_handler_function_t) &xmlrpc;
+		data->parser_data.handler_function = (sebs_parse_handler_function_t) &xmlrpc;
 		data->parser_data.overall_len = 0;
 		data->parser_data.security_len = 1024;
 		data->parser_data.event = 0;
 
-		data->value_no = 0;
+
+		xmlrpc_tag_state_t tag_state=XMLRPC_TAG_STATE_NONE;
+		xmlrpc_type_tag_t type_tag=XMLRPC_TYPE_TAG_NONE;
+		uint8_t param_no=0;
+		uint32_t array_level=0;
+		data->param_no = 0;
 		data->method = XMLRPC_METHOD_UNKNOWN;
+		data->array_state = XMLRPC_ARRAY_STATE_NONE;
 
 		//set pointer to parser data
 		*in_type_out_parser_data = &data->parser_data;
@@ -102,12 +109,12 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		case XMLRPC_RESULT_NONE:
 			break;
 		case XMLRPC_RESULT_CONTENT_LENGTH:
-			if (data->main_module_data.http.std_func_data.numberparse.result
+			if (data->http.std_func_data.numberparse.result
 					== SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 			{
-				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->main_module_data.http.std_func_data.numberparse.number);
+				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->http.std_func_data.numberparse.number);
 				data->xml_length =
-						data->main_module_data.http.std_func_data.numberparse.number;
+						data->http.std_func_data.numberparse.number;
 				return false;
 			}
 			else
@@ -161,30 +168,28 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",data->main_module_data.http.std_func_data.seekstring.result);
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",data->http.std_func_data.seekstring.result);
 			data->method =
-					data->main_module_data.http.std_func_data.seekstring.result;
+					data->http.std_func_data.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_ACTION_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",data->main_module_data.http.std_func_data.seekstring.result);
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",data->http.std_func_data.seekstring.result);
 			data->action =
-					data->main_module_data.http.std_func_data.seekstring.result;
+					data->http.std_func_data.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT");
-			switch (data->main_module_data.http.descriptor)
+			switch (data->http.descriptor)
 			{
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
 				data->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
 				SEBS_PARSE_NUMBERPARSE_INIT(data->parser_data.next_parser,
-						data->main_module_data.http.std_func_data.numberparse,
-						3, false)
-				;
+						data->http.std_func_data.numberparse,
+						3, false);
 				break;
 			}
-
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
@@ -195,12 +200,12 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			DEBUG_PRINT_STR("HEADER END!");
 			data->xmlrpc_state = XMLRPC_STATE_XML;
 			SEBS_PARSE_XML_INIT(data->parser_data.current_parser,
-					&data->parser_data, data->main_module_data.xml,
+					&data->parser_data, data->xml,
 					xmlrpc_tag_strings, XMLRPC_TAG_STRINGS_LEN,
 					xmlrpc_attribute_strings, XMLRPC_TAG_STRINGS_LEN)
 			;
 
-			data->main_module_data.xml.parser_data = &data->parser_data;
+			data->xml.parser_data = &data->parser_data;
 			break;
 		default:
 			break;
@@ -217,36 +222,178 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		switch (xml_event)
 		{
 
+		case SEBS_PARSE_XML_EVENT_NONE:
+			//No Event ...
+			break;
+
+
+		case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
+		case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
+			DEBUG_PRINT_STR("---XML--------> ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1elf");
+			break;
+
 		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE ");
-			break;
 		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES ");
+				//Attribute? I don't give a F*ck about the xml version...
 			break;
+
 		case SEBS_PARSE_XML_EVENT_CDATA:
 			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CDATA ");
+			//Is this used anywhere? Some JSON somewhere I remember... but where?
 			break;
-		case SEBS_PARSE_XML_EVENT_NONE:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_NONE ");
-			break;
-		case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ERROR_DEPTH ");
-			break;
-		case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_ERROR_MALFORMED ");
-			break;
+
+
 		case SEBS_PARSE_XML_EVENT_TAG:
 			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_TAG ");
+			if(data->xml.tag_type==SEBS_PARSE_XML_TAG_TYPE_CLOSE)
+			{
+				switch(data->xml.tags[data->xml.depth])
+				{
+				case XMLRPC_TAG_VALUE:
+					if(data->tag_state==XMLRPC_TAG_STATE_VALUE&& data->xml.depth==4)
+					{
+						data->tag_state=XMLRPC_TAG_STATE_PARAM;
+					}
+					else if(data->array_state==XMLRPC_ARRAY_STATE_VALUE)
+					{
+						data->array_state=XMLRPC_ARRAY_STATE_DATA;
+						if(data->array_level<XMLRPC_MAX_ARRAY_NESTING)
+							data->array_value_number[data->array_level]++;
+					}
+					break;
+
+				case XMLRPC_TAG_DATA:
+					if(data->array_state==XMLRPC_ARRAY_STATE_DATA)
+					{
+						data->array_state=XMLRPC_ARRAY_STATE_ARRAY;
+					}
+					break;
+
+				case XMLRPC_TAG_ARRAY:
+					if(data->array_state==XMLRPC_ARRAY_STATE_ARRAY)
+					{
+						if(data->array_level==0)
+						{
+							data->array_state=XMLRPC_ARRAY_STATE_NONE;
+						}
+						else
+						{
+							data->array_state=XMLRPC_ARRAY_STATE_VALUE;
+							data->array_level--;
+						}
+					}
+
+				case XMLRPC_TAG_PARAM:
+					if(data->tag_state==XMLRPC_TAG_STATE_PARAM && data->xml.depth==3)
+						data->tag_state=XMLRPC_TAG_STATE_PARAMS;
+					break;
+
+				case XMLRPC_TAG_PARAMS:
+					if(data->tag_state==XMLRPC_TAG_STATE_PARAMS && data->xml.depth==2)
+						data->tag_state=XMLRPC_TAG_STATE_METHODRC;
+					break;
+
+				case XMLRPC_TAG_METHODCALL:
+				case XMLRPC_TAG_METHODRESPONSE:
+					if(data->tag_state==XMLRPC_TAG_STATE_METHODRC && data->xml.depth==1)
+						data->tag_state=XMLRPC_TAG_STATE_NONE;
+					break;
+				default:
+					break;
+				}
+			}
+			DEBUG_PRINT(INT,"TAG_STATE_VALUE",data->tag_state);
 			break;
+
+
 		case SEBS_PARSE_XML_EVENT_INSIDE_TAG:
-			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_INSIDE_TAG ");
+			//create tag position information
+			switch(data->xml.tags[data->xml.depth])
+			{
+			case XMLRPC_TAG_METHODCALL:
+					if(data->xmlrpc_type==XMLRPC_SERVER && data->xml.depth==1)
+					{
+						data->tag_state=XMLRPC_TAG_STATE_METHODRC;
+					}
+				break;
+			case XMLRPC_TAG_METHODRESPONSE:
+					if(data->xmlrpc_type==XMLRPC_CLIENT && data->xml.depth==1)
+					{
+						data->tag_state=XMLRPC_TAG_STATE_METHODRC;
+					}
+				break;
+			case XMLRPC_TAG_PARAMS:
+					if(data->tag_state==XMLRPC_TAG_STATE_METHODRC && data->xml.depth==2)
+						data->tag_state=XMLRPC_TAG_STATE_PARAMS;
+					break;
+			case XMLRPC_TAG_PARAM:
+					if(data->tag_state==XMLRPC_TAG_STATE_PARAMS && data->xml.depth==3)
+						data->tag_state=XMLRPC_TAG_STATE_PARAM;
+						data->param_no++;
+				break;
+			case XMLRPC_TAG_VALUE:
+					if(data->tag_state==XMLRPC_TAG_STATE_PARAM && data->xml.depth==4)
+					{
+						data->tag_state=XMLRPC_TAG_STATE_VALUE;
+					}
+					else if(data->array_state==XMLRPC_ARRAY_STATE_DATA)
+					{
+						data->array_state=XMLRPC_ARRAY_STATE_VALUE;
+					}
+				break;
+
+			case XMLRPC_TAG_ARRAY:
+					if(data->tag_state==XMLRPC_TAG_STATE_VALUE)
+					{
+						if(data->array_state==XMLRPC_ARRAY_STATE_VALUE)
+						{
+							data->array_level++;
+							if(data->array_level<XMLRPC_MAX_ARRAY_NESTING)
+								data->array_value_number[data->array_level]=0;
+						}
+						data->array_state=XMLRPC_ARRAY_STATE_ARRAY;
+					}
+				break;
+			case XMLRPC_TAG_DATA:
+					if(data->array_state==XMLRPC_ARRAY_STATE_ARRAY)
+					{
+						data->array_state=XMLRPC_ARRAY_STATE_DATA;
+					}
+					break;
+
+
+
+			default:
+				break;
+			}
+			DEBUG_PRINT(INT,"TAG_STATE_VALUE",data->tag_state);
 			break;
+
 		case SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
 			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED ");
 			break;
+
 		case SEBS_PARSE_XML_EVENT_CONTENT_START:
 			DEBUG_PRINT_STR("---XML-------->SEBS_PARSE_XML_EVENT_CONTENT_START ");
+
+			switch(data->xml.tags[data->xml.depth])
+			{
+
+			case XMLRPC_TAG_METHODNAME:
+				if(data->xml.state==SEBS_PARSE_XML_STATE_ROOT)
+				{
+
+				}
+
+			default:
+
+				break;
+			}
+
+
+
 			break;
+
 		default:
 			DEBUG_PRINT_STR("---XML-------->UNKNOWN XML EVENT!");
 			break;
