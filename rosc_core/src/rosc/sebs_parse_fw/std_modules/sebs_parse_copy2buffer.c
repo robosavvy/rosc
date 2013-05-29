@@ -48,7 +48,7 @@ bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_dat
 			++sep;
 		}
 
-		if((data->cur_pos<data->max_len) && !isEndChar )
+		if((data->cur_pos<(data->max_len-1)) && !isEndChar )
 		{
 			data->buffer[data->cur_pos]=**buf;
 			data->cur_pos++;
@@ -65,6 +65,7 @@ bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_dat
 			{
 				data->result=COPY2BUFFER_MAXLEN;
 			}
+			data->buffer[data->cur_pos+1]='\0';
 			return true; //Finished!
 		}
 	}

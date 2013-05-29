@@ -129,7 +129,7 @@ extern const char *xmlrpc_http_methods[];
 /**
  * Length of the string array xmlrpc_tag_strings
  */
-#define XMLRPC_TAG_STRINGS_LEN 	16
+#define XMLRPC_TAG_STRINGS_LEN 	17
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
@@ -138,6 +138,7 @@ extern const char *xmlrpc_http_methods[];
 	 ENUM ## _TAG_ARRAY, \
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \
+	 ENUM ## _TAG_DOUBLE, \
 	 ENUM ## _TAG_FAULT, \
 	 ENUM ## _TAG_I4, \
 	 ENUM ## _TAG_INT, \

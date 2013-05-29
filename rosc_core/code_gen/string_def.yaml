@@ -60,6 +60,7 @@ xmlrpc_tag_strings: # <- This is the variable name for the
                   struct,
                   value,
                   array,
+                  double,
                   i4,
               }
 

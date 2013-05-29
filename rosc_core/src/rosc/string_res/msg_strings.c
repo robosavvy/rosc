@@ -81,6 +81,7 @@ const char *xmlrpc_tag_strings[] =
 	"array",
 	"boolean",
 	"data",
+	"double",
 	"fault",
 	"i4",
 	"int",

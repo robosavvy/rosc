@@ -97,7 +97,7 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 			{
 				if(found) //If found is not true here, the string is not inside the list
 				{
-					DEBUG_PRINT(STR,"SEEKSTRING RESULT", data->stringlist[0]);
+					//DEBUG_PRINT(STR,"SEEKSTRING RESULT", data->stringlist[0]);
 				}
 				else
 				{
