@@ -102,7 +102,7 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 				else
 				{
 					data->result=SEBS_PARSE_SEEKSTRING_NOT_FOUND;
-					DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
+					//DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
 				}
 				//End
 				return (true);

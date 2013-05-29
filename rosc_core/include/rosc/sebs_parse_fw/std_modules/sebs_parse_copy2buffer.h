@@ -34,13 +34,14 @@
 
 #include <rosc/system/types.h>
 
-#define SEBS_PARSE_COPY2BUFFER_INIT(NEXT_PARSER_DATA,COPY2BUFFER_DATA, BUFFER, MAX_LEN, END_CHARS)\
-		NEXT_PARSER_DATA=(parser_submode_function_t)&copy2buffer;\
-		COPY2BUFFER_DATA->buffer=BUFFER;\
-		COPY2BUFFER_DATA->max_len=MAX_LEN;\
-		COPY2BUFFER_DATA->endChrs=END_CHARS;\
-		COPY2BUFFER_DATA->cur_pos=0;\
-		return false
+#define SEBS_PARSE_COPY2BUFFER_INIT(NEXT_PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS)\
+		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
+		NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.buffer=BUFFER;\
+		DATA_STORAGE.max_len=MAX_LEN;\
+		DATA_STORAGE.endChrs=END_CHARS;\
+		DATA_STORAGE.cur_pos=0;\
+		return (true)
 
 typedef enum
 {

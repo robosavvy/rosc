@@ -74,7 +74,7 @@ typedef enum
 {
 	XMLRPC_ACTION_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND ,
 	XMLRPC_HTTP_ACTIONS(XMLRPC)
-}xmlrpc_server_actions_t;
+}xmlrpc_http_actions_t;
 
 /**
  * Creating the enum for method usage by hander function
@@ -83,7 +83,7 @@ typedef enum
 {
 	XMLRPC_METHOD_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND ,
 	XMLRPC_HTTP_METHODS(XMLRPC)
-}xmlrpc_server_method_t;
+}xmlrpc_http_methods_t;
 
 /**
  * XML Tags
@@ -111,13 +111,14 @@ typedef enum
 	XMLRPC_RESULT_NONE,
 	XMLRPC_RESULT_CONTENT_LENGTH,
 	XMLRPC_RESULT_METHOD_NAME,
+	XMLRPC_RESULT_CALLERID,
 }xmlrpc_result_handling_t;
 
 typedef enum
 {
 	XMLRPC_METHODNAME_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND ,
     XMLRPC_SLAVE_METHODNAMES(XMLRPC),
-}xmlrpc_ros_methods;
+}xmlrpc_ros_methodnames;
 
 typedef enum
 {
@@ -162,8 +163,8 @@ typedef struct
 	//HTTP variables
 
 	uint16_t http_response_code; //!<saves the response code
-	xmlrpc_server_method_t method; //!< the method requested
-	xmlrpc_server_actions_t action; //!< the action requested
+	xmlrpc_http_methods_t method; //!< the method requested
+	xmlrpc_http_actions_t action; //!< the action requested
 
 
 	//XML variables
@@ -176,21 +177,31 @@ typedef struct
 	uint32_t array_level;
 	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING];
 	xmlrpc_array_state_t array_state;
+	xmlrpc_ros_methodnames rpc_methodname;
 
+
+#ifndef ROSC_NO_CALLERID_EXTRACTION
 #ifdef __SYSTEM_HAS_MALLOC__
 #error there is stuff todo
 #else
 		char caller_id[__NODENAME_MAX_LEN__];
+		sebs_parse_copy2buffer_data_t copy2buffer;
+#endif
 #endif
 
+	sebs_parse_parseurl_data_t masterurl;
 
+
+	/**
+	 * This union contains data from the main
+	 * xmlrpc submodes. Http and xml parser.
+	 */
 	union
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
 	};
 
-	sebs_parse_parseurl_data_t parseurl;
 
 }xmlrpc_data_t;
 
