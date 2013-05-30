@@ -139,7 +139,7 @@ typedef struct
 } sebs_parse_xml_data_t;
 
 
-bool sebs_parse_xml(sebs_parser_data_t* pdata);
+sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata);
 
 
 #endif /* SEBS_PARSE_MODE_XML_H_ */

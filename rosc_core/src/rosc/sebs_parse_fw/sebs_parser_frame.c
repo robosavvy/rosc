@@ -73,7 +73,7 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	do
 	{
 		sebs_parse_function_t function;
-		bool switch_functions;
+		bool switch_functions=false;
 		bool handler=false;
 		if (data->event == SEBS_PARSE_EVENT_NONE && !data->handler_init)
 		{
@@ -89,12 +89,12 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 		switch(result)
 		{
 		case SEBS_PARSE_RETURN_FINISHED:
-			if(data->return_to_handler && !handler)
+			if(data->return_to_handler && handler)
 			{
 				data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 				data->return_to_handler = false;
-				switch_functions=true;
 			}
+			switch_functions=true;
 		break;
 
 		case SEBS_PARSE_RETURN_INIT:

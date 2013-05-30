@@ -40,7 +40,7 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 	{
 		pdata->function_init = false;
 		fdata->curChrPos = 0;
-		fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND;
+		fdata->result = 0;
 	}
 
 	while (*pdata->len > 0)
@@ -106,19 +106,19 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 		{
 			if (found) //If found is not true here, the string is not inside the list
 			{
-				//DEBUG_PRINT(STR,"SEEKSTRING RESULT", fdata->stringlist[0]);
+				DEBUG_PRINT(STR,"SEEKSTRING RESULT", fdata->stringlist[0]);
 			}
 			else
 			{
 				fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND;
-				//DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
+				DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
 			}
 			//End
-			return (true);
+			return (SEBS_PARSE_RETURN_FINISHED);
 		}
 		++*pdata->buf;
 		fdata->curChrPos++;
 		--*pdata->len;
 	}
-	return (false);
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

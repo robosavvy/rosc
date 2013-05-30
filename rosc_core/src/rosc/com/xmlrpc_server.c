@@ -35,7 +35,8 @@
 #include <rosc/com/xmlrpc_server.h>
 #include <rosc/system/status.h>
 
-bool xmlrpc(sebs_parser_data_t* pdata)
+
+sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
 	xmlrpc_data_t *hdata=pdata->handler_data;
 
@@ -154,19 +155,6 @@ bool xmlrpc(sebs_parser_data_t* pdata)
 		switch (http_event)
 		{
 
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
-			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-
-			//TODO return error message (server)
-			break;
 
 		case SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE");
@@ -214,6 +202,20 @@ bool xmlrpc(sebs_parser_data_t* pdata)
 					XMLRPC_TAG_STRINGS_LEN, xmlrpc_attribute_strings,
 					XMLRPC_TAG_STRINGS_LEN)
 			;
+
+			break;
+
+
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
+		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
+			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
 
 			break;
 		default:

@@ -31,7 +31,7 @@
 
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
 
-bool sebs_parse_xml(sebs_parser_data_t* pdata)
+sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 {
 	sebs_parse_xml_data_t *fdata=(sebs_parse_xml_data_t *)pdata->current_parser.parser_data;
 	if(pdata->function_init)

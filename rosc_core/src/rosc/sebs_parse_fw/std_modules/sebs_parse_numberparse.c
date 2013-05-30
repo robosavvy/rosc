@@ -80,19 +80,19 @@ sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 				else
 				{
 					fdata->result=SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER;
-					return true;
+					return(SEBS_PARSE_RETURN_FINISHED);
 				}
 			}
 			else
 			{
 				fdata->result=SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR;
 				fdata->last_byte=**pdata->buf;
-				return true;
+				return(SEBS_PARSE_RETURN_FINISHED);
 			}
 			break;
 		}
 	}
-	return false;
+	return(SEBS_PARSE_RETURN_GO_AHEAD);
 }
 
 

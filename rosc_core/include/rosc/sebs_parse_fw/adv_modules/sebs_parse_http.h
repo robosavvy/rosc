@@ -161,7 +161,7 @@ typedef struct
 }sebs_parse_http_data_t;
 
 
-bool sebs_parse_http(sebs_parser_data_t* pdata);
+sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata);
 
 
 

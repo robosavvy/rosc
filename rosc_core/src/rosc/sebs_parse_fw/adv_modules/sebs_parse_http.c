@@ -31,13 +31,16 @@
 
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 
-bool sebs_parse_http(sebs_parser_data_t* pdata)
+sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 {
+	sebs_parse_http_data_t *fdata=(sebs_parse_http_data_t *)pdata->current_parser.parser_data;
 	if(pdata->function_init)
 	{
 		pdata->function_init=false;
+		fdata->content_length=SEBS_PARSE_UNKNOWN;
+		fdata->descriptor=SEBS_PARSE_UNKNOWN;
+		fdata->substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
 	}
-	sebs_parse_http_data_t *fdata=(sebs_parse_http_data_t *)pdata->current_parser.parser_data;
 	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
 		bool is_field_content = false;
@@ -51,7 +54,6 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 			{
 				DEBUG_PRINT_STR("->METHOD found");
 				pdata->event = SEBS_PARSE_HTTP_EVENT_METHOD_PARSED;
-
 				fdata->state = SEBS_PARSE_HTTP_STATE_REQUEST_ACTION;
 			}
 			else

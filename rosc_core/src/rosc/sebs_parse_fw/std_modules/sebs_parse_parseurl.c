@@ -38,7 +38,7 @@ sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
 		pdata->function_init=false;
 
 	}
-	return false;
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }
 
 
