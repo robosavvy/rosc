@@ -81,15 +81,21 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 		}
 		else
 		{
-			data->event=SEBS_PARSE_EVENT_NONE;
 			function=data->handler_function;
 			handler=true;
 		}
+
+		//Call the current function
 		sebs_parse_return_t result=function(data);
+
+		//When the current function was the handler, reset event
+		if(handler)
+			data->event=SEBS_PARSE_EVENT_NONE;
+
 		switch(result)
 		{
 		case SEBS_PARSE_RETURN_FINISHED:
-			if(data->return_to_handler && handler)
+			if(data->return_to_handler)
 			{
 				data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 				data->return_to_handler = false;

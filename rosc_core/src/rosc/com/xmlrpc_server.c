@@ -68,13 +68,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 
-		hdata->parser_data.return_to_handler = false;
-		hdata->parser_data.event = SEBS_PARSE_EVENT_NONE;
-		hdata->parser_data.handler_function =
-				(sebs_parse_handler_function_t) &xmlrpc;
-		hdata->parser_data.overall_len = 0;
-		hdata->parser_data.security_len = 1024;
-		hdata->parser_data.event = 0;
+//		hdata->parser_data.return_to_handler = false;
+//		hdata->parser_data.event = SEBS_PARSE_EVENT_NONE;
+//		hdata->parser_data.handler_function =
+//				(sebs_parse_handler_function_t) &xmlrpc;
+//		hdata->parser_data.overall_len = 0;
+//		hdata->parser_data.security_len = 1024;
+//		hdata->parser_data.event = 0;
 
 		xmlrpc_tag_state_t tag_state = XMLRPC_TAG_STATE_NONE;
 		xmlrpc_type_tag_t type_tag = XMLRPC_TYPE_TAG_NONE;
@@ -96,7 +96,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	/* ********************
 	 * Handle Frame Events*
 	 **********************/
-	switch (hdata->parser_data.event)
+	switch (pdata->event)
 	{
 	case SEBS_PARSE_EVENT_LEN_SMALLER_ZERO:
 		//Should never get here... -> reset is above
@@ -151,7 +151,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	if (hdata->xmlrpc_state == XMLRPC_STATE_HTTP)
 	{
 		sebs_parse_http_event_t http_event =
-				(sebs_parse_http_event_t) hdata->parser_data.event;
+				(sebs_parse_http_event_t) pdata->event;
 		switch (http_event)
 		{
 
@@ -176,7 +176,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
 				hdata->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
-				SEBS_PARSE_NUMBERPARSE_INIT(hdata->parser_data.next_parser,
+				SEBS_PARSE_NUMBERPARSE_INIT(pdata,
 						hdata->http.numberparse, 3, false)
 				;
 				break;
@@ -211,7 +211,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
@@ -230,7 +229,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	else if (hdata->xmlrpc_state == XMLRPC_STATE_XML)
 	{
 		sebs_parse_xml_event_t xml_event =
-				(sebs_parse_xml_event_t) hdata->parser_data.event;
+				(sebs_parse_xml_event_t) pdata->event;
 		switch (xml_event)
 		{
 

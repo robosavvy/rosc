@@ -151,7 +151,6 @@ typedef enum
 
 typedef struct
 {
-	sebs_parser_data_t parser_data; //!< parser_data
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result

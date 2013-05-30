@@ -63,7 +63,7 @@ sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 			else
 			{
 				fdata->result=SEBS_PARSE_NUMBERPARSE_MAX_FIGURES;
-				return true;
+				return(SEBS_PARSE_RETURN_FINISHED);
 			}
 		}
 		else

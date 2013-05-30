@@ -72,7 +72,6 @@ typedef enum
 	SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
 	SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
 	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
-	SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED,             //!< means that now length was given in the http header
 	SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
 	SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE,                		 //!< means that a content type was found
 	SEBS_PARSE_HTTP_EVENT_HEADER_END,						 //!< means that the function reached the end

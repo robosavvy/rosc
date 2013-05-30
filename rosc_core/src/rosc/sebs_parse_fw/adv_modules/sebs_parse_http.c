@@ -256,11 +256,6 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
-					if (fdata->content_length < 0)
-					{
-						pdata->event =
-								SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED;
-					}
 					pdata->event = SEBS_PARSE_HTTP_EVENT_HEADER_END;
 					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
@@ -309,7 +304,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE;
 					SEBS_PARSE_NUMBERPARSE_INIT(
-							pdata->next_parser,
+							pdata,
 							fdata->numberparse, 3, false);
 					break;
 
