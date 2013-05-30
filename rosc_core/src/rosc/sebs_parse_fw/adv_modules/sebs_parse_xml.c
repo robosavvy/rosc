@@ -34,6 +34,15 @@
 bool sebs_parse_xml(sebs_parser_data_t* pdata)
 {
 	sebs_parse_xml_data_t *fdata=(sebs_parse_xml_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		fdata->depth=0;\
+		fdata->processed_bytes=0;\
+		fdata->state=SEBS_PARSE_XML_STATE_ROOT;\
+		fdata->substate=SEBS_PARSE_XML_SUBSTATE_NONE;\
+		fdata->tag_type=SEBS_PARSE_UNKNOWN;\
+	}
 	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
 
@@ -585,7 +594,7 @@ bool sebs_parse_xml(sebs_parser_data_t* pdata)
 					fdata->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
 					static const char* cdata_str="CDATA";
 					SEBS_PARSE_SEEKSTRING_INIT(
-							pdata->next_parser,
+							pdata,
 							fdata->seekstring,
 							&cdata_str,
 							1, " []=\"\'/<>?!",
@@ -594,7 +603,7 @@ bool sebs_parse_xml(sebs_parser_data_t* pdata)
 				case SEBS_PARSE_XML_STATE_TAG_START:
 					fdata->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							pdata->next_parser,
+							pdata,
 							fdata->seekstring,
 							fdata->tag_strings,
 							fdata->tag_strings_len, " []=\"\'/<>?!",
@@ -605,7 +614,7 @@ bool sebs_parse_xml(sebs_parser_data_t* pdata)
 					fdata->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					fdata->tag_type = SEBS_PARSE_XML_TAG_TYPE_CLOSE;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							pdata->next_parser,
+							pdata,
 							fdata->seekstring,
 							fdata->tag_strings,
 							fdata->tag_strings_len, " []=\"\'/<>?!",
@@ -615,7 +624,7 @@ bool sebs_parse_xml(sebs_parser_data_t* pdata)
 				case SEBS_PARSE_XML_STATE_TAG: //A non empty space inside a tag means, that we have a attribute.
 					fdata->substate =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							pdata->next_parser,
+							pdata,
 							fdata->seekstring,
 							fdata->attribute_strings,
 							fdata->attribute_strings_len,
@@ -646,5 +655,5 @@ bool sebs_parse_xml(sebs_parser_data_t* pdata)
 			}
 		}
 	}
-	return (false);
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

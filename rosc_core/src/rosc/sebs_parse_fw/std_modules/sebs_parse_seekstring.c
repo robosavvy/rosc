@@ -31,87 +31,94 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
-
 //decrease stringlist len instead of fit_max
-bool sebs_parse_seekstring(sebs_parser_data_t* pdata)
+sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 {
-	sebs_parse_seekstring_data_t *fdata=(sebs_parse_seekstring_data_t *)pdata->current_parser.parser_data;
+	sebs_parse_seekstring_data_t *fdata =
+			(sebs_parse_seekstring_data_t *) pdata->current_parser.parser_data;
+	if (pdata->function_init)
+	{
+		pdata->function_init = false;
+		fdata->curChrPos = 0;
+		fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND;
+	}
 
-		while(*pdata->len > 0)
+	while (*pdata->len > 0)
+	{
+		//Check if current char in buffer one is a separator
+		bool isSeparator = false;
+		const char *sep = fdata->endchrs;
+		char curChrBuf = **pdata->buf;
+		while (*sep != '\0')
 		{
-			//Check if current char in buffer one is a separator
-			bool isSeparator=false;
-			const char *sep=fdata->endchrs;
-			char curChrBuf=**pdata->buf;
-			while(*sep!='\0')
+			if (curChrBuf == *sep)
 			{
-				if(curChrBuf==*sep)
+				curChrBuf = '\0';
+				break;
+			}
+			++sep;
+		}
+
+		int8_t casechange = 0; //will contain upper-lower case conversion when not case-sensitive and alphabetic char
+		if (!fdata->case_sensitive) //if it is not case sensitive
+		{
+			if (curChrBuf >= 65 && curChrBuf <= 90) //a-z
+			{
+				casechange = 32;
+			}
+			else if (curChrBuf >= 97 && curChrBuf <= 122) //A-Z
+			{
+				casechange = -32;
+			}
+		}
+
+		bool found = false; //found at least one match
+		uint16_t newlen = 0; //the new length of the string list, when finding a non-suitable after one or more suitable strings
+		//Find the first possibility in remaining strings on current place
+		while (fdata->stringlist_len > 0 && fdata->stringlist_len > newlen)
+		{
+			if ((*fdata->stringlist)[fdata->curChrPos] == curChrBuf
+					|| (*fdata->stringlist)[fdata->curChrPos]
+							== (curChrBuf + casechange))
+			{
+				found = true;
+				newlen++;
+			}
+			else
+			{
+				if (!found)	//If no suitable string was found before
 				{
-					curChrBuf='\0';
+					++fdata->result; //Increase the current array number
+					++fdata->stringlist; //Increase the stringlist pointer
+					--fdata->stringlist_len; //deacrease stringlist length
+				}
+				else
+				{
+					//If something was found before at that place means that all strings
+					//after this one here are not suitable
+					fdata->stringlist_len = newlen;
 					break;
 				}
-				++sep;
 			}
-
-			int8_t casechange=0; //will contain upper-lower case conversion when not case-sensitive and alphabetic char
-			if(!fdata->case_sensitive) //if it is not case sensitive
-			{
-				if(curChrBuf>=65 && curChrBuf<=90) //a-z
-				{
-					casechange=32;
-				}
-				else if(curChrBuf>=97 && curChrBuf<=122) //A-Z
-				{
-					casechange=-32;
-				}
-			}
-
-			bool found=false;//found at least one match
-			uint16_t newlen=0;//the new length of the string list, when finding a non-suitable after one or more suitable strings
-			//Find the first possibility in remaining strings on current place
-			while(fdata->stringlist_len>0 && fdata->stringlist_len>newlen)
-			{
-				if((*fdata->stringlist)[fdata->curChrPos]==curChrBuf ||
-				   (*fdata->stringlist)[fdata->curChrPos]==(curChrBuf+casechange))
-				{
-					found=true;
-					newlen++;
-				}
-				else
-				{
-					if(!found)//If no suitable string was found before
-					{
-						++fdata->result; //Increase the current array number
-						++fdata->stringlist; //Increase the stringlist pointer
-						--fdata->stringlist_len; //deacrease stringlist length
-					}
-					else
-					{
-						//If something was found before at that place means that all strings
-						//after this one here are not suitable
-						fdata->stringlist_len=newlen;
-						break;
-					}
-				}
-			}
-			//If we have a separator the string must end here so
-			if(curChrBuf=='\0')
-			{
-				if(found) //If found is not true here, the string is not inside the list
-				{
-					//DEBUG_PRINT(STR,"SEEKSTRING RESULT", fdata->stringlist[0]);
-				}
-				else
-				{
-					fdata->result=SEBS_PARSE_SEEKSTRING_NOT_FOUND;
-					//DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
-				}
-				//End
-				return (true);
-			}
-			++*pdata->buf;
-			fdata->curChrPos++;
-			--*pdata->len;
 		}
-		return (false);
+		//If we have a separator the string must end here so
+		if (curChrBuf == '\0')
+		{
+			if (found) //If found is not true here, the string is not inside the list
+			{
+				//DEBUG_PRINT(STR,"SEEKSTRING RESULT", fdata->stringlist[0]);
+			}
+			else
+			{
+				fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND;
+				//DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
+			}
+			//End
+			return (true);
+		}
+		++*pdata->buf;
+		fdata->curChrPos++;
+		--*pdata->len;
+	}
+	return (false);
 }

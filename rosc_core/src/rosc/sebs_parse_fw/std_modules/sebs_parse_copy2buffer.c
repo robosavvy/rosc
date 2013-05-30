@@ -32,12 +32,14 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 
-bool sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
+sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 {
-
-
-
 	sebs_parse_copy2buffer_data_t *fdata=(sebs_parse_copy2buffer_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		fdata->cur_pos=0;
+	}
 
 	const char *sep=fdata->endChrs;
 	while(*pdata->len > 0)
@@ -74,7 +76,7 @@ bool sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 			return SEBS_PARSE_RETURN_FINISHED; //Finished!
 		}
 	}
-	return (SEBS_PARSE_RETURN_STREAMEND); //Not finished yet
+	return (SEBS_PARSE_RETURN_GO_AHEAD); //Not finished yet
 }
 
 

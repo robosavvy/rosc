@@ -32,10 +32,15 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
 
-bool sebs_parse_numberparse(sebs_parser_data_t *pdata)
+sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 	 //work around for inlining the function
 {
 	sebs_parse_numberparse_data_t *fdata=(sebs_parse_numberparse_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		fdata->cur_place=0;
+	}
 	while(*pdata->len > 0)
 	{
 		if(fdata->cur_place == 0)

@@ -31,9 +31,13 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 
-bool sebs_parse_parseurl(sebs_parser_data_t *pdata)
+sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
 {
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
 
+	}
 	return false;
 }
 

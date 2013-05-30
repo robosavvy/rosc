@@ -35,14 +35,13 @@
 #include <rosc/system/types.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-#define SEBS_PARSE_COPY2BUFFER_INIT(NEXT_PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS)\
-		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
-		NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
+#define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.buffer=BUFFER;\
 		DATA_STORAGE.max_len=MAX_LEN;\
 		DATA_STORAGE.endChrs=END_CHARS;\
-		DATA_STORAGE.cur_pos=0;\
-		return (true)
+		return (SEBS_PARSE_RETURN_INIT)
 
 typedef enum
 {
@@ -66,7 +65,7 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool sebs_parse_copy2buffer(sebs_parser_data_t* pdata);
+sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata);
 
 
 #endif /* SEBS_PARSE_COPY2BUFFER_H_ */

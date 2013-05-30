@@ -208,6 +208,6 @@ typedef struct
 
 
 
-bool xmlrpc(xmlrpc_data_t *data, void** parser_data_ptr);
+bool xmlrpc(sebs_parser_data_t* pdata);
 
 #endif /* XMLRPC_H_ */

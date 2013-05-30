@@ -44,19 +44,14 @@
 
 
 ///@todo document SEBS_PARSE_HTTP_INIT
-#define SEBS_PARSE_XML_INIT(PARSER_CALL, PARSER_DATA, XML_DATA, TAGS, TAGS_LEN, ATTRIBUTES, ATTRIBUTES_LEN)\
-		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_xml;\
-		PARSER_CALL.parser_data=&XML_DATA;\
-		XML_DATA.depth=0;\
-		XML_DATA.processed_bytes=0;\
-		XML_DATA.state=SEBS_PARSE_XML_STATE_ROOT;\
-		XML_DATA.substate=SEBS_PARSE_XML_SUBSTATE_NONE;\
-		XML_DATA.tag_type=SEBS_PARSE_UNKNOWN;\
-		XML_DATA.tag_strings=TAGS;\
-		XML_DATA.tag_strings_len=TAGS_LEN;\
-		XML_DATA.attribute_strings=ATTRIBUTES;\
-		XML_DATA.attribute_strings_len=ATTRIBUTES_LEN;\
-		XML_DATA.parser_data=PARSER_DATA
+#define SEBS_PARSE_XML_INIT(PARSER_DATA, DATA_STORAGE, TAGS, TAGS_LEN, ATTRIBUTES, ATTRIBUTES_LEN)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_xml;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.tag_strings=TAGS;\
+		DATA_STORAGE.tag_strings_len=TAGS_LEN;\
+		DATA_STORAGE.attribute_strings=ATTRIBUTES;\
+		DATA_STORAGE.attribute_strings_len=ATTRIBUTES_LEN;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 typedef enum
 {
@@ -117,13 +112,6 @@ typedef enum
 	SEBS_PARSE_XML_TAG_TYPE_COMMENT,
 	SEBS_PARSE_XML_TAG_TYPE_CDATA,
 } sebs_parse_xml_tag_type_t;
-
-
-
-
-
-
-
 
 typedef struct
 {

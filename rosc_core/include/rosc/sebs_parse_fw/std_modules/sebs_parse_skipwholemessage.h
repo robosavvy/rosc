@@ -37,7 +37,7 @@
 
 #define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(NEXT_PARSER_FUNC)\
 		NEXT_PARSER_FUNC=(parser_submode_function_t)&skipwholemessage;\
-		return true
+		return (SEBS_PARSE_RETURN_INIT)
 
 /**
  * This function skips every incoming char which is in the buffer.
@@ -48,6 +48,6 @@
  * @param unused not used by this function it needs no data storage..
  * @return This function will only return false because it can be only stopped by reseting the whole message handling
  */
-bool sebs_parse_skipwholemessage(sebs_parser_data_t* pdata);
+sebs_parse_return_t sebs_parse_skipwholemessage(sebs_parser_data_t* pdata);
 
 #endif /* SEBS_PARSE_SKIPWHOLEMESSAGE_H_ */

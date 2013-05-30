@@ -33,6 +33,10 @@
 
 bool sebs_parse_http(sebs_parser_data_t* pdata)
 {
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+	}
 	sebs_parse_http_data_t *fdata=(sebs_parse_http_data_t *)pdata->current_parser.parser_data;
 	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
@@ -172,7 +176,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 					fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_ACTION;
 					++*pdata->buf;
 					--*pdata->len;
-					SEBS_PARSE_SEEKSTRING_INIT(pdata->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring,
 							fdata->actions, fdata->actions_len,
 							" ", true)
@@ -256,7 +260,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 								SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED;
 					}
 					pdata->event = SEBS_PARSE_HTTP_EVENT_HEADER_END;
-					return (SEBS_PARSE_RETURN_STREAMEND);
+					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
@@ -275,7 +279,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 				{
 				case SEBS_PARSE_HTTP_STATE_REQUEST_METHOD:
 					fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
-					SEBS_PARSE_SEEKSTRING_INIT(pdata->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, fdata->methods,
 							fdata->methods_len, " /\n.", true)
 					;
@@ -284,7 +288,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 				case SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER:
 					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_REQUEST_HTTP_VER;
-					SEBS_PARSE_SEEKSTRING_INIT(pdata->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, http_header_stdtext,
 							HTTP_HEADER_STDTEXT_LEN, " \n", true)
 					;
@@ -293,7 +297,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
 					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_HTTP_VER;
-					SEBS_PARSE_SEEKSTRING_INIT(pdata->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, http_header_stdtext,
 							HTTP_HEADER_STDTEXT_LEN, " \n", true)
 					;
@@ -310,7 +314,7 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
 					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_DESCRIPTOR_ID;
-					SEBS_PARSE_SEEKSTRING_INIT(pdata->next_parser,
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring,
 							fdata->descriptors,
 							fdata->descriptors_len, " :", false)
@@ -351,5 +355,5 @@ bool sebs_parse_http(sebs_parser_data_t* pdata)
 			}
 		}
 	}
-	return (SEBS_PARSE_RETURN_STREAMEND);
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

@@ -129,9 +129,11 @@ int main_xmlrpctest()
 #endif
 
 	xmlrpc_data_t handler_data;
-	sebs_parser_data_t* parser_data;
-	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc);
+	sebs_parser_data_t parser_data;
 
+	parser_data.handler_init=true;
+	parser_data.handler_function=&xmlrpc;
+	parser_data.handler_data=&handler_data;
 
 
 	for(rlen=0;msg[rlen]!=0;rlen++);
@@ -147,7 +149,7 @@ int main_xmlrpctest()
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
 	//	xmlrpc_parse(msg+i*len,len,&pact);
-		sebs_parser_frame(msg+i*len,len,parser_data);
+		sebs_parser_frame(msg+i*len,len,&parser_data);
 	}
 
 	return (0);

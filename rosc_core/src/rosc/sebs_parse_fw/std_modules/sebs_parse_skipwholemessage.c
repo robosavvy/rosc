@@ -32,14 +32,19 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
-bool sebs_parse_skipwholemessage(sebs_parser_data_t* pdata)
+sebs_parse_return_t sebs_parse_skipwholemessage(sebs_parser_data_t* pdata)
 {
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+
+	}
 	while(*pdata->len>0)
 	{
 		++*pdata->buf;
 		--*pdata->len;
 	}
-	return false;
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }
 
 

@@ -39,9 +39,8 @@
 		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_numberparse;\
 		NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.negative_allowed=NEGATIVE_ALLOWED;\
-		DATA_STORAGE.cur_place=0;\
 		DATA_STORAGE.figure_max=FIGURE_MAX;\
-		return (true);
+		return (SEBS_PARSE_RETURN_INIT)
 
 /**
  * These are the result values of the number parse submode
@@ -74,6 +73,6 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool sebs_parse_numberparse(sebs_parser_data_t *pdata);
+sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata);
 
 #endif /* SEBS_PARSE_NUMBERPARSE_H_ */

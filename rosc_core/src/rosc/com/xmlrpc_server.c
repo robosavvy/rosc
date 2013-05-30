@@ -35,39 +35,35 @@
 #include <rosc/com/xmlrpc_server.h>
 #include <rosc/system/status.h>
 
-bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
+bool xmlrpc(sebs_parser_data_t* pdata)
 {
+	xmlrpc_data_t *hdata=pdata->handler_data;
 
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
 	 *****************/
-	if (in_type_out_parser_data
-			!= 0||hdata->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
+	if(pdata->handler_init)
 	{
+		pdata->handler_init=false;
 		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
-		SEBS_PARSE_HTTP_INIT(0, hdata->parser_data,
-				hdata->parser_data.current_parser, hdata->http,
-				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
-				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
-				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
 
-		xmlrpc_type_t* type = (xmlrpc_type_t*) *in_type_out_parser_data;
+		uint8_t init_state;
 		if (1) //(*type==XMLRPC_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
-			hdata->http.state = SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
+			init_state = SEBS_PARSE_HTTP_REQUEST_INIT;
 			hdata->xmlrpc_type = XMLRPC_SERVER;
-			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
+
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
-			hdata->http.state = SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
+			init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
 			hdata->xmlrpc_type = XMLRPC_CLIENT;
-			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN; //TODO must be set!
 		}
 
+		hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN; //TODO must be set!
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 
@@ -87,10 +83,13 @@ bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 		hdata->method = XMLRPC_METHOD_UNKNOWN;
 		hdata->array_state = XMLRPC_ARRAY_STATE_NONE;
 		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
-		//set pointer to parser data
-		*in_type_out_parser_data = &hdata->parser_data;
 
-		return (false);
+
+		SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
+				init_state,
+				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
+				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
+				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
 	}
 
 	/* ********************
@@ -211,13 +210,11 @@ bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 		case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
 			DEBUG_PRINT_STR("HEADER END!");
 			hdata->xmlrpc_state = XMLRPC_STATE_XML;
-			SEBS_PARSE_XML_INIT(hdata->p,
-					&hdata->parser_data, hdata->xml, xmlrpc_tag_strings,
+			SEBS_PARSE_XML_INIT(pdata, hdata->xml, xmlrpc_tag_strings,
 					XMLRPC_TAG_STRINGS_LEN, xmlrpc_attribute_strings,
 					XMLRPC_TAG_STRINGS_LEN)
 			;
 
-			hdata->xml.parser_data = &hdata->parser_data;
 			break;
 		default:
 			break;
@@ -446,7 +443,7 @@ bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 					&& hdata->tag_state == XMLRPC_TAG_STATE_METHODRC)
 			{
 				hdata->result_handling = XMLRPC_RESULT_METHOD_NAME;
-				SEBS_PARSE_SEEKSTRING_INIT(hdata->parser_data.next_parser,
+				SEBS_PARSE_SEEKSTRING_INIT(pdata,
 						hdata->xml.seekstring, xmlrpc_slave_methodnames,
 						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true);
 			}
@@ -471,8 +468,7 @@ bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 							|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
 					{
 						hdata->result_handling = XMLRPC_RESULT_CALLERID;
-						SEBS_PARSE_COPY2BUFFER_INIT(
-								hdata->parser_data.next_parser,
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,
 								hdata->copy2buffer, hdata->caller_id,
 								__NODENAME_MAX_LEN__, "<");
 					}
@@ -555,7 +551,7 @@ bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 	{
 		ROSC_FATAL("xmlrpc_state value unexpected!");
 	}
-	return (false);
+	return SEBS_PARSE_RETURN_GO_AHEAD;
 }
 
 #endif /* XMLRPC_SERVER_C_ */

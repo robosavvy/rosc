@@ -33,9 +33,9 @@
 
 sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function)
 {
-	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
-	handler_function(handler_data,(void*)&parser_data_ptr);
-	return (parser_data_ptr);
+//	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
+//	handler_function(handler_data,(void*)&parser_data_ptr);
+//	return (parser_data_ptr);
 }
 
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
@@ -43,6 +43,7 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	//pointing to current length and buffer for the handler
 	data->len=&len;
 	data->buf=&buf;
+
 
 	/*
 	 * What if len < 0?
@@ -73,37 +74,46 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	{
 		sebs_parse_function_t function;
 		bool switch_functions;
-		if (data->event == SEBS_PARSE_EVENT_NONE)
+		bool handler=false;
+		if (data->event == SEBS_PARSE_EVENT_NONE && !data->handler_init)
 		{
 			function=data->current_parser.parser_function;
 		}
 		else
 		{
+			data->event=SEBS_PARSE_EVENT_NONE;
 			function=data->handler_function;
+			handler=true;
 		}
-
-		switch(function(data))
+		sebs_parse_return_t result=function(data);
+		switch(result)
 		{
 		case SEBS_PARSE_RETURN_FINISHED:
-			if(data->return_to_handler)
+			if(data->return_to_handler && !handler)
 			{
-				data->event=SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED;
+				data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
+				data->return_to_handler = false;
+				switch_functions=true;
 			}
-			switch_functions=true;
 		break;
 
 		case SEBS_PARSE_RETURN_INIT:
-			data->next_function_init=true;
+			data->function_init=true;
 			switch_functions=true;
+			if(handler)
+				data->return_to_handler=true;
 		break;
-		case SEBS_PARSE_RETURN_STREAMEND:
+
+		case SEBS_PARSE_RETURN_INIT_ADV:
+			data->function_init=true;
+			switch_functions=true;
+			break;
+
+		case SEBS_PARSE_RETURN_GO_AHEAD:
 			break;
 		}
 		if(switch_functions)
 		{
-			//Handler started a function ...
-			data->return_to_handler=true;
-
 			//Switch current parser call and next parser call
 			sebs_parser_call_t store;
 			store.parser_function = data->next_parser.parser_function;

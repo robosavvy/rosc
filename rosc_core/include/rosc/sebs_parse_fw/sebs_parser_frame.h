@@ -44,6 +44,7 @@
 #define SEBS_PARSE_HANDLER_FUNCTION_CALL()\\
 		return_to_handler
 
+#define SEBS_PARSE_UNKNOWN  -1
 
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
@@ -61,9 +62,10 @@ struct sebs_parser_data_t;
  */
 typedef enum
 {
-	SEBS_PARSE_RETURN_STREAMEND,//!< means that there is no more data to parse at the moment
+	SEBS_PARSE_RETURN_GO_AHEAD,//!< means that there is no more data to parse at the moment
 	SEBS_PARSE_RETURN_FINISHED, //!< means that the function has finished and should be replaced by the caller function
 	SEBS_PARSE_RETURN_INIT,     //!< means that the current parser- or handler-function wants to call a function (sets init_function to true)
+	SEBS_PARSE_RETURN_INIT_ADV, //!< means that a advanced module is initialized from which does use events instead of returns
 }sebs_parse_return_t;
 
 /**
@@ -98,7 +100,7 @@ typedef struct sebs_parser_data_t
 {
 	bool handler_init;
 	void* handler_init_data;
-	bool next_function_init;
+	bool function_init;
 
 	/**
 	 * This is the function with its data

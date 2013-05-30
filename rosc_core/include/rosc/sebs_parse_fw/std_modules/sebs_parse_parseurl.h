@@ -69,5 +69,5 @@ typedef struct
  *
  * @TODO implement parseurl, needs more state information, protocol string list etc...
  */
-bool sebs_parse_parseurl(sebs_parser_data_t *pdata);
+sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata);
 #endif /* SEBS_PARSE_PARSEURL_H_ */

@@ -39,23 +39,22 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+#define SEBS_PARSE_HTTP_REQUEST_INIT SEBS_PARSE_HTTP_STATE_REQUEST_METHOD
+#define SEBS_PARSE_HTTP_RESPONSE_INIT SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER
 
-#define SEBS_PARSE_UNKNOWN  -1
 
 ///@todo document SEBS_PARSE_HTTP_INIT
-#define SEBS_PARSE_HTTP_INIT(PARSE_WHAT, PARSER_DATA, PARSER_CALL, HTTP_DATA, DESCRIPTORS, DESCRIPTORS_LEN, ACTIONS, ACTIONS_LEN, METHODS, METHODS_LEN)\
-		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_http;\
-		PARSER_CALL.parser_data=&HTTP_DATA;\
-		HTTP_DATA.content_length=-1;\
-		HTTP_DATA.state=PARSE_WHAT;\
-		HTTP_DATA.substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;\
-		HTTP_DATA.parser_data=&PARSER_DATA;\
-		HTTP_DATA.descriptors=DESCRIPTORS;\
-		HTTP_DATA.descriptors_len=DESCRIPTORS_LEN;\
-		HTTP_DATA.actions=ACTIONS;\
-		HTTP_DATA.actions_len=ACTIONS_LEN;\
-		HTTP_DATA.methods=METHODS;\
-		HTTP_DATA.methods_len=METHODS_LEN
+#define SEBS_PARSE_HTTP_INIT(PARSER_DATA, DATA_STORAGE, INIT_STATE, DESCRIPTORS, DESCRIPTORS_LEN, ACTIONS, ACTIONS_LEN, METHODS, METHODS_LEN)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_http;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.state=INIT_STATE;\
+		DATA_STORAGE.descriptors=DESCRIPTORS;\
+		DATA_STORAGE.descriptors_len=DESCRIPTORS_LEN;\
+		DATA_STORAGE.actions=ACTIONS;\
+		DATA_STORAGE.actions_len=ACTIONS_LEN;\
+		DATA_STORAGE.methods=METHODS;\
+		DATA_STORAGE.methods_len=METHODS_LEN;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 
 /**
