@@ -70,7 +70,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 		pdata->overall_len = 0;
-		pdata->security_len = 1024;
+		pdata->security_len = XMLRPC_SECURITY_MAX_MESSAGE_SIZE;
 
 		xmlrpc_tag_state_t tag_state = XMLRPC_TAG_STATE_NONE;
 		xmlrpc_type_tag_t type_tag = XMLRPC_TYPE_TAG_NONE;
