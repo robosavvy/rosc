@@ -207,4 +207,13 @@ ros_field_strings:
     error,
   }
  
-    
+ #Strings for url schemes
+url_scheme_string:
+  comment:
+      'strings for url schemes'
+  defineShort:
+      'URL_SCHEMES'
+  stringlist: {
+    http,
+    rosrpc
+  }  

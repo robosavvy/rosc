@@ -50,7 +50,8 @@ typedef enum
  */
 typedef struct
 {
-	char hostname_ip_char[__HOSTNAME_MAX_LEN__]; //!< The text form of the hostname/IP
+	const char **scheme_list; //!< The scheme list for the url scheme (http, rostcp)
+	char hostname_ip_char[__HOSTNAME_MAX_LEN__+100]; //!< The text form of the hostname/IP
 	uint16_t cur_pos; //!< curLen The current size of the copied chars
 	uint16_t IPv6[8];//!< storage for an IPv6 address
 	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6

@@ -184,6 +184,32 @@ extern const char *xmlrpc_http_descriptors[];
 
 
 /**
+ * Length of the string array xmlrpc_slave_methodnames
+ */
+#define XMLRPC_SLAVE_METHODNAMES_LEN 	10
+
+/**
+ * Macro for inserting Strings for known methods of the slave api string numbers into any enum
+ */
+#define XMLRPC_SLAVE_METHODNAMES(ENUM) \
+	 ENUM ## _METHODNAME_GETBUSINFO, \
+	 ENUM ## _METHODNAME_GETBUSSTATS, \
+	 ENUM ## _METHODNAME_GETMASTERURI, \
+	 ENUM ## _METHODNAME_GETPID, \
+	 ENUM ## _METHODNAME_GETPUBLICATIONS, \
+	 ENUM ## _METHODNAME_GETSUBSCRIPTIONS, \
+	 ENUM ## _METHODNAME_PARAMUPDATE, \
+	 ENUM ## _METHODNAME_PUBLISHERUPDATE, \
+	 ENUM ## _METHODNAME_REQUESTTOPIC, \
+	 ENUM ## _METHODNAME_SHUTDOWN
+
+/**
+ * This array contains the strings for Strings for known methods of the slave api
+ */
+extern const char *xmlrpc_slave_methodnames[];
+
+
+/**
  * Length of the string array ros_field_strings
  */
 #define ROS_FIELD_STRINGS_LEN 	10
@@ -210,29 +236,21 @@ extern const char *ros_field_strings[];
 
 
 /**
- * Length of the string array xmlrpc_slave_methodnames
+ * Length of the string array url_scheme_string
  */
-#define XMLRPC_SLAVE_METHODNAMES_LEN 	10
+#define URL_SCHEME_STRING_LEN 	2
 
 /**
- * Macro for inserting Strings for known methods of the slave api string numbers into any enum
+ * Macro for inserting strings for url schemes string numbers into any enum
  */
-#define XMLRPC_SLAVE_METHODNAMES(ENUM) \
-	 ENUM ## _METHODNAME_GETBUSINFO, \
-	 ENUM ## _METHODNAME_GETBUSSTATS, \
-	 ENUM ## _METHODNAME_GETMASTERURI, \
-	 ENUM ## _METHODNAME_GETPID, \
-	 ENUM ## _METHODNAME_GETPUBLICATIONS, \
-	 ENUM ## _METHODNAME_GETSUBSCRIPTIONS, \
-	 ENUM ## _METHODNAME_PARAMUPDATE, \
-	 ENUM ## _METHODNAME_PUBLISHERUPDATE, \
-	 ENUM ## _METHODNAME_REQUESTTOPIC, \
-	 ENUM ## _METHODNAME_SHUTDOWN
+#define URL_SCHEME_STRING(ENUM) \
+	 ENUM ## _URL_SCHEMES_HTTP, \
+	 ENUM ## _URL_SCHEMES_ROSRPC
 
 /**
- * This array contains the strings for Strings for known methods of the slave api
+ * This array contains the strings for strings for url schemes
  */
-extern const char *xmlrpc_slave_methodnames[];
+extern const char *url_scheme_string[];
 
 
 /**
