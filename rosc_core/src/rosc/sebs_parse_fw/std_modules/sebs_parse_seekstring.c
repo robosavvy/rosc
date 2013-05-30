@@ -33,14 +33,16 @@
 
 
 //decrease stringlist len instead of fit_max
-bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data)
+bool sebs_parse_seekstring(sebs_parser_data_t* pdata)
 {
-		while(*len > 0)
+	sebs_parse_seekstring_data_t *fdata=(sebs_parse_seekstring_data_t *)pdata->current_parser.parser_data;
+
+		while(*pdata->len > 0)
 		{
 			//Check if current char in buffer one is a separator
 			bool isSeparator=false;
-			const char *sep=data->endchrs;
-			char curChrBuf=**buf;
+			const char *sep=fdata->endchrs;
+			char curChrBuf=**pdata->buf;
 			while(*sep!='\0')
 			{
 				if(curChrBuf==*sep)
@@ -52,7 +54,7 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 			}
 
 			int8_t casechange=0; //will contain upper-lower case conversion when not case-sensitive and alphabetic char
-			if(!data->case_sensitive) //if it is not case sensitive
+			if(!fdata->case_sensitive) //if it is not case sensitive
 			{
 				if(curChrBuf>=65 && curChrBuf<=90) //a-z
 				{
@@ -67,10 +69,10 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 			bool found=false;//found at least one match
 			uint16_t newlen=0;//the new length of the string list, when finding a non-suitable after one or more suitable strings
 			//Find the first possibility in remaining strings on current place
-			while(data->stringlist_len>0 && data->stringlist_len>newlen)
+			while(fdata->stringlist_len>0 && fdata->stringlist_len>newlen)
 			{
-				if((*data->stringlist)[data->curChrPos]==curChrBuf ||
-				   (*data->stringlist)[data->curChrPos]==(curChrBuf+casechange))
+				if((*fdata->stringlist)[fdata->curChrPos]==curChrBuf ||
+				   (*fdata->stringlist)[fdata->curChrPos]==(curChrBuf+casechange))
 				{
 					found=true;
 					newlen++;
@@ -79,15 +81,15 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 				{
 					if(!found)//If no suitable string was found before
 					{
-						++data->result; //Increase the current array number
-						++data->stringlist; //Increase the stringlist pointer
-						--data->stringlist_len; //deacrease stringlist length
+						++fdata->result; //Increase the current array number
+						++fdata->stringlist; //Increase the stringlist pointer
+						--fdata->stringlist_len; //deacrease stringlist length
 					}
 					else
 					{
 						//If something was found before at that place means that all strings
 						//after this one here are not suitable
-						data->stringlist_len=newlen;
+						fdata->stringlist_len=newlen;
 						break;
 					}
 				}
@@ -97,19 +99,19 @@ bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_
 			{
 				if(found) //If found is not true here, the string is not inside the list
 				{
-					//DEBUG_PRINT(STR,"SEEKSTRING RESULT", data->stringlist[0]);
+					//DEBUG_PRINT(STR,"SEEKSTRING RESULT", fdata->stringlist[0]);
 				}
 				else
 				{
-					data->result=SEBS_PARSE_SEEKSTRING_NOT_FOUND;
+					fdata->result=SEBS_PARSE_SEEKSTRING_NOT_FOUND;
 					//DEBUG_PRINT_STR("SEEKSTRING: !STRING NOT FOUND!");
 				}
 				//End
 				return (true);
 			}
-			++*buf;
-			data->curChrPos++;
-			--*len;
+			++*pdata->buf;
+			fdata->curChrPos++;
+			--*pdata->len;
 		}
 		return (false);
 }

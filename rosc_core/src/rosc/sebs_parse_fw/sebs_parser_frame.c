@@ -71,63 +71,53 @@ void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 	 */
 	do
 	{
+		sebs_parse_function_t function;
+		bool switch_functions;
 		if (data->event == SEBS_PARSE_EVENT_NONE)
 		{
-			//call current parser function
-			if (data->current_parser.parser_function(&buf, &len,
-					data->current_parser.parser_data))
-			{
-				//was current function called by handler?
-				if (data->return_to_handler)
-				{
-					//set event
-					data->event = SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
-				}
-
-				//Switch current parser call and next parser call
-				sebs_parser_call_t store;
-				store.parser_function = data->next_parser.parser_function;
-				store.parser_data = data->next_parser.parser_data;
-
-				data->next_parser.parser_function =
-						data->current_parser.parser_function;
-				data->next_parser.parser_data =
-						data->current_parser.parser_data;
-
-				data->current_parser.parser_function = store.parser_function;
-				data->current_parser.parser_data = store.parser_data;
-			}
+			function=data->current_parser.parser_function;
 		}
-		else //call handler
+		else
 		{
-			//if handler function returns with true
-			if (data->handler_function(data, 0))//The 0 here is to disable the init.
-			{
-				//Handler started a function ...
-				data->return_to_handler=true;
-
-				//Switch current parser call and next parser call
-				sebs_parser_call_t store;
-				store.parser_function = data->next_parser.parser_function;
-				store.parser_data = data->next_parser.parser_data;
-
-				data->next_parser.parser_function =
-						data->current_parser.parser_function;
-				data->next_parser.parser_data =
-						data->current_parser.parser_data;
-
-				data->current_parser.parser_function = store.parser_function;
-				data->current_parser.parser_data = store.parser_data;
-			}
-			else
-			{
-				//No function was started by handler so ...
-				data->return_to_handler=false;
-			}
-
-			//Clear any event
-			data->event = SEBS_PARSE_EVENT_NONE;
+			function=data->handler_function;
 		}
+
+		switch(function(data))
+		{
+		case SEBS_PARSE_RETURN_FINISHED:
+			if(data->return_to_handler)
+			{
+				data->event=SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED;
+			}
+			switch_functions=true;
+		break;
+
+		case SEBS_PARSE_RETURN_INIT:
+			data->next_function_init=true;
+			switch_functions=true;
+		break;
+		case SEBS_PARSE_RETURN_STREAMEND:
+			break;
+		}
+		if(switch_functions)
+		{
+			//Handler started a function ...
+			data->return_to_handler=true;
+
+			//Switch current parser call and next parser call
+			sebs_parser_call_t store;
+			store.parser_function = data->next_parser.parser_function;
+			store.parser_data = data->next_parser.parser_data;
+
+			data->next_parser.parser_function =
+					data->current_parser.parser_function;
+			data->next_parser.parser_data =
+					data->current_parser.parser_data;
+
+			data->current_parser.parser_function = store.parser_function;
+			data->current_parser.parser_data = store.parser_data;
+		}
+
 	} while (len > 0);
 		data->overall_len+=data->call_len;
 }

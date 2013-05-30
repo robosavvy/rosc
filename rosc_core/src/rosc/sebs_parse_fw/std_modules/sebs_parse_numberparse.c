@@ -31,55 +31,57 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
-bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_data_t *data)
+
+bool sebs_parse_numberparse(sebs_parser_data_t *pdata)
 	 //work around for inlining the function
 {
-	while(*len > 0)
+	sebs_parse_numberparse_data_t *fdata=(sebs_parse_numberparse_data_t *)pdata->current_parser.parser_data;
+	while(*pdata->len > 0)
 	{
-		if(data->cur_place == 0)
+		if(fdata->cur_place == 0)
 		{
-			data->negative=false;
-			data->number=0;
+			fdata->negative=false;
+			fdata->number=0;
 		}
-		if(**buf>=48 && **buf<=57) //Check if char is a figure
+		if(**pdata->buf>=48 && **pdata->buf<=57) //Check if char is a figure
 		{
-			if(data->cur_place < data->figure_max)//Is the length still acceptable?
+			if(fdata->cur_place < fdata->figure_max)//Is the length still acceptable?
 			{
-				if(data->cur_place>0)
-					data->number*=10;//multiply current number by 10 to shift it left
+				if(fdata->cur_place>0)
+					fdata->number*=10;//multiply current number by 10 to shift it left
 
-				data->number+=**buf-48; //convert char to integer
-				++data->cur_place;
-				++*buf;
-				--*len;
+				fdata->number+=**pdata->buf-48; //convert char to integer
+				++fdata->cur_place;
+				++*pdata->buf;
+				--*pdata->len;
 			}
 			else
 			{
-				data->result=SEBS_PARSE_NUMBERPARSE_MAX_FIGURES;
+				fdata->result=SEBS_PARSE_NUMBERPARSE_MAX_FIGURES;
 				return true;
 			}
 		}
 		else
 		{
-			if(data->cur_place == 0) //Are we still at the beginning?
+			if(fdata->cur_place == 0) //Are we still at the beginning?
 			{
-				if(**buf=='-' && data->negative_allowed)//Is it a negative number?
+				if(**pdata->buf=='-' && fdata->negative_allowed)//Is it a negative number?
 				{
-					data->negative=true;
-					++*buf;
-					--*len;
+					fdata->negative=true;
+					++*pdata->buf;
+					--*pdata->len;
 					break;
 				}
 				else
 				{
-					data->result=SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER;
+					fdata->result=SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER;
 					return true;
 				}
 			}
 			else
 			{
-				data->result=SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR;
-				data->last_byte=**buf;
+				fdata->result=SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR;
+				fdata->last_byte=**pdata->buf;
 				return true;
 			}
 			break;

@@ -34,9 +34,12 @@
 
 #define SEBS_PARSE_XML_MAX_DEPTH 20
 
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+
+
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
 
@@ -124,11 +127,7 @@ typedef enum
 
 typedef struct
 {
-	/**
-	 * Parser data for advanced parser function
-	 * which uses events and other subfunctions.
-	 */
-	sebs_parser_data_t* parser_data;
+
 	uint16_t depth;	//!< depth stores the depth of the current location of the parser
 	uint32_t processed_bytes; //!< currently processed bytes of the xml part (updated after each chunk)
 	uint16_t current_tag; 	//!< current_tag contains the current known xml tag
@@ -146,14 +145,13 @@ typedef struct
 
 	union
 	{
-		sebs_parse_copy2buffer_data_t copy2buffer;
 		sebs_parse_numberparse_result_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
 	};
 } sebs_parse_xml_data_t;
 
 
-bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data);
+bool sebs_parse_xml(sebs_parser_data_t* pdata);
 
 
 #endif /* SEBS_PARSE_MODE_XML_H_ */

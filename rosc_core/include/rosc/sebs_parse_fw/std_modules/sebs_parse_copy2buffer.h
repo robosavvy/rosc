@@ -33,6 +33,7 @@
 #define SEBS_PARSE_COPY2BUFFER_H_
 
 #include <rosc/system/types.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 #define SEBS_PARSE_COPY2BUFFER_INIT(NEXT_PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS)\
 		NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
@@ -65,7 +66,7 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_data_t *data);
+bool sebs_parse_copy2buffer(sebs_parser_data_t* pdata);
 
 
 #endif /* SEBS_PARSE_COPY2BUFFER_H_ */

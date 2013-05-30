@@ -31,100 +31,100 @@
 
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
 
-bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
+bool sebs_parse_xml(sebs_parser_data_t* pdata)
 {
-
-	while (*len > 0 && data->parser_data->event == SEBS_PARSE_EVENT_NONE)
+	sebs_parse_xml_data_t *fdata=(sebs_parse_xml_data_t *)pdata->current_parser.parser_data;
+	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
 
 		//Are we inside a substate (awaiting "reply" from subfunction_state?)
 		//If yes, in which one?
-		switch (data->substate)
+		switch (fdata->substate)
 		{
 		case SEBS_PARSE_XML_SUBSTATE_TAG_ID:
 
-			if (data->seekstring.result < 0)
+			if (fdata->seekstring.result < 0)
 			{
-				data->current_tag = -1;
+				fdata->current_tag = -1;
 			}
 			else
 			{
-				data->current_tag = data->seekstring.result;
-				data->parser_data->event = SEBS_PARSE_XML_EVENT_TAG;
+				fdata->current_tag = fdata->seekstring.result;
+				pdata->event = SEBS_PARSE_XML_EVENT_TAG;
 			}
 
-			if (data->seekstring.result
+			if (fdata->seekstring.result
 					== SEBS_PARSE_XML_TAG_TYPE_CDATA)
 			{
-				data->state =SEBS_PARSE_XML_STATE_CDATA;
+				fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 			}
 			else
 			{
-				data->state =SEBS_PARSE_XML_STATE_TAG;
+				fdata->state =SEBS_PARSE_XML_STATE_TAG;
 			}
 			break;
 
 		case SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID:
 
-			if (data->seekstring.result < 0)
+			if (fdata->seekstring.result < 0)
 			{
-				data->attribute = -1;
+				fdata->attribute = -1;
 			}
 			else
 			{
-				data->attribute = data->seekstring.result;
+				fdata->attribute = fdata->seekstring.result;
 			}
-			data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL;
+			fdata->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL;
 			break;
 
 		case SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING:
 
-			if (data->seekstring.result == 0)
+			if (fdata->seekstring.result == 0)
 			{
-				data->state =SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET;
+				fdata->state =SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET;
 			}
 			else
 			{
-				data->parser_data->event = SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
+				pdata->event = SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 			}
 			break;
 		default:
 			break;
 		}
 
-		if (data->substate !=SEBS_PARSE_XML_SUBSTATE_NONE)
+		if (fdata->substate !=SEBS_PARSE_XML_SUBSTATE_NONE)
 		{
-			data->substate =SEBS_PARSE_XML_SUBSTATE_NONE;
+			fdata->substate =SEBS_PARSE_XML_SUBSTATE_NONE;
 		}
 		else
 		{
-			switch (**buf)
+			switch (**pdata->buf)
 			{
 			//the whitespace stuff ...
 			case '\t':
 			case '\n':
 			case ' ':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET:
 				case SEBS_PARSE_XML_STATE_QMTAG_EXPECT_CLOSE:
 				case SEBS_PARSE_XML_STATE_TAG_START:
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
-					data->state =SEBS_PARSE_XML_STATE_INNER;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER;
 					break;
 				default:
 					break;
@@ -132,40 +132,40 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				break;
 
 			case '[':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					if(data->tag_type==SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK)
+					if(fdata->tag_type==SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK)
 					{
-						data->state=SEBS_PARSE_XML_STATE_CDATA_START;
+						fdata->state=SEBS_PARSE_XML_STATE_CDATA_START;
 					}
 					else
 					{
-						data->parser_data->event=SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
+						pdata->event=SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					}
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_EXPECT_OPEN_BRACKET:
-						data->state =SEBS_PARSE_XML_STATE_CDATA;
-						data->parser_data->event=SEBS_PARSE_XML_EVENT_CDATA;
+						fdata->state =SEBS_PARSE_XML_STATE_CDATA;
+						pdata->event=SEBS_PARSE_XML_EVENT_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				}
 				break;
 
 			case '<':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
@@ -173,67 +173,67 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 				case SEBS_PARSE_XML_STATE_INNER:
 				case SEBS_PARSE_XML_STATE_ROOT:
-					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_NORMAL;
-					data->state = SEBS_PARSE_XML_STATE_TAG_START;
+					fdata->tag_type = SEBS_PARSE_XML_TAG_TYPE_NORMAL;
+					fdata->state = SEBS_PARSE_XML_STATE_TAG_START;
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
 
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 
 				}
 				break;
 			case '>':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_TAG:
-					switch (data->tag_type)
+					switch (fdata->tag_type)
 					{
 					case SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK:
 						break;
 					case SEBS_PARSE_XML_TAG_TYPE_QUESTION_MARK:
-						data->parser_data->event =
+						pdata->event =
 								SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 						break;
 					case SEBS_PARSE_XML_TAG_TYPE_NORMAL:
-						if (data->depth != SEBS_PARSE_XML_MAX_DEPTH)
+						if (fdata->depth != SEBS_PARSE_XML_MAX_DEPTH)
 						{
-							data->depth++;
-							data->tags[data->depth] = data->current_tag;
-							data->parser_data->event =
+							fdata->depth++;
+							fdata->tags[fdata->depth] = fdata->current_tag;
+							pdata->event =
 									SEBS_PARSE_XML_EVENT_INSIDE_TAG;
 						}
 						else
 						{
-							data->parser_data->event =
+							pdata->event =
 									SEBS_PARSE_XML_EVENT_ERROR_DEPTH;
 							DEBUG_PRINT_STR("XML ERROR! TOO DEEP!");
 						}
 						break;
 					case SEBS_PARSE_XML_TAG_TYPE_CLOSE:
-						if (data->tags[data->depth] == data->current_tag)
+						if (fdata->tags[fdata->depth] == fdata->current_tag)
 						{
-							if (data->depth > 0)
-								data->depth--;
+							if (fdata->depth > 0)
+								fdata->depth--;
 							else
-								data->parser_data->event =
+								pdata->event =
 										SEBS_PARSE_XML_EVENT_ERROR_DEPTH;
 						}
 						else
 						{
 							DEBUG_PRINT_STR("XML ERROR! XML INVALID!"); //TODO Error Handling
-							data->parser_data->event =
+							pdata->event =
 									SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 						}
 						break;
@@ -247,110 +247,110 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				case SEBS_PARSE_XML_STATE_QMTAG_EXPECT_CLOSE:
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
 					DEBUG_PRINT_STR("COMMENT END");
-					if (data->depth == 0)
-						data->state =SEBS_PARSE_XML_STATE_ROOT;
+					if (fdata->depth == 0)
+						fdata->state =SEBS_PARSE_XML_STATE_ROOT;
 					else
-						data->state =SEBS_PARSE_XML_STATE_INNER;
+						fdata->state =SEBS_PARSE_XML_STATE_INNER;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA:
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					if(data->depth==0)
+					if(fdata->depth==0)
 					{
-						data->state=SEBS_PARSE_XML_STATE_INNER;
+						fdata->state=SEBS_PARSE_XML_STATE_INNER;
 					}
 					else
 					{
-						data->state=SEBS_PARSE_XML_STATE_ROOT;
+						fdata->state=SEBS_PARSE_XML_STATE_ROOT;
 					}
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				}
 
-				if (data->state !=SEBS_PARSE_XML_STATE_COMMENT
-						&& data->state !=SEBS_PARSE_XML_STATE_CDATA)
+				if (fdata->state !=SEBS_PARSE_XML_STATE_COMMENT
+						&& fdata->state !=SEBS_PARSE_XML_STATE_CDATA)
 				{
-					data->current_tag = -1;
-					if (data->depth == 0)
+					fdata->current_tag = -1;
+					if (fdata->depth == 0)
 					{
-						data->state =SEBS_PARSE_XML_STATE_ROOT;
+						fdata->state =SEBS_PARSE_XML_STATE_ROOT;
 					}
-					else if (data->depth > 0)
+					else if (fdata->depth > 0)
 					{
-						data->state =SEBS_PARSE_XML_STATE_INNER;
+						fdata->state =SEBS_PARSE_XML_STATE_INNER;
 					}
 					else
 					{
 						DEBUG_PRINT_STR("NEGATIVE LVL!!! MALFORMED!");
-						data->parser_data->event =
+						pdata->event =
 								SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					}
 				}
 
 				break;
 			case '/':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->state =SEBS_PARSE_XML_STATE_CLOSE_TAG_START;
+					fdata->state =SEBS_PARSE_XML_STATE_CLOSE_TAG_START;
 					break;
 				case SEBS_PARSE_XML_STATE_TAG:
-					data->state =SEBS_PARSE_XML_STATE_EXPECT_SELFCLOSE_TAG_END;
+					fdata->state =SEBS_PARSE_XML_STATE_EXPECT_SELFCLOSE_TAG_END;
 					break;
 
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				}
 				break;
 			case '-':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					if (data->tag_type
+					if (fdata->tag_type
 							== SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK)
-						data->state =SEBS_PARSE_XML_STATE_COMMENT_START_1ST_DASH;
+						fdata->state =SEBS_PARSE_XML_STATE_COMMENT_START_1ST_DASH;
 					else
-						data->parser_data->event =
+						pdata->event =
 								SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT_START_1ST_DASH:
 					DEBUG_PRINT_STR("COMMENT START");
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH;
 					break;
 
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB:
@@ -359,153 +359,153 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				}
 				break;
 			case '?':
-				switch (data->state)
+				switch (fdata->state)
 				{
 
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_QUESTION_MARK;
+					fdata->tag_type = SEBS_PARSE_XML_TAG_TYPE_QUESTION_MARK;
 					break;
 
 				case SEBS_PARSE_XML_STATE_TAG:
-					if (data->tag_type == SEBS_PARSE_XML_TAG_TYPE_QUESTION_MARK)
+					if (fdata->tag_type == SEBS_PARSE_XML_TAG_TYPE_QUESTION_MARK)
 					{
-						data->state =SEBS_PARSE_XML_STATE_QMTAG_EXPECT_CLOSE;
+						fdata->state =SEBS_PARSE_XML_STATE_QMTAG_EXPECT_CLOSE;
 					}
 					else
 					{
-						data->parser_data->event =
+						pdata->event =
 								SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					}
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 				}
 				break;
 			case '!':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK;
+					fdata->tag_type = SEBS_PARSE_XML_TAG_TYPE_EXCLAMATION_MARK;
 					break;
 
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 					break;
 				}
 				break;
 			case '=':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_EQUAL:
-					data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND;
+					fdata->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 					break;
 				}
 				break;
 			case '\'': // '
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND:
-					data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB;
-					data->parser_data->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE;
+					fdata->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB;
+					pdata->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE;
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_APOSTROPHE_ATTRIB:
-					data->state =SEBS_PARSE_XML_STATE_TAG;
+					fdata->state =SEBS_PARSE_XML_STATE_TAG;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 					break;
@@ -514,20 +514,20 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				break;
 
 			case ']':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_CDATA:
-					data->state =SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET: //if ]]]
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
@@ -537,34 +537,34 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				break;
 
 			case '"': // '
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state =SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state =SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_WAIT_VAL_BOUND:
-					data->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB;
-					data->parser_data->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES;
+					fdata->state =SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB;
+					pdata->event=SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES;
 					break;
 				case SEBS_PARSE_XML_STATE_ATTRIBUTE_INSIDE_QUOTES_ATTRIB:
-					data->state =SEBS_PARSE_XML_STATE_TAG;
+					fdata->state =SEBS_PARSE_XML_STATE_TAG;
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state =SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state =SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state =SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_ERROR_MALFORMED;
 					break;
 					break;
@@ -572,63 +572,63 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				break;
 
 			default:
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_XML_STATE_COMMENT_END_1ST_DASH:
 				case SEBS_PARSE_XML_STATE_COMMENT_END_2ND_DASH:
-					data->state = SEBS_PARSE_XML_STATE_COMMENT;
+					fdata->state = SEBS_PARSE_XML_STATE_COMMENT;
 					break;
 				case SEBS_PARSE_XML_STATE_COMMENT:
 					break;
 
 				case SEBS_PARSE_XML_STATE_CDATA_START:
-					data->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
+					fdata->substate =SEBS_PARSE_XML_SUBSTATE_CDATA_TAG_STRING;
 					static const char* cdata_str="CDATA";
 					SEBS_PARSE_SEEKSTRING_INIT(
-							data->parser_data->next_parser,
-							data->seekstring,
+							pdata->next_parser,
+							fdata->seekstring,
 							&cdata_str,
 							1, " []=\"\'/<>?!",
 							true);
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
-					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
+					fdata->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							data->parser_data->next_parser,
-							data->seekstring,
-							data->tag_strings,
-							data->tag_strings_len, " []=\"\'/<>?!",
+							pdata->next_parser,
+							fdata->seekstring,
+							fdata->tag_strings,
+							fdata->tag_strings_len, " []=\"\'/<>?!",
 							true);
 					break;
 
 				case SEBS_PARSE_XML_STATE_CLOSE_TAG_START:
-					data->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
-					data->tag_type = SEBS_PARSE_XML_TAG_TYPE_CLOSE;
+					fdata->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
+					fdata->tag_type = SEBS_PARSE_XML_TAG_TYPE_CLOSE;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							data->parser_data->next_parser,
-							data->seekstring,
-							data->tag_strings,
-							data->tag_strings_len, " []=\"\'/<>?!",
+							pdata->next_parser,
+							fdata->seekstring,
+							fdata->tag_strings,
+							fdata->tag_strings_len, " []=\"\'/<>?!",
 							true);
 					break;
 
 				case SEBS_PARSE_XML_STATE_TAG: //A non empty space inside a tag means, that we have a attribute.
-					data->substate =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
+					fdata->substate =SEBS_PARSE_XML_SUBSTATE_ATTRIBUTE_ID;
 					SEBS_PARSE_SEEKSTRING_INIT(
-							data->parser_data->next_parser,
-							data->seekstring,
-							data->attribute_strings,
-							data->attribute_strings_len,
+							pdata->next_parser,
+							fdata->seekstring,
+							fdata->attribute_strings,
+							fdata->attribute_strings_len,
 							" []=\"\'/<>?!", true);
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:
-					data->state = SEBS_PARSE_XML_STATE_CDATA;
+					fdata->state = SEBS_PARSE_XML_STATE_CDATA;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_XML_EVENT_CONTENT_START;
-					data->state = SEBS_PARSE_XML_STATE_INNER_CONTENT;
+					fdata->state = SEBS_PARSE_XML_STATE_INNER_CONTENT;
 					break;
 				case SEBS_PARSE_XML_STATE_INNER_CONTENT:
 					break;
@@ -637,12 +637,12 @@ bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data)
 				}
 				break;
 			}
-			if (*len > 0
-					&& data->parser_data->event
+			if (*pdata->len > 0
+					&& pdata->event
 							!= SEBS_PARSE_XML_EVENT_CONTENT_START)
 			{
-				++*buf;
-				--*len;
+				++*pdata->buf;
+				--*pdata->len;
 			}
 		}
 	}

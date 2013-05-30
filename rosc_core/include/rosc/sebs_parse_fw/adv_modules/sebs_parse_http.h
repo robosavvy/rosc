@@ -34,10 +34,10 @@
 
 #include <rosc/system/types.h>
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
 #define SEBS_PARSE_UNKNOWN  -1
@@ -139,7 +139,6 @@ typedef struct
 	/**
 	 * Pointer for access to parser frame
 	 */
-	sebs_parser_data_t* parser_data;
 
 	sebs_parse_http_state_t state; //!< state contains the current state of the http parser
 	sebs_parse_http_substate_t substate; //!< contains the substate of the http parser (analyzing results of submodes)
@@ -163,7 +162,7 @@ typedef struct
 }sebs_parse_http_data_t;
 
 
-bool sebs_parse_http(char **buf_ptr, int32_t *len_ptr, sebs_parse_http_data_t *data);
+bool sebs_parse_http(sebs_parser_data_t* pdata);
 
 
 

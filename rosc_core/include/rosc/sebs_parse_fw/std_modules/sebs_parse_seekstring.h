@@ -34,7 +34,7 @@
 
 #include <rosc/system/types.h>
 #include <rosc/debug/debug_out.h>
-
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 /**
  * This macro defines the result number if no string was found
@@ -70,6 +70,6 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data);
+bool sebs_parse_seekstring(sebs_parser_data_t* pdata);
 
 #endif /* SEBS_PARSE_SEEKSTRING_H_ */

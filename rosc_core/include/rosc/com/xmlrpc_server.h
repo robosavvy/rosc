@@ -189,7 +189,7 @@ typedef struct
 #endif
 #endif
 
-	sebs_parse_parseurl_data_t masterurl;
+	sebs_parse_url_data_t masterurl;
 
 
 	/**

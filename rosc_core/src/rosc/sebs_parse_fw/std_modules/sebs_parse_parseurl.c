@@ -31,7 +31,7 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 
-bool sebs_parse_parseurl(char **buf, int32_t *len, sebs_parse_parseurl_data_t *data)
+bool sebs_parse_parseurl(sebs_parser_data_t *pdata)
 {
 
 	return false;

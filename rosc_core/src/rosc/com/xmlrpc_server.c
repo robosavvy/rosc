@@ -35,19 +35,19 @@
 #include <rosc/com/xmlrpc_server.h>
 #include <rosc/system/status.h>
 
-bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
+bool xmlrpc(xmlrpc_data_t *hdata, void** in_type_out_parser_data)
 {
 
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
 	 *****************/
 	if (in_type_out_parser_data
-			!= 0||data->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
+			!= 0||hdata->parser_data.event==SEBS_PARSE_EVENT_LEN_SMALLER_ZERO) //If not null lets init the stuff
 	{
 		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
-		SEBS_PARSE_HTTP_INIT(0, data->parser_data,
-				data->parser_data.current_parser, data->http,
+		SEBS_PARSE_HTTP_INIT(0, hdata->parser_data,
+				hdata->parser_data.current_parser, hdata->http,
 				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
 				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
 				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
@@ -56,39 +56,39 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		if (1) //(*type==XMLRPC_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
-			data->http.state = SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
-			data->xmlrpc_type = XMLRPC_SERVER;
-			data->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
+			hdata->http.state = SEBS_PARSE_HTTP_STATE_REQUEST_METHOD;
+			hdata->xmlrpc_type = XMLRPC_SERVER;
+			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
-			data->http.state = SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
-			data->xmlrpc_type = XMLRPC_CLIENT;
-			data->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN; //TODO must be set!
+			hdata->http.state = SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER;
+			hdata->xmlrpc_type = XMLRPC_CLIENT;
+			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN; //TODO must be set!
 		}
 
-		data->xmlrpc_state = XMLRPC_STATE_HTTP;
-		data->result_handling = XMLRPC_RESULT_NONE;
+		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
+		hdata->result_handling = XMLRPC_RESULT_NONE;
 
-		data->parser_data.return_to_handler = false;
-		data->parser_data.event = SEBS_PARSE_EVENT_NONE;
-		data->parser_data.handler_function =
+		hdata->parser_data.return_to_handler = false;
+		hdata->parser_data.event = SEBS_PARSE_EVENT_NONE;
+		hdata->parser_data.handler_function =
 				(sebs_parse_handler_function_t) &xmlrpc;
-		data->parser_data.overall_len = 0;
-		data->parser_data.security_len = 1024;
-		data->parser_data.event = 0;
+		hdata->parser_data.overall_len = 0;
+		hdata->parser_data.security_len = 1024;
+		hdata->parser_data.event = 0;
 
 		xmlrpc_tag_state_t tag_state = XMLRPC_TAG_STATE_NONE;
 		xmlrpc_type_tag_t type_tag = XMLRPC_TYPE_TAG_NONE;
 		uint8_t param_no = 0;
 		uint32_t array_level = 0;
-		data->param_no = 0;
-		data->method = XMLRPC_METHOD_UNKNOWN;
-		data->array_state = XMLRPC_ARRAY_STATE_NONE;
-		data->type_tag = XMLRPC_TYPE_TAG_NONE;
+		hdata->param_no = 0;
+		hdata->method = XMLRPC_METHOD_UNKNOWN;
+		hdata->array_state = XMLRPC_ARRAY_STATE_NONE;
+		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
 		//set pointer to parser data
-		*in_type_out_parser_data = &data->parser_data;
+		*in_type_out_parser_data = &hdata->parser_data;
 
 		return (false);
 	}
@@ -96,22 +96,22 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 	/* ********************
 	 * Handle Frame Events*
 	 **********************/
-	switch (data->parser_data.event)
+	switch (hdata->parser_data.event)
 	{
 	case SEBS_PARSE_EVENT_LEN_SMALLER_ZERO:
 		//Should never get here... -> reset is above
 		break;
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
-		switch (data->result_handling)
+		switch (hdata->result_handling)
 		{
 		case XMLRPC_RESULT_NONE:
 			break;
 		case XMLRPC_RESULT_CONTENT_LENGTH:
-			if (data->http.numberparse.result
+			if (hdata->http.numberparse.result
 					== SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 			{
-				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",data->http.numberparse.number);
-				data->xml_length = data->http.numberparse.number;
+				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",hdata->http.numberparse.number);
+				hdata->xml_length = hdata->http.numberparse.number;
 				return false;
 			}
 			else
@@ -120,12 +120,12 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			}
 			break;
 		case XMLRPC_RESULT_METHOD_NAME:
-			data->rpc_methodname = data->xml.seekstring.result;
-			DEBUG_PRINT(STR,"methodName",xmlrpc_slave_methodnames[data->rpc_methodname])
+			hdata->rpc_methodname = hdata->xml.seekstring.result;
+			DEBUG_PRINT(STR,"methodName",xmlrpc_slave_methodnames[hdata->rpc_methodname])
 			break;
 
 		case XMLRPC_RESULT_CALLERID:
-			DEBUG_PRINT(STR,"caller_id",data->caller_id);
+			DEBUG_PRINT(STR,"caller_id",hdata->caller_id);
 			break;
 
 		default:
@@ -136,7 +136,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE");
 		return false;
 		break;
-		data->result_handling = XMLRPC_RESULT_NONE;
+		hdata->result_handling = XMLRPC_RESULT_NONE;
 		while (1)
 			;
 		break;
@@ -148,10 +148,10 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 	/* *******************
 	 * Handle HTTP Events*
 	 *********************/
-	if (data->xmlrpc_state == XMLRPC_STATE_HTTP)
+	if (hdata->xmlrpc_state == XMLRPC_STATE_HTTP)
 	{
 		sebs_parse_http_event_t http_event =
-				(sebs_parse_http_event_t) data->parser_data.event;
+				(sebs_parse_http_event_t) hdata->parser_data.event;
 		switch (http_event)
 		{
 
@@ -174,33 +174,33 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",data->http.seekstring.result);
-			data->method = data->http.seekstring.result;
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",hdata->http.seekstring.result);
+			hdata->method = hdata->http.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_ACTION_PARSED:
-			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",data->http.seekstring.result);
-			data->action = data->http.seekstring.result;
+			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_ACTION_PARSED",hdata->http.seekstring.result);
+			hdata->action = hdata->http.seekstring.result;
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT");
-			switch (data->http.descriptor)
+			switch (hdata->http.descriptor)
 			{
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
-				data->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
-				SEBS_PARSE_NUMBERPARSE_INIT(data->parser_data.next_parser,
-						data->http.numberparse, 3, false)
+				hdata->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
+				SEBS_PARSE_NUMBERPARSE_INIT(hdata->parser_data.next_parser,
+						hdata->http.numberparse, 3, false)
 				;
 				break;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
-			if (data->http.numberparse.result
+			if (hdata->http.numberparse.result
 					== SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 			{
-				data->http_response_code = data->http.numberparse.number;
+				hdata->http_response_code = hdata->http.numberparse.number;
 			}
 			else
 			{
@@ -210,14 +210,14 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 
 		case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
 			DEBUG_PRINT_STR("HEADER END!");
-			data->xmlrpc_state = XMLRPC_STATE_XML;
-			SEBS_PARSE_XML_INIT(data->parser_data.current_parser,
-					&data->parser_data, data->xml, xmlrpc_tag_strings,
+			hdata->xmlrpc_state = XMLRPC_STATE_XML;
+			SEBS_PARSE_XML_INIT(hdata->p,
+					&hdata->parser_data, hdata->xml, xmlrpc_tag_strings,
 					XMLRPC_TAG_STRINGS_LEN, xmlrpc_attribute_strings,
 					XMLRPC_TAG_STRINGS_LEN)
 			;
 
-			data->xml.parser_data = &data->parser_data;
+			hdata->xml.parser_data = &hdata->parser_data;
 			break;
 		default:
 			break;
@@ -228,10 +228,10 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 	 * Handle XMLRPC Events*
 	 ***********************/
 
-	else if (data->xmlrpc_state == XMLRPC_STATE_XML)
+	else if (hdata->xmlrpc_state == XMLRPC_STATE_XML)
 	{
 		sebs_parse_xml_event_t xml_event =
-				(sebs_parse_xml_event_t) data->parser_data.event;
+				(sebs_parse_xml_event_t) hdata->parser_data.event;
 		switch (xml_event)
 		{
 
@@ -276,75 +276,75 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			 */
 		case SEBS_PARSE_XML_EVENT_INSIDE_TAG:
 			//create tag position information
-			switch (data->xml.tags[data->xml.depth])
+			switch (hdata->xml.tags[hdata->xml.depth])
 			{
 			case XMLRPC_TAG_METHODCALL:
-				if (data->xmlrpc_type == XMLRPC_SERVER && data->xml.depth == 1)
+				if (hdata->xmlrpc_type == XMLRPC_SERVER && hdata->xml.depth == 1)
 				{
-					data->tag_state = XMLRPC_TAG_STATE_METHODRC;
+					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
 			case XMLRPC_TAG_METHODRESPONSE:
-				if (data->xmlrpc_type == XMLRPC_CLIENT && data->xml.depth == 1)
+				if (hdata->xmlrpc_type == XMLRPC_CLIENT && hdata->xml.depth == 1)
 				{
-					data->tag_state = XMLRPC_TAG_STATE_METHODRC;
+					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
 			case XMLRPC_TAG_PARAMS:
-				if (data->tag_state == XMLRPC_TAG_STATE_METHODRC
-						&& data->xml.depth == 2)
-					data->tag_state = XMLRPC_TAG_STATE_PARAMS;
+				if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
+						&& hdata->xml.depth == 2)
+					hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
 				break;
 			case XMLRPC_TAG_PARAM:
-				if (data->tag_state == XMLRPC_TAG_STATE_PARAMS
-						&& data->xml.depth == 3)
-					data->tag_state = XMLRPC_TAG_STATE_PARAM;
-				data->param_no++;
+				if (hdata->tag_state == XMLRPC_TAG_STATE_PARAMS
+						&& hdata->xml.depth == 3)
+					hdata->tag_state = XMLRPC_TAG_STATE_PARAM;
+				hdata->param_no++;
 				break;
 			case XMLRPC_TAG_VALUE:
-				if (data->tag_state == XMLRPC_TAG_STATE_PARAM
-						&& data->xml.depth == 4)
+				if (hdata->tag_state == XMLRPC_TAG_STATE_PARAM
+						&& hdata->xml.depth == 4)
 				{
-					data->tag_state = XMLRPC_TAG_STATE_VALUE;
+					hdata->tag_state = XMLRPC_TAG_STATE_VALUE;
 				}
-				else if (data->array_state == XMLRPC_ARRAY_STATE_DATA)
+				else if (hdata->array_state == XMLRPC_ARRAY_STATE_DATA)
 				{
-					data->array_state = XMLRPC_ARRAY_STATE_VALUE;
+					hdata->array_state = XMLRPC_ARRAY_STATE_VALUE;
 				}
 				break;
 
 			case XMLRPC_TAG_ARRAY:
-				if (data->tag_state == XMLRPC_TAG_STATE_VALUE)
+				if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE)
 				{
-					if (data->array_state == XMLRPC_ARRAY_STATE_VALUE)
+					if (hdata->array_state == XMLRPC_ARRAY_STATE_VALUE)
 					{
-						data->array_level++;
-						if (data->array_level < XMLRPC_MAX_ARRAY_NESTING)
-							data->array_value_number[data->array_level] = 0;
+						hdata->array_level++;
+						if (hdata->array_level < XMLRPC_MAX_ARRAY_NESTING)
+							hdata->array_value_number[hdata->array_level] = 0;
 					}
-					data->array_state = XMLRPC_ARRAY_STATE_ARRAY;
+					hdata->array_state = XMLRPC_ARRAY_STATE_ARRAY;
 				}
 				break;
 			case XMLRPC_TAG_DATA:
-				if (data->array_state == XMLRPC_ARRAY_STATE_ARRAY)
+				if (hdata->array_state == XMLRPC_ARRAY_STATE_ARRAY)
 				{
-					data->array_state = XMLRPC_ARRAY_STATE_DATA;
+					hdata->array_state = XMLRPC_ARRAY_STATE_DATA;
 				}
 				break;
 
 
 			case XMLRPC_TAG_STRING:
-				data->type_tag=XMLRPC_TYPE_TAG_STRING;
+				hdata->type_tag=XMLRPC_TYPE_TAG_STRING;
 				break;
 			case XMLRPC_TAG_I4:
 			case XMLRPC_TAG_INT:
-				data->type_tag=XMLRPC_TYPE_TAG_INT;
+				hdata->type_tag=XMLRPC_TYPE_TAG_INT;
 				break;
 			case XMLRPC_TAG_BOOLEAN:
-				data->type_tag=XMLRPC_TYPE_TAG_BOOLEAN;
+				hdata->type_tag=XMLRPC_TYPE_TAG_BOOLEAN;
 				break;
 			case XMLRPC_TAG_DOUBLE:
-				data->type_tag=XMLRPC_TYPE_TAG_DOUBLE;
+				hdata->type_tag=XMLRPC_TYPE_TAG_DOUBLE;
 				break;
 
 
@@ -359,62 +359,62 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 		 * other values or arrays.
 		 */
 		case SEBS_PARSE_XML_EVENT_TAG:
-			if (data->xml.tag_type == SEBS_PARSE_XML_TAG_TYPE_CLOSE)
+			if (hdata->xml.tag_type == SEBS_PARSE_XML_TAG_TYPE_CLOSE)
 			{
-				switch (data->xml.tags[data->xml.depth])
+				switch (hdata->xml.tags[hdata->xml.depth])
 				{
 				case XMLRPC_TAG_VALUE:
-					if (data->tag_state == XMLRPC_TAG_STATE_VALUE
-							&& data->xml.depth == 4)
+					if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+							&& hdata->xml.depth == 4)
 					{
-						data->tag_state = XMLRPC_TAG_STATE_PARAM;
+						hdata->tag_state = XMLRPC_TAG_STATE_PARAM;
 					}
-					else if (data->array_state == XMLRPC_ARRAY_STATE_VALUE)
+					else if (hdata->array_state == XMLRPC_ARRAY_STATE_VALUE)
 					{
-						data->array_state = XMLRPC_ARRAY_STATE_DATA;
-						if (data->array_level < XMLRPC_MAX_ARRAY_NESTING)
-							data->array_value_number[data->array_level]++;
+						hdata->array_state = XMLRPC_ARRAY_STATE_DATA;
+						if (hdata->array_level < XMLRPC_MAX_ARRAY_NESTING)
+							hdata->array_value_number[hdata->array_level]++;
 					}
 					break;
 
 				case XMLRPC_TAG_DATA:
-					if (data->array_state == XMLRPC_ARRAY_STATE_DATA)
+					if (hdata->array_state == XMLRPC_ARRAY_STATE_DATA)
 					{
-						data->array_state = XMLRPC_ARRAY_STATE_ARRAY;
+						hdata->array_state = XMLRPC_ARRAY_STATE_ARRAY;
 					}
 					break;
 
 				case XMLRPC_TAG_ARRAY:
-					if (data->array_state == XMLRPC_ARRAY_STATE_ARRAY)
+					if (hdata->array_state == XMLRPC_ARRAY_STATE_ARRAY)
 					{
-						if (data->array_level == 0)
+						if (hdata->array_level == 0)
 						{
-							data->array_state = XMLRPC_ARRAY_STATE_NONE;
+							hdata->array_state = XMLRPC_ARRAY_STATE_NONE;
 						}
 						else
 						{
-							data->array_state = XMLRPC_ARRAY_STATE_VALUE;
-							data->array_level--;
+							hdata->array_state = XMLRPC_ARRAY_STATE_VALUE;
+							hdata->array_level--;
 						}
 					}
 
 				case XMLRPC_TAG_PARAM:
-					if (data->tag_state == XMLRPC_TAG_STATE_PARAM
-							&& data->xml.depth == 3)
-						data->tag_state = XMLRPC_TAG_STATE_PARAMS;
+					if (hdata->tag_state == XMLRPC_TAG_STATE_PARAM
+							&& hdata->xml.depth == 3)
+						hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
 					break;
 
 				case XMLRPC_TAG_PARAMS:
-					if (data->tag_state == XMLRPC_TAG_STATE_PARAMS
-							&& data->xml.depth == 2)
-						data->tag_state = XMLRPC_TAG_STATE_METHODRC;
+					if (hdata->tag_state == XMLRPC_TAG_STATE_PARAMS
+							&& hdata->xml.depth == 2)
+						hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 					break;
 
 				case XMLRPC_TAG_METHODCALL:
 				case XMLRPC_TAG_METHODRESPONSE:
-					if (data->tag_state == XMLRPC_TAG_STATE_METHODRC
-							&& data->xml.depth == 1)
-						data->tag_state = XMLRPC_TAG_STATE_NONE;
+					if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
+							&& hdata->xml.depth == 1)
+						hdata->tag_state = XMLRPC_TAG_STATE_NONE;
 					break;
 
 				case XMLRPC_TAG_STRING:
@@ -422,7 +422,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 				case XMLRPC_TAG_INT:
 				case XMLRPC_TAG_BOOLEAN:
 				case XMLRPC_TAG_DOUBLE:
-					data->type_tag=XMLRPC_TYPE_TAG_NONE;
+					hdata->type_tag=XMLRPC_TYPE_TAG_NONE;
 					break;
 
 				default:
@@ -442,16 +442,16 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 			 * Methodname, for knowing what the supplied values stand for,
 			 * the methodname is required first!
 			 */
-			if (data->xml.tags[data->xml.depth] == XMLRPC_TAG_METHODNAME
-					&& data->tag_state == XMLRPC_TAG_STATE_METHODRC)
+			if (hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_METHODNAME
+					&& hdata->tag_state == XMLRPC_TAG_STATE_METHODRC)
 			{
-				data->result_handling = XMLRPC_RESULT_METHOD_NAME;
-				SEBS_PARSE_SEEKSTRING_INIT(data->parser_data.next_parser,
-						data->xml.seekstring, xmlrpc_slave_methodnames,
+				hdata->result_handling = XMLRPC_RESULT_METHOD_NAME;
+				SEBS_PARSE_SEEKSTRING_INIT(hdata->parser_data.next_parser,
+						hdata->xml.seekstring, xmlrpc_slave_methodnames,
 						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true);
 			}
 
-			if (data->xmlrpc_type == XMLRPC_SERVER)
+			if (hdata->xmlrpc_type == XMLRPC_SERVER)
 			{
 				//The first field is always the caller_id in every known methodcall
 				//so lets extract as many chars as possible
@@ -463,17 +463,17 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 				 * just feel free to tell...
 				 * ROSc will use it for error reporting so far...
 				 */
-				if (data->tag_state == XMLRPC_TAG_STATE_VALUE
-						&& data->param_no == 1
-						&& data->array_state == XMLRPC_ARRAY_STATE_NONE)
+				if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+						&& hdata->param_no == 1
+						&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
 				{
-					if (data->type_tag == XMLRPC_TYPE_TAG_NONE
-							|| data->type_tag == XMLRPC_TYPE_TAG_STRING)
+					if (hdata->type_tag == XMLRPC_TYPE_TAG_NONE
+							|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
 					{
-						data->result_handling = XMLRPC_RESULT_CALLERID;
+						hdata->result_handling = XMLRPC_RESULT_CALLERID;
 						SEBS_PARSE_COPY2BUFFER_INIT(
-								data->parser_data.next_parser,
-								data->copy2buffer, data->caller_id,
+								hdata->parser_data.next_parser,
+								hdata->copy2buffer, hdata->caller_id,
 								__NODENAME_MAX_LEN__, "<");
 					}
 					else
@@ -484,7 +484,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 #endif
 				else
 				{
-					switch (data->rpc_methodname)
+					switch (hdata->rpc_methodname)
 					{
 						case XMLRPC_METHODNAME_UNKNOWN:
 						DEBUG_PRINT_STR("UNKNOWN METHODNAME!")
@@ -508,12 +508,12 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 						break;
 						case XMLRPC_METHODNAME_PUBLISHERUPDATE:
 						//Second parameter is topicname
-						if (data->tag_state == XMLRPC_TAG_STATE_VALUE
-								&& data->param_no == 2
-								&& data->array_state == XMLRPC_ARRAY_STATE_NONE)
+						if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+								&& hdata->param_no == 2
+								&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
 						{
-							if(data->type_tag == XMLRPC_TYPE_TAG_NONE
-									|| data->type_tag == XMLRPC_TYPE_TAG_STRING)
+							if(hdata->type_tag == XMLRPC_TYPE_TAG_NONE
+									|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
 							{
 								DEBUG_PRINT_STR("TOPIC");
 							}
@@ -523,10 +523,10 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 							}
 						}
 
-						if (data->tag_state == XMLRPC_TAG_STATE_VALUE
-								&& data->param_no == 3
-								&& data->array_state == XMLRPC_ARRAY_STATE_VALUE
-								&& data->array_level == 0
+						if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+								&& hdata->param_no == 3
+								&& hdata->array_state == XMLRPC_ARRAY_STATE_VALUE
+								&& hdata->array_level == 0
 							)
 						{
 							DEBUG_PRINT_STR("A PUBLISHER");
@@ -540,7 +540,7 @@ bool xmlrpc(xmlrpc_data_t *data, void** in_type_out_parser_data)
 					}
 				}
 			}
-			else if (data->xmlrpc_type == XMLRPC_CLIENT)
+			else if (hdata->xmlrpc_type == XMLRPC_CLIENT)
 			{
 
 			}

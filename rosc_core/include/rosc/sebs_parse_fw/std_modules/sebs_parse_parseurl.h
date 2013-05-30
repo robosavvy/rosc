@@ -34,6 +34,7 @@
 
 #include <rosc/system/types.h>
 #include <rosc/system/spec.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 /**
  *	Contains the result states parse url submode
  */
@@ -43,7 +44,7 @@ typedef enum
 	PARSEURL_MATCH_IPV4,    //!< PARSEURL_MATCH_IPv4 - means that the content is a IPv4 address
 	PARSEURL_MATCH_IPV6,   	//!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
 	PARSEURL_MATCH_IPv6_RESOLV,//!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
-}sebs_parse_parseurl_match_t;
+}sebs_parse_url_match_t;
 
 /**
  * This struct stores the data for the parseurl submode
@@ -56,8 +57,8 @@ typedef struct
 	uint16_t IPv6[8];//!< storage for an IPv6 address
 	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
 	uint16_t port; //!< storage for a port number
-	sebs_parse_parseurl_match_t what; //!< what specifies what kind of address is given
-}sebs_parse_parseurl_data_t;
+	sebs_parse_url_match_t what; //!< what specifies what kind of address is given
+}sebs_parse_url_data_t;
 
 /**
  * This function parses a URL from a stream
@@ -68,6 +69,5 @@ typedef struct
  *
  * @TODO implement parseurl, needs more state information, protocol string list etc...
  */
-bool sebs_parse_parseurl(char **buf, int32_t *len, sebs_parse_parseurl_data_t *data);
-
+bool sebs_parse_parseurl(sebs_parser_data_t *pdata);
 #endif /* SEBS_PARSE_PARSEURL_H_ */
