@@ -36,11 +36,12 @@
 #include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
 
 
+#define SEBS_PARSE_URL_INIT(PARSER_DATA, DATA_STORAGE, LENGTH, )
 
-#define SEBS_PARSE_URL_INIT(PARSER_DATA, DATA_STORAGE )
 /**
  *	Contains the result states parse url submode
  */
@@ -53,6 +54,19 @@ typedef enum
 	PARSEURL_RESULT_IPV6,   	 //!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
 	PARSEURL_RESULT_IPv6_RESOLV, //!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
 }sebs_parse_url_result_t;
+
+
+typedef enum
+{
+	SEBS_PARSE_URL_STATE_START,
+	SEBS_PARSE_URL_STATE_CHECK_SCHEME,
+	SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT,
+	SEBS_PARSE_URL_STATE_CHECK_DASH0,
+	SEBS_PARSE_URL_STATE_CHECK_DASH1,
+	SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE,
+	SEBS_PARSE_URL_STATE_PARSE_PORT,
+	SEBS_PARSE_URL_STATE_PARSE_RESOLV,
+}sebs_parse_url_state_t;
 
 /**
  * This struct stores the data for the parseurl submode
@@ -71,24 +85,15 @@ typedef struct
 	sebs_parse_url_result_t result; //!< what specifies what kind of address is given
 	uint16_t url_scheme; //!<contains the urlscheme http, mailto ...
 	uint16_t field_length;//!<contains the length of the field (rostcp), if null it parses as long as it makes sense...
-
+	sebs_parse_url_state_t state; //!contains the current state of the xml parser
 	union
 	{
+		sebs_parse_numberparse_result_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
 	};
 }sebs_parse_url_data_t;
 
-typedef enum
-{
-	SEBS_PARSE_URL_STATE_START,
-	SEBS_PARSE_URL_STATE_CHECK_SCHEME,
-	SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT,
-	SEBS_PARSE_URL_STATE_CHECK_DASH0,
-	SEBS_PARSE_URL_STATE_CHECK_DASH1,
-	SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE,
-	SEBS_PARSE_URL_STATE_PARSE_PORT,
-	SEBS_PARSE_URL_STATE_PARSE_RESOLV,
-}sebs_parse_url_state_t;
+
 
 /**
  * This function parses a URL from a stream, it requires a URL with a scheme specifier!

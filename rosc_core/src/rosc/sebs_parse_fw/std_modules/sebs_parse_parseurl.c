@@ -45,13 +45,30 @@ sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
 	bool finished=false;
 	while(pdata->len > 0)
 	{
+		switch (fdata->state) {
+			case SEBS_PARSE_URL_STATE_START:
+				DEBUG_PRINT_STR("PARSE URL...");
+
+				break;
+			default:
+				break;
+		}
+
+
+
+
+
 		SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,fdata->scheme_list,fdata->scheme_list_len,":/ @\\-[]<>",false);
+
+
+
 	}
 	if(finished)
 	{
 		//Restore calling function and return
 		pdata->next_parser.parser_function=fdata->caller.parser_function;
 		pdata->next_parser.parser_data=fdata->caller.parser_data;
+
 		return (SEBS_PARSE_RETURN_FINISHED);
 	}
 	else
