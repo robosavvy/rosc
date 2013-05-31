@@ -305,7 +305,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE;
 					SEBS_PARSE_NUMBERPARSE_INIT(
 							pdata,
-							fdata->numberparse, 3, false);
+							fdata->numberparse, 3, false, 10);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:

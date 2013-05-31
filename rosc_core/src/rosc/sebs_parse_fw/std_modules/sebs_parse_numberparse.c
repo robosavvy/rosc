@@ -30,7 +30,7 @@
  */
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
-
+#include <rosc/debug/debug_out.h>
 
 sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 	 //work around for inlining the function
@@ -40,22 +40,47 @@ sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 	{
 		pdata->function_init=false;
 		fdata->cur_place=0;
+		fdata->number=0;
+#ifdef __DEBUG__PRINTS__
+		if(fdata->base>36)
+		{
+			DEBUG_PRINT_STR("NUMBERPARSE_BASE_ERROR! BASE MUST BE SMALLER THAN 36!");
+			while(1);
+		}else if(fdata->base>16)
+		{
+			DEBUG_PRINT_STR("WARNING NUMBERPARSE: You are using a base greater than 16! What the hell are you up for? Is that intended!?!?");
+		}
+#endif
 	}
 	while(*pdata->len > 0)
 	{
-		if(fdata->cur_place == 0)
+		bool isFigure=false;
+		uint8_t figureConvertValue;
+		 //Check if char is a figure ...
+		if(**pdata->buf>='0' && **pdata->buf<=('9'+fdata->base-10))
 		{
-			fdata->negative=false;
-			fdata->number=0;
+			isFigure=true;
+			figureConvertValue='0';
 		}
-		if(**pdata->buf>=48 && **pdata->buf<=57) //Check if char is a figure
+		else if(**pdata->buf>='a' && **pdata->buf<=('a'+fdata->base-10) && (fdata->base>10))
+		{
+			isFigure=true;
+			figureConvertValue='a'-10;
+		}
+		else if(**pdata->buf>='A' && **pdata->buf<=('A'+fdata->base-10) && fdata->base>10)
+		{
+			isFigure=true;
+			figureConvertValue='A'-10;
+		}
+
+		if(isFigure)
 		{
 			if(fdata->cur_place < fdata->figure_max)//Is the length still acceptable?
 			{
 				if(fdata->cur_place>0)
-					fdata->number*=10;//multiply current number by 10 to shift it left
+					fdata->number*=fdata->base;//multiply current number by 10 to shift it left
 
-				fdata->number+=**pdata->buf-48; //convert char to integer
+				fdata->number+=**pdata->buf-figureConvertValue; //convert char to integer
 				++fdata->cur_place;
 				++*pdata->buf;
 				--*pdata->len;

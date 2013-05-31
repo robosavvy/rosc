@@ -236,21 +236,21 @@ extern const char *ros_field_strings[];
 
 
 /**
- * Length of the string array url_scheme_string
+ * Length of the string array xmlrpc_url_scheme_string
  */
-#define URL_SCHEME_STRING_LEN 	2
+#define XMLRPC_URL_SCHEME_STRING_LEN 	2
 
 /**
- * Macro for inserting strings for url schemes string numbers into any enum
+ * Macro for inserting strings for xmlrpc url schemes string numbers into any enum
  */
-#define URL_SCHEME_STRING(ENUM) \
+#define XMLRPC_URL_SCHEME_STRING(ENUM) \
 	 ENUM ## _URL_SCHEMES_HTTP, \
 	 ENUM ## _URL_SCHEMES_ROSRPC
 
 /**
- * This array contains the strings for strings for url schemes
+ * This array contains the strings for strings for xmlrpc url schemes
  */
-extern const char *url_scheme_string[];
+extern const char *xmlrpc_url_scheme_string[];
 
 
 /**

@@ -208,9 +208,9 @@ ros_field_strings:
   }
  
  #Strings for url schemes
-url_scheme_string:
+xmlrpc_url_scheme_string:
   comment:
-      'strings for url schemes'
+      'strings for xmlrpc url schemes'
   defineShort:
       'URL_SCHEMES'
   stringlist: {

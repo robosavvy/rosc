@@ -137,7 +137,7 @@ const char *ros_field_strings[] =
 	"type"
 };
 
-const char *url_scheme_string[] =
+const char *xmlrpc_url_scheme_string[] =
 {
 	"http",
 	"rosrpc"

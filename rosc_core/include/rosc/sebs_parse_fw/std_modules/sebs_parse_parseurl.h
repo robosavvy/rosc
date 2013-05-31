@@ -35,39 +35,64 @@
 #include <rosc/system/types.h>
 #include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+
+
+
+
+#define SEBS_PARSE_URL_INIT(PARSER_DATA, DATA_STORAGE )
 /**
  *	Contains the result states parse url submode
  */
 typedef enum
 {
-	PARSEURL_MATCH_HOSTNAME,//!< PARSEURL_MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
-	PARSEURL_MATCH_IPV4,    //!< PARSEURL_MATCH_IPv4 - means that the content is a IPv4 address
-	PARSEURL_MATCH_IPV6,   	//!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
-	PARSEURL_MATCH_IPv6_RESOLV,//!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
-}sebs_parse_url_match_t;
+	PARSEURL_RESULT_ERROR_URL_SCHEME, //!< means that there was no or an unknown url scheme given
+	PARSEURL_RESULT_ERROR_SIZE_LIMIT, //!< means that the given size limit was reached
+	PARSEURL_RESULT_HOSTNAME,    //!< PARSEURL_MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
+	PARSEURL_RESULT_IPV4,        //!< PARSEURL_MATCH_IPv4 - means that the content is a IPv4 address
+	PARSEURL_RESULT_IPV6,   	 //!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
+	PARSEURL_RESULT_IPv6_RESOLV, //!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
+}sebs_parse_url_result_t;
 
 /**
  * This struct stores the data for the parseurl submode
  */
 typedef struct
 {
+	sebs_parser_call_t caller; //!< this will store the original function when calling seekstring or other functions
 	const char **scheme_list; //!< The scheme list for the url scheme (http, rostcp)
+	uint16_t scheme_list_len; //!< The scheme list length
+
 	char hostname_ip_char[__HOSTNAME_MAX_LEN__+100]; //!< The text form of the hostname/IP
 	uint16_t cur_pos; //!< curLen The current size of the copied chars
 	uint16_t IPv6[8];//!< storage for an IPv6 address
 	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
 	uint16_t port; //!< storage for a port number
-	sebs_parse_url_match_t what; //!< what specifies what kind of address is given
+	sebs_parse_url_result_t result; //!< what specifies what kind of address is given
+	uint16_t url_scheme; //!<contains the urlscheme http, mailto ...
+	uint16_t field_length;//!<contains the length of the field (rostcp), if null it parses as long as it makes sense...
+
+	union
+	{
+		sebs_parse_seekstring_data_t seekstring;
+	};
 }sebs_parse_url_data_t;
 
+typedef enum
+{
+	SEBS_PARSE_URL_STATE_START,
+	SEBS_PARSE_URL_STATE_CHECK_SCHEME,
+	SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT,
+	SEBS_PARSE_URL_STATE_CHECK_DASH0,
+	SEBS_PARSE_URL_STATE_CHECK_DASH1,
+	SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE,
+	SEBS_PARSE_URL_STATE_PARSE_PORT,
+	SEBS_PARSE_URL_STATE_PARSE_RESOLV,
+}sebs_parse_url_state_t;
+
 /**
- * This function parses a URL from a stream
- * @param buf A pointer to the storage of the buffer
- * @param len The variable pointing to the length variable of the current buffer
- * @param data the function data storage, must be initialized in the beginning!
- * @return true when finished
- *
- * @TODO implement parseurl, needs more state information, protocol string list etc...
+ * This function parses a URL from a stream, it requires a URL with a scheme specifier!
+ * @param pdata The parsers data structure
  */
 sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata);
 #endif /* SEBS_PARSE_PARSEURL_H_ */

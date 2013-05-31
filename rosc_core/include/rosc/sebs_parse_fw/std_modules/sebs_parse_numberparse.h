@@ -35,11 +35,12 @@
 #include <rosc/system/types.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-#define SEBS_PARSE_NUMBERPARSE_INIT(PARSER_DATA, DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED)\
+#define SEBS_PARSE_NUMBERPARSE_INIT(PARSER_DATA, DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED, BASE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_numberparse;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.negative_allowed=NEGATIVE_ALLOWED;\
 		DATA_STORAGE.figure_max=FIGURE_MAX;\
+		DATA_STORAGE.base=BASE;\
 		return (SEBS_PARSE_RETURN_INIT)
 
 /**
@@ -57,6 +58,7 @@ typedef enum
  */
 typedef struct
 {
+	uint8_t base; //!if true the parsed number is expected to be in hexadecimal form
 	bool negative_allowed; //!< if true negative numbers are allowed
 	bool negative; //!< stores if there was a '-' in the beginning
 	uint8_t cur_place; //!< cur_place stores the number of the current figure of the number

@@ -173,7 +173,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
 				hdata->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
 				SEBS_PARSE_NUMBERPARSE_INIT(pdata,
-						hdata->http.numberparse, 3, false)
+						hdata->http.numberparse, 3, false,10)
 				;
 				break;
 			}

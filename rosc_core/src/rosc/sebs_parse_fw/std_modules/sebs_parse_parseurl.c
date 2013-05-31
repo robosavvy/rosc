@@ -33,12 +33,31 @@
 
 sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
 {
+	sebs_parse_url_data_t* fdata=(sebs_parse_url_data_t*) pdata->handler_data;
 	if(pdata->function_init)
 	{
 		pdata->function_init=false;
-
+		fdata->cur_pos=0;
+		//Save current return function
+		fdata->caller.parser_function=pdata->next_parser.parser_function;
+		fdata->caller.parser_data=pdata->next_parser.parser_data;
 	}
-	return (SEBS_PARSE_RETURN_GO_AHEAD);
+	bool finished=false;
+	while(pdata->len > 0)
+	{
+		SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,fdata->scheme_list,fdata->scheme_list_len,":/ @\\-[]<>",false);
+	}
+	if(finished)
+	{
+		//Restore calling function and return
+		pdata->next_parser.parser_function=fdata->caller.parser_function;
+		pdata->next_parser.parser_data=fdata->caller.parser_data;
+		return (SEBS_PARSE_RETURN_FINISHED);
+	}
+	else
+	{
+		return (SEBS_PARSE_RETURN_GO_AHEAD);
+	}
 }
 
 
