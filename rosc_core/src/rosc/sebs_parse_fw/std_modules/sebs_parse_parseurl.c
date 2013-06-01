@@ -31,44 +31,81 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 
-sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
+sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 {
-	sebs_parse_url_data_t* fdata=(sebs_parse_url_data_t*) pdata->handler_data;
-	if(pdata->function_init)
-	{
-		pdata->function_init=false;
-		fdata->cur_pos=0;
-		//Save current return function
-		fdata->caller.parser_function=pdata->next_parser.parser_function;
-		fdata->caller.parser_data=pdata->next_parser.parser_data;
-	}
-	bool finished=false;
-	while(pdata->len > 0)
-	{
-		switch (fdata->state) {
-			case SEBS_PARSE_URL_STATE_START:
-				DEBUG_PRINT_STR("PARSE URL...");
+	sebs_parse_url_data_t* fdata =
+			(sebs_parse_url_data_t*) pdata->current_parser.parser_data;
 
-				break;
+	if (pdata->function_init)
+	{
+		pdata->function_init = false;
+		fdata->cur_pos = 0;
+		//Save current return function
+		fdata->caller.parser_function = pdata->next_parser.parser_function;
+		fdata->caller.parser_data = pdata->next_parser.parser_data;
+		fdata->called_by_handler = pdata->return_to_handler;
+		pdata->return_to_handler = 0;
+		fdata->state = SEBS_PARSE_URL_STATE_START;
+	}
+	bool finished = false;
+	while (pdata->len > 0)
+	{
+		switch (fdata->state)
+		{
+		case SEBS_PARSE_URL_STATE_START:
+			DEBUG_PRINT_STR("PARSE URL...");
+			fdata->state = SEBS_PARSE_URL_STATE_CHECK_SCHEME;
+			SEBS_PARSE_SEEKSTRING_INIT(pdata, fdata->seekstring,
+					fdata->scheme_list, fdata->scheme_list_len, "!*'();:@$=+$,/?%#[]",
+					false)
+;			break;
+			case SEBS_PARSE_URL_STATE_CHECK_SCHEME:
+			if(fdata->seekstring.result<0)
+			{
+				fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME;
+				finished=true;
+			}
+			else
+			{
+				fdata->state=SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT;
+			}
+			break;
+			case SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT:
+			case SEBS_PARSE_URL_STATE_CHECK_DASH0:
+			case SEBS_PARSE_URL_STATE_CHECK_DASH1:
+			{
+				char chr_to_check;
+				sebs_parse_url_state_t state_when_found;
+				switch(fdata->state)
+				{
+					case SEBS_PARSE_URL_STATE_CHECK_DOUBLE_POINT:
+					chr_to_check=':';
+					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH0;
+					break;
+					case SEBS_PARSE_URL_STATE_CHECK_DASH0:
+					chr_to_check=':';
+					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH1;
+					break;
+					case SEBS_PARSE_URL_STATE_CHECK_DASH1:
+					chr_to_check=':';
+					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH1;
+					break;
+				}
+
+
+			}
+			break;
 			default:
-				break;
+			break;
 		}
 
-
-
-
-
-		SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,fdata->scheme_list,fdata->scheme_list_len,":/ @\\-[]<>",false);
-
-
-
 	}
-	if(finished)
+	if (finished)
 	{
 		//Restore calling function and return
-		pdata->next_parser.parser_function=fdata->caller.parser_function;
-		pdata->next_parser.parser_data=fdata->caller.parser_data;
-
+		pdata->next_parser.parser_function = fdata->caller.parser_function;
+		pdata->next_parser.parser_data = fdata->caller.parser_data;
+		pdata->return_to_handler = fdata->called_by_handler;
 		return (SEBS_PARSE_RETURN_FINISHED);
 	}
 	else
@@ -76,6 +113,4 @@ sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata)
 		return (SEBS_PARSE_RETURN_GO_AHEAD);
 	}
 }
-
-
 

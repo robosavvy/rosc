@@ -190,9 +190,6 @@ typedef struct
 #endif
 #endif
 
-	sebs_parse_url_data_t masterurl;
-
-
 	/**
 	 * This union contains data from the main
 	 * xmlrpc submodes. Http and xml parser.
@@ -201,6 +198,7 @@ typedef struct
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
+		sebs_parse_url_data_t url;
 	};
 
 

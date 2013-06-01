@@ -179,7 +179,7 @@ typedef struct sebs_parser_data_t
 	/**
 	 * The current length variable
 	 */
-	uint32_t *len;
+	int32_t *len;
 } sebs_parser_data_t;
 
 sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);

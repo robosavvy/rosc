@@ -40,19 +40,25 @@
 
 
 
-#define SEBS_PARSE_URL_INIT(PARSER_DATA, DATA_STORAGE, LENGTH, )
+#define SEBS_PARSE_URL_INIT(PARSER_DATA, DATA_STORAGE, URL_LENGTH,SCHEME_LIST,SCHEME_LIST_LEN)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_url;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.scheme_list=SCHEME_LIST;\
+		DATA_STORAGE.scheme_list_len=SCHEME_LIST_LEN;\
+		DATA_STORAGE.url_length=URL_LENGTH;\
+		return SEBS_PARSE_RETURN_INIT;
 
 /**
  *	Contains the result states parse url submode
  */
 typedef enum
 {
-	PARSEURL_RESULT_ERROR_URL_SCHEME, //!< means that there was no or an unknown url scheme given
-	PARSEURL_RESULT_ERROR_SIZE_LIMIT, //!< means that the given size limit was reached
-	PARSEURL_RESULT_HOSTNAME,    //!< PARSEURL_MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
-	PARSEURL_RESULT_IPV4,        //!< PARSEURL_MATCH_IPv4 - means that the content is a IPv4 address
-	PARSEURL_RESULT_IPV6,   	 //!< PARSEURL_MATCH_IPv6 - means that the content is a IPv6 address
-	PARSEURL_RESULT_IPv6_RESOLV, //!< PARSEURL_MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
+	SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME, //!< means that there was no or an unknown url scheme given
+	SEBS_PARSE_URL_RESULT_ERROR_SIZE_LIMIT, //!< means that the given size limit was reached
+	SEBS_PARSE_URL_RESULT_HOSTNAME,    //!< SEBS_PARSE_URL__MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
+	SEBS_PARSE_URL_RESULT_IPV4,        //!< SEBS_PARSE_URL__MATCH_IPv4 - means that the content is a IPv4 address
+	SEBS_PARSE_URL_RESULT_IPV6,   	 //!< SEBS_PARSE_URL__MATCH_IPv6 - means that the content is a IPv6 address
+	SEBS_PARSE_URL_RESULT_IPv6_RESOLV, //!< SEBS_PARSE_URL__MATCH_IPv6_RESOLV - means that the content is a IPv6 address with a IPv4 network resolving addition
 }sebs_parse_url_result_t;
 
 
@@ -74,6 +80,9 @@ typedef enum
 typedef struct
 {
 	sebs_parser_call_t caller; //!< this will store the original function when calling seekstring or other functions
+	bool called_by_handler; //!< this will store the original value of the return to handler function
+
+
 	const char **scheme_list; //!< The scheme list for the url scheme (http, rostcp)
 	uint16_t scheme_list_len; //!< The scheme list length
 
@@ -84,7 +93,7 @@ typedef struct
 	uint16_t port; //!< storage for a port number
 	sebs_parse_url_result_t result; //!< what specifies what kind of address is given
 	uint16_t url_scheme; //!<contains the urlscheme http, mailto ...
-	uint16_t field_length;//!<contains the length of the field (rostcp), if null it parses as long as it makes sense...
+	uint16_t url_length;//!<contains the length of the url when it is known before (usage: binary protocols like rostcp)
 	sebs_parse_url_state_t state; //!contains the current state of the xml parser
 	union
 	{
@@ -99,5 +108,5 @@ typedef struct
  * This function parses a URL from a stream, it requires a URL with a scheme specifier!
  * @param pdata The parsers data structure
  */
-sebs_parse_return_t sebs_parse_parseurl(sebs_parser_data_t *pdata);
+sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata);
 #endif /* SEBS_PARSE_PARSEURL_H_ */

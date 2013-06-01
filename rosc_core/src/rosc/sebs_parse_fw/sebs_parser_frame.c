@@ -35,7 +35,7 @@ sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_func
 {
 //	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
 //	handler_function(handler_data,(void*)&parser_data_ptr);
-//	return (parser_data_ptr);
+	return 0;
 }
 
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
