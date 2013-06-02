@@ -83,18 +83,49 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH0;
 					break;
 					case SEBS_PARSE_URL_STATE_CHECK_DASH0:
-					chr_to_check=':';
+					chr_to_check='/';
 					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH1;
 					break;
 					case SEBS_PARSE_URL_STATE_CHECK_DASH1:
-					chr_to_check=':';
-					state_when_found=SEBS_PARSE_URL_STATE_CHECK_DASH1;
+					chr_to_check='/';
+					state_when_found=SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE;
 					break;
+				}
+				if(len > 0)
+				{
+					if(**pdata->buf==chr_to_check)
+					{
+						fdata->state=state_when_found;
+					}
+					else
+					{
+						fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME;
+						finished=true;
+					}
 				}
 
 
 			}
 			break;
+			case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
+				if(**pdata->buf == '[')
+				{
+					fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV6;
+				}
+				else if(**pdata->buf>='0' && **pdata->buf>='9')
+				{
+					fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME;
+				}
+				else if(**pdata->buf>48 && **pdata->buf>57)
+				{
+					fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
+				}
+				else
+				{
+					fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
+				}
+				break;
+
 			default:
 			break;
 		}

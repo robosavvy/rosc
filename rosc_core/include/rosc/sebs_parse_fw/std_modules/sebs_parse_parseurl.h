@@ -54,7 +54,7 @@
 typedef enum
 {
 	SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME, //!< means that there was no or an unknown url scheme given
-	SEBS_PARSE_URL_RESULT_ERROR_SIZE_LIMIT, //!< means that the given size limit was reached
+	SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED, //!< means that the is not correct
 	SEBS_PARSE_URL_RESULT_HOSTNAME,    //!< SEBS_PARSE_URL__MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
 	SEBS_PARSE_URL_RESULT_IPV4,        //!< SEBS_PARSE_URL__MATCH_IPv4 - means that the content is a IPv4 address
 	SEBS_PARSE_URL_RESULT_IPV6,   	 //!< SEBS_PARSE_URL__MATCH_IPv6 - means that the content is a IPv6 address
@@ -72,6 +72,9 @@ typedef enum
 	SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE,
 	SEBS_PARSE_URL_STATE_PARSE_PORT,
 	SEBS_PARSE_URL_STATE_PARSE_RESOLV,
+	SEBS_PARSE_URL_STATE_PARSE_IPV6,
+	SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME,
+	SEBS_PARSE_URL_STATE_PARSE_HOSTNAME,
 }sebs_parse_url_state_t;
 
 /**
