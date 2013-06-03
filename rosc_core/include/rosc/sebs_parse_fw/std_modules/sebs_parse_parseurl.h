@@ -37,6 +37,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 
 
 
@@ -98,6 +99,10 @@ typedef struct
 	uint16_t url_scheme; //!<contains the urlscheme http, mailto ...
 	uint16_t url_length;//!<contains the length of the url when it is known before (usage: binary protocols like rostcp)
 	sebs_parse_url_state_t state; //!contains the current state of the xml parser
+	uint8_t dot_cnt; //!variable for counting the dots inside ipv4 and double dots in ipv6 addresses
+
+
+
 	union
 	{
 		sebs_parse_numberparse_result_t numberparse;

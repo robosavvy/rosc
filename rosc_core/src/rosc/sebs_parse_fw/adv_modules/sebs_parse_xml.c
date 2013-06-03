@@ -598,7 +598,7 @@ sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 							fdata->seekstring,
 							&cdata_str,
 							1, " []=\"\'/<>?!",
-							true);
+							true,0);
 					break;
 				case SEBS_PARSE_XML_STATE_TAG_START:
 					fdata->substate =SEBS_PARSE_XML_SUBSTATE_TAG_ID;
@@ -607,7 +607,7 @@ sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 							fdata->seekstring,
 							fdata->tag_strings,
 							fdata->tag_strings_len, " []=\"\'/<>?!",
-							true);
+							true,0);
 					break;
 
 				case SEBS_PARSE_XML_STATE_CLOSE_TAG_START:
@@ -618,7 +618,7 @@ sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 							fdata->seekstring,
 							fdata->tag_strings,
 							fdata->tag_strings_len, " []=\"\'/<>?!",
-							true);
+							true,0);
 					break;
 
 				case SEBS_PARSE_XML_STATE_TAG: //A non empty space inside a tag means, that we have a attribute.
@@ -628,7 +628,7 @@ sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 							fdata->seekstring,
 							fdata->attribute_strings,
 							fdata->attribute_strings_len,
-							" []=\"\'/<>?!", true);
+							" []=\"\'/<>?!", true,0);
 					break;
 				case SEBS_PARSE_XML_STATE_CDATA_FIRST_CLOSE_BRACKET:
 				case SEBS_PARSE_XML_STATE_CDATA_SECOND_CLOSE_BRACKET:

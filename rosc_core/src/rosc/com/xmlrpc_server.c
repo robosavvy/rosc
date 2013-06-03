@@ -443,7 +443,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				hdata->result_handling = XMLRPC_RESULT_METHOD_NAME;
 				SEBS_PARSE_SEEKSTRING_INIT(pdata,
 						hdata->xml.seekstring, xmlrpc_slave_methodnames,
-						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true);
+						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
 			}
 
 			if (hdata->xmlrpc_type == XMLRPC_SERVER)

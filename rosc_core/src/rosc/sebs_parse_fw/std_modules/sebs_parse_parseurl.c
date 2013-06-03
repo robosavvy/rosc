@@ -57,7 +57,7 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 			fdata->state = SEBS_PARSE_URL_STATE_CHECK_SCHEME;
 			SEBS_PARSE_SEEKSTRING_INIT(pdata, fdata->seekstring,
 					fdata->scheme_list, fdata->scheme_list_len, "!*'();:@$=+$,/?%#[]",
-					false)
+					false,0)
 ;			break;
 			case SEBS_PARSE_URL_STATE_CHECK_SCHEME:
 			if(fdata->seekstring.result<0)
@@ -91,19 +91,16 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 					state_when_found=SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE;
 					break;
 				}
-				if(len > 0)
-				{
+
 					if(**pdata->buf==chr_to_check)
 					{
 						fdata->state=state_when_found;
 					}
 					else
 					{
-						fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME;
+						fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
 						finished=true;
 					}
-				}
-
 
 			}
 			break;
@@ -116,15 +113,20 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 				{
 					fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME;
 				}
-				else if(**pdata->buf>48 && **pdata->buf>57)
+				else
 				{
 					fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
 				}
-				else
-				{
-					fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
-				}
 				break;
+			case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME:
+
+				break;
+			case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
+
+				break;
+
+
+
 
 			default:
 			break;

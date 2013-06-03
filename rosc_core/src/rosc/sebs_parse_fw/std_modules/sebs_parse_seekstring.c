@@ -119,6 +119,14 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 		++*pdata->buf;
 		fdata->curChrPos++;
 		--*pdata->len;
+
+
+		if(fdata->max_length!=0 && fdata->curChrPos>=fdata->max_length)
+		{
+			fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH;
+			return (SEBS_PARSE_RETURN_FINISHED);
+		}
+
 	}
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }
