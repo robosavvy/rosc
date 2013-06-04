@@ -41,6 +41,7 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 		int i;
 		pdata->function_init = false;
 		fdata->cur_pos = 0;
+		fdata->cur_fig = 0;
 		for (i = 0; i < 8; ++i)
 			fdata->ip.v6[i] = 0;
 		fdata->dot_cnt=0;
@@ -50,9 +51,11 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 		fdata->caller.parser_data = pdata->next_parser.parser_data;
 		fdata->called_by_handler = pdata->return_to_handler;
 		pdata->return_to_handler = 0;
+		fdata->result = SEBS_PARSE_URL_RESULT_IPV6;
 		fdata->state = SEBS_PARSE_URL_STATE_START;
 	}
 	bool finished = false;
+	bool grabChar = false;
 	while (*pdata->len > 0)
 	{
 		bool malformed = false;
@@ -134,16 +137,25 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 						case '.':
 						switch(fdata->state)
 						{
+
 							case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
 								if(fdata->dot_cnt < 3)
 								{
 									++fdata->dot_cnt;
 									fdata->cur_fig=0;
+
 								}
 								else //If we have more than three dots... it's a hostname
 								{
+									fdata->result=SEBS_PARSE_URL_RESULT_HOSTNAME;
 									fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
 								}
+								grabChar=true;
+								break;
+
+							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME:
+								grabChar=true;
+								break;
 
 							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
 							malformed=true;
@@ -155,6 +167,7 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 						switch(fdata->state)
 						{
 							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							fdata->result=SEBS_PARSE_URL_RESULT_IPV6;
 							fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV6;
 
 							break;
@@ -182,6 +195,7 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 
 							if(**pdata->buf>='0' && **pdata->buf<='9') //It's an IP while there are only numbers...
 							{
+								fdata->result=SEBS_PARSE_URL_RESULT_IPV4;
 								fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME;
 								if(fdata->cur_fig<3)
 								{
@@ -191,33 +205,42 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 								}
 								else //If there are more than 3 figures, it's a hostname
 								{
+									fdata->result=SEBS_PARSE_URL_RESULT_HOSTNAME;
 									fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
 								}
 							}
 							else //If there is another char than 0-9 it's a hostname
 							{
+								fdata->result=SEBS_PARSE_URL_RESULT_HOSTNAME;
 								fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
 							}
-
-							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME: //NO BREAK BY INTENTION!!!!
-							if(fdata->cur_pos<(__HOSTNAME_MAX_LEN__+20))
-							{
-								fdata->hostname_buf[fdata->cur_pos]=**pdata->buf;
-								fdata->cur_pos++;
-
-							}
-							else
-							{
-								finished=true;
-								fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
-							}
+							grabChar=true;
 							break;
+
+							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME:
+								grabChar=true;
+								break;
 							default:
 							malformed=true;
 							break;
 						}
 
 					}
+
+					if(grabChar)
+					{
+						if(fdata->cur_pos<(__HOSTNAME_MAX_LEN__+20))
+						{
+							fdata->hostname_buf[fdata->cur_pos]=**pdata->buf;
+							fdata->cur_pos++;
+						}
+						else
+						{
+							finished=true;
+							fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
+						}
+					}
+
 
 					if(malformed)
 					{

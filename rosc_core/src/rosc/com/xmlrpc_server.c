@@ -127,8 +127,9 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
 			DEBUG_PRINT(INT,"Port",hdata->url.port);
-			DEBUG_PRINT(INT,"Scheme number",hdata->url.url_scheme);
+			DEBUG_PRINT(STR,"Scheme",hdata->url.scheme_list[hdata->url.url_scheme]);
 			DEBUG_PRINT(STR,"Hostname",hdata->url.hostname_buf);
+			DEBUG_PRINT(INT,"RESULT",hdata->url.result);
 			break;
 
 		default:

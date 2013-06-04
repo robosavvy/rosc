@@ -85,6 +85,7 @@ char *test_request_message=
 		"<param>\n"
 		"<value><array><data>\n"
 		"<value><string>http://sncn-10:56998/</string></value>\n"
+		"<value><string>http://192.168.0.1:56998/</string></value>\n"
 		"</data></array></value>\n"
 		"</param>\n"
 		"</params>\n"
