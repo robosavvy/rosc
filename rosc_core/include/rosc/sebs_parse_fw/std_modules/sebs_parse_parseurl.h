@@ -56,6 +56,7 @@ typedef enum
 {
 	SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME, //!< means that there was no or an unknown url scheme given
 	SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED, //!< means that the is not correct
+	SEBS_PARSE_URL_RESULT_ERROR_HOSTNAME_TOO_LONG, //!< means that the buffers length was insufficient
 	SEBS_PARSE_URL_RESULT_HOSTNAME,    //!< SEBS_PARSE_URL__MATCH_HOSTNAME - means that the current content inside the buffer will only match a hostname
 	SEBS_PARSE_URL_RESULT_IPV4,        //!< SEBS_PARSE_URL__MATCH_IPv4 - means that the content is a IPv4 address
 	SEBS_PARSE_URL_RESULT_IPV6,   	 //!< SEBS_PARSE_URL__MATCH_IPv6 - means that the content is a IPv6 address
@@ -67,13 +68,16 @@ typedef enum
 {
 	SEBS_PARSE_URL_STATE_START,
 	SEBS_PARSE_URL_STATE_CHECK_SCHEME,
-	SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE,
+	SEBS_PARSE_URL_STATE_CHECK_SCHEME_END,
+	SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE,
 	SEBS_PARSE_URL_STATE_IPV6_GET_BLOCK,
 	SEBS_PARSE_URL_STATE_PARSE_PORT,
+	SEBS_PARSE_URL_STATE_CHECK_PORT,
 	SEBS_PARSE_URL_STATE_PARSE_RESOLV,
 	SEBS_PARSE_URL_STATE_PARSE_IPV6,
 	SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME,
 	SEBS_PARSE_URL_STATE_PARSE_HOSTNAME,
+	SEBS_PARSE_URL_STATE_PARSE_WAIT_DASH
 }sebs_parse_url_state_t;
 
 /**
@@ -81,29 +85,45 @@ typedef enum
  */
 typedef struct
 {
+	//Storage for previous next variable
 	sebs_parser_call_t caller; //!< this will store the original function when calling seekstring or other functions
 	bool called_by_handler; //!< this will store the original value of the return to handler function
 
+	//General
+	sebs_parse_url_state_t state; //!contains the current state of the xml parser
 
+
+	//Scheme
 	const char **scheme_list; //!< The scheme list for the url scheme (http, rostcp)
 	uint16_t scheme_list_len; //!< The scheme list length
-
-	char hostname_ip_char[__HOSTNAME_MAX_LEN__+100]; //!< The text form of the hostname/IP
-	uint16_t cur_pos; //!< curLen The current size of the copied chars
-	uint16_t IPv6[8];//!< storage for an IPv6 address
-	uint8_t IPv4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
-	uint16_t port; //!< storage for a port number
-	sebs_parse_url_result_t result; //!< what specifies what kind of address is given
 	uint16_t url_scheme; //!<contains the urlscheme http, mailto ...
 	uint16_t url_length;//!<contains the length of the url when it is known before (usage: binary protocols like rostcp)
-	sebs_parse_url_state_t state; //!contains the current state of the xml parser
+
+
+	//Hostname
+	char hostname_buf[__HOSTNAME_MAX_LEN__+20]; //!< The text form of the hostname/IP
+	uint16_t cur_pos; //!< curLen The current size of the copied chars
+
+	//IP Address
+	uint8_t cur_fig; //!current figure of the current ip address part
 	uint8_t dot_cnt; //!variable for counting the dots inside ipv4 and double dots in ipv6 addresses
-
-
 
 	union
 	{
-		sebs_parse_numberparse_result_t numberparse;
+		uint16_t v6[8];//!< storage for an IPv6 address
+		uint8_t v4[4]; //!< storage for an IPv4 address or the resolving end of IPv6
+	}ip;
+
+	//Port
+	uint16_t port; //!< storage for a port number
+
+	//Result
+	sebs_parse_url_result_t result; //!< what specifies what kind of address is given
+
+	//Subfunctions
+	union
+	{
+		sebs_parse_numberparse_data_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
 	};
 }sebs_parse_url_data_t;

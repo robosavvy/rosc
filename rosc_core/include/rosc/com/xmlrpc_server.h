@@ -114,6 +114,7 @@ typedef enum
 	XMLRPC_RESULT_CONTENT_LENGTH,
 	XMLRPC_RESULT_METHOD_NAME,
 	XMLRPC_RESULT_CALLERID,
+	XMLRPC_RESULT_PUBLISHER_UPDATE_URL,
 }xmlrpc_result_handling_t;
 
 typedef enum
@@ -198,8 +199,8 @@ typedef struct
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
-		sebs_parse_url_data_t url;
 	};
+		sebs_parse_url_data_t url;
 
 
 }xmlrpc_data_t;

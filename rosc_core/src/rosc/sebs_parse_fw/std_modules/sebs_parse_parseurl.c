@@ -38,8 +38,13 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 
 	if (pdata->function_init)
 	{
+		int i;
 		pdata->function_init = false;
 		fdata->cur_pos = 0;
+		for (i = 0; i < 8; ++i)
+			fdata->ip.v6[i] = 0;
+		fdata->dot_cnt=0;
+
 		//Save current return function
 		fdata->caller.parser_function = pdata->next_parser.parser_function;
 		fdata->caller.parser_data = pdata->next_parser.parser_data;
@@ -48,118 +53,198 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 		fdata->state = SEBS_PARSE_URL_STATE_START;
 	}
 	bool finished = false;
-	while (pdata->len > 0)
+	while (*pdata->len > 0)
 	{
-		bool malformed=false;
+		bool malformed = false;
 		switch (fdata->state)
 		{
-		case SEBS_PARSE_URL_STATE_START:
-			DEBUG_PRINT_STR("PARSE URL...");
-			fdata->state = SEBS_PARSE_URL_STATE_CHECK_SCHEME;
-			SEBS_PARSE_SEEKSTRING_INIT(pdata, fdata->seekstring,
-					fdata->scheme_list, fdata->scheme_list_len,
-					"!*'();:@$=+$,/?%#[]", false, fdata->url_length)
-;			break;
-			case SEBS_PARSE_URL_STATE_CHECK_SCHEME:
-			if(fdata->seekstring.result>=0 && **pdata->buf==':')
-			{
-				fdata->state=SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE;
-			}
-			else
-			{
-				malformed=true;
-			}
-			break;
-
-			default:
-			{
-
-				switch(**pdata->buf)
+			case SEBS_PARSE_URL_STATE_START:
+				DEBUG_PRINT_STR("PARSE URL...");
+				fdata->state = SEBS_PARSE_URL_STATE_CHECK_SCHEME;
+				SEBS_PARSE_SEEKSTRING_INIT(pdata, fdata->seekstring,
+						fdata->scheme_list, fdata->scheme_list_len,
+						"!*'();:@$=+$,/?%#[]", false, fdata->url_length)
+;				break;
+				case SEBS_PARSE_URL_STATE_CHECK_SCHEME:
+					fdata->url_scheme=fdata->seekstring.result;
+				if(fdata->url_scheme>=0)
 				{
-					case ':':
-					switch(fdata->state)
-					{
-						case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
-						malformed=true;
-						break;
-					}
-					break;
-
-					case '.':
-					switch(fdata->state)
-					{
-						case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
-						malformed=true;
-						break;
-					}
-					break;
-
-					case '[':
-					switch(fdata->state)
-					{
-						case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
-						fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV6;
-
-						break;
-					}
-					break;
-
-					case '/':
-					switch(fdata->state)
-					{
-						case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
-						break;
-					}
-					break;
-					default:
-
-					switch(fdata->state)
-					{
-					case SEBS_PARSE_URL_STATE_CHECK_ANALYSE_TYPE:
-					case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
-						if(!(**pdata->buf>='0' && **pdata->buf<='9'))
-						{
-							fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME;
-						}
-						else
-						{
-							fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
-						}
-						break;
-					}
-
-
+					fdata->state=SEBS_PARSE_URL_STATE_CHECK_SCHEME_END;
 				}
+				else
+				{
+					finished=true;
+					fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_SCHEME;
+				}
+				break;
+				case SEBS_PARSE_URL_STATE_PARSE_PORT:
+					fdata->state=SEBS_PARSE_URL_STATE_CHECK_PORT;
+					SEBS_PARSE_NUMBERPARSE_INIT(pdata, fdata->numberparse, 5, false, 10);
+				break;
+				case SEBS_PARSE_URL_STATE_CHECK_PORT:
+					switch(fdata->numberparse.result)
+					{
+						case SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR:
+							if(fdata->numberparse.number>1 && fdata->numberparse.number<0xFFFF)
+							{
+								DEBUG_PRINT_STR("NUMBER!");
+								fdata->port=fdata->numberparse.number;
+								fdata->state=SEBS_PARSE_URL_STATE_PARSE_WAIT_DASH;
+							}
+							else
+							{
+								malformed=true;
+							}
+							break;
+						case SEBS_PARSE_NUMBERPARSE_MAX_FIGURES:
+							malformed=true;
+							break;
 
+						case SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER:
+							malformed=true;
+							break;
+
+
+					}
+				break;
+				default: //If non of the states above
+				{
+
+					switch(**pdata->buf)
+					{
+						case ':':
+						switch(fdata->state)
+						{
+							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							malformed=true;
+							break;
+							case SEBS_PARSE_URL_STATE_CHECK_SCHEME_END:
+							fdata->state=SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE;
+							break;
+
+
+							case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
+							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME:
+							fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_PORT;
+							break;
+
+						}
+						break;
+
+						case '.':
+						switch(fdata->state)
+						{
+							case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
+								if(fdata->dot_cnt < 3)
+								{
+									++fdata->dot_cnt;
+									fdata->cur_fig=0;
+								}
+								else //If we have more than three dots... it's a hostname
+								{
+									fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
+								}
+
+							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							malformed=true;
+							break;
+						}
+						break;
+
+						case '[':
+						switch(fdata->state)
+						{
+							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV6;
+
+							break;
+						}
+						break;
+
+						case '/':
+						switch(fdata->state)
+						{
+							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							break;
+
+							case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
+							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME:
+							case SEBS_PARSE_URL_STATE_PARSE_WAIT_DASH:
+								finished=true;
+							break;
+						}
+						break;
+						default:
+						switch(fdata->state)
+						{
+							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
+							case SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME:
+
+							if(**pdata->buf>='0' && **pdata->buf<='9') //It's an IP while there are only numbers...
+							{
+								fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV4_HOSTNAME;
+								if(fdata->cur_fig<3)
+								{
+									fdata->ip.v4[fdata->dot_cnt]*=10;
+									fdata->ip.v4[fdata->dot_cnt]+=**pdata->buf-'0'; //convert to integer
+									++fdata->cur_fig;
+								}
+								else //If there are more than 3 figures, it's a hostname
+								{
+									fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
+								}
+							}
+							else //If there is another char than 0-9 it's a hostname
+							{
+								fdata->state=fdata->state=SEBS_PARSE_URL_STATE_PARSE_HOSTNAME;
+							}
+
+							case SEBS_PARSE_URL_STATE_PARSE_HOSTNAME: //NO BREAK BY INTENTION!!!!
+							if(fdata->cur_pos<(__HOSTNAME_MAX_LEN__+20))
+							{
+								fdata->hostname_buf[fdata->cur_pos]=**pdata->buf;
+								fdata->cur_pos++;
+
+							}
+							else
+							{
+								finished=true;
+								fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
+							}
+							break;
+							default:
+							malformed=true;
+							break;
+						}
+
+					}
+
+					if(malformed)
+					{
+						fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
+						finished=true;
+					}
+					else if(!finished)
+					{
+
+						++*pdata->buf;
+						--*pdata->len;
+						++fdata->url_length;
+					}
+				}
+				break;
 
 			}
-			break;
-
-			if(malformed)
+			if (finished)
 			{
-				fdata->result=SEBS_PARSE_URL_RESULT_ERROR_URL_MALFORMED;
-				finished=true;
-			}
-			else
-			{
-				++**pdata->buf;
-				--*pdata->len;
-				++fdata->url_length;
+				//Restore calling function and return
+				pdata->next_parser.parser_function = fdata->caller.parser_function;
+				pdata->next_parser.parser_data = fdata->caller.parser_data;
+				pdata->return_to_handler = fdata->called_by_handler;
+				fdata->hostname_buf[fdata->cur_pos]='\0';
+				return (SEBS_PARSE_RETURN_FINISHED);
 			}
 		}
-
-	}
-	if (finished)
-	{
-		//Restore calling function and return
-		pdata->next_parser.parser_function = fdata->caller.parser_function;
-		pdata->next_parser.parser_data = fdata->caller.parser_data;
-		pdata->return_to_handler = fdata->called_by_handler;
-		return (SEBS_PARSE_RETURN_FINISHED);
-	}
-	else
-	{
 		return (SEBS_PARSE_RETURN_GO_AHEAD);
-	}
 }
 

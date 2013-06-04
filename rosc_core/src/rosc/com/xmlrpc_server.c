@@ -125,6 +125,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT(STR,"caller_id",hdata->caller_id);
 			break;
 
+		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
+			DEBUG_PRINT(INT,"Port",hdata->url.port);
+			DEBUG_PRINT(INT,"Scheme number",hdata->url.url_scheme);
+			DEBUG_PRINT(STR,"Hostname",hdata->url.hostname_buf);
+			break;
+
 		default:
 			break;
 		}
@@ -481,7 +487,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					switch (hdata->rpc_methodname)
 					{
 						case XMLRPC_METHODNAME_UNKNOWN:
-						DEBUG_PRINT_STR("UNKNOWN METHODNAME!")
+						DEBUG_PRINT_STR("UNKNOWN METHODNAME!");
 						//TODO
 						break;
 						/*
@@ -524,6 +530,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							)
 						{
 							DEBUG_PRINT_STR("A PUBLISHER");
+							hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
 							SEBS_PARSE_URL_INIT(pdata,hdata->url,0,xmlrpc_url_scheme_string,XMLRPC_URL_SCHEME_STRING_LEN);
 						}
 						break;
