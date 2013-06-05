@@ -86,6 +86,8 @@ char *test_request_message=
 		"<value><array><data>\n"
 		"<value><string>http://sncn-10:56998/</string></value>\n"
 		"<value><string>http://192.168.0.1:56998/</string></value>\n"
+		"<value><string>http://[2001:db8:85a3:8d3::370:7348]/</string></value>\n"
+
 		"</data></array></value>\n"
 		"</param>\n"
 		"</params>\n"
