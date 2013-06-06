@@ -28,6 +28,8 @@
  *
  *  main.c created by Christian Holl
  */
+
+
 // /////////////////////////
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,6 +85,9 @@ char *test_request_message=
 		"<param>\n"
 		"<value><array><data>\n"
 		"<value><string>http://sncn-10:56998/</string></value>\n"
+		"<value><string>http://192.168.0.1:56998/</string></value>\n"
+		"<value><string>http://[2001:db8:85a3:8d3::370:7348]/</string></value>\n"
+
 		"</data></array></value>\n"
 		"</param>\n"
 		"</params>\n"
@@ -126,10 +131,12 @@ int main_xmlrpctest()
 
 #endif
 
-	xmlrpc_server_data_t handler_data;
-	sebs_parser_data_t* parser_data;
-	parser_data=(sebs_parser_data_t*) sebs_parser_init((void*)&handler_data,(sebs_parse_handler_function_t) &xmlrpc);
+	xmlrpc_data_t handler_data;
+	sebs_parser_data_t parser_data;
 
+	parser_data.handler_init=true;
+	parser_data.handler_function=&xmlrpc;
+	parser_data.handler_data=&handler_data;
 
 
 	for(rlen=0;msg[rlen]!=0;rlen++);
@@ -145,7 +152,7 @@ int main_xmlrpctest()
 		}
 	//	printf("Current Chunk %i, Size %i: \n",i, len);
 	//	xmlrpc_parse(msg+i*len,len,&pact);
-		sebs_parser_frame(msg+i*len,len,parser_data);
+		sebs_parser_frame(msg+i*len,len,&parser_data);
 	}
 
 	return (0);
@@ -286,29 +293,10 @@ int main_tcprostest()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 int main()
 {
 	printf("\n\nExecute --> rosc_linux_test\n\n");
-
-
-
-
-
-
 
 	//rosc_init();
 

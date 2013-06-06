@@ -60,6 +60,7 @@ xmlrpc_tag_strings: # <- This is the variable name for the
                   struct,
                   value,
                   array,
+                  double,
                   i4,
               }
 
@@ -103,7 +104,7 @@ xmlrpc_slave_methodnames:
   comment:
     'Strings for known methods of the slave api'
   defineShort:
-    'METHOD_NAME'
+    'METHODNAME'
   stringlist: {
       getBusStats,
       getBusInfo,
@@ -206,4 +207,13 @@ ros_field_strings:
     error,
   }
  
-    
+ #Strings for url schemes
+xmlrpc_url_scheme_string:
+  comment:
+      'strings for xmlrpc url schemes'
+  defineShort:
+      'URL_SCHEMES'
+  stringlist: {
+    http,
+    rosrpc
+  }  

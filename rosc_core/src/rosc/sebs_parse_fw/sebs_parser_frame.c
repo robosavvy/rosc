@@ -33,72 +33,107 @@
 
 sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function)
 {
-	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
-	handler_function(handler_data,(void*)&parser_data_ptr);
-	return (parser_data_ptr);
+//	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
+//	handler_function(handler_data,(void*)&parser_data_ptr);
+	return 0;
 }
 
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
 {
+	//pointing to current length and buffer for the handler
+	data->len=&len;
+	data->buf=&buf;
+
+
 	/*
 	 * What if len < 0?
 	 * Network functions return len=-1 when connection was terminated for example.
 	 * in that case the handler function is called.
 	 */
 	if (len < 0)
+	{
 		data->event = SEBS_PARSE_EVENT_LEN_SMALLER_ZERO;
+		data->call_len=0;
+	}
+	else
+	{
+		data->call_len=len;
+		if(data->security_len != 0)
+		{
+			if((data->overall_len+data->call_len) > data->security_len)
+			{
+				data->event=SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE;
+			}
+		}
+	}
 
 	/*
 	 * Handling the parser input
 	 */
 	do
 	{
-		if (data->event == SEBS_PARSE_EVENT_NONE)
+		sebs_parse_function_t function;
+		bool switch_functions=false;
+		bool handler=false;
+		if (data->event == SEBS_PARSE_EVENT_NONE && !data->handler_init)
 		{
-			//call parser
-			if (data->current_parser.parser_function(&buf, &len,
-					data->current_parser.parser_data))
-			{
-				//was current function called by handler?
-				//set event
-				if (data->return_to_handler)
-				{
-					data->event = SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
-				}
-
-				//Switch current parser call and next
-				sebs_parser_call_t store;
-				store.parser_function = data->next_parser.parser_function;
-				store.parser_data = data->next_parser.parser_data;
-
-				data->next_parser.parser_function =
-						data->current_parser.parser_function;
-				data->next_parser.parser_data =
-						data->current_parser.parser_data;
-
-				data->current_parser.parser_function = store.parser_function;
-				data->current_parser.parser_data = store.parser_data;
-			}
+			function=data->current_parser.parser_function;
 		}
-		else //call handler
+		else
 		{
-			//if handler function returns with true
-			if (data->handler_function(data, 0))//The 0 here is to disable the init.
-			{
-				//Switch current parser call and next
-				sebs_parser_call_t store;
-				store.parser_function = data->next_parser.parser_function;
-				store.parser_data = data->next_parser.parser_data;
-
-				data->next_parser.parser_function =
-						data->current_parser.parser_function;
-				data->next_parser.parser_data =
-						data->current_parser.parser_data;
-
-				data->current_parser.parser_function = store.parser_function;
-				data->current_parser.parser_data = store.parser_data;
-			}
-			data->event = SEBS_PARSE_EVENT_NONE;
+			function=data->handler_function;
+			handler=true;
 		}
+
+		//Call the current function
+		sebs_parse_return_t result=function(data);
+
+		//When the current function was the handler, reset event
+		if(handler)
+			data->event=SEBS_PARSE_EVENT_NONE;
+
+		switch(result)
+		{
+		case SEBS_PARSE_RETURN_FINISHED:
+			if(data->return_to_handler)
+			{
+				data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
+				data->return_to_handler = false;
+			}
+			switch_functions=true;
+		break;
+
+		case SEBS_PARSE_RETURN_INIT:
+			data->function_init=true;
+			switch_functions=true;
+			if(handler)
+				data->return_to_handler=true;
+		break;
+
+		case SEBS_PARSE_RETURN_INIT_ADV:
+			data->function_init=true;
+			switch_functions=true;
+			break;
+
+		case SEBS_PARSE_RETURN_GO_AHEAD:
+			break;
+		}
+		if(switch_functions)
+		{
+			//Switch current parser call and next parser call
+			sebs_parser_call_t store;
+			store.parser_function = data->next_parser.parser_function;
+			store.parser_data = data->next_parser.parser_data;
+
+			data->next_parser.parser_function =
+					data->current_parser.parser_function;
+			data->next_parser.parser_data =
+					data->current_parser.parser_data;
+
+			data->current_parser.parser_function = store.parser_function;
+			data->current_parser.parser_data = store.parser_data;
+		}
+
 	} while (len > 0);
+		data->overall_len+=data->call_len;
 }

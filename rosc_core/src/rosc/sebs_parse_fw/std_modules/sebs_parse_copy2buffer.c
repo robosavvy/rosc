@@ -32,15 +32,22 @@
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 
-bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_data_t *data)
+sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 {
-	const char *sep=data->endChrs;
-	while(*len > 0)
+	sebs_parse_copy2buffer_data_t *fdata=(sebs_parse_copy2buffer_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		fdata->cur_pos=0;
+	}
+
+	const char *sep=fdata->endChrs;
+	while(*pdata->len > 0)
 	{
 		bool isEndChar=false;
 		while(*sep!='\0')
 		{
-			if(**buf==*sep)
+			if(**pdata->buf==*sep)
 			{
 				isEndChar=true;
 				break;
@@ -48,27 +55,28 @@ bool sebs_parse_copy2buffer(char **buf, int32_t *len, sebs_parse_copy2buffer_dat
 			++sep;
 		}
 
-		if((data->cur_pos<data->max_len) && !isEndChar )
+		if((fdata->cur_pos<(fdata->max_len-1)) && !isEndChar )
 		{
-			data->buffer[data->cur_pos]=**buf;
-			data->cur_pos++;
-			++*buf;
-			--*len;
+			fdata->buffer[fdata->cur_pos]=**pdata->buf;
+			fdata->cur_pos++;
+			++*pdata->buf;
+			--*pdata->len;
 		}
 		else
 		{
 			if(isEndChar)
 			{
-				data->result=COPY2BUFFER_ENDCHR;
+				fdata->result=COPY2BUFFER_ENDCHR;
 			}
 			else
 			{
-				data->result=COPY2BUFFER_MAXLEN;
+				fdata->result=COPY2BUFFER_MAXLEN;
 			}
-			return true; //Finished!
+			fdata->buffer[fdata->cur_pos]='\0';
+			return SEBS_PARSE_RETURN_FINISHED; //Finished!
 		}
 	}
-	return false; //Not finished yet
+	return (SEBS_PARSE_RETURN_GO_AHEAD); //Not finished yet
 }
 
 

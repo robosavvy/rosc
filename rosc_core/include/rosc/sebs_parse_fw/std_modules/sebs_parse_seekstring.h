@@ -34,22 +34,26 @@
 
 #include <rosc/system/types.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 /**
  * This macro defines the result number if no string was found
  */
-#define SEEKSTRING_STRING_NOT_FOUND  -1
+enum
+{
+	SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH=-2,
+	SEBS_PARSE_SEEKSTRING_NOT_FOUND=-1
+};
 
-#define SEBS_PARSE_SEEKSTRING_INIT(NEXT_PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE)\
-				NEXT_PARSER_DATA.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
-				NEXT_PARSER_DATA.parser_data=(void *)(&DATA_STORAGE);\
+#define SEBS_PARSE_SEEKSTRING_INIT(PARSER_DATA, DATA_STORAGE, STRINGLIST, STRINGLIST_LEN, ENDCHRS, CASE_SENSITIVE, MAX_LEN)\
+				PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
+				PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 				DATA_STORAGE.stringlist=STRINGLIST;\
 				DATA_STORAGE.stringlist_len=STRINGLIST_LEN;\
 				DATA_STORAGE.endchrs=ENDCHRS;\
 				DATA_STORAGE.case_sensitive=CASE_SENSITIVE;\
-				DATA_STORAGE.curChrPos=0;\
-				DATA_STORAGE.result=0;\
-				return (true);
+				DATA_STORAGE.max_length=MAX_LEN;\
+				return (SEBS_PARSE_RETURN_INIT)
 
 typedef struct
 {
@@ -58,6 +62,7 @@ typedef struct
 	char * endchrs;		//!< endchrs is a list of characters (string) that will end the seek like "<" when reading inside tags
 	uint16_t stringlist_len; //!< Length of the stringlist to be checked for the string
 	uint16_t curChrPos;	//!< The char number since the start of seekString
+	uint16_t max_length; //!< length of the string to be searched if zero, it will use the end chars
 	int16_t result;	//!< At finish this contains the number of the found string or SEEKSTRING_STRING_NOT_FOUND
 }sebs_parse_seekstring_data_t;
 
@@ -69,6 +74,6 @@ typedef struct
  * @param data the function data storage, must be initialized in the beginning!
  * @return true when finished
  */
-bool sebs_parse_seekstring(char **buf, int32_t *len, sebs_parse_seekstring_data_t *data);
+sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata);
 
 #endif /* SEBS_PARSE_SEEKSTRING_H_ */

@@ -38,23 +38,46 @@
 #define SEBS_PARSER_FRAME_H_
 
 #include <rosc/system/types.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 
 
 
 #define SEBS_PARSE_HANDLER_FUNCTION_CALL()\\
 		return_to_handler
 
+#define SEBS_PARSE_UNKNOWN  -1
 
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
 #define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2
+#define SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE -3
+
+//forward declaration of struct
+struct sebs_parser_data_t;
 
 
-typedef bool (*sebs_parse_function_t)(char **buf, int32_t *len_ptr, void *data);
+
+
+/**
+ * These are the return values for parsers and handler functions
+ */
+typedef enum
+{
+	SEBS_PARSE_RETURN_GO_AHEAD,//!< means that there is no more data to parse at the moment
+	SEBS_PARSE_RETURN_FINISHED, //!< means that the function has finished and should be replaced by the caller function
+	SEBS_PARSE_RETURN_INIT,     //!< means that the current parser- or handler-function wants to call a function (sets init_function to true)
+	SEBS_PARSE_RETURN_INIT_ADV, //!< means that a advanced module is initialized from which does use events instead of returns
+}sebs_parse_return_t;
+
+/**
+ * This is the function pointer to a parser function
+ * @param pdata struct containing the parser data for the current parser.
+ * @param fdata parser specific struct containing information for the current parser function
+ * @return
+ */
+typedef sebs_parse_return_t (*sebs_parse_function_t)(struct sebs_parser_data_t* pdata);
+
+
+typedef sebs_parse_return_t (*sebs_parse_handler_function_t)(struct sebs_parser_data_t* pdata);
 
 /**
  * This struct stores a parser function and the data location for calling it
@@ -75,6 +98,10 @@ typedef struct
  */
 typedef struct sebs_parser_data_t
 {
+	bool handler_init;
+	void* handler_init_data;
+	bool function_init;
+
 	/**
 	 * This is the function with its data
 	 * called by the parser normally
@@ -114,19 +141,46 @@ typedef struct sebs_parser_data_t
 	void *handler_data;
 
 	/**
-	 * This is the handler function which is called every time, when an event occurs
-	 * @param data The data for the handler function
-	 * @param init this field is to be used with parser_init, if not zero,
-	 * 		  the hander_data outputing the parser_data pointer in that variable,
-	 * 		  it can also used for additional init data for the handler...
-	 * @return True if the handler called a function
+	 * This stores the event handler function
 	 */
-	bool (*handler_function)(void *data, void** parser_data);
+	sebs_parse_handler_function_t handler_function;
+
+	/**
+	 * Message Size Limit
+	 * This specifies a message size limit, when it is reached the void *dataevent
+	 * SEBS_PARSE_EVENT_SIZE_REACHED is set.
+	 *
+	 * The length is checked at the beginning by adding up buffer length
+	 * to a variable at the entry of the function.
+	 *
+	 * If the variable is set to zero, this feature is disabled.
+	 */
+	uint32_t security_len;
+
+	/**
+	 * The current length of the input buffer
+	 * can be used to calculate the parsed overall length.
+	 * overall_len + call_len - len
+	 */
+	uint32_t call_len;
+
+	/**
+	 * The current length of the processed message
+	 * (updates after finishing the current buffer content)
+	 */
+	uint32_t overall_len;
+
+
+	/**
+	 * Pointer of the current input buffer
+	 */
+	char **buf;
+
+	/**
+	 * The current length variable
+	 */
+	int32_t *len;
 } sebs_parser_data_t;
-
-
-
-typedef bool (*sebs_parse_handler_function_t)(void *data, void** init_in_parser_data_out);
 
 sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);
 
@@ -137,5 +191,10 @@ sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_func
  * @param data the Data for the parser
  */
 void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data);
+
+
+
+
+
 
 #endif /* SEBS_PARSER_FRAME_H_ */

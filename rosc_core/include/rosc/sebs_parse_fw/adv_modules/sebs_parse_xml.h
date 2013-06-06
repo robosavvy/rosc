@@ -34,24 +34,24 @@
 
 #define SEBS_PARSE_XML_MAX_DEPTH 20
 
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+
+
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+
+
 
 ///@todo document SEBS_PARSE_HTTP_INIT
-#define SEBS_PARSE_XML_INIT(PARSER_CALL, PARSER_DATA, XML_DATA, TAGS, TAGS_LEN, ATTRIBUTES, ATTRIBUTES_LEN)\
-		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_xml;\
-		PARSER_CALL.parser_data=&XML_DATA;\
-		XML_DATA.depth=0;\
-		XML_DATA.processed_bytes=0;\
-		XML_DATA.state=SEBS_PARSE_XML_STATE_ROOT;\
-		XML_DATA.substate=SEBS_PARSE_XML_SUBSTATE_NONE;\
-		XML_DATA.tag_type=ROSC_XMLRPC_TAG_NONE_UNKNOWN;\
-		XML_DATA.tag_strings=TAGS;\
-		XML_DATA.tag_strings_len=TAGS_LEN;\
-		XML_DATA.attribute_strings=ATTRIBUTES;\
-		XML_DATA.attribute_strings_len=ATTRIBUTES_LEN;\
-		XML_DATA.parser_data=PARSER_DATA
+#define SEBS_PARSE_XML_INIT(PARSER_DATA, DATA_STORAGE, TAGS, TAGS_LEN, ATTRIBUTES, ATTRIBUTES_LEN)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_xml;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.tag_strings=TAGS;\
+		DATA_STORAGE.tag_strings_len=TAGS_LEN;\
+		DATA_STORAGE.attribute_strings=ATTRIBUTES;\
+		DATA_STORAGE.attribute_strings_len=ATTRIBUTES_LEN;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 typedef enum
 {
@@ -113,20 +113,9 @@ typedef enum
 	SEBS_PARSE_XML_TAG_TYPE_CDATA,
 } sebs_parse_xml_tag_type_t;
 
-
-
-
-
-
-
-
 typedef struct
 {
-	/**
-	 * Parser data for advanced parser function
-	 * which uses events and other subfunctions.
-	 */
-	sebs_parser_data_t* parser_data;
+
 	uint16_t depth;	//!< depth stores the depth of the current location of the parser
 	uint32_t processed_bytes; //!< currently processed bytes of the xml part (updated after each chunk)
 	uint16_t current_tag; 	//!< current_tag contains the current known xml tag
@@ -144,14 +133,13 @@ typedef struct
 
 	union
 	{
-		sebs_parse_copy2buffer_data_t copy2buffer;
 		sebs_parse_numberparse_result_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
-	} std_func_data;
+	};
 } sebs_parse_xml_data_t;
 
-#ifndef FORCE_INLINE
-bool sebs_parse_xml(char **buf, int32_t *len, sebs_parse_xml_data_t *data);
-#endif
+
+sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata);
+
 
 #endif /* SEBS_PARSE_MODE_XML_H_ */

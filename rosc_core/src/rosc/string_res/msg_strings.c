@@ -81,6 +81,7 @@ const char *xmlrpc_tag_strings[] =
 	"array",
 	"boolean",
 	"data",
+	"double",
 	"fault",
 	"i4",
 	"int",
@@ -108,6 +109,20 @@ const char *xmlrpc_http_descriptors[] =
 	"User-Agent"
 };
 
+const char *xmlrpc_slave_methodnames[] =
+{
+	"getBusInfo",
+	"getBusStats",
+	"getMasterUri",
+	"getPid",
+	"getPublications",
+	"getSubscriptions",
+	"paramUpdate",
+	"publisherUpdate",
+	"requestTopic",
+	"shutdown"
+};
+
 const char *ros_field_strings[] =
 {
 	"callerid",
@@ -122,18 +137,10 @@ const char *ros_field_strings[] =
 	"type"
 };
 
-const char *xmlrpc_slave_methodnames[] =
+const char *xmlrpc_url_scheme_string[] =
 {
-	"getBusInfo",
-	"getBusStats",
-	"getMasterUri",
-	"getPid",
-	"getPublications",
-	"getSubscriptions",
-	"paramUpdate",
-	"publisherUpdate",
-	"requestTopic",
-	"shutdown"
+	"http",
+	"rosrpc"
 };
 
 const char *xmlrpc_http_actions[] =

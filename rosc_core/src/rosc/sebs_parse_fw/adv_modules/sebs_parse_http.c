@@ -29,124 +29,128 @@
  *  sebs_parse_http.c created by Christian Holl
  */
 
-
-
-
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 
-bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
+sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 {
-	while (*len > 0 && data->parser_data->event == SEBS_PARSE_EVENT_NONE)
+	sebs_parse_http_data_t *fdata=(sebs_parse_http_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		fdata->content_length=SEBS_PARSE_UNKNOWN;
+		fdata->descriptor=SEBS_PARSE_UNKNOWN;
+		fdata->substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
+	}
+	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
 		bool is_field_content = false;
 		/*
 		 *	Handling substate results
 		 */
-		switch (data->substate)
+		switch (fdata->substate)
 		{
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD:
-			if (data->std_func_data.seekstring.result >= 0)
+			if (fdata->seekstring.result >= 0)
 			{
 				DEBUG_PRINT_STR("->METHOD found");
-				data->parser_data->event = SEBS_PARSE_HTTP_EVENT_METHOD_PARSED;
-
-				data->state = SEBS_PARSE_HTTP_STATE_REQUEST_ACTION;
+				pdata->event = SEBS_PARSE_HTTP_EVENT_METHOD_PARSED;
+				fdata->state = SEBS_PARSE_HTTP_STATE_REQUEST_ACTION;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Method unknown");
-				data->parser_data->event =
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_ACTION:
-			if (data->std_func_data.seekstring.result >= 0)
+			if (fdata->seekstring.result >= 0)
 			{
 				DEBUG_PRINT_STR("->ACTION found...");
-				data->parser_data->event = SEBS_PARSE_HTTP_EVENT_ACTION_PARSED;
-				data->state = SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER;
+				pdata->event = SEBS_PARSE_HTTP_EVENT_ACTION_PARSED;
+				fdata->state = SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Action unknown");
-				data->parser_data->event =
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_REQUEST_HTTP_VER:
-			if (data->std_func_data.seekstring.result == HTTP_VAL_HTTP1_0
-					|| data->std_func_data.seekstring.result == HTTP_VAL_HTTP1_1)
+			if (fdata->seekstring.result == HTTP_VAL_HTTP1_0
+					|| fdata->seekstring.result == HTTP_VAL_HTTP1_1)
 			{
 				DEBUG_PRINT_STR("Version found...");
-				data->state = SEBS_PARSE_HTTP_STATE_HEADLINE_WAIT_END;
+				fdata->state = SEBS_PARSE_HTTP_STATE_HEADLINE_WAIT_END;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("ERROR! HTTP Version unknown");
-				data->parser_data->event =
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_HTTP_VER:
-			if (data->std_func_data.seekstring.result == HTTP_VAL_HTTP1_0
-					|| data->std_func_data.seekstring.result == HTTP_VAL_HTTP1_1)
+			if (fdata->seekstring.result == HTTP_VAL_HTTP1_0
+					|| fdata->seekstring.result == HTTP_VAL_HTTP1_1)
 			{
 				DEBUG_PRINT_STR("Version found...");
-				data->state = SEBS_PARSE_HTTP_STATE_RESPONSE_CODE;
+				fdata->state = SEBS_PARSE_HTTP_STATE_RESPONSE_CODE;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("ERROR! RESPONSE HTTP Version unknown");
-				data->parser_data->event =
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE:
-			switch (data->std_func_data.numberparse.result)
+			switch (fdata->numberparse.result)
 			{
-			case NUMBERPARSE_ANOTHER_CHAR:
-				if (**buf == ' ')
+			case SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR:
+				if (**pdata->buf == ' ')
 				{
-					DEBUG_PRINT(INT,"Code of HTTP Response", data->std_func_data.numberparse.number);
-					data->parser_data->event =
+					DEBUG_PRINT(INT,"Code of HTTP Response", fdata->numberparse.number);
+					pdata->event =
 							SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE;
-					data->state = SEBS_PARSE_HTTP_STATE_RESPONSE_STRING;
+					fdata->state = SEBS_PARSE_HTTP_STATE_RESPONSE_STRING;
 				}
 				else
 				{
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				}
 				break;
 
-			case NUMBERPARSE_ERROR_NONUMBER:
-				data->parser_data->event =
+			case SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER:
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;
 
-			case NUMBERPARSE_MAX_FIGURES:
-				data->parser_data->event =
+			case SEBS_PARSE_NUMBERPARSE_MAX_FIGURES:
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE;
 				break;
 			}
 			break;
 
 		case SEBS_PARSE_HTTP_SUBSTATE_CHECK_DESCRIPTOR_ID:
-			if (data->std_func_data.seekstring.result > 0)
+			if (fdata->seekstring.result > 0)
 			{
-				DEBUG_PRINT(INT,"RESULT",data->std_func_data.seekstring.result);
-				DEBUG_PRINT(STR,"Descriptor", data->std_func_data.seekstring.stringlist[0]);
-				data->descriptor = data->std_func_data.seekstring.result;
+				DEBUG_PRINT(INT,"RESULT",fdata->seekstring.result);
+				DEBUG_PRINT(STR,"Descriptor", fdata->seekstring.stringlist[0]);
+				fdata->descriptor = fdata->seekstring.result;
 			}
 			else
 			{
 				DEBUG_PRINT_STR("Unknown Descriptor...");
 			}
-			data->state = SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR;
+			fdata->state = SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR;
 			break;
 
 		default:
@@ -156,28 +160,28 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 		/*
 		 * Check if previous state was a substate
 		 */
-		if (data->substate != SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE)
+		if (fdata->substate != SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE)
 		{
-			data->substate = SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
+			fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
 		}
 		else
 		{
 			/*
 			 * Parsing
 			 */
-			switch (**buf)
+			switch (**pdata->buf)
 			{
 			case '/':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_HTTP_STATE_REQUEST_ACTION:
-					data->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_ACTION;
-					++*buf;
-					--*len;
-					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
-							data->std_func_data.seekstring,
-							data->actions, data->actions_len,
-							" ", true)
+					fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_ACTION;
+					++*pdata->buf;
+					--*pdata->len;
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							fdata->seekstring,
+							fdata->actions, fdata->actions_len,
+							" ", true,0)
 					;
 					break;
 
@@ -192,14 +196,14 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 					break;
 
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
 					break;
 				}
 				break;
 
 			case ':':
-				switch (data->state)
+				switch (fdata->state)
 				{
 
 				case SEBS_PARSE_HTTP_STATE_FIELD_CONTENT:
@@ -210,14 +214,14 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
-					data->state = SEBS_PARSE_HTTP_STATE_FIELD;
+					fdata->state = SEBS_PARSE_HTTP_STATE_FIELD;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_STRING:
 					break;
 
 				default:
-					data->parser_data->event =
+					pdata->event =
 							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
 					break;
 
@@ -225,11 +229,11 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				break;
 
 			case ' ':
-				switch (data->state)
+				switch (fdata->state)
 				{
 
 				case SEBS_PARSE_HTTP_STATE_FIELD_CONTENT:
-					data->state = SEBS_PARSE_HTTP_STATE_FIELD;
+					fdata->state = SEBS_PARSE_HTTP_STATE_FIELD;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_STRING:
@@ -241,83 +245,76 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 				break;
 
 			case '\n':
-				switch (data->state)
+				switch (fdata->state)
 				{
 				case SEBS_PARSE_HTTP_STATE_FIELD:
 				case SEBS_PARSE_HTTP_STATE_FIELD_CONTENT:
 				case SEBS_PARSE_HTTP_STATE_HEADLINE_WAIT_END:
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_STRING:
-					data->state =
+					fdata->state =
 							SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
-					if (data->content_length < 0)
-					{
-						data->parser_data->event =
-								SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED;
-					}
-					data->parser_data->event = SEBS_PARSE_HTTP_EVENT_HEADER_END;
-					return (false);
+					pdata->event = SEBS_PARSE_HTTP_EVENT_HEADER_END;
+					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_FIELD_SEPARATOR:
-					data->parser_data->event =
+				default:
+					pdata->event =
 							SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST;
-					break;
-
-				default: //TODO ^^ merge with above???
 					break;
 				}
 				break;
 
 				//Any other char
 			default:
-				switch (data->state)
+				switch (fdata->state)
 				///@note Here is a lot of potential for saving memory by reducing setup cause it is always almost the same
 				{
 				case SEBS_PARSE_HTTP_STATE_REQUEST_METHOD:
-					data->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
-					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
-							data->std_func_data.seekstring, data->methods,
-							data->methods_len, " /\n.", true)
+					fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							fdata->seekstring, fdata->methods,
+							fdata->methods_len, " /\n.", true,0)
 					;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_REQUEST_HTTP_VER:
-					data->substate =
+					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_REQUEST_HTTP_VER;
-					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
-							data->std_func_data.seekstring, http_header_stdtext,
-							HTTP_HEADER_STDTEXT_LEN, " \n", true)
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							fdata->seekstring, http_header_stdtext,
+							HTTP_HEADER_STDTEXT_LEN, " \n", true,0)
 					;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER:
-					data->substate =
+					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_HTTP_VER;
-					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
-							data->std_func_data.seekstring, http_header_stdtext,
-							HTTP_HEADER_STDTEXT_LEN, " \n", true)
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							fdata->seekstring, http_header_stdtext,
+							HTTP_HEADER_STDTEXT_LEN, " \n", true,0)
 					;
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_RESPONSE_CODE:
-					data->substate =
+					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_CODE;
 					SEBS_PARSE_NUMBERPARSE_INIT(
-							data->parser_data->next_parser,
-							data->std_func_data.numberparse, 3, false);
+							pdata,
+							fdata->numberparse, 3, false, 10);
 					break;
 
 				case SEBS_PARSE_HTTP_STATE_DESCRIPTOR_OR_HEADER_END:
-					data->substate =
+					fdata->substate =
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_DESCRIPTOR_ID;
-					SEBS_PARSE_SEEKSTRING_INIT(data->parser_data->next_parser,
-							data->std_func_data.seekstring,
-							data->descriptors,
-							data->descriptors_len, " :", false)
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							fdata->seekstring,
+							fdata->descriptors,
+							fdata->descriptors_len, " :", false,0)
 					;
 					break;
 
@@ -336,16 +333,18 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			if (is_field_content)
 			{
 				DEBUG_PRINT_STR("CONTENT_START");
-				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
-				data->parser_data->event =
+				fdata->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
+				pdata->event =
 						SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT;
-				data->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
+				fdata->state = SEBS_PARSE_HTTP_STATE_FIELD_CONTENT;
 			}
 
-			if (len > 0)
+			//We need to exclude header content event here because the first byte of the content
+			//would be skipped for a subfunction called by the handler!
+			if (pdata->len > 0 && pdata->event != SEBS_PARSE_HTTP_EVENT_HEADER_CONTENT)
 			{
-				++*buf;
-				--*len;
+				++*pdata->buf;
+				--*pdata->len;
 			}
 			else
 			{
@@ -353,5 +352,5 @@ bool sebs_parse_http(char **buf, int32_t *len, sebs_parse_http_data_t *data)
 			}
 		}
 	}
-	return (false);
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

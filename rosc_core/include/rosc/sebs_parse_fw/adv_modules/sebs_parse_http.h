@@ -34,29 +34,27 @@
 
 #include <rosc/system/types.h>
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+#define SEBS_PARSE_HTTP_REQUEST_INIT SEBS_PARSE_HTTP_STATE_REQUEST_METHOD
+#define SEBS_PARSE_HTTP_RESPONSE_INIT SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER
 
-#define SEBS_PARSE_HTTP_REQUEST_HEAD SEBS_PARSE_HTTP_STATE_REQUEST_METHOD
-#define SEBS_PARSE_HTTP_RESPONSE_HEAD SEBS_PARSE_HTTP_STATE_RESPONSE_HTTP_VER
 
 ///@todo document SEBS_PARSE_HTTP_INIT
-#define SEBS_PARSE_HTTP_INIT(PARSE_WHAT, PARSER_DATA, PARSER_CALL, HTTP_DATA, DESCRIPTORS, DESCRIPTORS_LEN, ACTIONS, ACTIONS_LEN, METHODS, METHODS_LEN)\
-		PARSER_CALL.parser_function=(sebs_parse_function_t)&sebs_parse_http;\
-		PARSER_CALL.parser_data=&HTTP_DATA;\
-		HTTP_DATA.content_length=-1;\
-		HTTP_DATA.state=PARSE_WHAT;\
-		HTTP_DATA.substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;\
-		HTTP_DATA.parser_data=&PARSER_DATA;\
-		HTTP_DATA.descriptors=DESCRIPTORS;\
-		HTTP_DATA.descriptors_len=DESCRIPTORS_LEN;\
-		HTTP_DATA.actions=ACTIONS;\
-		HTTP_DATA.actions_len=ACTIONS_LEN;\
-		HTTP_DATA.methods=METHODS;\
-		HTTP_DATA.methods_len=METHODS_LEN
+#define SEBS_PARSE_HTTP_INIT(PARSER_DATA, DATA_STORAGE, INIT_STATE, DESCRIPTORS, DESCRIPTORS_LEN, ACTIONS, ACTIONS_LEN, METHODS, METHODS_LEN)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_http;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.state=INIT_STATE;\
+		DATA_STORAGE.descriptors=DESCRIPTORS;\
+		DATA_STORAGE.descriptors_len=DESCRIPTORS_LEN;\
+		DATA_STORAGE.actions=ACTIONS;\
+		DATA_STORAGE.actions_len=ACTIONS_LEN;\
+		DATA_STORAGE.methods=METHODS;\
+		DATA_STORAGE.methods_len=METHODS_LEN;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 
 /**
@@ -74,7 +72,6 @@ typedef enum
 	SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND,                   //!< means that the target/action/url was not found in the string array (code: 404)
 	SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
 	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
-	SEBS_PARSE_HTTP_EVENT_ERROR_LENGTH_REQUIRED,             //!< means that now length was given in the http header
 	SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
 	SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE,                		 //!< means that a content type was found
 	SEBS_PARSE_HTTP_EVENT_HEADER_END,						 //!< means that the function reached the end
@@ -130,7 +127,7 @@ typedef enum
 
 typedef enum
 {
-	__HTTP_HEADER_STDTEXT(HTTP)
+	HTTP_HEADER_STDTEXT(HTTP)
 }xmlrpc_server_stdtxt_t;
 
 
@@ -140,7 +137,6 @@ typedef struct
 	/**
 	 * Pointer for access to parser frame
 	 */
-	sebs_parser_data_t* parser_data;
 
 	sebs_parse_http_state_t state; //!< state contains the current state of the http parser
 	sebs_parse_http_substate_t substate; //!< contains the substate of the http parser (analyzing results of submodes)
@@ -160,11 +156,11 @@ typedef struct
 	{
 		sebs_parse_numberparse_data_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
-	}std_func_data;
+	};
 }sebs_parse_http_data_t;
 
 
-bool sebs_parse_http(char **buf_ptr, int32_t *len_ptr, sebs_parse_http_data_t *data);
+sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata);
 
 
 

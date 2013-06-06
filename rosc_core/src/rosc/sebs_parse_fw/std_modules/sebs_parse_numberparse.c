@@ -30,61 +30,94 @@
  */
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
+#include <rosc/debug/debug_out.h>
 
-bool sebs_parse_numberparse(char **buf, int32_t *len, sebs_parse_numberparse_data_t *data)
+sebs_parse_return_t sebs_parse_numberparse(sebs_parser_data_t *pdata)
 	 //work around for inlining the function
 {
-	while(*len > 0)
+	sebs_parse_numberparse_data_t *fdata=(sebs_parse_numberparse_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
 	{
-		if(data->cur_place == 0)
+		pdata->function_init=false;
+		fdata->cur_place=0;
+		fdata->number=0;
+#ifdef __DEBUG__PRINTS__
+		if(fdata->base>36)
 		{
-			data->negative=false;
-			data->number=0;
+			DEBUG_PRINT_STR("NUMBERPARSE_BASE_ERROR! BASE MUST BE SMALLER THAN 36!");
+			while(1);
+		}else if(fdata->base>16)
+		{
+			DEBUG_PRINT_STR("WARNING NUMBERPARSE: You are using a base greater than 16! What the hell are you up for? Is that intended!?!?");
 		}
-		if(**buf>=48 && **buf<=57) //Check if char is a figure
+#endif
+	}
+	while(*pdata->len > 0)
+	{
+		bool isFigure=false;
+		uint8_t figureConvertValue;
+		 //Check if char is a figure ...
+		if(**pdata->buf>='0' && **pdata->buf<=('9'+fdata->base-10))
 		{
-			if(data->cur_place < data->figure_max)//Is the length still acceptable?
-			{
-				if(data->cur_place>0)
-					data->number*=10;//multiply current number by 10 to shift it left
+			isFigure=true;
+			figureConvertValue='0';
+		}
+		else if(**pdata->buf>='a' && **pdata->buf<=('a'+fdata->base-10) && (fdata->base>10))
+		{
+			isFigure=true;
+			figureConvertValue='a'-10;
+		}
+		else if(**pdata->buf>='A' && **pdata->buf<=('A'+fdata->base-10) && fdata->base>10)
+		{
+			isFigure=true;
+			figureConvertValue='A'-10;
+		}
 
-				data->number+=**buf-48; //convert char to integer
-				++data->cur_place;
-				++*buf;
-				--*len;
+		if(isFigure)
+		{
+			if(fdata->cur_place < fdata->figure_max)//Is the length still acceptable?
+			{
+				if(fdata->cur_place>0)
+					fdata->number*=fdata->base;//multiply current number by 10 to shift it left
+
+				fdata->number+=**pdata->buf-figureConvertValue; //convert char to integer
+				++fdata->cur_place;
+				++*pdata->buf;
+				--*pdata->len;
 			}
 			else
 			{
-				data->result=NUMBERPARSE_MAX_FIGURES;
-				return true;
+				fdata->result=SEBS_PARSE_NUMBERPARSE_MAX_FIGURES;
+				return(SEBS_PARSE_RETURN_FINISHED);
 			}
 		}
 		else
 		{
-			if(data->cur_place == 0) //Are we still at the beginning?
+			if(fdata->cur_place == 0) //Are we still at the beginning?
 			{
-				if(**buf=='-' && data->negative_allowed)//Is it a negative number?
+				if(**pdata->buf=='-' && fdata->negative_allowed)//Is it a negative number?
 				{
-					data->negative=true;
-					++*buf;
-					--*len;
+					fdata->negative=true;
+					++*pdata->buf;
+					--*pdata->len;
 					break;
 				}
 				else
 				{
-					data->result=NUMBERPARSE_ERROR_NONUMBER;
-					return true;
+					fdata->result=SEBS_PARSE_NUMBERPARSE_ERROR_NONUMBER;
+					return(SEBS_PARSE_RETURN_FINISHED);
 				}
 			}
 			else
 			{
-				data->result=NUMBERPARSE_ANOTHER_CHAR;
-				return true;
+				fdata->result=SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR;
+				fdata->last_byte=**pdata->buf;
+				return(SEBS_PARSE_RETURN_FINISHED);
 			}
 			break;
 		}
 	}
-	return false;
+	return(SEBS_PARSE_RETURN_GO_AHEAD);
 }
 
 

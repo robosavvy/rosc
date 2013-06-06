@@ -149,7 +149,7 @@ if __name__ == '__main__':
                     
                 
                 #Creating the definition for being able to insert it into any enum    
-                headerfile.write('#define __')   
+                headerfile.write('#define ')   
                 headerfile.write(item.upper())
                 headerfile.write('(ENUM) \\\n')
                 
