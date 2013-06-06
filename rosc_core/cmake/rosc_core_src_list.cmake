@@ -1,6 +1,7 @@
 SET(ROSC_CORE_SOURCES
 src/rosc/sebs_parse_fw/sebs_parser_frame.c
 src/rosc/sebs_parse_fw/adv_modules/sebs_parse_http.c
+src/rosc/sebs_parse_fw/adv_modules/sebs_ros.c
 src/rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.c
@@ -14,6 +15,7 @@ src/rosc/system/iface.c
 src/rosc/system/system.c
 src/rosc/system/rosc_init.c
 src/rosc/com/xmlrpc_server.c
+src/rosc/com/ros_topic.c
 src/rosc/msg_generators/xml_msg_gen.c
 src/rosc/string_res/msg_strings.c
 )

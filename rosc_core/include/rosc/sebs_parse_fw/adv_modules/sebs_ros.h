@@ -26,58 +26,31 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  endian.h created by Christian Holl
+ *  sebs_ros.h created by Christian Holl
  */
 
-#ifndef ENDIAN_H_
-#define ENDIAN_H_
+#ifndef SEBS_ROS_H_
+#define SEBS_ROS_H_
 
-#include <rosc/system/types.h>
+#include <endian.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-/**
- * This type of the struct stores the byte order for each
- * common type of the system, when the values are initialized
- * with like for example 0x0807060504030201 for 8 bytes.
- */
+
+
+typedef enum
+{
+	SEBS_PARSE_ROS_STATE_CONNECTION_ROSRPC,
+	SEBS_PARSE_ROS_STATE_CONNECTION_TOPIC_HEADER,
+	SEBS_PARSE_ROS_STATE_CONNECTION_TOPIC_BINARY,
+}sebs_parse_ros_state_t;
+
 typedef struct
 {
-	union
-	{
-		uint16_t SIZE_2;
-		int8_t SIZE_2_B[sizeof(uint16_t)];
-	};
-	union
-	{
-		uint32_t SIZE_4;
-		int8_t SIZE_4_B[sizeof(uint32_t)];
-	};
-	union
-	{
-		uint64_t SIZE_8;
-		int8_t SIZE_8_B[sizeof(uint64_t)];
-	};
-} endian_t;
+	uint32_t message_length;
+	uint32_t current_field_length;
+}sebs_parse_ros_data_t;
 
-/**
- * Contains byte order corrections for the communication
- * byte order (little endian) to the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_system;
 
-/**
- * Contains byte order corrections to the communication
- * byte order (little endian) from the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_network;
+sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata);
 
-/**
- * This function initializes the variable
- * which is linked to the system_byte_order.
- *
- * @TODO Make rosc_init_endian replaceable for really weired compilers...
- */
-void rosc_init_endian(void);
-
-#endif /* ENDIAN_H_ */
+#endif /* SEBS_ROS_H_ */

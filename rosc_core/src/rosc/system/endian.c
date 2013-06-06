@@ -34,64 +34,85 @@
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/types.h>
 
+static endian_t local_byte_order_correction_to_system;
+static endian_t local_byte_order_correction_to_network;
 
-static endian_t local_system_byte_order =
+
+const endian_t* const g_byte_order_correction_to_system = &local_byte_order_correction_to_system;
+const endian_t* const g_byte_order_correction_to_network = &local_byte_order_correction_to_network;
+
+static endian_t pattern_local =
 {
 { 0x0201 },
 { 0x04030201 },
-{ 0x0807060504030201 },
-};
+{ 0x0807060504030201 }, }; //Bytes are numbered 1-X to find out if there is something strange on the current platform
 
-const endian_t* const g_system_byte_order = &local_system_byte_order;
+
 
 void rosc_init_endian(void)
 {
-	if (sizeof(uint8_t) != 1 &&
-		sizeof(uint16_t) != 2 &&
-		sizeof(uint32_t) != 4 &&
-		sizeof(uint64_t) != 8)
+	if (sizeof(uint8_t) != 1 && sizeof(uint16_t) != 2 && sizeof(uint32_t) != 4
+			&& sizeof(uint64_t) != 8)
 	{
 		ROSC_FATAL("One or more data types do not have the expected byte size!");
 	}
 
+
+
 	uint8_t size;
-	int8_t *currentByteAccess;
-	for(size=2;size<=8;size<<=1)
+	int8_t *system_byte_order;
+	int8_t *byte_order_2_system_array;
+	int8_t *byte_order_2_network_array;
+	for (size = 2; size <= 8; size <<= 1)
 	{
 		switch(size)
 		{
-		case 2:
-			currentByteAccess=local_system_byte_order.SIZE_2_B;
-			break;
-		case 4:
-			currentByteAccess=local_system_byte_order.SIZE_4_B;
-			break;
-		case 8:
-			currentByteAccess=local_system_byte_order.SIZE_8_B;
-			break;
-		default:
-			ROSC_FATAL("Unexpected state in rosc_init_endian size switch!")
-			break;
+			case 2:
+				system_byte_order = pattern_local.SIZE_2_B;
+				byte_order_2_system_array = local_byte_order_correction_to_system.SIZE_2_B;
+				byte_order_2_network_array = local_byte_order_correction_to_network.SIZE_2_B;
+				break;
+			case 4:
+				system_byte_order = pattern_local.SIZE_4_B;
+				byte_order_2_system_array = local_byte_order_correction_to_system.SIZE_4_B;
+				byte_order_2_network_array = local_byte_order_correction_to_network.SIZE_4_B;
+				break;
+			case 8:
+				system_byte_order = pattern_local.SIZE_8_B;
+				byte_order_2_system_array = local_byte_order_correction_to_system.SIZE_8_B;
+				byte_order_2_network_array = local_byte_order_correction_to_network.SIZE_8_B;
+				break;
+			default:
+				ROSC_FATAL("ENDIAN: Unexpected state in rosc_init_endian size switch!");
+				break;
 		}
 
-		int i;
+		int i, j;
 		DEBUG_PRINT(INT,"Size",size);
-		for(i=0;i<size;++i)
+		for (i = 0; i < size; ++i)
 		{
-			if(currentByteAccess>0 &&
-			   currentByteAccess[i]<=8)
+			//Seeking the current byte position
+			bool found = false;
+			for (j = 0; j < size; ++j)
 			{
-				currentByteAccess[i]-=i+1;
+				if (system_byte_order[j] == i+1) //we search for the current byte
+				{
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+			{
+				ROSC_FATAL("ENDIAN: Byte number not found!");
 			}
 			else
 			{
-				ROSC_FATAL("Byte Endian information is not in the specified range");
+				byte_order_2_system_array[i]=j-i;
+				byte_order_2_network_array[i]=system_byte_order[i]-(i+1);
 			}
+
 		}
 
 	}
-
-
-
 
 }
