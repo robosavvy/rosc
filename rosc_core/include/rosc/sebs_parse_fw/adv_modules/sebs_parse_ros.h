@@ -26,22 +26,77 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  sebs_ros.c created by Christian Holl
+ *  sebs_parse_ros.h created by Christian Holl
  */
 
-#include <rosc/sebs_parse_fw/adv_modules/sebs_ros.h>
+#ifndef SEBS_PARSE_ROS_H_
+#define SEBS_PARSE_ROS_H_
 
-sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
+#include <endian.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+
+#define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
+
+typedef enum
 {
-	sebs_parse_ros_data_t *fdata=(sebs_parse_ros_data_t *)pdata->current_parser.parser_data;
-	if(pdata->function_init)
+	SEBS_PARSE_ROS_MODE_CONNECTION_ROSRPC,
+	SEBS_PARSE_ROS_MODE_CONNECTION_TOPIC_HEADER,
+	SEBS_PARSE_ROS_MODE_CONNECTION_TOPIC_BINARY,
+}sebs_parse_ros_mode_t;
+
+typedef enum
+{
+	SEBS_PARSE_ROSPRC_MESSAGE_LENGTH,
+	SEBS_PARSE_ROSRPC_FIELD_LENGTH,
+	SEBS_PARSE_ROSRPC_FIELD_ID,
+	SEBS_PARSE_ROSRPC_FIELD_VALUE,
+
+	//Topic
+	SEBS_PARSE_ROSTOPIC_SUBMESSAGE_LENGTH,
+	SEBS_PARSE_ROSTOPIC_ARRAY_LENGTH,
+	SEBS_PARSE_ROSTOPIC_VALUE,
+
+}sebs_parse_ros_state_t;
+
+
+typedef enum
+{
+
+	SEBS_PARSE_ROS_EVENT_RPC_FIELD_ID,
+	SEBS_PARSE_ROS_EVENT_RPC_FIELD_START,
+
+}sebs_parse_ros_event_t;
+
+typedef struct
+{
+	sebs_parse_ros_state_t state;
+	sebs_parse_ros_mode_t mode;
+
+	union
 	{
+		bool	boolean;
 
-	}
+		uint8_t uint8;
+		uint16_t uint16;
+		uint32_t uint32;
+		uint64_t uint64;
 
-	while (*pdata->len > 0 )
-	{
+		int8_t int8;
+		int16_t int16;
+		int32_t int32;
+		int64_t int64;
 
-	}
-	return (SEBS_PARSE_RETURN_GO_AHEAD);
-}
+		float64_t float64;
+		float32_t float32;
+	}parsed_value;
+
+}sebs_parse_ros_data_t;
+
+
+
+sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata);
+
+#endif /* SEBS_PARSE_ROS_H_ */

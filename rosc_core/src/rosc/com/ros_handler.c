@@ -26,12 +26,25 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  rosproto.h created by Christian Holl
+ *  ros_handler.c created by Christian Holl
  */
 
-#ifndef ROSPROTO_H_
-#define ROSPROTO_H_
+#include <rosc/com/ros_handler.h>
+#include <rosc/debug/debug_out.h>
+
+sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
+{
+	ros_hander_data_t *hdata=pdata->handler_data;
+
+
+	if(pdata->handler_init)
+	{
+		pdata->handler_init=false;
+		DEBUG_PRINT_STR("ROS HANDLER");
+		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
+	}
 
 
 
-#endif /* ROSPROTO_H_ */
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
+}

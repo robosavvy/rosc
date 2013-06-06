@@ -26,31 +26,30 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  sebs_ros.h created by Christian Holl
+ *  sebs_parse_ros.c created by Christian Holl
  */
 
-#ifndef SEBS_ROS_H_
-#define SEBS_ROS_H_
+#include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
+#include <rosc/debug/debug_out.h>
 
-#include <endian.h>
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-
-
-
-typedef enum
+sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 {
-	SEBS_PARSE_ROS_STATE_CONNECTION_ROSRPC,
-	SEBS_PARSE_ROS_STATE_CONNECTION_TOPIC_HEADER,
-	SEBS_PARSE_ROS_STATE_CONNECTION_TOPIC_BINARY,
-}sebs_parse_ros_state_t;
+	sebs_parse_ros_data_t *fdata=(sebs_parse_ros_data_t *)pdata->current_parser.parser_data;
+	if(pdata->function_init)
+	{
+		pdata->function_init=false;
+		DEBUG_PRINT_STR("ROS PARSER");
+	}
 
-typedef struct
-{
-	uint32_t message_length;
-	uint32_t current_field_length;
-}sebs_parse_ros_data_t;
+	while (*pdata->len > 0)
+	{
+		switch(fdata->state)
+		{
+			//States for analysing subfunction results
 
 
-sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata);
+		}
 
-#endif /* SEBS_ROS_H_ */
+	}
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
+}

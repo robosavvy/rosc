@@ -51,7 +51,7 @@
 
 #include <rosc/rosc.h>
 #include <rosc/system/eth.h>
-//#include <rosc/sebs_parse_fw>
+#include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 
 //The memory definitions for
 //the size of all port buffers
@@ -181,7 +181,7 @@ int main_xmlrpctest()
 // ///////////////////////
 //     ROSTCP Testing   //
 // ///////////////////////
-
+#include <rosc/com/ros_handler.h>
 
 unsigned char add_two_ints_rosrpc_query[] = {
 0x48, 0x00, 0x00, 0x00,
@@ -246,17 +246,22 @@ int main_tcprostest()
 	int rlen;
 	int buffersize=1;
 
-#if(0)
+#if(1)
 	unsigned char *msg=add_two_ints_rosrpc_query;
-//	char server_data[10];
-//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_SERVER,&server_data);
-//	rlen=sizeof(add_two_ints_rosrpc_query);
+	rlen=sizeof(add_two_ints_rosrpc_query);
+
 #else
 	unsigned char *msg=add_two_ints_rosrpc_response;
-//	char server_data[10];
-//	ros_parse_act_init(&pact,ROS_TYPE_ROSRPC_CLIENT,&server_data);
-//	rlen=sizeof(add_two_ints_rosrpc_response);
+	rlen=sizeof(add_two_ints_rosrpc_response);
 #endif
+
+
+	ros_hander_data_t handler_data;
+	sebs_parser_data_t parser_data;
+
+	parser_data.handler_init=true;
+	parser_data.handler_function=&ros_handler;
+	parser_data.handler_data=&handler_data;
 
 
 	printf("Test Message Length: %i\n",rlen);
@@ -271,13 +276,9 @@ int main_tcprostest()
 		}
 		else
 		{
-			printf("%i,", msg[i]);
+			printf("[%i]", msg[i]);
 		}
-
 	}
-
-
-
 
 	for(i=0;rlen-i*buffersize+buffersize>0;i++)
 	{
@@ -286,7 +287,7 @@ int main_tcprostest()
 		{
 			len=len-(i*buffersize-rlen);
 		}
-		//ros_parse(msg+i*len,len,&pact);
+		sebs_parser_frame(msg+i*len,len,&parser_data);
 	}
 
 	return (0);
@@ -300,8 +301,8 @@ int main()
 
 	rosc_init();
 
-	main_xmlrpctest();
-	//main_tcprostest();
+	//main_xmlrpctest();
+	main_tcprostest();
 	return (0);
 }
 
