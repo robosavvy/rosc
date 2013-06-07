@@ -35,6 +35,47 @@
 #include <endian.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+
+
+typedef enum
+{
+	ROS_TYPE_SUBMESSAGE,
+	ROS_TYPE_SUBMESSAGE_END,
+	ROS_TYPE_SUBMESSAGE_ARRAY,
+
+	ROS_TYPE_INT8,
+	ROS_TYPE_INT16,
+	ROS_TYPE_INT32,
+	ROS_TYPE_INT64,
+
+	ROS_TYPE_UINT8,
+	ROS_TYPE_UINT16,
+	ROS_TYPE_UINT32,
+	ROS_TYPE_UINT64,
+
+	ROS_TYPE_FLOAT32,
+	ROS_TYPE_FLOAT64,
+
+	ROS_TYPE_TIME,
+	ROS_TYPE_DURATION,
+	ROS_TYPE_BOOL,
+	ROS_TYPE_STRING,
+
+	ROS_TYPE_MSG_END,
+	ROS_TYPE_RESULT_END,
+}ros_type_t;
+
+
+//NOTES
+//
+// message_buildup[int32,int8,int16,SM,AR,int32,ARe,SMe, SMA,  SM,  int32, int32 ]
+// message_lengths[4    ,1   , 2   , SML, 4, 4   , 0, 0,SMAL, SML,  4, 4]
+//
+//
+
+
+
+
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
@@ -75,6 +116,11 @@ typedef struct
 	sebs_parse_ros_state_t state;
 	sebs_parse_ros_mode_t mode;
 
+
+
+	/**
+	 * storage for value events
+	 */
 	union
 	{
 		bool	boolean;
