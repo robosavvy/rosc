@@ -239,6 +239,68 @@ unsigned char add_two_ints_rosrpc_response[] = {
 0x41, 0x64, 0x64, 0x54, 0x77, 0x6f, 0x49, 0x6e,
 0x74, 0x73 };
 
+/*
+rostopic pub /test std_msgs/Int8MultiArray """
+layout:
+  dim: [{label: 'label', size: 5, stride: 1},{label: 'gnampf', size: 6,
+stride: 7} ]
+  data_offset: 0
+data: [1, 2, 3, 4]
+""" -r 1
+*/
+
+char MultiArrayInt8[] = {
+//Whole message size
+0x33, 0x00, 0x00, 0x00,
+//Size dim array (elements)
+0x02, 0x00, 0x00, 0x00,
+//Size label (amount of chars)
+0x05, 0x00, 0x00, 0x00,
+//l     a     b     e     l
+0x6c, 0x61, 0x62, 0x65, 0x6c,
+//size var:5
+0x05, 0x00, 0x00, 0x00,
+//stride: 1
+0x01, 0x00, 0x00, 0x00,
+
+//Size label
+0x06, 0x00, 0x00, 0x00,
+//g    n      a     m    p     f
+0x67, 0x6e, 0x61, 0x6d, 0x70, 0x66,
+//size var:6
+0x06, 0x00, 0x00, 0x00,
+//stride: 7
+0x07,0x00, 0x00, 0x00,
+//offset
+0x00, 0x00, 0x00, 0x00,
+
+//data size (4)
+0x04, 0x00, 0x00, 0x00,
+//data array elements
+0x01, 0x02, 0x03, 0x04 };
+
+ros_type_t multiarray[]={ROS_TYPE_MESSAGE, //message start -> length 32 Bit
+							ROS_TYPE_ARRAY, //dim [level1]
+								ROS_TYPE_SUBMESSAGE, //SUBMESSAGE
+									ROS_TYPE_STRING, //label
+									ROS_TYPE_UINT32, //size
+									ROS_TYPE_UINT32, //stride
+									ROS_TYPE_UINT32, //offset
+								ROS_TYPE_SUBMESSAGE_END, //Back to array
+							ROS_TYPE_ARRAY, //data
+						ROS_TYPE_MSG_END //message end
+						};
+
+
+
+int array_depth=0;
+uint32_t length[3];
+
+typedef struct
+{
+	ros_type_t *typearray;
+	uint32_t length;
+};
 
 
 int main_tcprostest()
