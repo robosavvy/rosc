@@ -475,7 +475,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						hdata->result_handling = XMLRPC_RESULT_CALLERID;
 						SEBS_PARSE_COPY2BUFFER_INIT(pdata,
 								hdata->copy2buffer, hdata->caller_id,
-								__NODENAME_MAX_LEN__, "<");
+								__NODENAME_MAX_LEN__, "<",0,1);
 					}
 					else
 					{

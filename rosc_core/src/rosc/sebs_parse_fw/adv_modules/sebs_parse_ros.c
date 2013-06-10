@@ -31,6 +31,8 @@
 
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/system/endian.h>
+
 
 sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 {
@@ -38,6 +40,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	if(pdata->function_init)
 	{
 		pdata->function_init=false;
+		fdata->state=SEBS_PARSE_ROSPRC_MESSAGE_LENGTH;
+
 		DEBUG_PRINT_STR("ROS PARSER");
 	}
 
@@ -45,8 +49,23 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	{
 		switch(fdata->state)
 		{
-			//States for analysing subfunction results
+			case SEBS_PARSE_ROSPRC_MESSAGE_LENGTH:
+				fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
+				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
+				break;
 
+			case SEBS_PARSE_ROSRPC_FIELD_LENGTH:
+				DEBUG_PRINT(INT,"MSG LEN",fdata->message_length);
+				fdata->state=SEBS_PARSE_ROSRPC_FIELD_ID;
+				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->field_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
+
+				break;
+
+			case SEBS_PARSE_ROSRPC_FIELD_ID:
+				fdata->message_length-=4;
+				DEBUG_PRINT(INT,"Field LEN",fdata->field_length);
+
+				break;
 
 		}
 

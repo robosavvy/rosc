@@ -36,11 +36,14 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_hander_data_t *hdata=pdata->handler_data;
 
+	DEBUG_PRINT_STR("ROS HANDLER");
 
 	if(pdata->handler_init)
 	{
 		pdata->handler_init=false;
-		DEBUG_PRINT_STR("ROS HANDLER");
+		pdata->return_to_handler=false;
+		pdata->overall_len=0;
+		pdata->security_len=1024;
 		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
 	}
 

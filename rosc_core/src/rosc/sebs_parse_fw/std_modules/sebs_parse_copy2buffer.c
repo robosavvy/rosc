@@ -31,6 +31,7 @@
 
 
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
+#include <rosc/debug/debug_out.h>
 
 sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 {
@@ -42,22 +43,41 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 	}
 
 	const char *sep=fdata->endChrs;
+	const char *correct=fdata->byteOrderCorrection;
+	char *buffer_c=fdata->buffer;
+
+#ifdef __DEBUG__PRINTS__
+	if(sep==0 && fdata->max_len==0)
+	{
+		DEBUG_PRINT_STR("ERROR copy2buf -> Will copy an endless amount of chars!!");
+		while(1);
+	}
+#endif
+
 	while(*pdata->len > 0)
 	{
 		bool isEndChar=false;
-		while(*sep!='\0')
+		if(sep!=0)
 		{
-			if(**pdata->buf==*sep)
+			while(*sep!='\0')
 			{
-				isEndChar=true;
-				break;
+				if(**pdata->buf==*sep)
+				{
+					isEndChar=true;
+					break;
+				}
+				++sep;
 			}
-			++sep;
 		}
 
-		if((fdata->cur_pos<(fdata->max_len-1)) && !isEndChar )
+		if((fdata->cur_pos<(fdata->max_len-(!!fdata->is_string /*subtract one if string(for terminator)*/
+				))) && !isEndChar )
 		{
-			fdata->buffer[fdata->cur_pos]=**pdata->buf;
+			if(correct==0)
+				buffer_c[fdata->cur_pos]=**pdata->buf;
+			else //Byte order correction
+				buffer_c[fdata->cur_pos+correct[fdata->cur_pos]]=**pdata->buf;
+
 			fdata->cur_pos++;
 			++*pdata->buf;
 			--*pdata->len;
@@ -72,7 +92,7 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 			{
 				fdata->result=COPY2BUFFER_MAXLEN;
 			}
-			fdata->buffer[fdata->cur_pos]='\0';
+			if(fdata->is_string)buffer_c[fdata->cur_pos]='\0';
 			return SEBS_PARSE_RETURN_FINISHED; //Finished!
 		}
 	}

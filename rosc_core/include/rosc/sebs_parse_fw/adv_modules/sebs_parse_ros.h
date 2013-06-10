@@ -34,7 +34,7 @@
 
 #include <endian.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 
 
 typedef enum
@@ -66,17 +66,6 @@ typedef enum
 	ROS_TYPE_RESULT_END,
 }ros_type_t;
 
-
-//NOTES
-//
-// message_buildup[int32,int8,int16,SM,AR,int32,ARe,SMe, SMA,  SM,  int32, int32 ]
-// message_lengths[4    ,1   , 2   , SML, 4, 4   , 0, 0,SMAL, SML,  4, 4]
-//
-//
-
-
-
-
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
@@ -97,7 +86,7 @@ typedef enum
 	SEBS_PARSE_ROSRPC_FIELD_VALUE,
 
 	//Topic
-	SEBS_PARSE_ROSTOPIC_SUBMESSAGE_LENGTH,
+	SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH,
 	SEBS_PARSE_ROSTOPIC_ARRAY_LENGTH,
 	SEBS_PARSE_ROSTOPIC_VALUE,
 
@@ -114,6 +103,8 @@ typedef enum
 
 typedef struct
 {
+	uint32_t message_length;
+	uint32_t field_length;
 	sebs_parse_ros_state_t state;
 	sebs_parse_ros_mode_t mode;
 
@@ -139,6 +130,11 @@ typedef struct
 		float64_t float64;
 		float32_t float32;
 	}parsed_value;
+
+	union
+	{
+		sebs_parse_copy2buffer_data_t copy2buffer;
+	};
 
 }sebs_parse_ros_data_t;
 
