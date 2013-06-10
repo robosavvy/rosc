@@ -35,7 +35,7 @@
 #include <endian.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
-
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 
 typedef enum
 {
@@ -84,7 +84,7 @@ typedef enum
 	SEBS_PARSE_ROSRPC_FIELD_LENGTH,
 	SEBS_PARSE_ROSRPC_FIELD_ID,
 	SEBS_PARSE_ROSRPC_FIELD_VALUE,
-
+	SEBS_PARSE_ROSRPC_FIELD_EQUAL,
 	//Topic
 	SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH,
 	SEBS_PARSE_ROSTOPIC_ARRAY_LENGTH,
@@ -134,6 +134,7 @@ typedef struct
 	union
 	{
 		sebs_parse_copy2buffer_data_t copy2buffer;
+		sebs_parse_seekstring_data_t seekstring;
 	};
 
 }sebs_parse_ros_data_t;

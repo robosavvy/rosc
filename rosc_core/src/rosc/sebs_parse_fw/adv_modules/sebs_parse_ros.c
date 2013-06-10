@@ -32,7 +32,7 @@
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/endian.h>
-
+#include <rosc/string_res/msg_strings.h>
 
 sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 {
@@ -45,7 +45,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 		DEBUG_PRINT_STR("ROS PARSER");
 	}
 
-	while (*pdata->len > 0)
+	while (*pdata->len > 0
+			&& (fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH  || fdata->message_length>0))
 	{
 		switch(fdata->state)
 		{
@@ -63,8 +64,18 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSRPC_FIELD_ID:
 				fdata->message_length-=4;
+				fdata->state=SEBS_PARSE_ROSRPC_FIELD_EQUAL;
 				DEBUG_PRINT(INT,"Field LEN",fdata->field_length);
+				SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,ros_field_strings, ROS_FIELD_STRINGS_LEN, "=",true, fdata->message_length);
+				break;
 
+			case SEBS_PARSE_ROSRPC_FIELD_EQUAL:
+				DEBUG_PRINT(INT,"Current Pos",fdata->seekstring.curChrPos);
+				if(!fdata->seekstring.result>0)
+				{
+					//TODO Error
+				}
+				while(1);
 				break;
 
 		}
