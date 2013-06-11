@@ -32,7 +32,8 @@
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/endian.h>
-#include <rosc/string_res/msg_strings.h>
+#include <rosc/system/types.h>
+
 
 sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 {
@@ -46,8 +47,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	}
 
 	while (*pdata->len > 0
-			&& (fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH  || fdata->message_length>0))
+			&& (fdata->message_length>0 || fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH))
 	{
+		bool skipchar=false;
 		switch(fdata->state)
 		{
 			case SEBS_PARSE_ROSPRC_MESSAGE_LENGTH:
@@ -59,27 +61,71 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				DEBUG_PRINT(INT,"MSG LEN",fdata->message_length);
 				fdata->state=SEBS_PARSE_ROSRPC_FIELD_ID;
 				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->field_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
-
 				break;
 
 			case SEBS_PARSE_ROSRPC_FIELD_ID:
 				fdata->message_length-=4;
 				fdata->state=SEBS_PARSE_ROSRPC_FIELD_EQUAL;
+				if(fdata->field_length > fdata->message_length)
+				{
+					DEBUG_PRINT_STR("ERROR FIELD LENGTH BIGGER THAN MESSAGE LENGTH!");
+					//TODO ERROR
+				}
 				DEBUG_PRINT(INT,"Field LEN",fdata->field_length);
 				SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,ros_field_strings, ROS_FIELD_STRINGS_LEN, "=",true, fdata->message_length);
 				break;
 
 			case SEBS_PARSE_ROSRPC_FIELD_EQUAL:
 				DEBUG_PRINT(INT,"Current Pos",fdata->seekstring.curChrPos);
-				if(!fdata->seekstring.result>0)
+				fdata->state=SEBS_PARSE_ROSRPC_FIELD_CONTENT;
+				//Subtract length
+
+				fdata->field_length-=fdata->seekstring.curChrPos;
+				fdata->message_length-=fdata->seekstring.curChrPos;
+				if(**pdata->buf=='=')
 				{
-					//TODO Error
+					skipchar=true;
+					if(fdata->seekstring.result>=0)
+					{
+						fdata->rpc_field_id=fdata->seekstring.result;
+						pdata->event=SEBS_PARSE_ROS_EVENT_RPC_FIELD_START;
+					}
 				}
-				while(1);
+				else
+				{
+					//TODO ERROR -> NO '='
+				}
+				break;
+			case SEBS_PARSE_ROSRPC_FIELD_CONTENT:
+				if(fdata->field_length>0)
+				{
+					skipchar=true;
+				}
+				else
+				{
+					if(fdata->field_length<0)DEBUG_PRINT_STR("FIELD LENGTH < 0 !!!!");
+					fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
+				}
 				break;
 
 		}
 
+
+		if(skipchar)
+		{
+			--fdata->field_length;
+			--fdata->message_length;
+			++*pdata->buf;
+			--*pdata->len;
+
+			if(fdata->message_length==0)
+			{
+				DEBUG_PRINT_STR("MESSAGE END!");
+			}
+		}
+
+		if(pdata->event!=SEBS_PARSE_EVENT_NONE)
+			break;
 	}
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

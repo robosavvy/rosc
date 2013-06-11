@@ -36,6 +36,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/string_res/msg_strings.h>
 
 typedef enum
 {
@@ -85,6 +86,7 @@ typedef enum
 	SEBS_PARSE_ROSRPC_FIELD_ID,
 	SEBS_PARSE_ROSRPC_FIELD_VALUE,
 	SEBS_PARSE_ROSRPC_FIELD_EQUAL,
+	SEBS_PARSE_ROSRPC_FIELD_CONTENT,
 	//Topic
 	SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH,
 	SEBS_PARSE_ROSTOPIC_ARRAY_LENGTH,
@@ -95,8 +97,13 @@ typedef enum
 
 typedef enum
 {
+	SEBS_PARSE_ROS_FIELD_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH,
+	ROS_FIELD_STRINGS(SEBS_PARSE),
+}sebs_parse_ros_rpc_field;
 
-	SEBS_PARSE_ROS_EVENT_RPC_FIELD_ID,
+typedef enum
+{
+	SEBS_PARSE_ROS_EVENT_RPC_NONE=SEBS_PARSE_EVENT_NONE,
 	SEBS_PARSE_ROS_EVENT_RPC_FIELD_START,
 
 }sebs_parse_ros_event_t;
@@ -107,7 +114,7 @@ typedef struct
 	uint32_t field_length;
 	sebs_parse_ros_state_t state;
 	sebs_parse_ros_mode_t mode;
-
+	sebs_parse_ros_rpc_field rpc_field_id;
 
 
 	/**

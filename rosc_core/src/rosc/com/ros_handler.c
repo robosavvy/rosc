@@ -47,6 +47,19 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
 	}
 
+	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
+
+
+	switch(*ros_event)
+	{
+		case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
+			DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
+			DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
+
+
+			break;
+	}
+
 
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
