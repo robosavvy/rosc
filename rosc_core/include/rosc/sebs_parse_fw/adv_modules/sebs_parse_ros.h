@@ -99,12 +99,13 @@ typedef enum
 {
 	SEBS_PARSE_ROS_FIELD_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH,
 	ROS_FIELD_STRINGS(SEBS_PARSE),
-}sebs_parse_ros_rpc_field;
+}sebs_parse_ros_rpc_field_t;
 
 typedef enum
 {
 	SEBS_PARSE_ROS_EVENT_RPC_NONE=SEBS_PARSE_EVENT_NONE,
 	SEBS_PARSE_ROS_EVENT_RPC_FIELD_START,
+	SEBS_PARSE_ROS_EVENT_MESSAGE_END,
 
 }sebs_parse_ros_event_t;
 
@@ -114,7 +115,12 @@ typedef struct
 	uint32_t field_length;
 	sebs_parse_ros_state_t state;
 	sebs_parse_ros_mode_t mode;
-	sebs_parse_ros_rpc_field rpc_field_id;
+	sebs_parse_ros_rpc_field_t rpc_field_id;
+
+	const ros_type_t* binary_buildup;
+
+	void *binary_data_io;
+
 
 
 	/**

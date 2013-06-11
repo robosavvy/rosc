@@ -212,7 +212,7 @@ extern const char *xmlrpc_slave_methodnames[];
 /**
  * Length of the string array ros_field_strings
  */
-#define ROS_FIELD_STRINGS_LEN 	10
+#define ROS_FIELD_STRINGS_LEN 	13
 
 /**
  * Macro for inserting field id strings for the ros protocol string numbers into any enum
@@ -224,6 +224,9 @@ extern const char *xmlrpc_slave_methodnames[];
 	 ENUM ## _ROS_FIELD_MD5SUM, \
 	 ENUM ## _ROS_FIELD_MESSAGE_DEFINITION, \
 	 ENUM ## _ROS_FIELD_PERSISTENT, \
+	 ENUM ## _ROS_FIELD_PROBE, \
+	 ENUM ## _ROS_FIELD_REQUEST_TYPE, \
+	 ENUM ## _ROS_FIELD_RESPONSE_TYPE, \
 	 ENUM ## _ROS_FIELD_SERVICE, \
 	 ENUM ## _ROS_FIELD_TCP_NODELAY, \
 	 ENUM ## _ROS_FIELD_TOPIC, \

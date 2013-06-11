@@ -55,8 +55,9 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
 			DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
 			DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
-
-
+			break;
+		case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
+			DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
 			break;
 	}
 

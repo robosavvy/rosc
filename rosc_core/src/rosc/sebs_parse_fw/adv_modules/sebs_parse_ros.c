@@ -118,8 +118,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			++*pdata->buf;
 			--*pdata->len;
 
-			if(fdata->message_length==0)
+			if(fdata->message_length==0 && fdata->state != SEBS_PARSE_ROSPRC_MESSAGE_LENGTH)
 			{
+				pdata->event=SEBS_PARSE_ROS_EVENT_MESSAGE_END;
 				DEBUG_PRINT_STR("MESSAGE END!");
 			}
 		}
