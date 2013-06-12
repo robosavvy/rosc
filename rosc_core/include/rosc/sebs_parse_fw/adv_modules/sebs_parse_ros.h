@@ -38,33 +38,49 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/string_res/msg_strings.h>
 
+typedef void (*rosc_callbackFkt_t)(void *msg);
+
+
+#ifdef __SYSTEM_HAS_MALLOC__
+	/**
+	 * Maximum pointer value for array pointers when malloc is available
+	 */
+	#define ROSC_PADDING_ARRAY_START_VALUE (-1)
+#else
+	/**
+	 * Maximum pointer value ...
+	 */
+	#define ROSC_PADDING_ARRAY_START_VALUE {-1}
+#endif
+
+
 typedef enum
 {
-	ROS_TYPE_MESSAGE,
-	ROS_TYPE_SUBMESSAGE,
-	ROS_TYPE_SUBMESSAGE_END,
-	ROS_TYPE_ARRAY,
+	ROS_TYPE_MESSAGE,       //!< ROS_TYPE_MESSAGE
+	ROS_TYPE_SUBMESSAGE,    //!< ROS_TYPE_SUBMESSAGE
+	ROS_TYPE_SUBMESSAGE_END,//!< ROS_TYPE_SUBMESSAGE_END
+	ROS_TYPE_ARRAY,         //!< ROS_TYPE_ARRAY
 
-	ROS_TYPE_INT8,
-	ROS_TYPE_INT16,
-	ROS_TYPE_INT32,
-	ROS_TYPE_INT64,
+	ROS_TYPE_INT8,          //!< ROS_TYPE_INT8
+	ROS_TYPE_INT16,         //!< ROS_TYPE_INT16
+	ROS_TYPE_INT32,         //!< ROS_TYPE_INT32
+	ROS_TYPE_INT64,         //!< ROS_TYPE_INT64
 
-	ROS_TYPE_UINT8,
-	ROS_TYPE_UINT16,
-	ROS_TYPE_UINT32,
-	ROS_TYPE_UINT64,
+	ROS_TYPE_UINT8,         //!< ROS_TYPE_UINT8
+	ROS_TYPE_UINT16,        //!< ROS_TYPE_UINT16
+	ROS_TYPE_UINT32,        //!< ROS_TYPE_UINT32
+	ROS_TYPE_UINT64,        //!< ROS_TYPE_UINT64
 
-	ROS_TYPE_FLOAT32,
-	ROS_TYPE_FLOAT64,
+	ROS_TYPE_FLOAT32,       //!< ROS_TYPE_FLOAT32
+	ROS_TYPE_FLOAT64,       //!< ROS_TYPE_FLOAT64
 
-	ROS_TYPE_TIME,
-	ROS_TYPE_DURATION,
-	ROS_TYPE_BOOL,
-	ROS_TYPE_STRING,
+	ROS_TYPE_TIME,          //!< ROS_TYPE_TIME
+	ROS_TYPE_DURATION,      //!< ROS_TYPE_DURATION
+	ROS_TYPE_BOOL,          //!< ROS_TYPE_BOOL
+	ROS_TYPE_STRING,        //!< ROS_TYPE_STRING
 
-	ROS_TYPE_MSG_END,
-	ROS_TYPE_RESULT_END,
+	ROS_TYPE_MSG_END,       //!< ROS_TYPE_MSG_END
+	ROS_TYPE_RESULT_END,    //!< ROS_TYPE_RESULT_END
 }ros_type_t;
 
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
@@ -119,9 +135,8 @@ typedef struct
 
 	const ros_type_t* binary_buildup;
 
+	rosc_callbackFkt_t callback;
 	void *binary_data_io;
-
-
 
 	/**
 	 * storage for value events

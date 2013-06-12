@@ -158,26 +158,6 @@ int main_xmlrpctest()
 	return (0);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ///////////////////////
 //     ROSTCP Testing   //
 // ///////////////////////
@@ -743,14 +723,20 @@ char MultiArrayInt8[] = {
 ros_type_t multiarray[]={ROS_TYPE_MESSAGE, //message start -> length 32 Bit
 							ROS_TYPE_ARRAY, //dim [level1]
 								ROS_TYPE_SUBMESSAGE, //SUBMESSAGE
-									ROS_TYPE_STRING, //label
-									ROS_TYPE_UINT32, //size
-									ROS_TYPE_UINT32, //stride
-									ROS_TYPE_UINT32, //offset
+
 								ROS_TYPE_SUBMESSAGE_END, //Back to array
 							ROS_TYPE_ARRAY, //data
 						ROS_TYPE_MSG_END //message end
 						};
+
+
+
+
+
+
+
+
+
 
 int array_depth=0;
 uint32_t length[3];

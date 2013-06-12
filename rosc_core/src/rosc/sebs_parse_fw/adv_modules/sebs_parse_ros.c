@@ -52,6 +52,10 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 		bool skipchar=false;
 		switch(fdata->state)
 		{
+
+			/* ******
+			 *ROSPRC*
+			 ********/
 			case SEBS_PARSE_ROSPRC_MESSAGE_LENGTH:
 				fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
 				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
@@ -107,6 +111,15 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
 				}
 				break;
+
+		    /* ********
+			 *ROSTOPIC*
+			 **********/
+
+			case SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH:
+				fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
+				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
+			break;
 
 		}
 
