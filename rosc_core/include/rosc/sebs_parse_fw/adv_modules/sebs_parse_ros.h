@@ -37,6 +37,7 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/string_res/msg_strings.h>
+#include <rosc/com/ros_msg_buildup.h>
 
 typedef void (*rosc_callbackFkt_t)(void *msg);
 
@@ -54,34 +55,7 @@ typedef void (*rosc_callbackFkt_t)(void *msg);
 #endif
 
 
-typedef enum
-{
-	ROS_TYPE_MESSAGE,       //!< ROS_TYPE_MESSAGE
-	ROS_TYPE_SUBMESSAGE,    //!< ROS_TYPE_SUBMESSAGE
-	ROS_TYPE_SUBMESSAGE_END,//!< ROS_TYPE_SUBMESSAGE_END
-	ROS_TYPE_ARRAY,         //!< ROS_TYPE_ARRAY
 
-	ROS_TYPE_INT8,          //!< ROS_TYPE_INT8
-	ROS_TYPE_INT16,         //!< ROS_TYPE_INT16
-	ROS_TYPE_INT32,         //!< ROS_TYPE_INT32
-	ROS_TYPE_INT64,         //!< ROS_TYPE_INT64
-
-	ROS_TYPE_UINT8,         //!< ROS_TYPE_UINT8
-	ROS_TYPE_UINT16,        //!< ROS_TYPE_UINT16
-	ROS_TYPE_UINT32,        //!< ROS_TYPE_UINT32
-	ROS_TYPE_UINT64,        //!< ROS_TYPE_UINT64
-
-	ROS_TYPE_FLOAT32,       //!< ROS_TYPE_FLOAT32
-	ROS_TYPE_FLOAT64,       //!< ROS_TYPE_FLOAT64
-
-	ROS_TYPE_TIME,          //!< ROS_TYPE_TIME
-	ROS_TYPE_DURATION,      //!< ROS_TYPE_DURATION
-	ROS_TYPE_BOOL,          //!< ROS_TYPE_BOOL
-	ROS_TYPE_STRING,        //!< ROS_TYPE_STRING
-
-	ROS_TYPE_MSG_END,       //!< ROS_TYPE_MSG_END
-	ROS_TYPE_RESULT_END,    //!< ROS_TYPE_RESULT_END
-}ros_type_t;
 
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
@@ -133,7 +107,7 @@ typedef struct
 	sebs_parse_ros_mode_t mode;
 	sebs_parse_ros_rpc_field_t rpc_field_id;
 
-	const ros_type_t* binary_buildup;
+	const ros_msg_buildup_type_t* binary_buildup;
 
 	rosc_callbackFkt_t callback;
 	void *binary_data_io;

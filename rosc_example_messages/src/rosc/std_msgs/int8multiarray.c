@@ -26,55 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  MultiArrayDimension.h created by Christian Holl
+ *  int8multiarray.c created by Christian Holl
  */
 
-#ifndef MULTIARRAYDIMENSION_H_
-#define MULTIARRAYDIMENSION_H_
-
-#include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
-
-
-union
-{
-	rosc_msg_MultiArrayDimension dim;
-	char *array;
-}rosc_msg_MultiArrayDimension_Padding={ { {0xFFFFFFFF,ROSC_PADDING_ARRAY_START_VALUE} }, 0xFFFFFFFF,0xFFFFFFFF };
-
-#define ROSC_DEPEND_MSG_MULTIARRAYDIMENSION\
-const ros_type_t rosc_msg_buildup_MultiArrayDimension[]=\
-{\
-	ROS_TYPE_STRING,\
-	ROS_TYPE_UINT32,\
-	ROS_TYPE_UINT32,\
-	ROS_TYPE_UINT32,\
-};\
-
-typedef struct
-{
-	struct
-	{
-		uint32_t size;
-		char* data;
-	}label;
-	uint32_t size;
-	uint32_t stride;
-}rosc_msg_MultiArrayDimension;
-
-
-#define ROSC_NEW_MULTIARRAYDIMENSION_STATIC_TYPE(STATIC_NAME, MULTIARRAYDIMENSION_LABEL_MAX_SIZE)\
-typedef struct\
-{\
-	struct\
-	{\
-		uint32_t size;\
-		char data[MULTIARRAYDIMENSION_LABEL_MAX_SIZE];\
-	}label;\
-	uint32_t size;\
-	uint32_t stride;\
-}rosc_msg_MultiArrayDimension_static_STATIC_NAME;\
-
-
-
-
-#endif /* MULTIARRAYDIMENSION_H_ */
+#include <rosc/std_msgs/int8multiarray.h>

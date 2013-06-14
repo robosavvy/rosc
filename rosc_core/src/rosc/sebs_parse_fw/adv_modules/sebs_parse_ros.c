@@ -107,7 +107,6 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				}
 				else
 				{
-					if(fdata->field_length<0)DEBUG_PRINT_STR("FIELD LENGTH < 0 !!!!");
 					fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
 				}
 				break;
@@ -121,6 +120,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
 			break;
 
+			default: //TODO check
+				break;
 		}
 
 

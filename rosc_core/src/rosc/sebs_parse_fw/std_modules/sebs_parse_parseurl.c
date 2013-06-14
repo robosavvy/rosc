@@ -157,6 +157,8 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 							}
 
 							break;
+							default:
+								break;
 						}
 						break;
 
@@ -186,6 +188,10 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 							case SEBS_PARSE_URL_STATE_ANALYSE_URI_TYPE:
 							malformed=true;
 							break;
+
+
+							default: //TODO check
+								break;
 						}
 						break;
 
@@ -197,6 +203,8 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 //							fdata->state=SEBS_PARSE_URL_STATE_PARSE_IPV6;
 								malformed=true; //TODO REMOVE when implemented
 							break;
+							default: //TODO check
+								break;
 						}
 						break;
 
@@ -211,6 +219,8 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 							case SEBS_PARSE_URL_STATE_PARSE_WAIT_DASH:
 							finished=true;
 							break;
+							default: //TODO check
+								break;
 						}
 						break;
 						default:

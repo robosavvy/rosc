@@ -26,77 +26,44 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  copy2buffer.c created by Christian Holl
+ *  multiarraydimension.h created by Christian Holl
  */
 
+#ifndef MULTIARRAYDIMENSION_H_
+#define MULTIARRAYDIMENSION_H_
 
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
-#include <rosc/debug/debug_out.h>
+#include <rosc/system/types.h>
+#include <rosc/com/ros_msg_buildup.h>
 
-sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
+//std_msgs/MultiArrayDimension
+//string label
+//uint32 size
+//uint32 stride
+
+typedef struct
 {
-	sebs_parse_copy2buffer_data_t *fdata=(sebs_parse_copy2buffer_data_t *)pdata->current_parser.parser_data;
-	if(pdata->function_init)
+	struct
 	{
-		pdata->function_init=false;
-		fdata->cur_pos=0;
-	}
+		uint32_t size;
+		char *data;
+	}label;
+	uint32_t size;
+	uint32_t stride;
+}ros_msg_MultiArrayDimension;
 
-	const char *sep=fdata->endChrs;
-	int8_t *correct=fdata->byteOrderCorrection;
-	char *buffer_c=fdata->buffer;
+extern const ros_msg_buildup_t rosc_msg_MultiArrayDimension_buildup;
 
-#ifdef __DEBUG__PRINTS__
-	if(sep==0 && fdata->max_len==0)
-	{
-		DEBUG_PRINT_STR("ERROR copy2buf -> Will copy an endless amount of chars!!");
-		while(1);
-	}
-#endif
+#define ROS_MSG_NEW_STATIC_SUBSCRIBER_TYPE(NAME, LABEL_SIZE)\
+typedef struct\
+{\
+	struct\
+	{\
+		char data[LABEL_SIZE];\
+		uint32_t size;\
+	}label;\
+	uint32_t size;\
+	uint32_t stride;\
+}ros_msg_static_subscriber_MultiArrayDimension_ ## NAME ;\
+uint32_t ros_msg_static_subscriber_sizeinfo_MultiArrayDimension_ ## NAME []={ LABEL_SIZE }
 
-	while(*pdata->len > 0)
-	{
-		bool isEndChar=false;
-		if(sep!=0)
-		{
-			while(*sep!='\0')
-			{
-				if(**pdata->buf==*sep)
-				{
-					isEndChar=true;
-					break;
-				}
-				++sep;
-			}
-		}
-
-		if((fdata->cur_pos<(fdata->max_len-(!!fdata->is_string /*subtract one if string(for terminator)*/
-				))) && !isEndChar )
-		{
-			if(correct==0)
-				buffer_c[fdata->cur_pos]=**pdata->buf;
-			else //Byte order correction
-				buffer_c[fdata->cur_pos+correct[fdata->cur_pos]]=**pdata->buf;
-
-			fdata->cur_pos++;
-			++*pdata->buf;
-			--*pdata->len;
-		}
-		else
-		{
-			if(isEndChar)
-			{
-				fdata->result=COPY2BUFFER_ENDCHR;
-			}
-			else
-			{
-				fdata->result=COPY2BUFFER_MAXLEN;
-			}
-			if(fdata->is_string)buffer_c[fdata->cur_pos]='\0';
-			return SEBS_PARSE_RETURN_FINISHED; //Finished!
-		}
-	}
-	return (SEBS_PARSE_RETURN_GO_AHEAD); //Not finished yet
-}
-
-
+#endif /* MULTIARRAYDIMENSION_H_ */

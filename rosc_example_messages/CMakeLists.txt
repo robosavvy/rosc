@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rosc_linux_test)
+project(rosc_example_messages)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86)
+find_package(catkin REQUIRED rosc_core)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -28,7 +28,7 @@ find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
-#   FILES
+#   FILES 
 #   Service1.srv
 #   Service2.srv
 # )
@@ -39,6 +39,8 @@ find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86)
 #   std_msgs  # Or other packages containing msgs
 # )
 
+
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -48,13 +50,11 @@ find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES rosc_linux_test
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
-
-
+   INCLUDE_DIRS include
+  # LIBRARIES rosc_core
+  # CATKIN_DEPENDS other_catkin_pkg
+  CFG_EXTRAS example_src_list.cmake #pointing to cmake/rosc_core_src
+)  
 
 ###########
 ## Build ##
@@ -63,30 +63,25 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include 
-                     ${catkin_INCLUDE_DIRS} 
-                     ${rosc_core_INCLUDE_DIRS} 
-                     ${rosc_sys_linux_x86_INCLUDE_DIRS})
+                    ${catkin_INCLUDE_DIRS}
+                    ${rosc_core_INCLUDE_DIRS} )
 
 ## Declare a cpp library
-# add_library(rosc_linux_test
-#   src/${PROJECT_NAME}/rosc_linux_test.cpp
+# add_library(rosc_core
+#   src/${PROJECT_NAME}/rosc_core.cpp
 # )
 
 ## Declare a cpp executable
-add_executable(rosc_linux_test_node src/main.c ${ROSC_EXAMPLE_MESSAGES_SRC})
+# add_executable(rosc_core_node src/rosc_core_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(rosc_linux_test_node rosc_sys_linux_x86 rosc_example_messages)
+# add_dependencies(rosc_core_node rosc_core_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(rosc_linux_test_node
+# target_link_libraries(rosc_core_node
 #   ${catkin_LIBRARIES}
 # )
-
-target_link_libraries(rosc_linux_test_node
-    rosc_sys_linux_x86
-)
 
 #############
 ## Install ##
@@ -103,7 +98,7 @@ target_link_libraries(rosc_linux_test_node
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS rosc_linux_test rosc_linux_test_node
+# install(TARGETS rosc_core rosc_core_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -128,12 +123,10 @@ target_link_libraries(rosc_linux_test_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_rosc_linux_test.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_rosc_core.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-execute_process(COMMAND clang ${ROSC_CORE_SOURCES} ${CMAKE_CURRENT_LIST_DIR}/src/main.c -I/usr/include -I/usr/include/x86_64-linux-gnu -I${rosc_core_INCLUDE_DIRS} -I${rosc_sys_linux_x86_INCLUDE_DIRS})

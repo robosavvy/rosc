@@ -163,7 +163,7 @@ int main_xmlrpctest()
 // ///////////////////////
 #include <rosc/com/ros_handler.h>
 
-unsigned char add_two_ints_rosrpc_query[] = {
+char add_two_ints_rosrpc_query[] = {
 //Message length
 0x48, 0x00, 0x00, 0x00,
 
@@ -197,7 +197,7 @@ unsigned char add_two_ints_rosrpc_query[] = {
 0x75, 0x6d, 0x3d, 0x2a
 };
 
-unsigned char add_two_ints_rosrpc_response[] = {
+char add_two_ints_rosrpc_response[] = {
 //Message length
 0xde, 0x00, 0x00, 0x00,
 
@@ -714,51 +714,17 @@ char MultiArrayInt8[] = {
 //data array elements
 0x01, 0x02, 0x03, 0x04 };
 
-
-
-
-
-
-
-ros_type_t multiarray[]={ROS_TYPE_MESSAGE, //message start -> length 32 Bit
-							ROS_TYPE_ARRAY, //dim [level1]
-								ROS_TYPE_SUBMESSAGE, //SUBMESSAGE
-
-								ROS_TYPE_SUBMESSAGE_END, //Back to array
-							ROS_TYPE_ARRAY, //data
-						ROS_TYPE_MSG_END //message end
-						};
-
-
-
-
-
-
-
-
-
-
-int array_depth=0;
-uint32_t length[3];
-
-typedef struct
-{
-	ros_type_t *typearray;
-	uint32_t length;
-};
-
-
 int main_tcprostest()
 {
 	int rlen;
 	int buffersize=1;
 
 #if(0)
-	unsigned char *msg=add_two_ints_rosrpc_query;
+	char *msg=add_two_ints_rosrpc_query;
 	rlen=sizeof(add_two_ints_rosrpc_query);
 
 #else
-	unsigned char *msg=add_two_ints_rosrpc_response;
+	char *msg=add_two_ints_rosrpc_response;
 	rlen=sizeof(add_two_ints_rosrpc_response);
 #endif
 

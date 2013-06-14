@@ -59,6 +59,9 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
 			DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
 			break;
+
+		default: //TODO check
+			break;
 	}
 
 
