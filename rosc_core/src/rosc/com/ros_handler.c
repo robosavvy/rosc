@@ -26,62 +26,45 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  endian.h created by Christian Holl
+ *  ros_handler.c created by Christian Holl
  */
 
-#ifndef ENDIAN_H_
-#define ENDIAN_H_
+#include <rosc/com/ros_handler.h>
+#include <rosc/debug/debug_out.h>
 
-#include <rosc/system/types.h>
-
-
-
-
-
-/**
- * This type of the struct stores the byte order for each
- * common type of the system, when the values are initialized
- * with like for example 0x0807060504030201 for 8 bytes.
- */
-typedef struct
+sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
-	union
+	ros_hander_data_t *hdata=pdata->handler_data;
+
+	DEBUG_PRINT_STR("ROS HANDLER");
+
+	if(pdata->handler_init)
 	{
-		uint16_t SIZE_2;
-		int8_t SIZE_2_B[sizeof(uint16_t)];
-	};
-	union
+		pdata->handler_init=false;
+		pdata->return_to_handler=false;
+		pdata->overall_len=0;
+		pdata->security_len=1024;
+		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
+	}
+
+	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
+
+
+	switch(*ros_event)
 	{
-		uint32_t SIZE_4;
-		int8_t SIZE_4_B[sizeof(uint32_t)];
-	};
-	union
-	{
-		uint64_t SIZE_8;
-		int8_t SIZE_8_B[sizeof(uint64_t)];
-	};
-} endian_t;
+		case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
+			DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
+			DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
+			break;
+		case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
+			DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+			break;
 
-/**
- * Contains byte order corrections for the communication
- * byte order (little endian) to the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_system;
+		default: //TODO check
+			break;
+	}
 
-/**
- * Contains byte order corrections to the communication
- * byte order (little endian) from the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_network;
 
-/**
- * This function initializes the variable
- * which is linked to the system_byte_order.
- *
- * @TODO Make rosc_init_endian replaceable for really weired compilers...
- */
-void rosc_init_endian(void);
 
-#endif /* ENDIAN_H_ */
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
+}

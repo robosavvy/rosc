@@ -163,7 +163,6 @@ typedef struct
 
 
 	//HTTP variables
-
 	uint16_t http_response_code; //!<saves the response code
 	xmlrpc_http_methods_t method; //!< the method requested
 	xmlrpc_http_actions_t action; //!< the action requested

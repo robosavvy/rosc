@@ -35,12 +35,14 @@
 #include <rosc/system/types.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-#define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS)\
+#define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS, BYTE_ORDER_CORRECT,IS_STRING)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.buffer=BUFFER;\
 		DATA_STORAGE.max_len=MAX_LEN;\
 		DATA_STORAGE.endChrs=END_CHARS;\
+		DATA_STORAGE.byteOrderCorrection=(int8_t*)BYTE_ORDER_CORRECT;\
+		DATA_STORAGE.is_string=IS_STRING;\
 		return (SEBS_PARSE_RETURN_INIT)
 
 typedef enum
@@ -51,11 +53,13 @@ typedef enum
 
 typedef struct
 {
-	char* buffer; //!< buffer points to the place where the chars have to be stored in memory.
+	void* buffer; //!< buffer points to the place where the chars have to be stored in memory.
 	uint32_t cur_pos; //!< cur_pos stores the amount of already copied chars.
 	uint32_t max_len; //!< max_len is the maximum length to be used for the buffer.
-	char* endChrs; //!< chrs which will mark the end of the string
+	const char* endChrs; //!< values which will mark the end of the string
+	int8_t* byteOrderCorrection; //!< if this is set to a non zero value; The numbers in the array will be used to change the byte order. Must be as big as the datatype
 	sebs_parse_copy2buffer_result_t result; //!< stores the result of the submode
+	bool is_string; //!< if set to one the max length will be reduced by one and a string terminator will be inserted
 }sebs_parse_copy2buffer_data_t;
 
 /**

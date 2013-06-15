@@ -26,62 +26,17 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  endian.h created by Christian Holl
+ *  multiarrylayout.c created by Christian Holl
  */
 
-#ifndef ENDIAN_H_
-#define ENDIAN_H_
+#include <rosc/std_msgs/multiarraylayout.h>
 
-#include <rosc/system/types.h>
-
-
-
-
-
-/**
- * This type of the struct stores the byte order for each
- * common type of the system, when the values are initialized
- * with like for example 0x0807060504030201 for 8 bytes.
- */
-typedef struct
+static ros_msg_buildup_type_t rosc_msg_MultiArrayLayout_buildup_types[]=
 {
-	union
-	{
-		uint16_t SIZE_2;
-		int8_t SIZE_2_B[sizeof(uint16_t)];
-	};
-	union
-	{
-		uint32_t SIZE_4;
-		int8_t SIZE_4_B[sizeof(uint32_t)];
-	};
-	union
-	{
-		uint64_t SIZE_8;
-		int8_t SIZE_8_B[sizeof(uint64_t)];
-	};
-} endian_t;
+		ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
+		ROS_MSG_BUILDUP_TYPE_UINT32,
+};
 
-/**
- * Contains byte order corrections for the communication
- * byte order (little endian) to the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_system;
+static ros_msg_buildup_type_t const rosc_msg_MultiArrayLayout_buildup_submessages[]={rosc_msg_MultiArrayDimension_buildup};
 
-/**
- * Contains byte order corrections to the communication
- * byte order (little endian) from the endian format of the
- * system. To convert the adress do for each byte chrptr+SIZE_X_B[byte_number]
- */
-extern const endian_t* const g_byte_order_correction_to_network;
-
-/**
- * This function initializes the variable
- * which is linked to the system_byte_order.
- *
- * @TODO Make rosc_init_endian replaceable for really weired compilers...
- */
-void rosc_init_endian(void);
-
-#endif /* ENDIAN_H_ */
+const ros_msg_buildup_t rosc_msg_MultiArrayLayout_buildup= {rosc_msg_MultiArrayLayout_buildup_types, rosc_msg_MultiArrayLayout_buildup_submessages};

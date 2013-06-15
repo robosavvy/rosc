@@ -103,6 +103,9 @@ typedef enum
 	SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES, //!< means that at this point there is attribute content of a quotes(") limited attribute
 } sebs_parse_xml_event_t;
 
+/**
+ * The different tag types ?! CDATA Comment ...
+ */
 typedef enum
 {
 	SEBS_PARSE_XML_TAG_TYPE_NORMAL,

@@ -205,6 +205,9 @@ ros_field_strings:
     latching,
     persistent,
     error,
+    probe,
+    request_type,
+    response_type,
   }
  
  #Strings for url schemes
