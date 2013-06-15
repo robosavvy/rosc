@@ -52,7 +52,8 @@ typedef struct
 	uint32_t data_offset;
 }ros_msg_MultiArrayLayout;
 
-extern const ros_msg_buildup_t rosc_msg_MultiArrayLayout_buildup;
+
+extern const ros_msg_buildup_t const *rosc_msg_MultiArrayLayout_buildup;
 
 #define ROS_MSG_NEW_STATIC_SUBSCRIBER_TYPE(NAME, LABEL_SIZE)\
 typedef struct\

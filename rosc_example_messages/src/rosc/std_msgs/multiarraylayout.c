@@ -31,12 +31,16 @@
 
 #include <rosc/std_msgs/multiarraylayout.h>
 
-static ros_msg_buildup_type_t rosc_msg_MultiArrayLayout_buildup_types[]=
+static const ros_msg_buildup_type_t rosc_msg_MultiArrayLayout_buildup_types[]=
 {
 		ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
 		ROS_MSG_BUILDUP_TYPE_UINT32,
 };
 
-static ros_msg_buildup_type_t const rosc_msg_MultiArrayLayout_buildup_submessages[]={rosc_msg_MultiArrayDimension_buildup};
 
-const ros_msg_buildup_t rosc_msg_MultiArrayLayout_buildup= {rosc_msg_MultiArrayLayout_buildup_types, rosc_msg_MultiArrayLayout_buildup_submessages};
+
+
+//const ros_msg_buildup_t rosc_msg_MultiArrayLayout_buildup= {rosc_msg_MultiArrayLayout_buildup_types, rosc_msg_MultiArrayLayout_buildup_submessages};
+
+
+extern const ros_msg_buildup_t const *rosc_msg_MultiArrayLayout_buildup;

@@ -38,5 +38,8 @@ static ros_msg_buildup_type_t rosc_msg_MultiArrayDimension_buildup_types[]=
 		ROS_MSG_BUILDUP_TYPE_UINT32,
 		ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 };
-const ros_msg_buildup_t rosc_msg_MultiArrayDimension_buildup= {rosc_msg_MultiArrayDimension_buildup_types, 0};
 
+
+static const ros_msg_buildup_t rosc_msg_MultiArrayDimension_buildup_l={rosc_msg_MultiArrayDimension_buildup_types, 0};
+
+const ros_msg_buildup_t const *rosc_msg_MultiArrayDimension_buildup= &rosc_msg_MultiArrayDimension_buildup_l;

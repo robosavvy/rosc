@@ -51,7 +51,7 @@ typedef struct
 	uint32_t stride;
 }ros_msg_MultiArrayDimension;
 
-extern const ros_msg_buildup_t rosc_msg_MultiArrayDimension_buildup;
+extern const ros_msg_buildup_t const *rosc_msg_MultiArrayDimension_buildup;
 
 #define ROS_MSG_NEW_STATIC_SUBSCRIBER_TYPE(NAME, LABEL_SIZE)\
 typedef struct\
