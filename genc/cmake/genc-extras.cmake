@@ -42,7 +42,7 @@ macro(_generate_module_c)
   # the macros, they do nothing
 endmacro()
 
-set(genc_INSTALL_DIR include/rosc/msg/)
+set(genc_INSTALL_DIR include/rosc/msg)
 
 macro(genc_append_include_dirs)
   if(NOT genc_APPENDED_INCLUDE_DIRS)
