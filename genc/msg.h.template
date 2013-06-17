@@ -131,37 +131,54 @@ if trait_class == 'MD5Sum':
 @[end for]@
 
  
-
-// todo, change this stuff below into proper EmPy syntax
-@{
-for field in spec.parsed_fields():
-    if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
-        (package, name) = genmsg.names.package_resource_name(field.base_type)
-        msg_context = genmsg.msg_loader.MsgContext()
- 
-        innerSpec = genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, search_path)
-        print innerSpec.fields()
-}@
-
-
-
-//gnampf
 ros_msg_buildup_type_t ros_msg_buildup_@(spec.package)[]=
 {
-    @[for field in spec.parsed_fields()]
-    @[if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']]
-    ROS_MSG_BUILDUP_TYPE_SUBMESSAGE@[if field.is_array]_ARRAY@[end if],
+@{
+def add_tabs(count, str):
+    for i in range(count):
+        str = str + "\t"
+    return str
     
-    
-    
-    
-    @[else]
-    @[if field.is_array]ROS_MSG_BUILDUP_TYPE_ARRAY,@[end if]
-    ROS_MSG_BUILDUP_TYPE_@(field.base_type.upper()),
-    @[end if]
-    @[end for]
+def create_buildup_list(depth, spec, array_depth, max_array_depth):
+    list=""
+    max_array_depth=0;
+    for field in spec.parsed_fields():
+        if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
+            list=add_tabs(depth, list)
+            (package, name) = genmsg.names.package_resource_name(field.base_type)
+            msg_context = genmsg.msg_loader.MsgContext()
+            innerSpec = genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, search_path)
+            list=list + "ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
+            if (field.is_array):
+                list=list + "ARRAY"
+                array_depth+=1
+                if (array_depth+1 > max_array_depth):
+                    max_array_depth+=1
+            list=list + ",\n"
+            (tlist, max_array_depth)=create_buildup_list(depth+1, innerSpec, array_depth, max_array_depth)      
+            list+=tlist;
+            if(field.is_array):
+                array_depth-=1
+        else:
+            if(field.is_array):
+                list=add_tabs(depth, list)
+                list=list + "ROS_MSG_BUILDUP_TYPE_ARRAY,\n"
+                if (array_depth+1 > max_array_depth):
+                    max_array_depth+=1
+            list=add_tabs(depth, list)
+            list=list + "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper() +",\n"
+    list=add_tabs(depth, list)
+    list=list + "ROS_MSG_BUILDUP_TYPE_MESSAGE_END,"
+    if not depth == 1:
+         list=list + "\n"
+    return list, max_array_depth
 
 
-}
+(list,max_array_depth)=create_buildup_list(1,spec,0,0)
+print list
+
+
+}@}
 
 #endif // @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H
+@(max_array_depth)
