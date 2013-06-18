@@ -57,10 +57,8 @@ class msg(object):
         '''
         self.__msg_spec=msg_spec
         self.__search_path=search_path
-        self._create_build_list(msg_spec)
-        
-        
-
+        self.__create_information(msg_spec)
+         
     def get_msgspec_form_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
         return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, self.__search_path)
@@ -82,7 +80,54 @@ class msg(object):
             tabs = tabs + "\t"
         return tabs
     
-    def _create_build_list(self, spec, prev_field_name=''):
+    def __add_base_type_static(self, depth, base_type, name):
+        if base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
+            return add_tabs(depth) + base_type + "_t"
+        elif base_type == 'byte':
+            return add_tabs(depth) + 'uint8_t'
+        elif base_type == 'char':
+            return add_tabs(depth) + 'int8_t'
+        elif base_type == 'time' or  base_type == 'duration':
+            output= add_tabs(depth) + 'struct\n'
+            output+= add_tabs(depth) + '{' + '\n'
+            output+= add_tabs(depth+1) + 'uint32_t sec;' + '\n'
+            output+= add_tabs(depth+1) + 'uint32_t nsec;' + '\n'
+            output+= add_tabs(depth) + '}' + name
+            return output
+
+    def __add_base_array_static(self, depth, base_type, name, arraylength):
+        str=""
+        for line in range(6):
+            indent=""
+            identation=depth
+            
+            if line in [2,3,4]:
+                identation+=1
+                
+            for i in range(identation):
+                indent+="\t"
+                
+            if line == 0:
+                str+=indent+"struct"
+            elif line == 1:
+                str+=indent+"{"
+            elif line == 2:
+                str+=self.__add_base_type_static(identation, base_type, 'data') + "[" + arraylength + "]" + ";"
+            elif line == 3:
+                str+=indent+"uint32_t size;"
+            elif line == 4:
+                if not arraylength.isdigit():
+                    str+=indent+"bool oversize;"
+                else:
+                    continue
+            elif line == 5:
+                str+= indent+"}" + name + ";"
+                
+            str+="\n"
+        return str;
+    
+
+    def __create_information(self, spec, prev_field_name=''):
         for field in spec.parsed_fields():
             if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
                 submessage_entry="ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
@@ -97,7 +142,7 @@ class msg(object):
                         self.__max_array_depth+=1
                 self.__msg_buildup.append((self.__depth,submessage_entry, 0))
                 self.__depth+=1
-                self._create_build_list(innerSpec, field.name)
+                self.__create_information(innerSpec, field.name)
                 self.__depth-=1
                 if(field.is_array):
                     self.__array_depth-=1
