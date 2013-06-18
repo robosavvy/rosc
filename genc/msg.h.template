@@ -134,51 +134,117 @@ if trait_class == 'MD5Sum':
 ros_msg_buildup_type_t ros_msg_buildup_@(spec.package)[]=
 {
 @{
-def add_tabs(count, str):
+def add_tabs(count):
+    tabs=""
     for i in range(count):
-        str = str + "\t"
-    return str
+        tabs = tabs + "\t"
+    return tabs
+
+def add_base_type_static(depth, base_type, name):
+
+    if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
+        return add_tabs(depth) + field.base_type + "_t"
+    elif field.base_type == 'byte':
+        return add_tabs(depth) + 'uint8_t'
+    elif field.base_type == 'char':
+        return add_tabs(depth) + 'int8_t'
+    elif field.base_type == 'time' or  field.base_type == 'duration':
+        output= add_tabs(depth) + struct + '\n'
+        output= add_tabs(depth) + '{' + '\n'
+        output= add_tabs(depth+1) + '' + '\n'
+        output= add_tabs(depth+1) + '' + '\n'
+        output= add_tabs(depth) + '}' + name + ';\n'
+
     
-def create_buildup_list(depth, spec, array_depth, max_array_depth):
+def add_base_array_static(depth, base_type, name, arraylength):
+    for line in range(6):
+    
+        identation=depth
+        
+        if line in [2,3,4]:
+            indentation+=1
+            
+        for indent in range(indentation):
+            str+="/t"
+        if line == 0:
+            str+="struct"
+        elif line == 1:
+            str+="{"
+        elif line == 2:
+            str+=add_base_type(indentation, base_type)
+        elif line == 3:
+            str+="uint32_t size;"
+        elif line == 4:
+            str+="bool oversize;"
+        elif line == 5:
+            str+= "}" + name + ";"
+        str+="\n"
+    return str;
+    
+def getInnnerSpec(spec):
+    (package, name) = genmsg.names.package_resource_name(field.base_type)
+    msg_context = genmsg.msg_loader.MsgContext()
+    return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, search_path)
+
+def create_buildup_list(depth, spec, array_depth, max_array_depth, fieldname):
     list=""
+    struct_static=""
+    struct_malloc=""
     max_array_depth=0;
     for field in spec.parsed_fields():
         if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
-            list=add_tabs(depth, list)
-            (package, name) = genmsg.names.package_resource_name(field.base_type)
-            msg_context = genmsg.msg_loader.MsgContext()
-            innerSpec = genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, search_path)
-            list=list + "ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
+            list+=add_tabs(depth)
+        
+            innerSpec = getInnnerSpec(spec)
+                
+            list+="ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
             if (field.is_array):
-                list=list + "ARRAY"
+                list+="ARRAY"
+                if(field.array_len == None):
+                    list+='_UL'
                 array_depth+=1
                 if (array_depth+1 > max_array_depth):
                     max_array_depth+=1
-            list=list + ",\n"
-            (tlist, max_array_depth)=create_buildup_list(depth+1, innerSpec, array_depth, max_array_depth)      
+            list+=",\n"
+            (tlist, max_array_depth)=create_buildup_list(depth+1, innerSpec, array_depth, max_array_depth, fieldname + "_" + field.name)      
             list+=tlist;
             if(field.is_array):
                 array_depth-=1
         else:
             if(field.is_array):
-                list=add_tabs(depth, list)
-                list=list + "ROS_MSG_BUILDUP_TYPE_ARRAY,\n"
+                list+=add_tabs(depth)
+                list+="ROS_MSG_BUILDUP_TYPE_ARRAY"
+                if(field.array_len == None):
+                    list+='_UL'
+                list+=",\n"
+
+                if(field.base_type == 'string'): #Stringarray ...
+                    if (array_depth+2 > max_array_depth):
+                        max_array_depth=array_depth+2
+                else:
+                    if (array_depth+1 > max_array_depth):
+                        max_array_depth=array_depth+1
+                list+=add_tabs(1) #1 tab more for the data inside array
+                                       
+            if(field.base_type == 'string'):#String type, which is actually a array itself
                 if (array_depth+1 > max_array_depth):
-                    max_array_depth+=1
-            list=add_tabs(depth, list)
-            list=list + "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper() +",\n"
-    list=add_tabs(depth, list)
-    list=list + "ROS_MSG_BUILDUP_TYPE_MESSAGE_END,"
+                    max_array_depth=array_depth+1
+            list+=add_tabs(depth)
+            list+="ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper() +",\n\n"
+    list+=add_tabs(depth)
+    list+="ROS_MSG_BUILDUP_TYPE_MESSAGE_END,"
     if not depth == 1:
-         list=list + "\n"
+         list+="\n\n"
     return list, max_array_depth
 
 
-(list,max_array_depth)=create_buildup_list(1,spec,0,0)
+(list,max_array_depth)=create_buildup_list(1,spec,0,0,"")
 print list
-
-
+print msg_context
+print field.base_type
+print search_path
 }@}
+
 
 #endif // @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H
 @(max_array_depth)
