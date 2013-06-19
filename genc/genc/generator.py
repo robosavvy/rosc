@@ -50,7 +50,7 @@ class msg(object):
     __msg_static_size_fields=[]
     __array_depth=0
     __max_array_depth=0
-    __depth=0
+    __message_depth=0
     
 
     def __init__(self, msg_spec, search_path):
@@ -88,11 +88,11 @@ class msg(object):
     
     def __add_base_type_static(self, depth, base_type, name, prev_name):
         if base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
-           self.__msg_static_struct += (add_tabs(depth) + base_type + "_t")
+           self.__msg_static_struct += (add_tabs(depth) + base_type + "_t " + name)
         elif base_type == 'byte':
-           self.__msg_static_struct += (add_tabs(depth) + 'uint8_t')
+           self.__msg_static_struct += (add_tabs(depth) + 'uint8_t ' + name)
         elif base_type == 'char':
-           self. __msg_static_struct += (add_tabs(depth) + 'int8_t')
+           self. __msg_static_struct += (add_tabs(depth) + 'int8_t ' + name)
         elif base_type == 'time' or  base_type == 'duration':
             output= add_tabs(depth) + 'struct\n'
             output+= add_tabs(depth) + '{' + '\n'
@@ -142,47 +142,71 @@ class msg(object):
                 
             self.__msg_static_struct+="\n"
 
+    def __addBuildupEntry(self,field):
+        entry=""
+        if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
+            entry="ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
+            if(field.is_array):
+                entry+="ARRAY"
+                if(field.array_len == None): #array with undefined length
+                    entry+="_UL"
+            self.__msg_buildup.append((self.__message_depth, entry, 0))
+        else:
+            indent=self.__message_depth
+            if(field.is_array):
+                indent+=1
+                entry="ROS_MSG_BUILDUP_TYPE_ARRAY"
+                if(field.array_len == None): #array with undefined length
+                    entry+="_UL"
+                self.__msg_buildup.append((self.__message_depth, entry, 0))
+                self.__msg_buildup.append((self.__message_depth+1, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+            else:
+                self.__msg_buildup.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+
+            
+        
+
+    def __addSubmessageHeaders(self,field):
+        pass
+        
+    def __addSubmessageFooters(self,field):
+        pass
     
     def __processField(self, field):
         #if field is another message
         if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
+            
             pass
         else:
+            
             pass
+        
+        
+        
         
     def __create_information(self, spec, prev_field_name=''):
         for field in spec.parsed_fields():
+            self.__addBuildupEntry(field)
             if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
-                submessage_entry="ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
-                #get the inner message type
+                
                 innerSpec = self.get_msgspec_form_field(field)
+                
                 if (field.is_array):
-                    submessage_entry+="ARRAY"
-                    if(field.array_len == None): #array with undefined length
-                        submessage_entry+="_UL"
                     self.__array_depth+=1
                     if (self.__array_depth+1 > self.__max_array_depth):
                         self.__max_array_depth+=1
-                self.__msg_buildup.append((self.__depth,submessage_entry, 0))
-                self.__depth+=1               
+                
+                self.__message_depth+=1               
                 self.__create_information(innerSpec, field.name + "_")
-                self.__depth-=1
+                self.__message_depth-=1
                 if(field.is_array):
                     self.__array_depth-=1
             else:
-                field_depth=self.__depth
+                field_depth=self.__message_depth
                 if(field.is_array):
-                    field_depth+=1
-                    array_entry="ROS_MSG_BUILDUP_TYPE_ARRAY"
-                    
-                    #Undefined array length?
-                    if(field.array_len == None):
-                        array_entry+="_UL" # Add UL ending to symbol
-                    self.__msg_buildup.append((self.__depth, array_entry, 0))
                     
                     ##Add array string
-                    self.__add_base_array_static(self.__depth, field.base_type, field.name, prev_field_name, field.array_len)
-    
+                    self.__add_base_array_static(self.__message_depth, field.base_type, field.name, prev_field_name, field.array_len)
     
                     if(field.base_type == 'string'): #Stringarray ...
                         if (self.__array_depth+2 >self.__max_array_depth):
@@ -191,13 +215,12 @@ class msg(object):
                         if (self.__array_depth+1 >self.__max_array_depth):
                             self.max_array_depth=self.__array_depth+1
                 else:
-                    self.__add_base_type_static(self.__depth, field.base_type, field.name, prev_field_name)
+                    self.__add_base_type_static(self.__message_depth, field.base_type, field.name, prev_field_name)
                     self.__msg_static_struct+=';\n'
                                
                 if(field.base_type == 'string'):#String type, which is actually a array itself
                     if (self.__array_depth+1 >self.__max_array_depth):
                         self.max_array_depth=self.__array_depth+1
 
-                self.__msg_buildup.append((field_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(),1))
-        self.__msg_buildup.append((self.__depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
+        self.__msg_buildup.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
     
