@@ -59,7 +59,7 @@ class msg(object):
         '''
         self.__msg_spec=msg_spec
         self.__search_path=search_path
-        self.__create_information(msg_spec)
+        self.__process_spec(msg_spec)
          
     def get_msgspec_form_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
@@ -79,68 +79,14 @@ class msg(object):
     def printStaticMsgStruct(self):
         print self.__msg_static_struct
     
+    def printStaticMsgStructInit(self):
+        print self.__msg_static_size_fields
     
     def add_tabs(self, count):
         tabs=""
         for i in range(count):
             tabs = tabs + "\t"
         return tabs
-    
-    def __add_base_type_static(self, depth, base_type, name, prev_name):
-        if base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
-           self.__msg_static_struct += (add_tabs(depth) + base_type + "_t " + name)
-        elif base_type == 'byte':
-           self.__msg_static_struct += (add_tabs(depth) + 'uint8_t ' + name)
-        elif base_type == 'char':
-           self. __msg_static_struct += (add_tabs(depth) + 'int8_t ' + name)
-        elif base_type == 'time' or  base_type == 'duration':
-            output= add_tabs(depth) + 'struct\n'
-            output+= add_tabs(depth) + '{' + '\n'
-            output+= add_tabs(depth+1) + 'uint32_t sec;' + '\n'
-            output+= add_tabs(depth+1) + 'uint32_t nsec;' + '\n'
-            output+= add_tabs(depth) + '}' + name
-            self.__msg_static_struct+=output
-        elif base_type == 'string':
-            output= add_tabs(depth) + 'struct\n'
-            output+= add_tabs(depth) + '{' + '\n'
-            output+= add_tabs(depth+1) + 'uint32_t size;' + '\n'
-            output+= add_tabs(depth+1) + 'char data['  "MAX_SIZE_STRING_" + prev_name + name + '];' + '\n' 
-            output+= add_tabs(depth) + '}' + name
-            self.__msg_static_size_fields.append("MAX_SIZE_STRING_" + prev_name + name)
-            self.__msg_static_struct+=output
-            
-
-    def __add_base_array_static(self, depth, base_type, name, prev_name, arraylength):
-        for line in range(6):
-            indent=""
-            identation=depth
-            
-            if line in [2,3,4]:
-                identation+=1
-                
-            for i in range(identation):
-                indent+="\t"
-                
-            if line == 0:
-                self.__msg_static_struct+=indent+"struct"
-            elif line == 1:
-                self.__msg_static_struct+=indent+"{"
-            elif line == 3:
-                if(arraylength == None):
-                    arraylength = 'MAX_SIZE_' + prev_name + name
-                self.__add_base_type_static(identation, base_type, 'data', prev_name) 
-                self.__msg_static_struct+= "[" + str(arraylength) + "]" + ";"
-            elif line == 2:
-                self.__msg_static_struct+=indent+"uint32_t size;"
-            elif line == 4:
-                if not str(arraylength).isdigit():
-                    self.__msg_static_struct+=indent+"bool oversize;"
-                else:
-                    continue
-            elif line == 5:
-                self.__msg_static_struct+= indent+"}" + name + ";"
-                
-            self.__msg_static_struct+="\n"
 
     def __addBuildupEntry(self,field):
         entry=""
@@ -163,64 +109,83 @@ class msg(object):
             else:
                 self.__msg_buildup.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
 
-            
-        
-
-    def __addSubmessageHeaders(self,field):
-        pass
-        
-    def __addSubmessageFooters(self,field):
-        pass
     
-    def __processField(self, field):
-        #if field is another message
-        if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
-            
-            pass
+    def __addMessageHeader(self, prev_field, prev_names):
+        indent=""
+        for i in range(self.__message_depth):
+            indent+="\t"
+        self.__msg_static_struct+=indent + "struct\n"
+        self.__msg_static_struct+=indent + "{\n"
+        if(self.__message_depth != 0):
+            self.__msg_static_size_fields.append(self.__genMessageLengthOrDefineString(prev_field, prev_names))
+    
+    
+    def __genMessageLengthOrDefineString(self, prev_field, prev_names):
+        lendef=""
+        if(self.__message_depth !=0):
+            if (prev_field.is_array):
+                if(prev_field.array_len == None):
+                    lendef+=prev_names + 'SIZE'
+                else:
+                    lendef=str(prev_field.array_len)
+        return lendef
+    
+    def __addMessageFooter(self, prev_field, prev_names):
+        indent=""
+        for i in range(self.__message_depth):
+            indent+="\t"
+        if(self.__message_depth ==0):
+            self.__msg_static_struct+=indent + "}" + "rosc_msg" + ";\n"
         else:
-            
-            pass
+            self.__msg_static_struct+=indent + "}" + prev_field.name
+            if (prev_field.is_array):
+                self.__msg_static_struct+="["
+                self.__msg_static_struct+=self.__genMessageLengthOrDefineString(prev_field, prev_names)
+                self.__msg_static_struct+="]"
+            self.__msg_static_struct+=";\n"
+
+    
         
-        
-        
-        
-    def __create_information(self, spec, prev_field_name=''):
+    def __process_spec(self, spec, prev_field=None, prev_names=''):
+        self.__addMessageHeader(prev_field, prev_names)
         for field in spec.parsed_fields():
             self.__addBuildupEntry(field)
             if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
-                
-                innerSpec = self.get_msgspec_form_field(field)
-                
+                               
+                #####ARRAY DEPTH SIZE DETERMINATION#####
                 if (field.is_array):
                     self.__array_depth+=1
                     if (self.__array_depth+1 > self.__max_array_depth):
                         self.__max_array_depth+=1
+                ########################################
                 
-                self.__message_depth+=1               
-                self.__create_information(innerSpec, field.name + "_")
+
+                self.__message_depth+=1
+                self.__process_spec(self.get_msgspec_form_field(field), field, prev_names + field.name + "_") ##Recursive call go one message type deeper
                 self.__message_depth-=1
+                
+                #####ARRAY DEPTH SIZE DETERMINATION#####
                 if(field.is_array):
                     self.__array_depth-=1
+                ########################################   
             else:
-                field_depth=self.__message_depth
                 if(field.is_array):
                     
-                    ##Add array string
-                    self.__add_base_array_static(self.__message_depth, field.base_type, field.name, prev_field_name, field.array_len)
-    
+                    #####ARRAY DEPTH SIZE DETERMINATION###################
                     if(field.base_type == 'string'): #Stringarray ...
                         if (self.__array_depth+2 >self.__max_array_depth):
                             self.__max_array_depth=self.__array_depth+2
                     else:
                         if (self.__array_depth+1 >self.__max_array_depth):
                             self.max_array_depth=self.__array_depth+1
-                else:
-                    self.__add_base_type_static(self.__message_depth, field.base_type, field.name, prev_field_name)
-                    self.__msg_static_struct+=';\n'
+                    #######################################################
+
                                
+                #####ARRAY DEPTH SIZE DETERMINATION###################               
                 if(field.base_type == 'string'):#String type, which is actually a array itself
                     if (self.__array_depth+1 >self.__max_array_depth):
                         self.max_array_depth=self.__array_depth+1
+                #######################################################
 
         self.__msg_buildup.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
-    
+        self.__addMessageFooter(prev_field, prev_names)
