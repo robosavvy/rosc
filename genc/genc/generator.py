@@ -135,7 +135,7 @@ class msg(object):
         for i in range(self.__message_depth):
             indent+="\t"
         if(self.__message_depth ==0):
-            self.__msg_static_struct+=indent + "}" + "rosc_msg" + ";\n"
+            self.__msg_static_struct+=indent + "}"
         else:
             self.__msg_static_struct+=indent + "}" + prev_field.name
             if (prev_field.is_array):
@@ -190,7 +190,7 @@ class msg(object):
             pass
         
         self.__message_depth-=1
-        pass
+
         
         
     def __process_spec(self, spec, prev_field=None, prev_names=''):
@@ -236,4 +236,9 @@ class msg(object):
                 #######################################################
 
         self.__msg_buildup.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
+
         self.__addMessageFooter(prev_field, prev_names)
+        if(self.__message_depth==0):
+            
+            self.__msg_static_struct+="rosc_static_msg" + "_" + spec.package + "__" +spec.short_name + "_ ## USER_TYPENAME"
+        pass
