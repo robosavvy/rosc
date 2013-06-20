@@ -80,6 +80,16 @@ class msg(object):
     
     def printStaticMsgStructInit(self):
         print self.__msg_static_size_fields
+        
+    def printStaticMsgStructInitDefinition(self):
+        output= "#define ROSC_USERDEF_MSG_" + self.__msg_spec.package + self.__msg_spec.short_name + "(\n"
+        for staticf in self.__msg_static_size_fields:
+            if not (staticf.isdigit()):
+                output+=staticf + ",\n"
+        output+=")"
+        output+=self.__msg_static_struct.replace("\n", "\\\n")
+        print output
+        pass
     
     def add_tabs(self, count):
         tabs=""
@@ -153,7 +163,10 @@ class msg(object):
                 self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
             self.__message_depth+=1
             
-            field_out="data"
+            if(field.base_type !="string"):
+                field_out="data"
+            else:
+                field_out=field.name
         else:
             field_out=field.name
             
