@@ -24,6 +24,7 @@ find_package(catkin REQUIRED roscpp rospy std_msgs message_generation)
  FILES
  abctest.msg
  gnampf.msg
+ test12345.msg
 )
 
 ## Generate services in the 'srv' folder

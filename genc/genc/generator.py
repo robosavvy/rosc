@@ -116,7 +116,7 @@ class msg(object):
             indent+="\t"
         self.__msg_static_struct+=indent + "struct\n"
         self.__msg_static_struct+=indent + "{\n"
-        if(self.__message_depth != 0):
+        if(self.__message_depth != 0 and prev_field.is_array):
             self.__msg_static_size_fields.append(self.__genMessageLengthOrDefineString(prev_field, prev_names))
     
     
@@ -187,6 +187,8 @@ class msg(object):
         if(field.is_array):
             self.__message_depth-=1
             self.__addMessageFooter(field, prev_names + "_" + field.name)
+            pass
+        
         self.__message_depth-=1
         pass
         
