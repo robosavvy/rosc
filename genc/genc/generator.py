@@ -35,7 +35,6 @@ import genc.generator
 import genmsg.names
 import genmsg.msg_loader
 import genmsg.msgs
-from Test import add_tabs
 
 
 class msg(object):
@@ -72,9 +71,9 @@ class msg(object):
     def printBuildupArray(self):
         for (indent,text, additionalreturn) in self.__msg_buildup:
             if additionalreturn == 1:
-                print add_tabs(indent) + text + ",\n"
+                print self.add_tabs(indent) + text + ",\n"
             else:
-                print add_tabs(indent) + text + ","
+                print self.add_tabs(indent) + text + ","
     
     def printStaticMsgStruct(self):
         print self.__msg_static_struct
@@ -149,9 +148,9 @@ class msg(object):
         self.__message_depth+=1
         if(field.is_array):
             self.__addMessageHeader(field, prev_names + "_" + field.name)
-            self.__msg_static_struct+= add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
+            self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
             if(field.array_len == None):
-                self.__msg_static_struct+= add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
+                self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
             self.__message_depth+=1
             
             field_out="data"
@@ -159,27 +158,27 @@ class msg(object):
             field_out=field.name
             
         if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
-            self.__msg_static_struct += (add_tabs(self.__message_depth) + field.base_type + "_t " + field_out)
+            self.__msg_static_struct += (self.add_tabs(self.__message_depth) + field.base_type + "_t " + field_out)
         elif field.base_type == 'byte':
-           self.__msg_static_struct += (add_tabs(self.__message_depth) + 'uint8_t ' + field_out)
+           self.__msg_static_struct += (self.add_tabs(self.__message_depth) + 'uint8_t ' + field_out)
         elif field.base_type == 'bool':
-           self.__msg_static_struct += (add_tabs(self.__message_depth) + 'bool ' + field_out)
+           self.__msg_static_struct += (self.add_tabs(self.__message_depth) + 'bool ' + field_out)
         elif field.base_type == 'char':
-           self. __msg_static_struct += (add_tabs(self.__message_depth) + 'int8_t ' + field_out)
+           self. __msg_static_struct += (self.add_tabs(self.__message_depth) + 'int8_t ' + field_out)
         elif field.base_type == 'time' or  field.base_type == 'duration':
-           output= add_tabs(self.__message_depth) + 'struct\n'
-           output+= add_tabs(self.__message_depth) + '{' + '\n'
-           output+= add_tabs(self.__message_depth+1) + 'uint32_t sec;' + '\n'
-           output+= add_tabs(self.__message_depth+1) + 'uint32_t nsec;' + '\n'
-           output+= add_tabs(self.__message_depth) + '}' + field_out
+           output= self.add_tabs(self.__message_depth) + 'struct\n'
+           output+= self.add_tabs(self.__message_depth) + '{' + '\n'
+           output+= self.add_tabs(self.__message_depth+1) + 'uint32_t sec;' + '\n'
+           output+= self.add_tabs(self.__message_depth+1) + 'uint32_t nsec;' + '\n'
+           output+= self.add_tabs(self.__message_depth) + '}' + field_out
            self.__msg_static_struct+=output
         elif field.base_type == 'string':
-           output= add_tabs(self.__message_depth) + 'struct\n'
-           output+= add_tabs(self.__message_depth) + '{' + '\n'
-           output+= add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
-           output+= add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
-           output+= add_tabs(self.__message_depth+1) + 'char data['  "MAX_SIZE_STRING" + prev_names + "_" + field_out +'];' + '\n' 
-           output+= add_tabs(self.__message_depth) + '}' + field_out
+           output= self.add_tabs(self.__message_depth) + 'struct\n'
+           output+= self.add_tabs(self.__message_depth) + '{' + '\n'
+           output+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
+           output+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
+           output+= self.add_tabs(self.__message_depth+1) + 'char data['  "MAX_SIZE_STRING" + prev_names + "_" + field_out +'];' + '\n' 
+           output+= self.add_tabs(self.__message_depth) + '}' + field_out
            self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field_out)
            self.__msg_static_struct+=output 
         self.__msg_static_struct+= ";\n"
