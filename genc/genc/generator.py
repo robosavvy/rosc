@@ -82,11 +82,15 @@ class msg(object):
         print self.__msg_static_size_fields
         
     def printStaticMsgStructInitDefinition(self):
-        output= "#define ROSC_USERDEF_MSG_" + self.__msg_spec.package + self.__msg_spec.short_name + "(\n"
+        output= "#define ROSC_USERDEF_MSG_" + self.__msg_spec.package + self.__msg_spec.short_name + "(\nUSER_TYPE,\n"
         for staticf in self.__msg_static_size_fields:
             if not (staticf.isdigit()):
                 output+=staticf + ",\n"
         output+=")"
+        output+= rosc_msg_static_length_definition_ + self.__msg_spec.package + self.__msg_spec.short_name + "_ ## USER_TYPE[]={"
+        for staticf in self.__msg_static_size_fields:
+            staticf + ",\n"
+        output+="};"  
         output+=self.__msg_static_struct.replace("\n", "\\\n")
         print output
         pass
