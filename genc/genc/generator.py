@@ -46,6 +46,7 @@ class msg(object):
     __msg_spec=[]
     __msg_buildup=[]
     __msg_static_struct=""
+    __msg_static_padding_init=""
     __msg_static_size_fields=[]
     __array_depth=0
     __max_array_depth=0
@@ -106,6 +107,9 @@ class msg(object):
         print output.replace("\n", "\\\n")
         pass
     
+    def printStaticPaddingInit(self):
+        print self.__msg_static_padding_init;
+    
     def add_tabs(self, count):
         tabs=""
         for i in range(count):
@@ -135,6 +139,9 @@ class msg(object):
 
     
     def __addMessageHeader(self, prev_field, prev_names):
+        #Padding init struct begin
+        self.__msg_static_padding_init+='{';
+        
         indent=""
         for i in range(self.__message_depth):
             indent+="\t"
@@ -155,6 +162,9 @@ class msg(object):
         return lendef
     
     def __addMessageFooter(self, prev_field, prev_names):
+        #Padding init struct end
+        self.__msg_static_padding_init+='}';
+        
         indent=""
         for i in range(self.__message_depth):
             indent+="\t"
@@ -167,12 +177,42 @@ class msg(object):
                 self.__msg_static_struct+=self.__genMessageLengthOrDefineString(prev_field, prev_names)
                 self.__msg_static_struct+="]"
             self.__msg_static_struct+=";\n"
+            
+    def __add_static_padding_init(self, fieldtype):
+        if fieldtype in ['uint8', 'int8', 'char', 'bool']:
+            #Padding init struct end
+            self.__msg_static_padding_init+='0xFF'
+            pass
+        elif fieldtype in ['uint16', 'int16']:
+            #Padding init struct end
+            self.__msg_static_padding_init+='0xFFFF'
+            pass
+        elif fieldtype in ['uint32', 'int32']:
+            self.__msg_static_padding_init+='0xFFFFFFFF'
+            pass
+        elif fieldtype in ['uint64', 'int64']:
+            self.__msg_static_padding_init+='0xFFFFFFFFFFFFFFFF'
+            pass     
+        elif fieldtype == 'float32':
+            self.__msg_static_padding_init+='float32'
+            pass
+        elif fieldtype == 'float64':
+            pass
+        elif fieldtype in ['time', 'duration']:
+            self.__msg_static_padding_init+='{0xFFFFFFFF,0xFFFFFFFF}'
+            pass
+        elif fieldtype == 'string':
+            self.__msg_static_padding_init+='{0xFF}'
+            pass
 
     def __addVariable(self, field, prev_names):
+        #add Variable to padding init
+        self.__add_static_padding_init(field.base_type)
         footer=""
         self.__message_depth+=1
         if(field.is_array):
             self.__addMessageHeader(field, prev_names + "_" + field.name)
+            self.__add_static_padding_init(field.base_type)
             self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
             if(field.array_len == None):
                 self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
