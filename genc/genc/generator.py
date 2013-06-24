@@ -79,11 +79,10 @@ class msg(object):
     def printStaticMsgStruct(self):
         print self.__msg_static_struct
     
-    def printStaticMsgStructInit(self):
-        print self.__msg_static_size_fields
+ 
         
-    def printStaticMsgStructInitDefinition(self):
-        output= "#define ROSC_USERDEF_MSG_" + self.__msg_spec.package + self.__msg_spec.short_name + "(\nUSER_TYPE,\n"
+    def printStaticMsgStructDefinition(self):
+        output= "#define ROSC_USERDEF_STATIC_MSG_" + self.__msg_spec.package + "_" + self.__msg_spec.short_name + "(\nUSER_TYPE,\n"
         first=True
         for staticf in self.__msg_static_size_fields:
 
@@ -156,7 +155,7 @@ class msg(object):
         if(self.__message_depth !=0):
             if (prev_field.is_array):
                 if(prev_field.array_len == None):
-                    lendef+='MAX_SIZE_ARRAY' + prev_names
+                    lendef+='MAX_SIZE_ARRAY' + prev_names + "_" + prev_field.name
                 else:
                     lendef=str(prev_field.array_len)
         return lendef
@@ -211,17 +210,16 @@ class msg(object):
         footer=""
         self.__message_depth+=1
         if(field.is_array):
-            self.__addMessageHeader(field, prev_names + "_" + field.name)
+            self.__addMessageHeader(field, prev_names)
             self.__add_static_padding_init(field.base_type)
             self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
             if(field.array_len == None):
                 self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
             self.__message_depth+=1
             
-            if(field.base_type !="string"):
-                field_out="data"
-            else:
-                field_out=field.name
+
+            field_out="data"
+
         else:
             field_out=field.name
             
@@ -245,16 +243,23 @@ class msg(object):
            output+= self.add_tabs(self.__message_depth) + '{' + '\n'
            output+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
            output+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
-           output+= self.add_tabs(self.__message_depth+1) + 'char data['  "MAX_SIZE_STRING" + prev_names + "_" + field_out +'];' + '\n' 
+           output+= self.add_tabs(self.__message_depth+1) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'];' + '\n' 
            output+= self.add_tabs(self.__message_depth) + '}' + field_out
-           self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field_out)
+           self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field.name)
            self.__msg_static_struct+=output 
-        self.__msg_static_struct+= ";\n"
+        
         
         if(field.is_array):
             self.__message_depth-=1
-            self.__addMessageFooter(field, prev_names + "_" + field.name)
+            self.__msg_static_struct+= "["
+            self.__msg_static_struct+=self.__genMessageLengthOrDefineString(field, prev_names)
+            self.__msg_static_struct+= "];\n"
+            self.__msg_static_struct+= self.add_tabs(self.__message_depth)+ '}' + field.name
+             
+            #self.__addMessageFooter(field, prev_names + "_" + field.name)
             pass
+        self.__msg_static_struct+= ";\n"
+        
         
         self.__message_depth-=1
 
@@ -262,6 +267,9 @@ class msg(object):
         
     def __process_spec(self, spec, prev_field=None, prev_names=''):
         self.__addMessageHeader(prev_field, prev_names)
+        prev_names_new=""
+        if(prev_field != None):
+            prev_names_new=prev_names + "_" + prev_field.name
         for field in spec.parsed_fields():
             self.__addBuildupEntry(field)
             if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
@@ -275,7 +283,7 @@ class msg(object):
                 
 
                 self.__message_depth+=1
-                self.__process_spec(self.get_msgspec_form_field(field), field, prev_names + "_" + field.name) ##Recursive call go one message type deeper
+                self.__process_spec(self.get_msgspec_form_field(field), field, prev_names_new) ##Recursive call go one message type deeper
                 self.__message_depth-=1
                 
                 #####ARRAY DEPTH SIZE DETERMINATION#####
@@ -283,7 +291,7 @@ class msg(object):
                     self.__array_depth-=1
                 ########################################   
             else:
-                self.__addVariable(field, prev_names)
+                self.__addVariable(field, prev_names_new)
                 if(field.is_array):
                     
                     #####ARRAY DEPTH SIZE DETERMINATION###################
