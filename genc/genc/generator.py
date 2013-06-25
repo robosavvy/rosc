@@ -79,6 +79,10 @@ class msg_static(object):
     
     def print_struct_definition(self):
                
+        messageType= "rosc_static_msg__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
+        lookupName= "rosc_static_msg_lookup__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
+    
+    
         output= "#define ROSC_USERDEF_STATIC_MSG_" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "(\nUSER_TYPE,\n"
         first=True
         for staticf in self.__msg_static_size_fields:
@@ -99,18 +103,17 @@ class msg_static(object):
             else:
                 output+=",\n"
             output+= staticf
-        output+="};"
+        output+="};\n"
+        output+="union\n"
+        output+="{\n"
+        output+="\tconst "+ messageType + "msg;\n"
+        output+="\tconst char padding_out[sizeof(" + messageType + ")];\n"
+        output+="}"+ lookupName + "="
+        output+=self.__msg_static_padding_init  + ";\n"
+        output=output.replace("\n", "\\\n") + ";\n"
+        print output
         pass
     
-    def print_struct_padding(self):
-        messageType= self.__msg_spec.package + "_" + self.__msg_spec.short_name
-        output="union\n"
-        output+="{\n"
-        output+="\t"+ messageType + "msg;\n"
-        output+="\tconst char padding_out[sizeof(messageType)];\n"
-        output+="}rosc_variable_placement_lookup__" + messageType + output.replace("\n", "\\\n") + ";\n"
-        print self.__msg_static_padding_init  
-          
     def __get_submessage_data_from_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
         return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, self.__search_path)
