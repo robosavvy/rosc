@@ -41,12 +41,22 @@ class msg(object):
     '''
     classdocs
     '''
-
+    
+    PADDING_LAST_START=0
+    PADDING_LAST_BRACKET_OPEN=1
+    PADDING_LAST_VAR=2
+    PADDING_LAST_BRACKET_CLOSE=3
+    
+    
     __search_path=[]
     __msg_spec=[]
     __msg_buildup=[]
     __msg_static_struct=""
     __msg_static_padding_init=""
+    __msg_static_padding_init_last=PADDING_LAST_START
+    __msg_static_padding_init_brackets_open=0
+    
+    
     __msg_static_size_fields=[]
     __array_depth=0
     __max_array_depth=0
@@ -137,17 +147,21 @@ class msg(object):
                 self.__msg_buildup.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
 
     
-    def __addMessageHeader(self, prev_field, prev_names):
-        #Padding init struct begin
-        self.__msg_static_padding_init+='{';
-        
-        indent=""
-        for i in range(self.__message_depth):
-            indent+="\t"
-        self.__msg_static_struct+=indent + "struct\n"
-        self.__msg_static_struct+=indent + "{\n"
-        if(self.__message_depth != 0 and prev_field.is_array):
-            self.__msg_static_size_fields.append(self.__genMessageLengthOrDefineString(prev_field, prev_names))
+    def __addMessageHeader(self, field, prev_names):
+        if(self.__message_depth != 0):
+            self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "struct\n"
+            self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "{\n"
+        self.__message_depth+=1
+        if(field != None):
+            if(field.is_array):
+                self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "struct\n"
+                self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "{\n"
+                self.__msg_static_struct+=self.add_tabs(self.__message_depth+1) + "uint32_t size;\n"
+                if(field.array_len == None):
+                    self.__msg_static_struct+=self.add_tabs(self.__message_depth+1) + "bool oversize;\n"
+                    self.__msg_static_size_fields.append(self.__genMessageLengthOrDefineString(field, prev_names))
+    
+            
     
     
     def __genMessageLengthOrDefineString(self, prev_field, prev_names):
@@ -160,24 +174,70 @@ class msg(object):
                     lendef=str(prev_field.array_len)
         return lendef
     
-    def __addMessageFooter(self, prev_field, prev_names):
-        #Padding init struct end
-        self.__msg_static_padding_init+='}';
-        
-        indent=""
-        for i in range(self.__message_depth):
-            indent+="\t"
-        if(self.__message_depth ==0):
-            self.__msg_static_struct+=indent + "}"
+    def __addMessageFooter(self, field, prev_names):
+        if(field==None):
+            self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "}"
         else:
-            self.__msg_static_struct+=indent + "}" + prev_field.name
-            if (prev_field.is_array):
-                self.__msg_static_struct+="["
-                self.__msg_static_struct+=self.__genMessageLengthOrDefineString(prev_field, prev_names)
-                self.__msg_static_struct+="]"
+            if (field.is_array):
+                self.__msg_static_struct+=self.add_tabs(self.__message_depth)+"}data["
+                self.__msg_static_struct+=self.__genMessageLengthOrDefineString(field, prev_names)
+                self.__msg_static_struct+="];\n"
+                self.__message_depth-=1
+                
+            self.__msg_static_struct+=self.add_tabs(self.__message_depth) + "}" + field.name
             self.__msg_static_struct+=";\n"
+        self.__message_depth-=1
+    
+    def __padding_open_bracket(self):
+        if(self.__msg_static_padding_init_last == self.PADDING_LAST_START):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_VAR):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_OPEN):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_CLOSE):
+             self.__msg_static_padding_init+=","
+        self.__msg_static_padding_init_last = self.PADDING_LAST_BRACKET_OPEN
+        
+        self.__msg_static_padding_init+="{"
+        self.__msg_static_padding_init_brackets_open+=1
+        
+    def __padding_close_bracket(self):
+        if(self.__msg_static_padding_init_last == self.PADDING_LAST_START):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_VAR):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_OPEN):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_CLOSE):
+            pass
+        self.__msg_static_padding_init_last = self.PADDING_LAST_BRACKET_CLOSE
+        
+        self.__msg_static_padding_init+="}"
+        self.__msg_static_padding_init_brackets_open-=1
+        
+    def __padding_add_var(self, field):
+        fieldtype=field.base_type
+        
+        if(self.__msg_static_padding_init_last == self.PADDING_LAST_START):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_VAR):
+            self.__msg_static_padding_init+=","
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_OPEN):
+            pass
+        elif(self.__msg_static_padding_init_last == self.PADDING_LAST_BRACKET_CLOSE):
+            self.__msg_static_padding_init+=","
+        self.__msg_static_padding_init_last = self.PADDING_LAST_VAR
+        
+        
+        if(field.is_array):
+            if(field.array_len != None):
+                self.__msg_static_padding_init+="{>0xFFFFFFFF, "
+            else:
+                self.__msg_static_padding_init+="{>0xFFFFFFFF, 0xFF, "
             
-    def __add_static_padding_init(self, fieldtype):
+        
+        
         if fieldtype in ['uint8', 'int8', 'char', 'bool']:
             #Padding init struct end
             self.__msg_static_padding_init+='0xFF'
@@ -194,32 +254,29 @@ class msg(object):
             pass     
         elif fieldtype == 'float32':
             self.__msg_static_padding_init+='float32'
-            pass
+            self.__msg_static_padding_init+='{0xFFFFFFFFFFFFFFFF}'
         elif fieldtype == 'float64':
-            pass
+            self.__msg_static_padding_init+='{0xFFFFFFFFFFFFFFFF}'
         elif fieldtype in ['time', 'duration']:
             self.__msg_static_padding_init+='{0xFFFFFFFF,0xFFFFFFFF}'
             pass
         elif fieldtype == 'string':
-            self.__msg_static_padding_init+='{0xFF}'
+            self.__msg_static_padding_init+='{0xFFFFFFFF,0xFF,{0xFF}}'
             pass
 
+        if(field.is_array):
+            self.__msg_static_padding_init+="<}"
+           
+
+
     def __addVariable(self, field, prev_names):
-        #add Variable to padding init
-        self.__add_static_padding_init(field.base_type)
+
         footer=""
         self.__message_depth+=1
         if(field.is_array):
             self.__addMessageHeader(field, prev_names)
-            self.__add_static_padding_init(field.base_type)
-            self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'uint32_t size;' + '\n'
-            if(field.array_len == None):
-                self.__msg_static_struct+= self.add_tabs(self.__message_depth+1) + 'bool oversize;' + '\n'
             self.__message_depth+=1
-            
-
             field_out="data"
-
         else:
             field_out=field.name
             
@@ -255,18 +312,15 @@ class msg(object):
             self.__msg_static_struct+=self.__genMessageLengthOrDefineString(field, prev_names)
             self.__msg_static_struct+= "];\n"
             self.__msg_static_struct+= self.add_tabs(self.__message_depth)+ '}' + field.name
-             
-            #self.__addMessageFooter(field, prev_names + "_" + field.name)
-            pass
-        self.__msg_static_struct+= ";\n"
-        
-        
+
+        self.__msg_static_struct+= ";\n"  
         self.__message_depth-=1
 
         
         
     def __process_spec(self, spec, prev_field=None, prev_names=''):
         self.__addMessageHeader(prev_field, prev_names)
+        self.__padding_open_bracket()
         prev_names_new=""
         if(prev_field != None):
             prev_names_new=prev_names + "_" + prev_field.name
@@ -282,15 +336,16 @@ class msg(object):
                 ########################################
                 
 
-                self.__message_depth+=1
+                #self.__message_depth+=1
                 self.__process_spec(self.get_msgspec_form_field(field), field, prev_names_new) ##Recursive call go one message type deeper
-                self.__message_depth-=1
+                #self.__message_depth-=1
                 
                 #####ARRAY DEPTH SIZE DETERMINATION#####
                 if(field.is_array):
                     self.__array_depth-=1
                 ########################################   
             else:
+                self.__padding_add_var(field)
                 self.__addVariable(field, prev_names_new)
                 if(field.is_array):
                     
@@ -311,9 +366,10 @@ class msg(object):
                 #######################################################
 
         self.__msg_buildup.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
-
+        self.__padding_close_bracket()
         self.__addMessageFooter(prev_field, prev_names)
         if(self.__message_depth==0):
-            
             self.__msg_static_struct+="rosc_static_msg" + "__" + spec.package + "_" +spec.short_name + "__ ## USER_TYPE ;\n"
-        pass
+
+
+
