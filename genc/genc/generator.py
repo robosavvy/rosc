@@ -76,6 +76,9 @@ class msg_static(object):
     def print_struct(self):
         print self.__msg_static_struct
     
+        '''
+            Prints the definition for a userdefined static struct
+        '''
     def print_struct_definition(self):  
         messageType= "rosc_static_msg__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
         lookupName= "rosc_static_msg_lookup__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
@@ -91,10 +94,10 @@ class msg_static(object):
                     output+=",\n"
                 output+=staticf
         output+=")\n"
+        output+="typedef \n"
         output+=self.__msg_static_struct
-        print output
-        output+= "\nrosc_msg_static_length_definition__" + self.__msg_spec.package +"__"+ self.__msg_spec.short_name + "__ ## USER_TYPE[]={\n"
-        first=True
+        output+= "\nuint32_t rosc_static_msg_length_definition__" + self.__msg_spec.package +"__"+ self.__msg_spec.short_name + "__ ## USER_TYPE[]={\n"
+        first=True 
         for staticf in self.__msg_static_size_fields:
             if first:
                 first=False
@@ -105,13 +108,18 @@ class msg_static(object):
         output+="union\n"
         output+="{\n"
         output+="\tconst "+ messageType + "msg;\n"
-        output+="\tconst char padding_out[sizeof(" + messageType + ")];\n"
+        output+="\tconst char padding_out[ sizeof( " + messageType + ")];\n"
         output+="}"+ lookupName + "="
         output+=self.__msg_static_padding_init  + ";"
         output=output.replace("\n", "\\\n") + "\n"
+        print output
         
         pass
     
+        '''
+            This gets the message spec from a non base type submessage
+            :param field: :class:`MsgContext`
+        '''
     def __get_submessage_data_from_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
         return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, self.__search_path)
@@ -279,7 +287,7 @@ class msg_static(object):
         self.__padding_close_bracket()
         self.__struct_define_add_footer(prev_field, prev_names)
         if(self.__message_depth==0):
-            self.__msg_static_struct+="rosc_static_msg" + "__" + spec.package + "_" +spec.short_name + "__ ## USER_TYPE ;\n"
+            self.__msg_static_struct+="rosc_static_msg" + "__" + spec.package + "__" +spec.short_name + "__ ## USER_TYPE ;\n"
 
     def __padding_open_bracket(self):
         if(self.__msg_static_padding_init_last == self.PADDING_LAST_START):
