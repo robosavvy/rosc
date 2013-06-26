@@ -190,7 +190,7 @@ class msg_static(object):
     def __struct_define_add_variable(self, field, prev_names):
 
 
-        if(field.is_array or field.base_type == 'string'):
+        if(field.is_array or field.base_type in ['string', 'time', 'duration']):
             self.__struct_define_add_header(field, prev_names)
 
             field_out="data"
@@ -224,9 +224,8 @@ class msg_static(object):
             self.__msg_static_struct+= "]"
             self.__msg_static_struct+= ";\n"
         
-        if(field.is_array or field.base_type == 'string'):
+        if(field.is_array or field.base_type in ['string','time','duration']):
             self.__struct_define_add_footer(field, prev_names)
-
         else:
             self.__msg_static_struct+= ";\n"  
 
