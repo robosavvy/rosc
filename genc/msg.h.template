@@ -88,7 +88,7 @@ for field in spec.parsed_fields():
 (package, name) = genmsg.names.package_resource_name(spec.full_name)
 rosc_name_pack=package + '__' + name
 rosc_pref= 'rosc_static_msg' 
-rosc_usertype = rosc_pref + '_user_type'
+rosc_usertype = rosc_pref + '_user_def'
 rosc_padding = rosc_pref + '_padding__' + rosc_name_pack
 rosc_len = rosc_pref + '_len_def__' + rosc_name_pack
 }@
@@ -113,7 +113,7 @@ rosc_len = rosc_pref + '_len_def__' + rosc_name_pack
     USER_TYPE@[for sizef in rosc_gen.get_static_struct_size_fields()]@[if not sizef.isdigit()],
     @(sizef)\@[end if]@[end for]
 )\
-typedef @(rosc_gen.get_static_struct().replace('\n','\\\n'))@(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE;\
+typedef @(rosc_gen.get_static_struct().replace('\n','\\\n'))@(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE ## _t;\
 uint32_t @(rosc_len)__ ## USER_TYPE []=\
 {\  
     @(len(rosc_gen.get_static_struct_size_fields()))@[for sizef in rosc_gen.get_static_struct_size_fields()],\
@@ -121,10 +121,19 @@ uint32_t @(rosc_len)__ ## USER_TYPE []=\
 };\
 union\
 {\
-    @(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE __padding_struct;
-    const uint8_t padding__lookup[sizeof(const @(rosc_padding)__ ## USER_TYPE)]
+    @(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE ## _t __padding_struct;
+    const uint8_t padding__lookup[sizeof(const @(rosc_padding)__ ## USER_TYPE ## _t)]
 }@(rosc_padding)__ ## USER_TYPE = @(rosc_gen.get_padding_init());
 
-    
+//#################################################
+// Static subscriber topics memory size list entry
+//#################################################
+#define @(rosc_usertype.upper())__SIZE_LIST_ENTRY(USER_TYPE)\
+    @(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE ## _t @(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE;
+
+
+
+
+
     
 #endif // @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H

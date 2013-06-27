@@ -122,7 +122,6 @@ class msg_static(object):
         output+=self.__msg_static_padding_init  + ";"
         output=output.replace("\n", "\\\n") + "\n"
         print output
-        
         pass
     
         '''
