@@ -206,7 +206,21 @@ class msg_static(object):
             field_out=field.name
             
         if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
+            if(field.base_type in ['float32','float64']):
+                self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'union\n'
+                self.__msg_static_struct += self.__add_tabs(self.__message_depth) + '{\n'
+                self.__message_depth+=1
+                if(field.base_type == 'float32'):
+                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint32_t _padding_init_;\n'
+                else:
+                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint64_t _padding_init_;\n'
+
             self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + field.base_type + "_t " + field_out)
+           
+            if(field.base_type in ['float32','float64']):
+                self.__message_depth-=1
+                self.__msg_static_struct += ";\n" + self.__add_tabs(self.__message_depth) + '}'
+                
         elif field.base_type == 'byte':
            self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + 'uint8_t ' + field_out)
         elif field.base_type == 'bool':
