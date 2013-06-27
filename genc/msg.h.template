@@ -80,6 +80,17 @@ for field in spec.parsed_fields():
       (package, name) = genmsg.names.package_resource_name(field.base_type)
       package = package or spec.package # convert '' to package
       print '#include <rosc/msg/%s/%s.h>'%(package, name)
+
+##
+## Define some strings which might be changed later
+##
+#rosc msg prefix
+(package, name) = genmsg.names.package_resource_name(spec.full_name)
+rosc_name_pack=package + '__' + name
+rosc_pref= 'rosc_static_msg' 
+rosc_usertype = rosc_pref + '_user_type'
+rosc_padding = rosc_pref + '_padding__' + rosc_name_pack
+rosc_len = rosc_pref + '_len_def__' + rosc_name_pack
 }@
 
 //##############################
@@ -97,6 +108,23 @@ for field in spec.parsed_fields():
 //##############################
 // Static Userdefinable Message
 //##############################
-@{rosc_gen.print_struct_definition()}
+#define @(rosc_usertype.upper())__@(rosc_name_pack)
+(\
+    USER_TYPE@[for sizef in rosc_gen.get_static_struct_size_fields()]@[if not sizef.isdigit()],
+    @(sizef)\@[end if]@[end for]
+)\
+typedef @(rosc_gen.get_static_struct().replace('\n','\\\n'))@(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE;\
+uint32_t @(rosc_len)__ ## USER_TYPE []=\
+{\  
+    @(len(rosc_gen.get_static_struct_size_fields()))@[for sizef in rosc_gen.get_static_struct_size_fields()],\
+    @(sizef)@[end for]
+};\
+union\
+{\
+    @(rosc_usertype)__@(rosc_name_pack)__ ## USER_TYPE __padding_struct;
+    const uint8_t padding__lookup[sizeof(const @(rosc_padding)__ ## USER_TYPE)]
+}@(rosc_padding)__ ## USER_TYPE = @(rosc_gen.get_padding_init());
 
+    
+    
 #endif // @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H

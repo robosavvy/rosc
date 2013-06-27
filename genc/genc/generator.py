@@ -48,7 +48,7 @@ class msg_static(object):
     
     __search_path=[]
     __msg_spec=[]
-    __msg_buildup=[]
+    __msg_buildup_array=[]
     __msg_static_struct=""
     __msg_static_padding_init=""
     __msg_static_padding_init_last=PADDING_LAST_START
@@ -66,16 +66,25 @@ class msg_static(object):
         self.__search_path=search_path
         self.__struct_define_recursive_create(msg_spec)
         
+    
+    def get_buildup_array(self):
+        return self.__msg_buildup_array
+    
+    def get_static_struct(self):
+        return self.__msg_static_struct
+    
+    def get_static_struct_size_fields(self):
+        return self.__msg_static_size_fields
+    
+    def get_padding_init(self):
+        return self.__msg_static_padding_init
+    
     def print_buildup_array(self):
-        for (indent,text, additionalreturn) in self.__msg_buildup:
+        for (indent,text, additionalreturn) in self.__msg_buildup_array:
             if additionalreturn == 1:
                 print self.__add_tabs(indent) + text + ",\n"
             else:
                 print self.__add_tabs(indent) + text + ","
-    
-    def print_struct(self):
-        print self.__msg_static_struct
-    
         '''
             Prints the definition for a userdefined static struct
         '''
@@ -138,7 +147,7 @@ class msg_static(object):
                 entry+="ARRAY"
                 if(field.array_len == None): #array with undefined length
                     entry+="_UL"
-            self.__msg_buildup.append((self.__message_depth, entry, 0))
+            self.__msg_buildup_array.append((self.__message_depth, entry, 0))
         else:
             indent=self.__message_depth
             if(field.is_array):
@@ -146,10 +155,10 @@ class msg_static(object):
                 entry="ROS_MSG_BUILDUP_TYPE_ARRAY"
                 if(field.array_len == None): #array with undefined length
                     entry+="_UL"
-                self.__msg_buildup.append((self.__message_depth, entry, 0))
-                self.__msg_buildup.append((self.__message_depth+1, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+                self.__msg_buildup_array.append((self.__message_depth, entry, 0))
+                self.__msg_buildup_array.append((self.__message_depth+1, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
             else:
-                self.__msg_buildup.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+                self.__msg_buildup_array.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
 
     def __struct_define_add_header(self, field, prev_names):
         if(field == None):
@@ -196,8 +205,7 @@ class msg_static(object):
             self.__msg_static_struct+=";\n"
         
     def __struct_define_add_variable(self, field, prev_names):
-
-
+        self.__padding_add_var(field)
         if(field.is_array or field.base_type in ['string', 'time', 'duration']):
             self.__struct_define_add_header(field, prev_names)
 
@@ -211,9 +219,10 @@ class msg_static(object):
                 self.__msg_static_struct += self.__add_tabs(self.__message_depth) + '{\n'
                 self.__message_depth+=1
                 if(field.base_type == 'float32'):
-                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint32_t _padding_init_;\n'
+                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint32_t ___padding_init_'
                 else:
-                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint64_t _padding_init_;\n'
+                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint64_t ___padding_init_'
+                self.__msg_static_struct += field.name + ";\n"
 
             self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + field.base_type + "_t " + field_out)
            
@@ -297,11 +306,10 @@ class msg_static(object):
                     if (self.__array_depth+1 >self.__max_array_depth):
                         self.max_array_depth=self.__array_depth+1
                 #######################################################
-        self.__msg_buildup.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
+        self.__msg_buildup_array.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
         self.__padding_close_bracket()
         self.__struct_define_add_footer(prev_field, prev_names)
-        if(self.__message_depth==0):
-            self.__msg_static_struct+="rosc_static_msg" + "__" + spec.package + "__" +spec.short_name + "__ ## USER_TYPE ;\n"
+        
 
     def __padding_open_bracket(self):
         if(self.__msg_static_padding_init_last == self.PADDING_LAST_START):
@@ -345,9 +353,9 @@ class msg_static(object):
         self.__msg_static_padding_init_last = self.PADDING_LAST_VAR
         
         if(field.is_array):
-            if(field.array_len != None):
+            if(field.array_len != None): #Defined length?
                 self.__msg_static_padding_init+="{0xFFFFFFFF, "
-            else:
+            else:                         #Undefined length -> add bool oversize init
                 self.__msg_static_padding_init+="{0xFFFFFFFF, 0xFF, "
             
         if fieldtype in ['uint8', 'int8', 'char', 'bool']:
@@ -365,8 +373,7 @@ class msg_static(object):
             self.__msg_static_padding_init+='0xFFFFFFFFFFFFFFFF'
             pass     
         elif fieldtype == 'float32':
-            self.__msg_static_padding_init+='float32'
-            self.__msg_static_padding_init+='{0xFFFFFFFFFFFFFFFF}'
+            self.__msg_static_padding_init+='{0xFFFFFFFF}'
         elif fieldtype == 'float64':
             self.__msg_static_padding_init+='{0xFFFFFFFFFFFFFFFF}'
         elif fieldtype in ['time', 'duration']:
