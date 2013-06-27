@@ -171,9 +171,9 @@ class msg_static(object):
         if(field != None):
             if(field.is_array):
                 self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "uint32_t size;\n"
+                self.__msg_static_size_fields.append(self.__struct_define_Length_or_Def_Param(field, prev_names))
                 if(field.array_len == None):
                     self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "bool oversize;\n"
-                    self.__msg_static_size_fields.append(self.__struct_define_Length_or_Def_Param(field, prev_names))
                 if(field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64']):
                     self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "struct"+"\t/*" + comment +" array data*/\n"
                     self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "{\n"
@@ -207,11 +207,10 @@ class msg_static(object):
         self.__padding_add_var(field)
         if(field.is_array or field.base_type in ['string', 'time', 'duration']):
             self.__struct_define_add_header(field, prev_names)
-
             field_out="data"
         else:
             field_out=field.name
-            
+                    
         if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
             if(field.base_type in ['float32','float64']):
                 self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'union\n'
@@ -353,9 +352,9 @@ class msg_static(object):
         
         if(field.is_array):
             if(field.array_len != None): #Defined length?
-                self.__msg_static_padding_init+="{0xFFFFFFFF, "
+                self.__msg_static_padding_init+="{ 0xFFFFFFFF, {"
             else:                         #Undefined length -> add bool oversize init
-                self.__msg_static_padding_init+="{0xFFFFFFFF, 0xFF, "
+                self.__msg_static_padding_init+="{ 0xFFFFFFFF, 0xFF, {"
             
         if fieldtype in ['uint8', 'int8', 'char', 'bool']:
             #Padding init struct end
@@ -376,11 +375,11 @@ class msg_static(object):
         elif fieldtype == 'float64':
             self.__msg_static_padding_init+='{0xFFFFFFFFFFFFFFFF}'
         elif fieldtype in ['time', 'duration']:
-            self.__msg_static_padding_init+='{0xFFFFFFFF,0xFFFFFFFF}'
+            self.__msg_static_padding_init+='{ 0xFFFFFFFF,0xFFFFFFFF}'
             pass
         elif fieldtype == 'string':
-            self.__msg_static_padding_init+='{0xFFFFFFFF,0xFF,{0xFF}}'
+            self.__msg_static_padding_init+='{ 0xFFFFFFFF,0xFF, {0xFF} }'
             pass
 
         if(field.is_array):
-            self.__msg_static_padding_init+="}"
+            self.__msg_static_padding_init+="} }"
