@@ -28,15 +28,17 @@
  *
  *  main.c created by Christian Holl
  */
+#include <stdio.h>
 #include <stdbool.h>
 #include <inttypes.h>
 #include <rosc/msg/rosc_linux_test/rosc_sub.h>
 #include <rosc/msg/rosc_linux_test/rosc_test.h>
 
-ROSC_USERDEF_STATIC_MSG_rosc_linux_test__rosc_test(test,1,2,3,4)
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__rosc_sub(narf,1,1,1);
+
 
 int main()
 {
-
+	printf("test");
 	return 0;
 }
