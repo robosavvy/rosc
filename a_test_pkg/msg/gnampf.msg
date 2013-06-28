@@ -1,3 +1,5 @@
-float32 test
-#abctest[] infArr
+
+string[4] fest
+
+abctest[] infArr
 #abctest[3] finArr
