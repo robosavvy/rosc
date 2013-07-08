@@ -150,6 +150,9 @@ class msg_static(object):
         return tabs
 
 
+    '''
+        Creates the function for creating a array for the position of struct members
+    '''
     def __offset_add(self,field):
         if (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'string', 'time', 'duration']):         
             out=""
