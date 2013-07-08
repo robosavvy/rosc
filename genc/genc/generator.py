@@ -46,19 +46,20 @@ class msg_static(object):
     PADDING_LAST_VAR=2
     PADDING_LAST_BRACKET_CLOSE=3
     
-    __search_path=[]
-    __msg_spec=[]
-    __msg_buildup_array=[]
-    __msg_static_struct=""
-    __msg_static_padding_init=""
-    __msg_static_padding_init_last=PADDING_LAST_START
-    __msg_static_padding_init_brackets_open=0
-    __msg_static_size_fields=[]
-    __msg_static_substructure_components=[]
-    __msg_static_substructure_sizes=[]
-    __array_depth=0
-    __max_array_depth=0
-    __message_depth=0
+    __search_path=[] #The search paths for packages
+    __msg_spec=[] #The specification of the message
+    __msg_buildup_array=[] #The array string for the "buildup information"
+    __msg_static_struct="" #The struct for defining a static message
+    __msg_static_padding_init="" #The initializing values for a padding localization struct #deprecated
+    __msg_static_padding_init_last=PADDING_LAST_START #The previous kind of padding init, brackets and so on #deprecated
+    __msg_static_padding_init_brackets_open=0 #a counter for the open brackets #unused #deprecated
+    __msg_static_size_fields=[] #size of fields needed for the memory filling (structures in arrays only)
+    __msg_static_substructure_components=[] #current component calls (c)
+    __msg_static_substructure_sizes=[] #substructure component list for creating size array
+    __msg_static_member_offsets=[] #message member memory offsets
+    __array_depth=0 #current array depth of the message
+    __max_array_depth=0 #maximum array depth of the message
+    __message_depth=0 #current message depth (submessage)
     
     def __init__(self, msg_spec, search_path):
         '''
@@ -67,6 +68,10 @@ class msg_static(object):
         self.__msg_spec=msg_spec
         self.__search_path=search_path
         self.__struct_define_recursive_create(msg_spec)
+    
+    
+    def get_static_member_offsets(self):
+        return self.__msg_static_member_offsets
     
     def get_static_in_substructure_sizes(self):
         return self.__msg_static_substructure_sizes
@@ -92,6 +97,7 @@ class msg_static(object):
         '''
             Prints the definition for a userdefined static struct
         '''
+
     def print_struct_definition(self):  
         messageType= "rosc_static_msg__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
         lookupName= "rosc_static_msg_lookup__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
@@ -132,6 +138,7 @@ class msg_static(object):
             This gets the message spec from a non base type submessage
             :param field: :class:`MsgContext`
         '''
+
     def __get_submessage_data_from_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
         return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, self.__search_path)
@@ -142,8 +149,31 @@ class msg_static(object):
             tabs = tabs + "\t"
         return tabs
 
+
+    def __offset_add(self,field):
+        if (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'string', 'time', 'duration']):         
+            out=""
+            for comp in self.__msg_static_substructure_components:
+                (comp_str, comp_array, undef_array)=comp
+                out+="." + comp_str
+                if(comp_array):
+                    self.__msg_static_member_offsets.append((out, "." + "size"))
+                    if(undef_array):
+                        self.__msg_static_member_offsets.append((out, "." + "oversize"))                         
+                    out+=".data[0]"
+            
+            if field.base_type == 'time' or field.base_type == 'duration' :
+                self.__msg_static_member_offsets.append((out + "." +field.name, ".sec" ))
+                self.__msg_static_member_offsets.append((out + "." +field.name, ".nsec" ))
+            elif (field.base_type == 'string'):
+                self.__msg_static_member_offsets.append((out + "." +field.name, ".size" ))
+                self.__msg_static_member_offsets.append((out + "." +field.name, "." + "oversize"))    
+                self.__msg_static_member_offsets.append((out + "." +field.name, "." + "str_data[0]"))
+            else:
+                self.__msg_static_member_offsets.append((out, "." + field.name))
+
     def __substructure_list_add(self, field):
-        self.__msg_static_substructure_components.append((field.name,field.is_array))
+        self.__msg_static_substructure_components.append((field.name,field.is_array, field.array_len==None))
 
     def __substructure_list_remove(self):
         self.__msg_static_substructure_components.pop()
@@ -152,13 +182,13 @@ class msg_static(object):
         if not (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'time', 'duration']):         
             out=""
             for comp in self.__msg_static_substructure_components:
-                (comp_str, comp_array)=comp
+                (comp_str, comp_array, undef_array)=comp
                 out+="." + comp_str
                 if(comp_array):
                     out+=".data[0]"
             out+="." + field.name + ".data[0]"
             self.__msg_static_substructure_sizes.append(out)
-    
+
 
     def __msg_buildup_array_entry(self,field):
         entry=""
@@ -318,7 +348,7 @@ class msg_static(object):
                     self.__array_depth-=1
                 ########################################   
             else:                
-                
+                self.__offset_add(field)
                 self.__struct_define_add_variable(field, prev_names_new)
 
                 if(field.is_array):
