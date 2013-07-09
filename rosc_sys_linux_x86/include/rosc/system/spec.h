@@ -35,6 +35,10 @@
 
 
 
+#include <stddef.h> //Get offsetof function, if it's not defined here ... define it on your own...
+//Example #define offsetof(TYPE, MEMBER) ( (size_t) &( ( (TYPE *) 0 )->MEMBER ) )
+
+
 #define __HOSTNAME_MAX_LEN__ 46 //minimum 46 bytes, storing a IPv6 Address in characters
 #define __NODENAME_MAX_LEN__ 50
 #define __PORT_MAXIMUM__     8

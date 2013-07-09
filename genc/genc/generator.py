@@ -165,15 +165,25 @@ class msg_static(object):
                         self.__msg_static_member_offsets.append((out, "." + "oversize"))                         
                     out+=".data[0]"
             
-            if field.base_type == 'time' or field.base_type == 'duration' :
-                self.__msg_static_member_offsets.append((out + "." +field.name, ".sec" ))
-                self.__msg_static_member_offsets.append((out + "." +field.name, ".nsec" ))
-            elif (field.base_type == 'string'):
+            array_sub=''
+            if(field.is_array):
                 self.__msg_static_member_offsets.append((out + "." +field.name, ".size" ))
-                self.__msg_static_member_offsets.append((out + "." +field.name, "." + "oversize"))    
-                self.__msg_static_member_offsets.append((out + "." +field.name, "." + "str_data[0]"))
+                if(field.array_len==None):
+                    self.__msg_static_member_offsets.append((out + "." +field.name, ".oversize" ))
+                array_sub=".data[0]"
+            
+            if field.base_type == 'time' or field.base_type == 'duration' :
+                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".sec" ))
+                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".nsec" ))
+            elif (field.base_type == 'string'):
+                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".size" ))
+                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, "." + "oversize"))    
+                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, "." + "str_data[0]"))
             else:
-                self.__msg_static_member_offsets.append((out, "." + field.name))
+                if(field.is_array):
+                    self.__msg_static_member_offsets.append((out + "." +field.name, ".data[0]"))
+                else:
+                    self.__msg_static_member_offsets.append((out, "." + field.name))
 
     def __substructure_list_add(self, field):
         self.__msg_static_substructure_components.append((field.name,field.is_array, field.array_len==None))

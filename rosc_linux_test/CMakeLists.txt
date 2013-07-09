@@ -4,7 +4,7 @@ project(rosc_linux_test)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86 rosc_example_messages std_msgs)
+find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86 std_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -64,8 +64,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include 
                      ${catkin_INCLUDE_DIRS} 
-                     ${rosc_core_INCLUDE_DIRS} 
-                     ${rosc_sys_linux_x86_INCLUDE_DIRS})
+                     ${rosc_core_INCLUDE_DIRS})
 
 ## Declare a cpp library
 # add_library(rosc_linux_test
@@ -77,7 +76,7 @@ add_executable(rosc_linux_test_node src/main.c ${ROSC_EXAMPLE_MESSAGES_SRC})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(rosc_linux_test_node rosc_sys_linux_x86 rosc_example_messages)
+add_dependencies(rosc_linux_test_node rosc_sys_linux_x86)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(rosc_linux_test_node
