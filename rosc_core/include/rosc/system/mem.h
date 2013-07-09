@@ -42,5 +42,9 @@
 #define offsetofsub(TYPE, SUBSTRUCT, MEMBER)\
 		offsetof(TYPE,SUBSTRUCT.MEMBER)-offsetof(TYPE,SUBSTRUCT)
 
+/**
+ * This macro determines the memory size of a struct member.
+ */
+#define sizeofmember(TYPE, MEMBER) ( sizeof( ( (TYPE *) 0 )->MEMBER ) )
 
 #endif /* MEM_H_ */
