@@ -132,7 +132,7 @@ const uint32_t @(rosc_len)__ ## USER_TYPE[]=\
     @(len(rosc_gen.get_static_struct_size_fields()))@
 @[for field in rosc_gen.get_static_struct_size_fields()],\
     @(field)@
-@[end for]\    
+@[end for]\
 };\
 @###########################################
 @# Printing substructure size information ##
@@ -160,9 +160,18 @@ const size_t @(rosc_pref)_memory_offsets__@(rosc_name_pack)__ ## USER_TYPE []=\
 }
 
 
-#define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)=
-{
-@{rosc_gen.print_buildup_array()}@
+#define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)\
+ros_msg_buildup_type_t @(rosc_pref.upper())_buildup__@(rosc_name_pack)=\
+{\
+@{first = True}@
+@[for (indent, entry, additionalreturn) in rosc_gen.get_static_buildup_array()]@
+@[ if first]@
+@{  first = False}@
+@[ else]@
+,\
+@[ end if]@
+@[for i in range(indent)]    @[end for]@(entry)@
+@[end for]\
 }
                                
                                     

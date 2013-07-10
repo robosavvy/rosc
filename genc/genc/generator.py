@@ -59,7 +59,8 @@ class msg_static(object):
     __msg_static_member_offsets=[] #message member memory offsets
     __array_depth=0 #current array depth of the message
     __max_array_depth=0 #maximum array depth of the message
-    __message_depth=0 #current message depth (submessage)
+    __message_struct_indent_depth=0 #current message depth for structs
+    __message_buildup_indent_depth=0
     
     def __init__(self, msg_spec, search_path):
         '''
@@ -94,10 +95,10 @@ class msg_static(object):
                 print self.__add_tabs(indent) + text + ",\n"
             else:
                 print self.__add_tabs(indent) + text + ","
+                
         '''
             Prints the definition for a userdefined static struct
         '''
-
     def print_struct_definition(self):  
         messageType= "rosc_static_msg__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
         lookupName= "rosc_static_msg_lookup__" + self.__msg_spec.package + "__" + self.__msg_spec.short_name + "__ ## USER_TYPE "
@@ -138,7 +139,6 @@ class msg_static(object):
             This gets the message spec from a non base type submessage
             :param field: :class:`MsgContext`
         '''
-
     def __get_submessage_data_from_field(self, field):
         msg_context = genmsg.msg_loader.MsgContext()
         return genmsg.msg_loader.load_msg_by_type(msg_context, field.base_type, self.__search_path)
@@ -204,6 +204,7 @@ class msg_static(object):
 
 
     def __msg_buildup_array_entry(self,field):
+
         entry=""
         if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
             entry="ROS_MSG_BUILDUP_TYPE_SUBMESSAGE"
@@ -211,45 +212,44 @@ class msg_static(object):
                 entry+="ARRAY"
                 if(field.array_len == None): #array with undefined length
                     entry+="_UL"
-            self.__msg_buildup_array.append((self.__message_depth, entry, 0))
+            self.__msg_buildup_array.append((self.__message_buildup_indent_depth, entry, 0))
         else:
-            indent=self.__message_depth
+            indent=self.__message_buildup_indent_depth
             if(field.is_array):
-                indent+=1
                 entry="ROS_MSG_BUILDUP_TYPE_ARRAY"
                 if(field.array_len == None): #array with undefined length
                     entry+="_UL"
-                self.__msg_buildup_array.append((self.__message_depth, entry, 0))
-                self.__msg_buildup_array.append((self.__message_depth+1, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+                self.__msg_buildup_array.append((self.__message_buildup_indent_depth, entry, 0))
+                self.__msg_buildup_array.append((self.__message_buildup_indent_depth+1, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
             else:
-                self.__msg_buildup_array.append((self.__message_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
+                self.__msg_buildup_array.append((self.__message_buildup_indent_depth, "ROS_MSG_BUILDUP_TYPE_" + field.base_type.upper(), 1))
 
     def __struct_define_add_header(self, field, prev_names):        
         if(field == None):
             comment = "Main Message Start"
         else:    
             comment = field.name
-        self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "struct" + "\t/*" + comment +"*/\n"
-        self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "{\n"
-        self.__message_depth+=1
+        self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "struct" + "\t/*" + comment +"*/\n"
+        self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "{\n"
+        self.__message_struct_indent_depth+=1
         
         if(field != None):
             if(field.is_array):
-                self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "uint32_t size;\n"
+                self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "uint32_t size;\n"
                 self.__msg_static_size_fields.append(self.__struct_define_Length_or_Def_Param(field, prev_names))
 
                 if(field.array_len == None):
-                    self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "bool oversize;\n"
+                    self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "bool oversize;\n"
                     
                 if(field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64']):
-                    self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "struct"+"\t/*" + comment +" array data*/\n"
-                    self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "{\n"
-                    self.__message_depth+=1
+                    self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "struct"+"\t/*" + comment +" array data*/\n"
+                    self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "{\n"
+                    self.__message_struct_indent_depth+=1
 
              
     def __struct_define_Length_or_Def_Param(self, prev_field, prev_names):
         lendef=""
-        if(self.__message_depth !=0):
+        if(self.__message_struct_indent_depth !=0):
             if (prev_field.is_array):
                 if(prev_field.array_len == None):
                     lendef+='MAX_SIZE_ARRAY' + prev_names + "_" + prev_field.name
@@ -258,17 +258,17 @@ class msg_static(object):
         return lendef
     
     def __struct_define_add_footer(self, field, prev_names):
-        self.__message_depth-=1
+        self.__message_struct_indent_depth-=1
         if(field==None):
-            self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "}"
+            self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "}"
         else:
             if (field.is_array and field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64']):
-                self.__msg_static_struct+=self.__add_tabs(self.__message_depth)+"}data["
+                self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth)+"}data["
                 self.__msg_static_struct+=self.__struct_define_Length_or_Def_Param(field, prev_names)
                 self.__msg_static_struct+="];\n"
-                self.__message_depth-=1
+                self.__message_struct_indent_depth-=1
                 
-            self.__msg_static_struct+=self.__add_tabs(self.__message_depth) + "}" + field.name
+            self.__msg_static_struct+=self.__add_tabs(self.__message_struct_indent_depth) + "}" + field.name
             self.__msg_static_struct+=";\n"
         
     def __struct_define_add_variable(self, field, prev_names):
@@ -282,35 +282,35 @@ class msg_static(object):
                     
         if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
             if(field.base_type in ['float32','float64']):
-                self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'union\n'
-                self.__msg_static_struct += self.__add_tabs(self.__message_depth) + '{\n'
-                self.__message_depth+=1
+                self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'union\n'
+                self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + '{\n'
+                self.__message_struct_indent_depth+=1
                 if(field.base_type == 'float32'):
-                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint32_t ___padding_init_'
+                    self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t ___padding_init_'
                 else:
-                    self.__msg_static_struct += self.__add_tabs(self.__message_depth) + 'uint64_t ___padding_init_'
+                    self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'uint64_t ___padding_init_'
                 self.__msg_static_struct += field.name + ";\n"
 
-            self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + field.base_type + "_t " + field_out)
+            self.__msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + field.base_type + "_t " + field_out)
            
             if(field.base_type in ['float32','float64']):
-                self.__message_depth-=1
-                self.__msg_static_struct += ";\n" + self.__add_tabs(self.__message_depth) + '}'
+                self.__message_struct_indent_depth-=1
+                self.__msg_static_struct += ";\n" + self.__add_tabs(self.__message_struct_indent_depth) + '}'
                 
         elif field.base_type == 'byte':
-           self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + 'uint8_t ' + field_out)
+           self.__msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + 'uint8_t ' + field_out)
         elif field.base_type == 'bool':
-           self.__msg_static_struct += (self.__add_tabs(self.__message_depth) + 'bool ' + field_out)
+           self.__msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + 'bool ' + field_out)
         elif field.base_type == 'char':
-           self. __msg_static_struct += (self.__add_tabs(self.__message_depth) + 'int8_t ' + field_out)
+           self. __msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + 'int8_t ' + field_out)
         elif field.base_type == 'time' or  field.base_type == 'duration':
-           output= self.__add_tabs(self.__message_depth) + 'uint32_t sec;' + '\n'
-           output+= self.__add_tabs(self.__message_depth) + 'uint32_t nsec;' + '\n'
+           output= self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t sec;' + '\n'
+           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t nsec;' + '\n'
            self.__msg_static_struct+=output
         elif field.base_type == 'string':
-           output= self.__add_tabs(self.__message_depth) + 'uint32_t size;' + '\n'
-           output+= self.__add_tabs(self.__message_depth) + 'bool oversize;' + '\n'
-           output+= self.__add_tabs(self.__message_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'];' + '\n' 
+           output= self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t size;' + '\n'
+           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'bool oversize;' + '\n'
+           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'];' + '\n' 
            self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field.name)
            self.__msg_static_struct+=output
 
@@ -331,6 +331,7 @@ class msg_static(object):
         Creates the structure for storing information
     '''
     def __struct_define_recursive_create(self, spec, prev_field=None, prev_names=''):
+        self.__message_buildup_indent_depth+=1
         self.__struct_define_add_header(prev_field, prev_names)
         self.__padding_open_bracket()
         prev_names_new=""
@@ -379,7 +380,8 @@ class msg_static(object):
                     if (self.__array_depth+1 >self.__max_array_depth):
                         self.max_array_depth=self.__array_depth+1
                 #######################################################
-        self.__msg_buildup_array.append((self.__message_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
+        self.__msg_buildup_array.append((self.__message_buildup_indent_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
+        self.__message_buildup_indent_depth-=1
         self.__padding_close_bracket()
         self.__struct_define_add_footer(prev_field, prev_names)
        

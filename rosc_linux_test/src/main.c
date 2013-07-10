@@ -33,17 +33,19 @@
 #include <inttypes.h>
 #include <rosc/msg/rosc_linux_test/rosc_sub.h>
 #include <rosc/msg/rosc_linux_test/rosc_test.h>
+#include <rosc/rosc.h>
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__rosc_sub(narf,6,6,6);
+
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__rosc_sub(test,1,2,3);
 
 
 int main()
 {
-	printf("test");
 
 	int i;
-	for ( i = 0; i < sizeof(rosc_static_msg_user_def__rosc_linux_test__rosc_sub__narf_t); ++i) {
-		printf(" %x ", rosc_static_msg_padding__rosc_linux_test__rosc_sub__narf.padding__lookup[i]);
+	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__rosc_sub__test[0]; ++i) {
+
+		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__rosc_sub__test[i]);
 	}
-	return 0;
+	printf("\n");
 }
