@@ -33,19 +33,23 @@
 #include <inttypes.h>
 #include <rosc/msg/rosc_linux_test/rosc_sub.h>
 #include <rosc/msg/rosc_linux_test/rosc_test.h>
+#include <rosc/msg/a_test_pkg/gnampf.h>
 #include <rosc/rosc.h>
 
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__rosc_sub(test,1,2,3);
+ROSC_STATIC_MSG_USER_DEF__a_test_pkg__gnampf(a,12,12,12,12,12,12,12,12,12,12);
+
 
 
 int main()
 {
 
-	int i;
-	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__rosc_sub__test[0]; ++i) {
+	printf("aaaaaaaahh333hh! %i\n",sizeof(rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a));
 
-		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__rosc_sub__test[i]);
+	int i;
+	for (i = 1; i <= rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a[0]; ++i) {
+
+		printf("%i, ",(int) rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a[i]);
 	}
 	printf("\n");
 }

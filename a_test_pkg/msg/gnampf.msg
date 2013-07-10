@@ -1,5 +1,5 @@
-
-string[4] fest
-
-abctest[] infArr
-#abctest[3] finArr
+string[] lala
+abctest[] sub1
+time[] luelueluel
+uint8[] tuttuttut
+bool hihihi

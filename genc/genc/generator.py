@@ -154,36 +154,44 @@ class msg_static(object):
         Creates the function for creating a array for the position of struct members
     '''
     def __offset_add(self,field):
-        if (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'string', 'time', 'duration']):         
-            out=""
-            for comp in self.__msg_static_substructure_components:
-                (comp_str, comp_array, undef_array)=comp
-                out+="." + comp_str
-                if(comp_array):
-                    self.__msg_static_member_offsets.append((out, "." + "size"))
-                    if(undef_array):
-                        self.__msg_static_member_offsets.append((out, "." + "oversize"))                         
-                    out+=".data[0]"
+        
+        isSubMessage=field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'string', 'time', 'duration']       
+        out=""
+        
+        for comp in self.__msg_static_substructure_components:
+            (comp_str, comp_array, undef_array)=comp
+            if out != "":
+                out+="." 
+            out+=comp_str
+            if(comp_array):                     
+                out+=".data[0]"
+        
+        dot=""
+        if(out != ""):
+            dot = '.'
+        
+
+        self.__msg_static_member_offsets.append((out ,field.name))
             
-            array_sub=''
-            if(field.is_array):
-                self.__msg_static_member_offsets.append((out + "." +field.name, ".size" ))
-                if(field.array_len==None):
-                    self.__msg_static_member_offsets.append((out + "." +field.name, ".oversize" ))
-                array_sub=".data[0]"
-            
-            if field.base_type == 'time' or field.base_type == 'duration' :
-                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".sec" ))
-                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".nsec" ))
-            elif (field.base_type == 'string'):
-                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, ".size" ))
-                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, "." + "oversize"))    
-                self.__msg_static_member_offsets.append((out + "." +field.name+array_sub, "." + "str_data[0]"))
-            else:
-                if(field.is_array):
-                    self.__msg_static_member_offsets.append((out + "." +field.name, ".data[0]"))
-                else:
-                    self.__msg_static_member_offsets.append((out, "." + field.name))
+        array_sub=''
+        if(field.is_array):
+            self.__msg_static_member_offsets.append((out + dot +field.name, "size" ))
+            if(field.array_len==None):
+                self.__msg_static_member_offsets.append((out + dot +field.name, "oversize" ))
+            self.__msg_static_member_offsets.append((out + dot +field.name, "data[0]" ))
+            array_sub=".data[0]"
+        
+        if field.base_type == 'time' or field.base_type == 'duration' :
+            self.__msg_static_member_offsets.append((out + dot +field.name+array_sub, "sec" ))
+            self.__msg_static_member_offsets.append((out + dot +field.name+array_sub, "nsec" ))
+        elif (field.base_type == 'string'):
+            self.__msg_static_member_offsets.append((out + dot +field.name+array_sub, "size" ))
+            self.__msg_static_member_offsets.append((out + dot +field.name+array_sub, "oversize"))    
+            self.__msg_static_member_offsets.append((out + dot +field.name+array_sub, "str_data[0]"))
+
+                
+                
+                
 
     def __substructure_list_add(self, field):
         self.__msg_static_substructure_components.append((field.name,field.is_array, field.array_len==None))
@@ -338,12 +346,13 @@ class msg_static(object):
         if(prev_field != None):
             prev_names_new=prev_names + "_" + prev_field.name
         for field in spec.parsed_fields():
+            self.__offset_add(field)
             self.__msg_buildup_array_entry(field)
             if field.base_type not in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64','string','time','duration']:
                                
                 #####ARRAY DEPTH SIZE DETERMINATION#####
                 if (field.is_array):
-                    self.__array_depth+=1
+                    self.__array_depth+=1 
                     if (self.__array_depth+1 > self.__max_array_depth):
                         self.__max_array_depth+=1
                 ########################################
@@ -362,7 +371,6 @@ class msg_static(object):
                     self.__array_depth-=1
                 ########################################   
             else:                
-                self.__offset_add(field)
                 self.__struct_define_add_variable(field, prev_names_new)
 
                 if(field.is_array):

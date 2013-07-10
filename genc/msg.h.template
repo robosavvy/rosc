@@ -49,7 +49,7 @@
  */
 @{
 #Import python modules used for building the template
-import genmsg.msgs
+import genmsg.msgs 
 import gencpp
 import genmsg.msg_loader
 import genc.generator
@@ -152,13 +152,13 @@ const size_t @(rosc_pref)_memory_offsets__@(rosc_name_pack)__ ## USER_TYPE []=\
     @(len(rosc_gen.get_static_member_offsets()))@
 @[for (struct, member) in rosc_gen.get_static_member_offsets()],\
 @[ if struct == '']@
-    offsetof(@(rosc_usertype), @(member[1:]))@
+    offsetof(@(rosc_usertype),@(member))@
 @[ else]@
-    offsetofsub(@(rosc_usertype), @(struct[1:]), @(member[1:]))@
+    offsetofsub(@(rosc_usertype),@(struct),@(member))@
 @[ end if]@
 @[end for]\
 }
-
+ 
 
 #define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)\
 ros_msg_buildup_type_t @(rosc_pref.upper())_buildup__@(rosc_name_pack)=\
