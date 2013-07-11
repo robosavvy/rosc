@@ -26,23 +26,28 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ros_msg_buildup.h created by Christian Holl
+ *  ros_msg_common.h created by Christian Holl
  */
 
-#ifndef ROS_MSG_BUILDUP_TYPE_H_
-#define ROS_MSG_BUILDUP_TYPE_H_
+#ifndef ROS_MSG_COMMON_H_
+#define ROS_MSG_COMMON_H_
 
 typedef enum
 {
 	ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
+	ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL,
 	ROS_MSG_BUILDUP_TYPE_SUBMESSAGE,
 	ROS_MSG_BUILDUP_TYPE_ARRAY,
+	ROS_MSG_BUILDUP_TYPE_ARRAY_UL,
+	ROS_MSG_BUILDUP_TYPE_STRING,
 
+	ROS_MSG_BUILDUP_TYPE_CHAR,
 	ROS_MSG_BUILDUP_TYPE_INT8,
 	ROS_MSG_BUILDUP_TYPE_INT16,
 	ROS_MSG_BUILDUP_TYPE_INT32,
 	ROS_MSG_BUILDUP_TYPE_INT64,
 
+	ROS_MSG_BUILDUP_TYPE_BYTE,
 	ROS_MSG_BUILDUP_TYPE_UINT8,
 	ROS_MSG_BUILDUP_TYPE_UINT16,
 	ROS_MSG_BUILDUP_TYPE_UINT32,
@@ -54,16 +59,22 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_TIME,
 	ROS_MSG_BUILDUP_TYPE_DURATION,
 	ROS_MSG_BUILDUP_TYPE_BOOL,
-	ROS_MSG_BUILDUP_TYPE_STRING,
 
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 }ros_msg_buildup_type_t;
+
+#define ROSC_STATIC_MSG_SIZE_LIST_HEAD \
+typedef union\
+{\
+
+#define ROSC_STATIC_MSG_SIZE_LIST_FOOT\
+}ros_static_subscriber_message_memory_size_t;
 
 
 typedef struct ros_msg_buildup_t
 {
 	const ros_msg_buildup_type_t *const buildup_types;
-	struct ros_msg_buildup_t *const submessages;
+	const struct ros_msg_buildup_t *const submessages;
 }ros_msg_buildup_t;
 
-#endif /* ROS_MSG_BUILDUP_TYPE_H_ */
+#endif /* ROS_MSG_COMMON_H_ */

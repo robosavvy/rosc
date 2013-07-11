@@ -20,6 +20,8 @@
 #Linux TXT Editor Backup
 *.*~
 
+#Python binaries
+*.pyc
 
 #Eclipse workspace data folder
 .metadata
