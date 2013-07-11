@@ -32,6 +32,7 @@
 #include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
 
+
 #ifndef __SYSTEM_HAS_MALLOC__
 	#ifndef PORTS_STATIC_MAX_NUMBER
 		#error No port setting macro defined, define PORTS_DYNAMIC or PORTS_STATIC_MAX_NUMBER <maximal ports>
@@ -44,7 +45,7 @@
 	port_t* const port_list_hub=&__port_mem_reservation[0];
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
-	extern uint8_t *rosc_static_port_mem;
+	extern uint8_t rosc_static_port_mem[];
 	extern const uint8_t rosc_static_port_mem_size;
 
 
@@ -70,10 +71,10 @@ void rosc_ports_init()
 	//Init for static systems on
 	#ifndef __SYSTEM_HAS_MALLOC__
 		int i;
-		for(i=1;i<PORTS_STATIC_MAX_NUMBER+1;++i)
+		for(i=0;i<PORTS_STATIC_MAX_NUMBER;++i)
 		{
-			__port_mem_reservation[i-1].next=&__port_mem_reservation[i];
-			__port_mem_reservation[i].data=(void*)(rosc_static_port_mem+rosc_static_port_mem_size*i);
+			__port_mem_reservation[i].next=&__port_mem_reservation[i+1];
+			__port_mem_reservation[i].data=(void*)(&rosc_static_port_mem[0]+rosc_static_port_mem_size*i);
 			__port_mem_reservation[i].interface=0;
 			__port_mem_reservation[i].socket_id=0;
 			__port_mem_reservation[i].port_number=0;
@@ -81,5 +82,6 @@ void rosc_ports_init()
 			__port_mem_reservation[i].state=PORT_STATE_CLOSED;
 			__port_mem_reservation[i].next=0;
 		}
+		__port_mem_reservation[i].next=0; //Set current address to zero
 	#endif
 }

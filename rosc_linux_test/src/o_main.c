@@ -61,9 +61,6 @@
 //The memory definitions for
 //the size of all port buffers
 //for the biggest available message
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
-	char justatestsize[23];
-STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 
 char *test_request_message=

@@ -33,6 +33,7 @@
 #define ROSINIT_H_
 
 #include <rosc/system/types.h>
+#include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
 
 #ifndef  __SYSTEM_HAS_MALLOC__
@@ -42,7 +43,7 @@
 	 * defines the begin of the list which must contain all
 	 * port types on static systems
 	 */
-	#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
+	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
 		typedef struct\
 		{\
 			union\
@@ -55,13 +56,18 @@
 	 * the necessary external variables for the memory size
 	 * of all port buffers
 	 */
-	#define STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
+	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
 			};\
 		}rosc_port_memory_size_def_t;\
 		const uint8_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t x_rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
-		uint8_t *rosc_static_port_mem=(uint8_t *)x_rosc_static_port_mem;
+		rosc_port_memory_size_def_t rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
+
+
+
+
 #endif
+
+
 
 /**
  * This function initializes a rosc client

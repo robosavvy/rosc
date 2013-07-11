@@ -63,14 +63,6 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 }ros_msg_buildup_type_t;
 
-#define ROSC_STATIC_MSG_SIZE_LIST_HEAD \
-typedef union\
-{\
-
-#define ROSC_STATIC_MSG_SIZE_LIST_FOOT\
-}ros_static_subscriber_message_memory_size_t;
-
-
 typedef struct ros_msg_buildup_t
 {
 	const ros_msg_buildup_type_t *const buildup_types;
