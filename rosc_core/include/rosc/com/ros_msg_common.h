@@ -26,11 +26,11 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ros_msg_buildup.h created by Christian Holl
+ *  ros_msg_common.h created by Christian Holl
  */
 
-#ifndef ROS_MSG_BUILDUP_TYPE_H_
-#define ROS_MSG_BUILDUP_TYPE_H_
+#ifndef ROS_MSG_COMMON_H_
+#define ROS_MSG_COMMON_H_
 
 typedef enum
 {
@@ -63,6 +63,13 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 }ros_msg_buildup_type_t;
 
+#define ROSC_STATIC_MSG_SIZE_LIST_HEAD \
+typedef union\
+{\
+
+#define ROSC_STATIC_MSG_SIZE_LIST_FOOT\
+}ros_static_subscriber_message_memory_size_t;
+
 
 typedef struct ros_msg_buildup_t
 {
@@ -70,4 +77,4 @@ typedef struct ros_msg_buildup_t
 	const struct ros_msg_buildup_t *const submessages;
 }ros_msg_buildup_t;
 
-#endif /* ROS_MSG_BUILDUP_TYPE_H_ */
+#endif /* ROS_MSG_COMMON_H_ */

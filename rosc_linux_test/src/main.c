@@ -35,10 +35,22 @@
 #include <rosc/msg/rosc_linux_test/rosc_test.h>
 #include <rosc/msg/a_test_pkg/gnampf.h>
 #include <rosc/rosc.h>
+#include <rosc/com/ros_msg_common.h>
 
 
-ROSC_STATIC_MSG_USER_DEF__a_test_pkg__gnampf(a,12,12,12,12,12,12,12,12,12,12);
 
+ROSC_STATIC_MSG_BUILDUP__a_test_pkg__gnampf();
+
+ROSC_STATIC_MSG_USER_DEF__a_test_pkg__gnampf(a,1,1,1,1,1,1,1,1,1,1);
+
+ROSC_STATIC_MSG_SIZE_LIST_HEAD
+	ROSC_SIZE_LIST_ENTRY__a_test_pkg__gnampf(a)
+ROSC_STATIC_MSG_SIZE_LIST_FOOT
+
+ROSC_STATIC_CALLBACK_HEAD__a_test_pkg__gnampf__(a,my)
+{
+
+}
 
 
 int main()
@@ -46,7 +58,7 @@ int main()
 
 	printf("aaaaaaaahh333hh! %i\n",sizeof(rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a));
 
-	int i;
+	int i=ROS_MSG_BUILDUP_TYPE_STRING;
 	for (i = 1; i <= rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a[0]; ++i) {
 
 		printf("%i, ",(int) rosc_static_msg_memory_offsets__a_test_pkg__gnampf__a[i]);

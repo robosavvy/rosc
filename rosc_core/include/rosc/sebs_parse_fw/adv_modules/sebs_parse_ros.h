@@ -37,7 +37,7 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/com/ros_msg_buildup.h>
+#include <rosc/com/ros_msg_common.h>
 
 typedef void (*rosc_callbackFkt_t)(void *msg);
 

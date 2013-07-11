@@ -4,7 +4,7 @@ project(rosc_linux_test)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rosc_core rosc_sys_linux_x86 std_msgs a_test_pkg)
+find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -65,6 +65,7 @@ catkin_package(
 include_directories(include 
                      ${catkin_INCLUDE_DIRS} 
                      ${rosc_core_INCLUDE_DIRS}
+                     ${rosc_sys_linux_x86_INCLUDE_DIRS}
                      ${a_test_pkg_INCLUDE_DIRS})
 
 ## Declare a cpp library
