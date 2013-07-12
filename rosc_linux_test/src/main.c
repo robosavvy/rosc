@@ -31,27 +31,25 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <inttypes.h>
-#include <rosc/msg/rosc_linux_test/test_builtin.h>
+#include <rosc/msg/rosc_linux_test/testbuiltin.h>
 #include <rosc/rosc.h>
 
 
 
-ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__test_builtin();
+ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__test_builtin(test,3,3,3,3,3,3,3,3,3,3,3,3,3);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,3,3,3,3,3,3,3,3,3,3,3,3);
 
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
-	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__test_builtin(test)
+	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__testbuiltin(test)
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 
-ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__test_builtin__(test,cb)
+ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,cb)
 {
 
 }
-
-
 
 
 int main()
@@ -60,9 +58,9 @@ int main()
 	rosc_init();
 
 	int i=ROS_MSG_BUILDUP_TYPE_STRING;
-	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__test_builtin__test[0]; ++i) {
+	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {
 
-		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__test_builtin__test[i]);
+		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[i]);
 	}
 	printf("\n");
 }

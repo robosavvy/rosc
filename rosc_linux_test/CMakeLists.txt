@@ -22,8 +22,8 @@ find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs)
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   test_builtin.msg
-   test_submessage.msg
+   testbuiltin.msg
+   testsubmessage.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -114,7 +114,7 @@ target_link_libraries(rosc_linux_test_node
 # install(DIRECTORY include/${PROJECT_NAME}/
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
+#   PATTERN ".svn" EXCLUDE 
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)

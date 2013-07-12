@@ -54,5 +54,5 @@ time[2] tbi_time_A
 #Duration
 duration[] tbi_duration_A
 
-test_submessage t_nbi_sub
-test_submessage[] t_nbi_sub_A
+testsubmessage t_nbi_sub
+testsubmessage[2] t_nbi_sub_A
