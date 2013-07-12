@@ -22,8 +22,8 @@ find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs)
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   rosc_sub.msg
-   rosc_test.msg
+   test_builtin.msg
+   test_submessage.msg
 )
 
 ## Generate services in the 'srv' folder

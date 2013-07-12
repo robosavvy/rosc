@@ -59,7 +59,7 @@
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
 			};\
 		}rosc_port_memory_size_def_t;\
-		const uint8_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
+		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
 		rosc_port_memory_size_def_t rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
 
 
