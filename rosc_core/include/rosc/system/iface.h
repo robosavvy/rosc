@@ -85,9 +85,9 @@ typedef enum
 typedef struct iface_t
 {
 	iface_type_t type;
-	char* name;	//!< This is the topic / server name of the interface
-	struct iface_t* next;
-	iface_definition_t* const def;
+	char *name;	//!< This is the topic / server name of the interface
+	struct iface_t *next;
+	iface_definition_t const *def;
 	iface_state_t state;
 }iface_t;
 
@@ -96,7 +96,7 @@ typedef struct iface_t
 
 
 void rosc_init_interface_list();
-void register_interface(iface_t *interface, const char *interfacename, const iface_definition_t* iface_def);
+void register_interface(iface_t *interface, const char *interfacename, const iface_definition_t *iface_def);
 void unregister_interface(iface_t *interface);
 
 

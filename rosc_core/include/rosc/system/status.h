@@ -49,7 +49,7 @@ typedef enum
 	#define ROSC_ERROR(MSG)
 	#define ROSC_FATAL(MSG) while(1){};
 #else
-	extern report(const char *,status_type_t status);
+	extern report(const char *msg, status_type_t status);
 
 	#define ROSC_INFO(MSG)\
 		report(MSG, STATUS_INFO);
