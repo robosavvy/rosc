@@ -49,10 +49,10 @@ bool[] tbi_bool_A
 string[] tbi_string_A
 
 #Time
-time[2] tbi_time_A
+#time[2] tbi_time_A
 
 #Duration
-duration[] tbi_duration_A
+#duration[] tbi_duration_A
 
 testsubmessage t_nbi_sub
 testsubmessage[2] t_nbi_sub_A
