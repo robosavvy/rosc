@@ -34,7 +34,7 @@
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
-	ros_hander_data_t *hdata=pdata->handler_data;
+	ros_handler_data_t *hdata=pdata->handler_data;
 
 	DEBUG_PRINT_STR("ROS HANDLER");
 
