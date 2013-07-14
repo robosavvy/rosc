@@ -34,6 +34,9 @@
 #include <rosc/system/types.h>
 #include <rosc/system/iface.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/com/xmlrpc_server.h>
+#include <rosc/com/ros_handler.h>
+
 
 
 
@@ -58,11 +61,17 @@ typedef enum
 }port_state_t;
 
 
+typedef union
+{
+	xmlrpc_data_t xmlrpc;
+	ros_handler_data_t rosmsg;
+}handler_data_size_t;
+
 typedef struct port_t
 {
 	uint16_t port_number;
-	struct iface_t* interface;
-	void *data;
+	struct iface_t* interface;  //!< Interface connected to port
+	handler_data_size_t handler_data; 	//!< Handler for the current interface
 	uint32_t socket_id;
 	port_type_t type;
 	port_state_t state;
