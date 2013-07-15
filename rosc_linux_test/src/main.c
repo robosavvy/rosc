@@ -368,17 +368,16 @@ iface_t sub={	IFACE_TYPE_TOPIC_SUBSCRIBER,
 				(size_t *)rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
 				(size_t *)rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test};
 
-
 int main()
 {
 	rosc_init();
 	register_interface(&sub);
 
 
-	int i=ROS_MSG_BUILDUP_TYPE_STRING;
-	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {
-
-		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[i]);
-	}
-	printf("\n");
+//	int i=ROS_MSG_BUILDUP_TYPE_STRING;
+//	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {
+//
+//		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[i]);
+//	}
+	printf("\n---END---\n");
 }

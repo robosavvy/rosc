@@ -32,15 +32,10 @@
 #define PORTS_H_
 
 #include <rosc/system/types.h>
+//#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+//#include <rosc/com/xmlrpc_server.h>
+//#include <rosc/com/ros_handler.h>
 #include <rosc/system/iface.h>
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-#include <rosc/com/xmlrpc_server.h>
-#include <rosc/com/ros_handler.h>
-
-
-
-
-
 
 typedef enum
 {
@@ -61,16 +56,12 @@ typedef enum
 }port_state_t;
 
 
-typedef union
-{
-	xmlrpc_data_t xmlrpc;
-	ros_handler_data_t rosmsg;
-}handler_data_size_t;
+
 
 typedef struct port_t
 {
 	uint16_t port_number;
-	struct iface_t* interface;  //!< Interface connected to port
+	struct iface_t *interface;  //!< Interface connected to port
 	void* data;
 	uint32_t socket_id;
 	port_type_t type;
@@ -78,7 +69,17 @@ typedef struct port_t
 	struct port_t *next;
 }port_t;
 
+
 void rosc_ports_init();
+
+/**
+ * Opens a port for a specific interface
+ * @param iface interface which will use the port
+ * @return True if successfull, False if not
+ */
+bool rosc_open_port(struct iface_t *iface);
+
+
 
 
 #endif /* PORTS_H_ */

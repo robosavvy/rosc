@@ -30,8 +30,7 @@
  */
 
 #include <rosc/system/ports.h>
-#include <rosc/system/spec.h>
-
+#include <rosc/system/status.h>
 
 #ifndef __SYSTEM_HAS_MALLOC__
 	#ifndef PORTS_STATIC_MAX_NUMBER
@@ -84,4 +83,67 @@ void rosc_ports_init()
 		}
 		__port_mem_reservation[i].next=0; //Set current address to zero
 	#endif
+}
+
+bool rosc_opjen_port(struct iface_t *iface)
+{
+	port_t *cur=port_list_hub->next;
+	while(
+#ifndef __SYSTEM_HAS_MALLOC__
+			(cur->state!=PORT_STATE_CLOSED ||
+			cur->state!=PORT_STATE_UNUSABLE) &&
+#endif
+			cur->next!=0)
+	{
+		cur=cur->next;
+	}
+
+#ifndef __SYSTEM_HAS_MALLOC__
+	if(cur->state==PORT_STATE_CLOSED)
+	{
+		switch(iface->type)
+		{
+
+			case IFACE_TYPE_XMLRPC_SERVER:
+
+				break;
+
+			case IFACE_TYPE_XMLRPC_CLIENT:
+
+				break;
+
+			case IFACE_TYPE_ROSRPC_SERVER:
+
+				break;
+
+			case IFACE_TYPE_TOPIC_PUBLISHER:
+
+				break;
+
+			case IFACE_TYPE_SERVICE_SERVER:
+
+				break;
+
+			case IFACE_TYPE_TOPIC_SUBSCRIBER:
+
+				break;
+
+			case IFACE_TYPE_SERVICE_CLIENT:
+
+				break;
+
+			case IFACE_TYPE_LIST_HUB:
+				ROSC_FATAL("FATAL ERROR, FOUND IFACE HUB NOT AT THE BEGINNING!");
+				break;
+		}
+
+		return (true);
+	}
+	else
+	{
+		return (false);
+	}
+#else
+	//TODO allocate new port memory and stuff here
+#endif
 }

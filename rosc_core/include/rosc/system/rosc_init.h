@@ -35,6 +35,10 @@
 #include <rosc/system/types.h>
 #include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/com/ros_handler.h>
+#include <rosc/com/xmlrpc_server.h>
+
 
 #ifndef  __SYSTEM_HAS_MALLOC__
 
@@ -46,8 +50,15 @@
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
 		typedef struct\
 		{\
-			union\
-			{
+					sebs_parser_data_t pdata;\
+					union\
+					{\
+						xmlrpc_data_t xml;\
+						struct\
+						{\
+							ros_handler_data_t hdata;\
+							union\
+							{
 
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
@@ -57,17 +68,16 @@
 	 * of all port buffers
 	 */
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
-			};\
+							}message_data;\
+						}ros;\
+					}handler;\
 		}rosc_port_memory_size_def_t;\
 		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
-
-
-
-
+		rosc_port_memory_size_def_t rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];
 #endif
 
 
+#include <rosc/com/ros_handler.h>
 
 /**
  * This function initializes a rosc client
