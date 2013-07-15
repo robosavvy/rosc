@@ -49,10 +49,12 @@ struct\
 
 typedef struct
 {
-	char dummy;
-
+	ros_msg_buildup_type_t buildup;
+	size_t *submessage_sizes;
+	size_t *memory_offsets;
+	void (*callback_fkt)(void*);
 	sebs_parse_ros_data_t ros;
-}ros_hander_data_t;
+}ros_handler_data_t;
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata);
 
