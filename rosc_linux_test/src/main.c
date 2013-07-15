@@ -356,15 +356,24 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,cb)
-{
-
+	/*Callback Function stuff here*/
 }
+
+
+iface_t sub={	IFACE_TYPE_TOPIC_SUBSCRIBER,
+				"/test",
+				IFACE_STATE_UNREGISTERED,
+				(ros_msg_buildup_t *)rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
+				(size_t *)rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
+				(size_t *)rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
+				(size_t *)rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test};
 
 
 int main()
 {
-
 	rosc_init();
+	register_interface(&sub);
+
 
 	int i=ROS_MSG_BUILDUP_TYPE_STRING;
 	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {

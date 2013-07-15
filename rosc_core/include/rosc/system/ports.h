@@ -71,7 +71,7 @@ typedef struct port_t
 {
 	uint16_t port_number;
 	struct iface_t* interface;  //!< Interface connected to port
-	handler_data_size_t handler_data; 	//!< Handler for the current interface
+	void* data;
 	uint32_t socket_id;
 	port_type_t type;
 	port_state_t state;

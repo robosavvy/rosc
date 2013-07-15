@@ -35,23 +35,8 @@
 
 #include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
+#include <rosc/com/ros_msg_common.h>
 
-
-/**
- * This enum contains the message type commands for the marshalling functions
- */
-typedef enum
-{
-	IFACE_DEFINITION_TYPE_XMLRPC_SERVER,  //!< IFACE_DEFINITION_TYPE_XMLRPC_SERVER
-	IFACE_DEFINITION_TYPE_XMLRPC_CLIENT,  //!< IFACE_DEFINITION_TYPE_XMLRPC_CLIENT
-
-	IFACE_DEFINITON_TYPE_TOPIC_SUBSCRIBER,//!< IFACE_DEFINITON_TYPE_TOPIC_SUBSCRIBER
-	IFACE_DEFINITON_TYPE_TOPIC_PUBLISHER, //!< IFACE_DEFINITON_TYPE_TOPIC_PUBLISHER
-
-	IFACE_DEFINITON_TYPE_SERVICE_SERVER,  //!< IFACE_DEFINITON_TYPE_SERVICE_SERVER
-	IFACE_DEFINITON_TYPE_SERVICE_CLIENT,  //!< IFACE_DEFINITON_TYPE_SERVICE_CLIENT
-
-}iface_definition_t;
 
 /**
  * This enum specifies the available interfaces types
@@ -86,9 +71,13 @@ typedef struct iface_t
 {
 	iface_type_t type;
 	char *name;	//!< This is the topic / server name of the interface
-	struct iface_t *next;
-	iface_definition_t const *def;
 	iface_state_t state;
+	ros_msg_buildup_t *buildup;
+	size_t *submessage_sizes;
+	size_t *array_lengths;
+	size_t *memory_offsets;
+	struct iface_t *next;
+
 }iface_t;
 
 
@@ -96,7 +85,7 @@ typedef struct iface_t
 
 
 void rosc_init_interface_list();
-void register_interface(iface_t *interface, const char *interfacename, const iface_definition_t *iface_def);
+void register_interface(iface_t *interface);
 void unregister_interface(iface_t *interface);
 
 

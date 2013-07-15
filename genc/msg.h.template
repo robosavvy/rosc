@@ -92,7 +92,7 @@ rosc_usertype = rosc_pref + '_user_def' + "__" + rosc_name_pack + "__ ## USER_TY
 rosc_usertype_def = rosc_pref.upper() + '_USER_DEF' + "__" + rosc_name_pack
 rosc_buildup = rosc_pref + '_buildup'
 rosc_padding = rosc_pref + '_padding__' + rosc_name_pack
-rosc_len = rosc_pref + '_len_def__' + rosc_name_pack
+rosc_len = rosc_pref + '_array_size_list__' + rosc_name_pack
 }@
 
 /* ************
@@ -137,7 +137,7 @@ const uint32_t @(rosc_len)__ ## USER_TYPE[]=\
 @###########################################
 @# Printing substructure size information ##
 @###########################################
-const uint32_t @(rosc_pref)_size_list__@(rosc_name_pack)__ ## USER_TYPE []=\
+const uint32_t @(rosc_pref)_submessage_size_list__@(rosc_name_pack)__ ## USER_TYPE []=\
 {\
     @(len(rosc_gen.get_static_in_substructure_sizes()))@
 @[for field in rosc_gen.get_static_in_substructure_sizes()],\
@@ -161,7 +161,7 @@ const size_t @(rosc_pref)_memory_offsets__@(rosc_name_pack)__ ## USER_TYPE []=\
  
 
 #define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)()\
-ros_msg_buildup_type_t @(rosc_pref.upper())_buildup__@(rosc_name_pack)[]=\
+ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 {\
 @{first = True}@
 @[for (indent, entry, additionalreturn) in rosc_gen.get_static_buildup_array()]@
@@ -186,8 +186,9 @@ ros_msg_buildup_type_t @(rosc_pref.upper())_buildup__@(rosc_name_pack)[]=\
 ** Callback function head for usertype **
 ****************************************/
 #define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)__(USER_TYPE, CALLBACK_NAME)\
-void CALLBACK_NAME(@(rosc_usertype) msg)
- 
+void CALLBACK_NAME(const void* const __msg)\
+{\
+    const @(rosc_usertype)* const msg=(const @(rosc_usertype)* const) __msg;\
 
 
 
