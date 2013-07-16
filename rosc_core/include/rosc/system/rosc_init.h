@@ -38,7 +38,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_handler.h>
 #include <rosc/com/xmlrpc_server.h>
-
+#include <rosc/system/mem.h>
 
 #ifndef  __SYSTEM_HAS_MALLOC__
 
@@ -59,13 +59,20 @@
 							ros_handler_data_t hdata;\
 							union\
 							{
-
+							char mem_start;
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 	 * defines the end of the list which must contain all
 	 * port types on static systems, it also sets up
 	 * the necessary external variables for the memory size
 	 * of all port buffers
+	 *
+	 * Additional information (rosc developers only):
+	 * We need the type and array size variables here because the port memory size type is
+	 * not known to rosc functions because it would force the user to have a separate
+	 * setup header file which needs to be included by all rosc stuff requiring this
+	 * information. To get arround this, the information is passed by "external" variables,
+	 * these are setup here.
 	 */
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
 							}message_data;\
@@ -73,7 +80,11 @@
 					}handler;\
 		}rosc_port_memory_size_def_t;\
 		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];
+		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
+		void *rosc_static_port_mem=(void *)__rosc_static_port_mem;\
+		const size_t rosc_static_port_mem_pdata_offset=offsetof(rosc_port_memory_size_def_t,pdata);\
+		const size_t rosc_static_port_mem_hdata_offset=offsetof(rosc_port_memory_size_def_t,handler);\
+		const size_t rosc_static_port_mem_message_offset=offsetof(rosc_port_memory_size_def_t,handler.ros.message_data);
 #endif
 
 

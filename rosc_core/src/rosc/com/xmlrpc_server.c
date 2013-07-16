@@ -50,23 +50,21 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 
 		uint8_t init_state;
-		if (1) //(*type==XMLRPC_SERVER)
+		if (hdata->type_tag == XMLRPC_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
 			init_state = SEBS_PARSE_HTTP_REQUEST_INIT;
 			hdata->xmlrpc_type = XMLRPC_SERVER;
-			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
-
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
 			init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
 			hdata->xmlrpc_type = XMLRPC_CLIENT;
-			hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN; //TODO must be set on init!
 		}
 
 
+		hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 		pdata->overall_len = 0;

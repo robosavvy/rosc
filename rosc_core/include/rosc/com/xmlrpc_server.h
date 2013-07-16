@@ -49,8 +49,8 @@
 
 typedef enum
 {
-	XMLRPC_SERVER=1,
-	XMLRPC_CLIENT=2
+	XMLRPC_SERVER,
+	XMLRPC_CLIENT
 }xmlrpc_type_t;
 
 typedef enum
@@ -155,12 +155,9 @@ typedef enum
 typedef struct
 {
 
+	xmlrpc_type_t xmlrpc_type;
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
-
-
-	xmlrpc_type_t xmlrpc_type;
-
 
 	//HTTP variables
 	uint16_t http_response_code; //!<saves the response code

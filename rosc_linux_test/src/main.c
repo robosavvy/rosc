@@ -372,7 +372,7 @@ int main()
 {
 	rosc_init();
 	register_interface(&sub);
-
+	rosc_open_port(&sub);
 
 //	int i=ROS_MSG_BUILDUP_TYPE_STRING;
 //	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {

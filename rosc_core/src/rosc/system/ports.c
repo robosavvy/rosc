@@ -29,6 +29,7 @@
  *  ports.c created by Christian Holl
  */
 
+#include <rosc/system/spec.h>
 #include <rosc/system/ports.h>
 #include <rosc/system/status.h>
 
@@ -38,15 +39,17 @@
 	#endif
 
 	//Memory for the port structs itself
-	static port_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER+1];
+	static port_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER];
 
 	//point the hub pointer to the first array entry
-	port_t* const port_list_hub=&__port_mem_reservation[0];
+	static port_t port_list_hub;
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
-	extern uint8_t rosc_static_port_mem[];
-	extern const uint8_t rosc_static_port_mem_size;
-
+	extern void* rosc_static_port_mem;
+	extern const size_t rosc_static_port_mem_size;
+	extern const size_t rosc_static_port_mem_pdata_offset;
+	extern const size_t rosc_static_port_mem_message_offset;
+	extern const size_t rosc_static_port_mem_hdata_offset;
 
 #else
 	port_t __port_list_hub;
@@ -59,83 +62,88 @@
 void rosc_ports_init()
 {
 	//Init list hub
-	port_list_hub->data=0;
-	port_list_hub->interface=0;
-	port_list_hub->socket_id=0;
-	port_list_hub->port_number=0;
-	port_list_hub->type=PORT_TYPE_HUB;
-	port_list_hub->state=PORT_STATE_UNUSABLE;
-	port_list_hub->next=0;
+	port_list_hub.data=0;
+	port_list_hub.interface=0;
+	port_list_hub.socket_id=0;
+	port_list_hub.port_number=0;
+	port_list_hub.type=PORT_TYPE_HUB;
+	port_list_hub.state=PORT_STATE_UNUSABLE;
+	port_list_hub.next=0;
 
 	//Init for static systems on
 	#ifndef __SYSTEM_HAS_MALLOC__
+		port_list_hub.next=(port_t*)__port_mem_reservation;
 		int i;
 		for(i=0;i<PORTS_STATIC_MAX_NUMBER;++i)
 		{
-			__port_mem_reservation[i].next=&__port_mem_reservation[i+1];
-			__port_mem_reservation[i].data=(void*)(&rosc_static_port_mem[0]+rosc_static_port_mem_size*i);
+			__port_mem_reservation[i].next=(port_t *)__port_mem_reservation+sizeof(port_t)*(i+1);
+			__port_mem_reservation[i].data=(void*)(rosc_static_port_mem+rosc_static_port_mem_size*i);
 			__port_mem_reservation[i].interface=0;
 			__port_mem_reservation[i].socket_id=0;
 			__port_mem_reservation[i].port_number=0;
 			__port_mem_reservation[i].type=PORT_TYPE_UNUSED;
 			__port_mem_reservation[i].state=PORT_STATE_CLOSED;
-			__port_mem_reservation[i].next=0;
 		}
-		__port_mem_reservation[i].next=0; //Set current address to zero
+		__port_mem_reservation[i-1].next=0; //Set last items next address to zero
 	#endif
 }
 
-bool rosc_opjen_port(struct iface_t *iface)
+bool rosc_open_port( iface_t *iface, uint16_t port_number)
 {
-	port_t *cur=port_list_hub->next;
-	while(
-#ifndef __SYSTEM_HAS_MALLOC__
-			(cur->state!=PORT_STATE_CLOSED ||
-			cur->state!=PORT_STATE_UNUSABLE) &&
-#endif
-			cur->next!=0)
+	port_t *cur=port_list_hub.next;
+	while(1)
 	{
+		if(cur->next==0)break;
+		if(cur->state!=PORT_STATE_CLOSED ||
+			cur->state!=PORT_STATE_UNUSABLE) break;
 		cur=cur->next;
 	}
 
 #ifndef __SYSTEM_HAS_MALLOC__
 	if(cur->state==PORT_STATE_CLOSED)
 	{
+		sebs_parser_data_t *pdata=cur->data+rosc_static_port_mem_pdata_offset;
+		pdata->handler_data=cur->data+rosc_static_port_mem_hdata_offset;
+		void *message_data=cur->data+rosc_static_port_mem_message_offset;
+		pdata->handler_init=true;
+
 		switch(iface->type)
 		{
-
 			case IFACE_TYPE_XMLRPC_SERVER:
-
+					pdata->handler_function=&xmlrpc;
+					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=XMLRPC_SERVER;
 				break;
-
 			case IFACE_TYPE_XMLRPC_CLIENT:
-
+					pdata->handler_function=&xmlrpc;
+					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=XMLRPC_CLIENT;
 				break;
 
 			case IFACE_TYPE_ROSRPC_SERVER:
-
+					pdata->handler_function=&ros_handler;
+		//			((ros_handler_data_t *)&pdata->handler_data);
 				break;
 
 			case IFACE_TYPE_TOPIC_PUBLISHER:
-
+					pdata->handler_function=&ros_handler;
 				break;
 
 			case IFACE_TYPE_SERVICE_SERVER:
-
+					pdata->handler_function=&ros_handler;
 				break;
 
 			case IFACE_TYPE_TOPIC_SUBSCRIBER:
-
+					pdata->handler_function=&ros_handler;
 				break;
 
 			case IFACE_TYPE_SERVICE_CLIENT:
-
+					pdata->handler_function=&ros_handler;
 				break;
 
 			case IFACE_TYPE_LIST_HUB:
 				ROSC_FATAL("FATAL ERROR, FOUND IFACE HUB NOT AT THE BEGINNING!");
 				break;
 		}
+		pdata->handler_function(pdata); //initialize the handler;
 
 		return (true);
 	}
@@ -145,5 +153,7 @@ bool rosc_opjen_port(struct iface_t *iface)
 	}
 #else
 	//TODO allocate new port memory and stuff here
+
+	//Needs additions for type sizes of ros message...
 #endif
 }
