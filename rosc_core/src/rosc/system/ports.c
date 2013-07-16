@@ -47,15 +47,12 @@
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
 	extern void* rosc_static_port_mem;
 	extern const size_t rosc_static_port_mem_size;
-	extern const size_t rosc_static_port_mem_pdata_offset;
 	extern const size_t rosc_static_port_mem_message_offset;
 	extern const size_t rosc_static_port_mem_hdata_offset;
 
 #else
 	port_t __port_list_hub;
 	const port_t* port_list_hub=__port_list_hub;
-
-
 #endif
 
 
@@ -103,45 +100,31 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 #ifndef __SYSTEM_HAS_MALLOC__
 	if(cur->state==PORT_STATE_CLOSED)
 	{
-		sebs_parser_data_t *pdata=cur->data+rosc_static_port_mem_pdata_offset;
-		pdata->handler_data=cur->data+rosc_static_port_mem_hdata_offset;
+		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
 		void *message_data=cur->data+rosc_static_port_mem_message_offset;
-		pdata->handler_init=true;
+		cur->pdata.handler_init=true;
 
 		switch(iface->type)
 		{
 			case IFACE_TYPE_XMLRPC_SERVER:
 			case IFACE_TYPE_XMLRPC_CLIENT:
-					pdata->handler_function=&xmlrpc;
-					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=iface->type;
+					cur->pdata.handler_function=&xmlrpc;
+					((xmlrpc_data_t *)&cur->pdata.handler_data)->xmlrpc_type=iface->type;
 				break;
 
 			case IFACE_TYPE_ROSRPC_SERVER:
-					pdata->handler_function=&ros_handler;
-		//			((ros_handler_data_t *)&pdata->handler_data);
-				break;
-
 			case IFACE_TYPE_TOPIC_PUBLISHER:
-					pdata->handler_function=&ros_handler;
-				break;
-
 			case IFACE_TYPE_SERVICE_SERVER:
-					pdata->handler_function=&ros_handler;
-				break;
-
 			case IFACE_TYPE_TOPIC_SUBSCRIBER:
-					pdata->handler_function=&ros_handler;
-				break;
-
 			case IFACE_TYPE_SERVICE_CLIENT:
-					pdata->handler_function=&ros_handler;
+					cur->pdata.handler_function=&ros_handler;
 				break;
 
 			case IFACE_TYPE_LIST_HUB:
 				ROSC_FATAL("FATAL ERROR, FOUND IFACE HUB NOT AT THE BEGINNING!");
 				break;
 		}
-		pdata->handler_function(pdata); //initialize the handler;
+		cur->pdata.handler_function(&cur->pdata); //initialize the handler;
 
 		return (true);
 	}

@@ -38,7 +38,8 @@
 
 typedef struct
 {
-
+	uint16_t port_number;
+	iface_type_t ros_type;
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;
 

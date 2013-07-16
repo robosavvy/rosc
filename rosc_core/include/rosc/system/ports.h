@@ -57,6 +57,7 @@ typedef enum
 typedef struct port_t
 {
 	uint16_t port_number;
+	sebs_parser_data_t pdata;
 	struct iface_t *interface;
 	void* data;
 	uint32_t socket_id;

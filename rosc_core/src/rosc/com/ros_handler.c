@@ -31,6 +31,7 @@
 
 #include <rosc/com/ros_handler.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/system/status.h>
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
@@ -48,6 +49,22 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
+
+
+	switch(hdata->ros_type)
+	{
+		case IFACE_TYPE_ROSRPC_CLIENT:
+		case IFACE_TYPE_ROSRPC_SERVER:
+		case IFACE_TYPE_TOPIC_PUBLISHER:
+		case IFACE_TYPE_TOPIC_SUBSCRIBER:
+		case IFACE_TYPE_XMLRPC_CLIENT:
+		case IFACE_TYPE_XMLRPC_SERVER:
+
+		default:
+			ROSC_FATAL("ros handler: Not a ros handler type!");
+	}
+
+
 
 
 	switch(*ros_event)

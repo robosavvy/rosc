@@ -38,6 +38,7 @@
 
 
 #include <rosc/system/iface.h>
+#include <rosc/system/ports.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
@@ -152,6 +153,8 @@ typedef struct
 {
 
 	iface_type_t xmlrpc_type;
+
+	uint16_t port_number;
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
