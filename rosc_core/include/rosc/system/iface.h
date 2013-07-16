@@ -33,7 +33,6 @@
 #ifndef IFACE_H_
 #define IFACE_H_
 
-#include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
 #include <rosc/com/ros_msg_common.h>
 

@@ -34,10 +34,11 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
-
+#include <rosc/system/iface.h>
 
 typedef struct
 {
+
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;
 

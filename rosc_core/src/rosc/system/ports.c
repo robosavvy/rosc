@@ -29,9 +29,9 @@
  *  ports.c created by Christian Holl
  */
 
-#include <rosc/system/spec.h>
 #include <rosc/system/ports.h>
 #include <rosc/system/status.h>
+
 
 #ifndef __SYSTEM_HAS_MALLOC__
 	#ifndef PORTS_STATIC_MAX_NUMBER
@@ -98,6 +98,7 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 			cur->state!=PORT_STATE_UNUSABLE) break;
 		cur=cur->next;
 	}
+	cur->port_number=port_number;
 
 #ifndef __SYSTEM_HAS_MALLOC__
 	if(cur->state==PORT_STATE_CLOSED)
@@ -110,12 +111,9 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 		switch(iface->type)
 		{
 			case IFACE_TYPE_XMLRPC_SERVER:
-					pdata->handler_function=&xmlrpc;
-					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=XMLRPC_SERVER;
-				break;
 			case IFACE_TYPE_XMLRPC_CLIENT:
 					pdata->handler_function=&xmlrpc;
-					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=XMLRPC_CLIENT;
+					((xmlrpc_data_t *)&pdata->handler_data)->xmlrpc_type=iface->type;
 				break;
 
 			case IFACE_TYPE_ROSRPC_SERVER:

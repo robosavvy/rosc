@@ -347,7 +347,7 @@ char peer1_2[] = {
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,3,3,3,3,3,3,3,3,3,3,3);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,3,3,3,3,3,3,3,3,3,3,3,3);
 
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
@@ -372,7 +372,7 @@ int main()
 {
 	rosc_init();
 	register_interface(&sub);
-	rosc_open_port(&sub);
+	rosc_open_port(&sub,0);
 
 //	int i=ROS_MSG_BUILDUP_TYPE_STRING;
 //	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {

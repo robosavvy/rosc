@@ -31,8 +31,6 @@
 #ifndef PORTS_H_
 #define PORTS_H_
 
-#include <rosc/system/types.h>
-#include <rosc/system/iface.h>
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/xmlrpc_server.h>
