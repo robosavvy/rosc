@@ -95,38 +95,16 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 			cur->state!=PORT_STATE_UNUSABLE) break;
 		cur=cur->next;
 	}
-	cur->port_number=port_number;
-
 #ifndef __SYSTEM_HAS_MALLOC__
 	if(cur->state==PORT_STATE_CLOSED)
 	{
-		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
-		void *message_data=cur->data+rosc_static_port_mem_message_offset;
+		cur->interface=iface;
 		cur->pdata.handler_init=true;
+		cur->pdata.init_mode=iface->init_mode;
+		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
+		cur->pdata.additional_storage=cur->data+rosc_static_port_mem_message_offset;
+		cur->pdata.handler_function=iface->handler_function;
 
-		switch(iface->type)
-		{
-			case IFACE_TYPE_XMLRPC_SERVER:
-			case IFACE_TYPE_XMLRPC_CLIENT:
-					cur->pdata.handler_function=&xmlrpc;
-					((xmlrpc_data_t *)&cur->pdata.handler_data)->xmlrpc_type=iface->type;
-				break;
-
-			case IFACE_TYPE_ROSRPC_SERVER:
-			case IFACE_TYPE_TOPIC_PUBLISHER:
-			case IFACE_TYPE_SERVICE_SERVER:
-			case IFACE_TYPE_TOPIC_SUBSCRIBER:
-			case IFACE_TYPE_SERVICE_CLIENT:
-					cur->pdata.handler_function=&ros_handler;
-				break;
-
-			case IFACE_TYPE_LIST_HUB:
-				ROSC_FATAL("FATAL ERROR, FOUND IFACE HUB NOT AT THE BEGINNING!");
-				break;
-		}
-		cur->pdata.handler_function(&cur->pdata); //initialize the handler;
-
-		return (true);
 	}
 	else
 	{
@@ -137,4 +115,23 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 
 	//Needs additions for type sizes of ros message...
 #endif
+
+
+	cur->port_number=port_number;
+	cur->socket_id=1;  //////////////////////////////////////TODO REMOVE BEFORE DOING ANY SERIOUS!!!
+	return (true);
+}
+
+
+
+void rosc_receive_by_socketid(uint32_t socket_id, int8_t *buffer, uint32_t len)
+{
+	port_t *cur=port_list_hub.next;
+	while(1)
+	{
+		if(cur->next==0)break;
+		if(cur->socket_id==socket_id) break;
+		cur=cur->next;
+	}
+	sebs_parser_frame(buffer,len,&cur->pdata);
 }

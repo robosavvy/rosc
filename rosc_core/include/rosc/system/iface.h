@@ -34,7 +34,10 @@
 #define IFACE_H_
 
 #include <rosc/system/spec.h>
+#include <rosc/system/types.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_msg_common.h>
+
 
 
 /**
@@ -72,19 +75,20 @@ typedef enum
  */
 typedef struct iface_t
 {
-	iface_type_t type;
+	bool isListHub;
 	char *name;	//!< This is the topic / server name of the interface
 	iface_state_t state;
 	ros_msg_buildup_t *buildup;
 	size_t *submessage_sizes;
 	size_t *array_lengths;
 	size_t *memory_offsets;
+	uint8_t init_mode;
+	sebs_parse_function_t handler_function;
 	struct iface_t *next;
+#ifdef __SYSTEM_HAS_MALLOC__
+	size_t handler_mem_size;
+#endif
 }iface_t;
-
-
-
-
 
 void rosc_init_interface_list();
 void register_interface(iface_t *interface);

@@ -74,10 +74,10 @@ void rosc_ports_init();
 /**
  * Opens a port for a specific interface
  * @param iface interface which will use the port
- * @param
  * @return True if successfull, False if not
  */
-bool rosc_open_port(struct iface_t *iface, uint16_t port_number);
+bool rosc_open_port( iface_t *iface, uint16_t port_number);
+
 
 
 

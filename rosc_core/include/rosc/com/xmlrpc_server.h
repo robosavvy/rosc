@@ -151,9 +151,6 @@ typedef enum
 
 typedef struct
 {
-
-	iface_type_t xmlrpc_type;
-
 	uint16_t port_number;
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler

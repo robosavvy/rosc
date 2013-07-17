@@ -50,12 +50,13 @@
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN\
 		typedef struct\
 		{\
-					union\
-					{\
+			union\
+			{\
 						xmlrpc_data_t xml;\
-						ros_handler_data_t hdata;\
-						union\
-						{
+						ros_handler_data_t ros;\
+			}handler;\
+			union\
+			{
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 	 * defines the end of the list which must contain all
@@ -71,14 +72,13 @@
 	 * these are setup here.
 	 */
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
-						}message_data;\
-					}handler;\
+			}message_data;\
 		}rosc_port_memory_size_def_t;\
 		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
 		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
 		void *rosc_static_port_mem=(void *)__rosc_static_port_mem;\
 		const size_t rosc_static_port_mem_hdata_offset=offsetof(rosc_port_memory_size_def_t,handler);\
-		const size_t rosc_static_port_mem_message_offset=offsetof(rosc_port_memory_size_def_t,handler.message_data);
+		const size_t rosc_static_port_mem_message_offset=offsetof(rosc_port_memory_size_def_t,message_data);
 #endif
 
 

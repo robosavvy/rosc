@@ -41,8 +41,6 @@
 
 
 
-#define SEBS_PARSE_HANDLER_FUNCTION_CALL()\\
-		return_to_handler
 
 #define SEBS_PARSE_UNKNOWN  -1
 
@@ -69,15 +67,12 @@ typedef enum
 }sebs_parse_return_t;
 
 /**
- * This is the function pointer to a parser function
+ * This is the function pointer to a parser or parser handler function
  * @param pdata struct containing the parser data for the current parser.
  * @param fdata parser specific struct containing information for the current parser function
  * @return
  */
 typedef sebs_parse_return_t (*sebs_parse_function_t)(struct sebs_parser_data_t* pdata);
-
-
-typedef sebs_parse_return_t (*sebs_parse_handler_function_t)(struct sebs_parser_data_t* pdata);
 
 /**
  * This struct stores a parser function and the data location for calling it
@@ -98,8 +93,17 @@ typedef struct
  */
 typedef struct sebs_parser_data_t
 {
+	/**
+	 * If true, the handler will be initialized (or reset)
+	 */
 	bool handler_init;
-	void* handler_init_data;
+
+	/**
+	 * init_mode can be used to tell the handler function to initialize a specific parser mode
+	 */
+	uint8_t init_mode;
+
+
 	bool function_init;
 
 	/**
@@ -143,7 +147,7 @@ typedef struct sebs_parser_data_t
 	/**
 	 * This stores the event handler function
 	 */
-	sebs_parse_handler_function_t handler_function;
+	sebs_parse_function_t handler_function;
 
 	/**
 	 * Message Size Limit
@@ -180,9 +184,16 @@ typedef struct sebs_parser_data_t
 	 * The current length variable
 	 */
 	int32_t *len;
+
+	/**
+	 * This targets a additional storage location
+	 */
+	void *additional_storage;
+
 } sebs_parser_data_t;
 
-sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);
+
+
 
 /**
  * This is the base function for the streaming parsers
