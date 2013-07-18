@@ -104,7 +104,7 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
 		cur->pdata.additional_storage=cur->data+rosc_static_port_mem_message_offset;
 		cur->pdata.handler_function=iface->handler_function;
-
+		cur->pdata.communication_port=cur;
 	}
 	else
 	{

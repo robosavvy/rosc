@@ -190,6 +190,11 @@ typedef struct sebs_parser_data_t
 	 */
 	void *additional_storage;
 
+	/**
+	 * This points to the communication port of the current parser
+	 */
+	void *communication_port;
+
 } sebs_parser_data_t;
 
 

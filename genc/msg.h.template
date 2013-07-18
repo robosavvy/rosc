@@ -140,7 +140,7 @@ const size_t @(rosc_len)__ ## USER_TYPE[]=\
 const size_t @(rosc_pref)_submessage_size_list__@(rosc_name_pack)__ ## USER_TYPE []=\
 {\
     @(len(rosc_gen.get_static_in_substructure_sizes()))@
-@[for field in rosc_gen.get_static_in_substructure_sizes()],\ 
+@[for field in rosc_gen.get_static_in_substructure_sizes()],\
     sizeofmember(@(rosc_usertype),@(field.replace('.','',1)))@
 @[end for]\
 };\
