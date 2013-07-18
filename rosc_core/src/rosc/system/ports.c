@@ -124,7 +124,7 @@ bool rosc_open_port( iface_t *iface, uint16_t port_number)
 
 
 
-void rosc_receive_by_socketid(uint32_t socket_id, int8_t *buffer, uint32_t len)
+void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 {
 	port_t *cur=port_list_hub.next;
 	while(1)

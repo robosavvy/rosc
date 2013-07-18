@@ -178,7 +178,7 @@ typedef struct sebs_parser_data_t
 	/**
 	 * Pointer of the current input buffer
 	 */
-	char **buf;
+	uint8_t **buf;
 
 	/**
 	 * The current length variable
@@ -205,7 +205,7 @@ typedef struct sebs_parser_data_t
  * @param len length of the current input buffer
  * @param data the Data for the parser
  */
-void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data);
+void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data);
 
 
 

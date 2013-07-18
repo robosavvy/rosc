@@ -32,7 +32,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
-void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
+void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 {
 	//pointing to current length and buffer for the handler
 	data->len=&len;
