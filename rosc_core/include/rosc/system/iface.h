@@ -39,23 +39,6 @@
 #include <rosc/com/ros_msg_common.h>
 
 
-
-/**
- * This enum specifies the available interfaces types
- */
-typedef enum
-{
-	IFACE_TYPE_LIST_HUB,
-	IFACE_TYPE_SERVICE_SERVER,
-	IFACE_TYPE_SERVICE_CLIENT,
-	IFACE_TYPE_TOPIC_PUBLISHER,
-	IFACE_TYPE_TOPIC_SUBSCRIBER,
-	IFACE_TYPE_ROSRPC_CLIENT,
-	IFACE_TYPE_ROSRPC_SERVER,
-	IFACE_TYPE_XMLRPC_CLIENT,
-	IFACE_TYPE_XMLRPC_SERVER,
-}iface_type_t;
-
 /**
  * This enum contains the different interface states
  */

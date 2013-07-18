@@ -56,14 +56,14 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		uint8_t init_state;
 
 
-		if (init_mode == IFACE_TYPE_XMLRPC_SERVER)
+		if (init_mode == XMLRPC_TYPE_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
 			init_state = SEBS_PARSE_HTTP_REQUEST_INIT;
 		}
-		else if (init_mode == IFACE_TYPE_XMLRPC_CLIENT)
+		else if (init_mode == XMLRPC_TYPE_CLIENT)
 		{
-			DEBUG_PRINT_STR("INIT_XMLRPC_CLIENT");
+			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 			init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
 		}
 		else
@@ -286,13 +286,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			switch (hdata->xml.tags[hdata->xml.depth])
 			{
 			case XMLRPC_TAG_METHODCALL:
-				if (init_mode == IFACE_TYPE_XMLRPC_SERVER && hdata->xml.depth == 1)
+				if (init_mode == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
 			case XMLRPC_TAG_METHODRESPONSE:
-				if (init_mode == IFACE_TYPE_XMLRPC_CLIENT && hdata->xml.depth == 1)
+				if (init_mode == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
@@ -458,7 +458,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
 			}
 
-			if (init_mode == IFACE_TYPE_XMLRPC_SERVER)
+			if (init_mode == XMLRPC_TYPE_SERVER)
 			{
 				//The first field is always the caller_id in every known methodcall
 				//so lets extract as many chars as possible
@@ -547,7 +547,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					}
 				}
 			}
-			else if (init_mode == IFACE_TYPE_XMLRPC_CLIENT)
+			else if (init_mode == XMLRPC_TYPE_CLIENT)
 			{
 
 			}

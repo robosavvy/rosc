@@ -50,8 +50,8 @@
 
 typedef enum
 {
-	XMLRPC_TYPE_SERVER,
 	XMLRPC_TYPE_CLIENT,
+	XMLRPC_TYPE_SERVER,
 }xmlrpc_t;
 
 typedef struct
