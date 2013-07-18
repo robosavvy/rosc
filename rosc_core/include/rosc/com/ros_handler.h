@@ -34,25 +34,18 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
+#include <rosc/system/iface.h>
+#include <rosc/com/ros_msg_common.h>
 
-/**
- * Insertion for submessage data into custom topic types on static systems
- */
-#define SUBSTATUS_ARRAY(MAX_SUBMESSAGE_DEPTH, MAX_ARRAY_DEPTH)\
-struct\
-{\
-	uint32_t submessage_length[MAX_SUBMESSAGE_DEPTH];\
-	uint32_t array_length[MAX_ARRAY_DEPTH];\
-	uint32_t array_entry[MAX_ARRAY_DEPTH];\
-}subinfo;\
+
+
+
 
 
 typedef struct
 {
-	char dummy;
-
 	sebs_parse_ros_data_t ros;
-}ros_hander_data_t;
+}ros_handler_data_t;
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata);
 

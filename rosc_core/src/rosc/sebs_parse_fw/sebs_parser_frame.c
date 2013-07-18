@@ -31,14 +31,8 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function)
-{
-//	sebs_parser_data_t *parser_data_ptr=(sebs_parser_data_t*)1;
-//	handler_function(handler_data,(void*)&parser_data_ptr);
-	return 0;
-}
 
-void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data)
+void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 {
 	//pointing to current length and buffer for the handler
 	data->len=&len;

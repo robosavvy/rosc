@@ -32,6 +32,8 @@
 #ifndef ROS_MSG_COMMON_H_
 #define ROS_MSG_COMMON_H_
 
+#include <rosc/system/types.h>
+
 typedef enum
 {
 	ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
@@ -63,10 +65,27 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 }ros_msg_buildup_type_t;
 
-typedef struct ros_msg_buildup_t
+
+typedef enum
 {
-	const ros_msg_buildup_type_t *const buildup_types;
-	const struct ros_msg_buildup_t *const submessages;
-}ros_msg_buildup_t;
+	ROS_HANDLER_TYPE_SERVICE_SERVER,
+	ROS_HANDLER_TYPE_SERVICE_CLIENT,
+	ROS_HANDLER_TYPE_TOPIC_PUBLISHER,
+	ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
+	ROS_HANDLER_TYPE_ROSRPC_CLIENT,
+	ROS_HANDLER_TYPE_ROSRPC_SERVER,
+}ros_handler_type_t;
+
+typedef void (*ros_callbackFkt_t)(const void* const __msg);
+
+typedef struct
+{
+	const ros_handler_type_t handler_type;
+	const ros_msg_buildup_type_t* const buildup;
+	const size_t *submessage_sizes;
+	const size_t *array_lengths;
+	const size_t *memory_offsets;
+	const ros_callbackFkt_t callback;
+}ros_msg_init_t;
 
 #endif /* ROS_MSG_COMMON_H_ */

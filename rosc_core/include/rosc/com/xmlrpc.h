@@ -36,7 +36,9 @@
 
 #define XMLRPC_SECURITY_MAX_MESSAGE_SIZE 1024
 
-#include <rosc/system/spec.h>
+
+#include <rosc/system/iface.h>
+#include <rosc/system/ports.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
@@ -46,12 +48,16 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
-
 typedef enum
 {
-	XMLRPC_SERVER=1,
-	XMLRPC_CLIENT=2
-}xmlrpc_type_t;
+	XMLRPC_TYPE_CLIENT,
+	XMLRPC_TYPE_SERVER,
+}xmlrpc_t;
+
+typedef struct
+{
+	xmlrpc_t type;
+}xmlrpc_init_data_t;
 
 typedef enum
 {
@@ -154,13 +160,10 @@ typedef enum
 
 typedef struct
 {
+	uint16_t port_number;
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
-
-
-	xmlrpc_type_t xmlrpc_type;
-
 
 	//HTTP variables
 	uint16_t http_response_code; //!<saves the response code

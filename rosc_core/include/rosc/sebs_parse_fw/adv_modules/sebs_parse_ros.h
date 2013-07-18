@@ -39,22 +39,6 @@
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/com/ros_msg_common.h>
 
-typedef void (*rosc_callbackFkt_t)(void *msg);
-
-
-#ifdef __SYSTEM_HAS_MALLOC__
-	/**
-	 * Maximum pointer value for array pointers when malloc is available
-	 */
-	#define ROSC_PADDING_ARRAY_START_VALUE (-1)
-#else
-	/**
-	 * Maximum pointer value ...
-	 */
-	#define ROSC_PADDING_ARRAY_START_VALUE {-1}
-#endif
-
-
 
 
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
@@ -109,11 +93,10 @@ typedef struct
 
 	const ros_msg_buildup_type_t* binary_buildup;
 
-	rosc_callbackFkt_t callback;
 	void *binary_data_io;
 
 	/**
-	 * storage for value events
+	 * Storage for value events
 	 */
 	union
 	{
@@ -133,6 +116,15 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
+	ros_msg_init_t *init_data;
+	/**
+	 * Storage for message information
+	 */
+
+
+	/**
+	 * Submode data storage
+	 */
 	union
 	{
 		sebs_parse_copy2buffer_data_t copy2buffer;

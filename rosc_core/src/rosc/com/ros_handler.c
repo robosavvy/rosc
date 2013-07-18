@@ -31,23 +31,48 @@
 
 #include <rosc/com/ros_handler.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/system/status.h>
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
-	ros_hander_data_t *hdata=pdata->handler_data;
-
-	DEBUG_PRINT_STR("ROS HANDLER");
+	ros_handler_data_t *hdata=pdata->handler_data;
+	ros_msg_init_t *idata=(ros_msg_init_t*)pdata->init_data;
 
 	if(pdata->handler_init)
 	{
+		DEBUG_PRINT_STR("ROS HANDLER INIT");
 		pdata->handler_init=false;
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
 		pdata->security_len=1024;
+		hdata->ros.init_data=idata;
+
+		switch(idata->handler_type)
+		{
+			case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
+				break;
+			case ROS_HANDLER_TYPE_ROSRPC_SERVER:
+				break;
+
+			case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+				break;
+			case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+				break;
+			default:
+				ROSC_FATAL("ros handler: Not a ros handler type!");
+				break;
+		}
+
+
 		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
+
+
+
+
+
 
 
 	switch(*ros_event)

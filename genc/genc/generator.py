@@ -200,7 +200,7 @@ class msg_static(object):
         self.__msg_static_substructure_components.pop()
     
     def __substructure_len_append(self, field):
-        if not (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'time', 'duration']):         
+        if not (field.base_type in ['byte','char','bool','uint8','int8','uint16','int16','uint32','int32','uint64','int64','float32','float64', 'time', 'duration']) and field.is_array:         
             out=""
             for comp in self.__msg_static_substructure_components:
                 (comp_str, comp_array, undef_array)=comp
@@ -289,22 +289,7 @@ class msg_static(object):
             field_out=field.name
                     
         if field.base_type in ['uint8', 'int8', 'uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64', 'float32', 'float64']:
-            if(field.base_type in ['float32','float64']):
-                self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'union\n'
-                self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + '{\n'
-                self.__message_struct_indent_depth+=1
-                if(field.base_type == 'float32'):
-                    self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t ___padding_init_'
-                else:
-                    self.__msg_static_struct += self.__add_tabs(self.__message_struct_indent_depth) + 'uint64_t ___padding_init_'
-                self.__msg_static_struct += field.name + ";\n"
-
             self.__msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + field.base_type + "_t " + field_out)
-           
-            if(field.base_type in ['float32','float64']):
-                self.__message_struct_indent_depth-=1
-                self.__msg_static_struct += ";\n" + self.__add_tabs(self.__message_struct_indent_depth) + '}'
-                
         elif field.base_type == 'byte':
            self.__msg_static_struct += (self.__add_tabs(self.__message_struct_indent_depth) + 'uint8_t ' + field_out)
         elif field.base_type == 'bool':

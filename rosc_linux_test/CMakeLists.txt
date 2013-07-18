@@ -4,7 +4,7 @@ project(rosc_linux_test)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs)
+find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs message_generation)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -22,8 +22,8 @@ find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs)
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   rosc_sub.msg
-   rosc_test.msg
+   testbuiltin.msg
+   testsubmessage.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -50,7 +50,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES rosc_linux_test
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -114,7 +114,7 @@ target_link_libraries(rosc_linux_test_node
 # install(DIRECTORY include/${PROJECT_NAME}/
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
+#   PATTERN ".svn" EXCLUDE 
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)

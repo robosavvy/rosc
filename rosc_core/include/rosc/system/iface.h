@@ -33,37 +33,11 @@
 #ifndef IFACE_H_
 #define IFACE_H_
 
-#include <rosc/system/ports.h>
 #include <rosc/system/spec.h>
+#include <rosc/system/types.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/com/ros_msg_common.h>
 
-
-/**
- * This enum contains the message type commands for the marshalling functions
- */
-typedef enum
-{
-	IFACE_DEFINITION_TYPE_XMLRPC_SERVER,  //!< IFACE_DEFINITION_TYPE_XMLRPC_SERVER
-	IFACE_DEFINITION_TYPE_XMLRPC_CLIENT,  //!< IFACE_DEFINITION_TYPE_XMLRPC_CLIENT
-
-	IFACE_DEFINITON_TYPE_TOPIC_SUBSCRIBER,//!< IFACE_DEFINITON_TYPE_TOPIC_SUBSCRIBER
-	IFACE_DEFINITON_TYPE_TOPIC_PUBLISHER, //!< IFACE_DEFINITON_TYPE_TOPIC_PUBLISHER
-
-	IFACE_DEFINITON_TYPE_SERVICE_SERVER,  //!< IFACE_DEFINITON_TYPE_SERVICE_SERVER
-	IFACE_DEFINITON_TYPE_SERVICE_CLIENT,  //!< IFACE_DEFINITON_TYPE_SERVICE_CLIENT
-
-}iface_definition_t;
-
-/**
- * This enum specifies the available interfaces types
- */
-typedef enum
-{
-	IFACE_TYPE_LIST_HUB,        //!< IFACE_TYPE_LIST_HUB
-	IFACE_TYPE_SERVICE_SERVER,  //!< IFACE_TYPE_SERVICE_SERVER
-	IFACE_TYPE_SERVICE_CLIENT,  //!< IFACE_TYPE_SERVICE_CLIENT
-	IFACE_TYPE_TOPIC_PUBLISHER, //!< IFACE_TYPE_TOPIC_PUBLISHER
-	IFACE_TYPE_TOPIC_SUBSCRIBER,//!< IFACE_TYPE_TOPIC_SUBSCRIBER
-}iface_type_t;
 
 /**
  * This enum contains the different interface states
@@ -84,19 +58,19 @@ typedef enum
  */
 typedef struct iface_t
 {
-	iface_type_t type;
+	bool isListHub;
 	char *name;	//!< This is the topic / server name of the interface
-	struct iface_t *next;
-	iface_definition_t const *def;
+	sebs_parse_function_t handler_function;
+	void *init_data;
+#ifdef __SYSTEM_HAS_MALLOC__
+	size_t handler_mem_size;
+#endif
 	iface_state_t state;
+	struct iface_t *next;
 }iface_t;
 
-
-
-
-
 void rosc_init_interface_list();
-void register_interface(iface_t *interface, const char *interfacename, const iface_definition_t *iface_def);
+void register_interface(iface_t *interface);
 void unregister_interface(iface_t *interface);
 
 

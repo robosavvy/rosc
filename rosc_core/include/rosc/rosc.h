@@ -37,6 +37,8 @@
 #include <rosc/system/types.h>
 #include <rosc/system/mem.h>
 #include <rosc/com/ros_msg_common.h>
+#include <rosc/system/iface.h>
+
 
 
 #ifndef offsetof

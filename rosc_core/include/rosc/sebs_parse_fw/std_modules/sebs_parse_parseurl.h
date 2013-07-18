@@ -47,7 +47,7 @@
 		DATA_STORAGE.scheme_list=SCHEME_LIST;\
 		DATA_STORAGE.scheme_list_len=SCHEME_LIST_LEN;\
 		DATA_STORAGE.url_length=URL_LENGTH;\
-		return SEBS_PARSE_RETURN_INIT;
+		return (SEBS_PARSE_RETURN_INIT);
 
 /**
  *	Contains the result states parse url submode

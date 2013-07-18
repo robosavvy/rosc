@@ -41,8 +41,6 @@
 
 
 
-#define SEBS_PARSE_HANDLER_FUNCTION_CALL()\\
-		return_to_handler
 
 #define SEBS_PARSE_UNKNOWN  -1
 
@@ -69,15 +67,12 @@ typedef enum
 }sebs_parse_return_t;
 
 /**
- * This is the function pointer to a parser function
+ * This is the function pointer to a parser or parser handler function
  * @param pdata struct containing the parser data for the current parser.
  * @param fdata parser specific struct containing information for the current parser function
  * @return
  */
 typedef sebs_parse_return_t (*sebs_parse_function_t)(struct sebs_parser_data_t* pdata);
-
-
-typedef sebs_parse_return_t (*sebs_parse_handler_function_t)(struct sebs_parser_data_t* pdata);
 
 /**
  * This struct stores a parser function and the data location for calling it
@@ -98,8 +93,17 @@ typedef struct
  */
 typedef struct sebs_parser_data_t
 {
+	/**
+	 * If true, the handler will be initialized (or reset)
+	 */
 	bool handler_init;
-	void* handler_init_data;
+
+	/**
+	 * init_data can be used hand over specific init initialization
+	 */
+	void *init_data;
+
+
 	bool function_init;
 
 	/**
@@ -143,7 +147,7 @@ typedef struct sebs_parser_data_t
 	/**
 	 * This stores the event handler function
 	 */
-	sebs_parse_handler_function_t handler_function;
+	sebs_parse_function_t handler_function;
 
 	/**
 	 * Message Size Limit
@@ -174,15 +178,26 @@ typedef struct sebs_parser_data_t
 	/**
 	 * Pointer of the current input buffer
 	 */
-	char **buf;
+	uint8_t **buf;
 
 	/**
 	 * The current length variable
 	 */
 	int32_t *len;
+
+	/**
+	 * This targets a additional storage location
+	 */
+	void *additional_storage;
+
+	/**
+	 * This points to the communication port of the current parser
+	 */
+	void *communication_port;
+
 } sebs_parser_data_t;
 
-sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_function_t handler_function);
+
 
 /**
  * This is the base function for the streaming parsers
@@ -190,7 +205,7 @@ sebs_parser_data_t* sebs_parser_init(void *handler_data, sebs_parse_handler_func
  * @param len length of the current input buffer
  * @param data the Data for the parser
  */
-void sebs_parser_frame(char *buf, int32_t len, sebs_parser_data_t* data);
+void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data);
 
 
 

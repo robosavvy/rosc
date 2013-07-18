@@ -30,7 +30,7 @@
  */
 
 #include <rosc/system/ports.h>
-#include <rosc/system/spec.h>
+#include <rosc/system/status.h>
 
 
 #ifndef __SYSTEM_HAS_MALLOC__
@@ -39,49 +39,99 @@
 	#endif
 
 	//Memory for the port structs itself
-	static port_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER+1];
+	static port_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER];
 
 	//point the hub pointer to the first array entry
-	port_t* const port_list_hub=&__port_mem_reservation[0];
+	static port_t port_list_hub;
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
-	extern uint8_t rosc_static_port_mem[];
-	extern const uint8_t rosc_static_port_mem_size;
-
+	extern void* rosc_static_port_mem;
+	extern const size_t rosc_static_port_mem_size;
+	extern const size_t rosc_static_port_mem_message_offset;
+	extern const size_t rosc_static_port_mem_hdata_offset;
 
 #else
 	port_t __port_list_hub;
 	const port_t* port_list_hub=__port_list_hub;
-
-
 #endif
 
 
 void rosc_ports_init()
 {
 	//Init list hub
-	port_list_hub->data=0;
-	port_list_hub->interface=0;
-	port_list_hub->socket_id=0;
-	port_list_hub->port_number=0;
-	port_list_hub->type=PORT_TYPE_HUB;
-	port_list_hub->state=PORT_STATE_UNUSABLE;
-	port_list_hub->next=0;
+	port_list_hub.data=0;
+	port_list_hub.interface=0;
+	port_list_hub.socket_id=0;
+	port_list_hub.port_number=0;
+	port_list_hub.type=PORT_TYPE_HUB;
+	port_list_hub.state=PORT_STATE_UNUSABLE;
+	port_list_hub.next=0;
 
 	//Init for static systems on
 	#ifndef __SYSTEM_HAS_MALLOC__
+		port_list_hub.next=(port_t*)__port_mem_reservation;
 		int i;
 		for(i=0;i<PORTS_STATIC_MAX_NUMBER;++i)
 		{
-			__port_mem_reservation[i].next=&__port_mem_reservation[i+1];
-			__port_mem_reservation[i].data=(void*)(&rosc_static_port_mem[0]+rosc_static_port_mem_size*i);
+			__port_mem_reservation[i].next=(port_t *)__port_mem_reservation+sizeof(port_t)*(i+1);
+			__port_mem_reservation[i].data=(void*)(rosc_static_port_mem+rosc_static_port_mem_size*i);
 			__port_mem_reservation[i].interface=0;
 			__port_mem_reservation[i].socket_id=0;
 			__port_mem_reservation[i].port_number=0;
 			__port_mem_reservation[i].type=PORT_TYPE_UNUSED;
 			__port_mem_reservation[i].state=PORT_STATE_CLOSED;
-			__port_mem_reservation[i].next=0;
 		}
-		__port_mem_reservation[i].next=0; //Set current address to zero
+		__port_mem_reservation[i-1].next=0; //Set last items next address to zero
 	#endif
+}
+
+bool rosc_open_port( iface_t *iface, uint16_t port_number)
+{
+	port_t *cur=port_list_hub.next;
+	while(1)
+	{
+		if(cur->next==0)break;
+		if(cur->state!=PORT_STATE_CLOSED ||
+			cur->state!=PORT_STATE_UNUSABLE) break;
+		cur=cur->next;
+	}
+#ifndef __SYSTEM_HAS_MALLOC__
+	if(cur->state==PORT_STATE_CLOSED)
+	{
+		cur->interface=iface;
+		cur->pdata.handler_init=true;
+		cur->pdata.init_data=iface->init_data;
+		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
+		cur->pdata.additional_storage=cur->data+rosc_static_port_mem_message_offset;
+		cur->pdata.handler_function=iface->handler_function;
+		cur->pdata.communication_port=cur;
+	}
+	else
+	{
+		return (false);
+	}
+#else
+	//TODO allocate new port memory and stuff here
+
+	//Needs additions for type sizes of ros message...
+#endif
+
+
+	cur->port_number=port_number;
+	cur->socket_id=1;  //////////////////////////////////////TODO REMOVE BEFORE DOING ANY SERIOUS!!!
+	return (true);
+}
+
+
+
+void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
+{
+	port_t *cur=port_list_hub.next;
+	while(1)
+	{
+		if(cur->next==0)break;
+		if(cur->socket_id==socket_id) break;
+		cur=cur->next;
+	}
+	sebs_parser_frame(buffer,len,&cur->pdata);
 }

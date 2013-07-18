@@ -30,20 +30,19 @@
  */
 
 #include <rosc/system/iface.h>
-#include <rosc/system/spec.h>
 
 static iface_t interface_list_hub;
 
 
 void rosc_init_interface_list()
 {
-	interface_list_hub.type=IFACE_TYPE_LIST_HUB;
+	interface_list_hub.isListHub=true;
 	interface_list_hub.name=0;
 	interface_list_hub.next=0;
 }
 
 
-void register_interface(iface_t *interface, const char *topic_service_name, const iface_definition_t* iface_def)
+void register_interface(iface_t *interface)
 {
 	iface_t* cur=&interface_list_hub;
 	//Go to the end of the list
@@ -52,11 +51,24 @@ void register_interface(iface_t *interface, const char *topic_service_name, cons
 	if(cur->next != interface && cur->next == 0)
 	{
 		cur->next=interface;
+		cur->state=IFACE_STATE_DO_REGISTER;
 	}
 }
 
 
 void unregister_interface(iface_t *interface)
+{
+	iface_t* cur=&interface_list_hub;
+	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
+	if(cur == interface)
+	{
+		cur->state=IFACE_STATE_DO_UNREGISTER;
+	}
+}
+
+void remove_interface(iface_t *interface)
 {
 	iface_t* cur=&interface_list_hub;
 	iface_t* last;
