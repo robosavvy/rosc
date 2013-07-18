@@ -15,7 +15,7 @@ src/rosc/system/iface.c
 src/rosc/system/system.c
 src/rosc/system/rosc_init.c
 src/rosc/com/ros_handler.c
-src/rosc/com/xmlrpc_server.c
+src/rosc/com/xmlrpc.c
 src/rosc/msg_generators/xml_msg_gen.c
 src/rosc/string_res/msg_strings.c
 )
