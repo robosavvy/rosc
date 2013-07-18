@@ -39,7 +39,7 @@
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/com/ros_msg_common.h>
 
-typedef void (*ros_callbackFkt_t)(void *msg);
+
 
 #define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
@@ -116,19 +116,11 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
-
+	ros_msg_init_t *init_data;
 	/**
 	 * Storage for message information
 	 */
-	struct
-	{
-		ros_msg_buildup_type_t *buildup;
-		size_t *memory_offsets;
-		size_t *subarray_sizes;
 
-		ros_callbackFkt_t callback;
-		void *message_storage;
-	}rosmsg;
 
 	/**
 	 * Submode data storage

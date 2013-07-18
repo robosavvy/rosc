@@ -66,4 +66,26 @@ typedef enum
 }ros_msg_buildup_type_t;
 
 
+typedef enum
+{
+	ROS_HANDLER_TYPE_SERVICE_SERVER,
+	ROS_HANDLER_TYPE_SERVICE_CLIENT,
+	ROS_HANDLER_TYPE_TOPIC_PUBLISHER,
+	ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
+	ROS_HANDLER_TYPE_ROSRPC_CLIENT,
+	ROS_HANDLER_TYPE_ROSRPC_SERVER,
+}ros_handler_type_t;
+
+typedef void (*ros_callbackFkt_t)(const void* const __msg);
+
+typedef struct
+{
+	const ros_handler_type_t handler_type;
+	const ros_msg_buildup_type_t* const buildup;
+	const size_t *submessage_sizes;
+	const size_t *array_lengths;
+	const size_t *memory_offsets;
+	const ros_callbackFkt_t callback;
+}ros_msg_init_t;
+
 #endif /* ROS_MSG_COMMON_H_ */

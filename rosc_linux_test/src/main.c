@@ -214,31 +214,26 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 
-ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,cb)
+ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,mycallback)
 	/*Callback Function stuff here*/
 }
 
 
-ros_handler_init_t init_test={ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
+ros_msg_init_t init_test={ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
 							rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
 							rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
 							rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
-							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test};
-
+							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
+							&mycallback
+							};
 iface_t sub={
 		     false,
 		     "/topicName",
 		     &ros_handler,
-		     &init_test,
-};
-//				"/test",
-//				IFACE_STATE_UNREGISTERED,
-//				(ros_msg_buildup_t *)rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
-//				(size_t *)rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
-//				(size_t *)rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
-//				(size_t *)rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
-//				IFACE_TYPE_TOPIC_SUBSCRIBER,
-//				&ros_handler};
+		     &init_test};
+
+
+
 
 int main()
 {
@@ -247,10 +242,5 @@ int main()
 	rosc_open_port(&sub,0);
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
 
-//	int i=ROS_MSG_BUILDUP_TYPE_STRING;
-//	for (i = 1; i <= rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[0]; ++i) {
-//
-//		printf("%i, ",(int) rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test[i]);
-//	}
 	printf("\n---END---\n");
 }

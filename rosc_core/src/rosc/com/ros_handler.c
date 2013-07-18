@@ -36,7 +36,7 @@
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_handler_data_t *hdata=pdata->handler_data;
-	ros_handler_init_t *idata=(ros_handler_init_t*)pdata->init_data;
+	ros_msg_init_t *idata=(ros_msg_init_t*)pdata->init_data;
 
 	if(pdata->handler_init)
 	{
@@ -45,6 +45,7 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
 		pdata->security_len=1024;
+		hdata->ros.init_data=idata;
 
 		switch(idata->handler_type)
 		{
