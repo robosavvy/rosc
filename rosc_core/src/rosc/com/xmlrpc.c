@@ -29,10 +29,10 @@
  *  xmlrpc_server.c created by Christian Holl
  */
 
-#ifndef XMLRPC_SERVER_C_
-#define XMLRPC_SERVER_C_
+#ifndef XMLRPC_C_
+#define XMLRPC_C_
 
-#include <rosc/com/xmlrpc_server.h>
+#include <rosc/com/xmlrpc.h>
 #include <rosc/system/status.h>
 
 
@@ -565,4 +565,4 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }
 
-#endif /* XMLRPC_SERVER_C_ */
+#endif /* XMLRPC_C_ */

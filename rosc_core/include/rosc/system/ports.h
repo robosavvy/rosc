@@ -33,7 +33,7 @@
 
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-#include <rosc/com/xmlrpc_server.h>
+#include <rosc/com/xmlrpc.h>
 #include <rosc/com/ros_handler.h>
 typedef enum
 {
