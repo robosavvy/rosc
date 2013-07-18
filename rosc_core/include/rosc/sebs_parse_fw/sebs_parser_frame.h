@@ -99,9 +99,9 @@ typedef struct sebs_parser_data_t
 	bool handler_init;
 
 	/**
-	 * init_mode can be used to tell the handler function to initialize a specific parser mode
+	 * init_data can be used hand over specific init initialization
 	 */
-	uint8_t init_mode;
+	void *init_data;
 
 
 	bool function_init;
@@ -191,7 +191,6 @@ typedef struct sebs_parser_data_t
 	void *additional_storage;
 
 } sebs_parser_data_t;
-
 
 
 

@@ -35,10 +35,30 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/system/iface.h>
+#include <rosc/com/ros_msg_common.h>
+
+typedef enum
+{
+	ROS_HANDLER_TYPE_SERVICE_SERVER,
+	ROS_HANDLER_TYPE_SERVICE_CLIENT,
+	ROS_HANDLER_TYPE_TOPIC_PUBLISHER,
+	ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
+	ROS_HANDLER_TYPE_ROSRPC_CLIENT,
+	ROS_HANDLER_TYPE_ROSRPC_SERVER,
+}ros_handler_type_t;
+
 
 typedef struct
 {
-	uint16_t port_number;
+	const ros_handler_type_t handler_type;
+	const ros_msg_buildup_type_t* const buildup;
+	const size_t *submessage_sizes;
+	const size_t *array_lengths;
+	const size_t *memory_offsets;
+}ros_handler_init_t;
+
+typedef struct
+{
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;
 

@@ -36,7 +36,7 @@
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_handler_data_t *hdata=pdata->handler_data;
-
+	ros_handler_init_t *idata=(ros_handler_init_t*)pdata->init_data;
 
 	if(pdata->handler_init)
 	{
@@ -45,20 +45,25 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
 		pdata->security_len=1024;
-		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
-		switch(pdata->init_mode)
-		{
-			case IFACE_TYPE_ROSRPC_CLIENT:
-			case IFACE_TYPE_ROSRPC_SERVER:
-			case IFACE_TYPE_TOPIC_PUBLISHER:
-			case IFACE_TYPE_TOPIC_SUBSCRIBER:
-			case IFACE_TYPE_XMLRPC_CLIENT:
-			case IFACE_TYPE_XMLRPC_SERVER:
 
+		switch(idata->handler_type)
+		{
+			case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
+				break;
+			case ROS_HANDLER_TYPE_ROSRPC_SERVER:
+				break;
+
+			case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+				break;
+			case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
 				break;
 			default:
 				ROSC_FATAL("ros handler: Not a ros handler type!");
+				break;
 		}
+
+
+		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;

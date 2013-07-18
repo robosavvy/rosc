@@ -361,15 +361,26 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,cb)
 }
 
 
-iface_t sub={	false,
-				"/test",
-				IFACE_STATE_UNREGISTERED,
-				(ros_msg_buildup_t *)rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
-				(size_t *)rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
-				(size_t *)rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
-				(size_t *)rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
-				IFACE_TYPE_TOPIC_SUBSCRIBER,
-				&ros_handler};
+ros_handler_init_t init_test={ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
+							rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
+							rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
+							rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
+							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test};
+
+iface_t sub={
+		     false,
+		     "/topicName",
+		     &ros_handler,
+		     &init_test,
+};
+//				"/test",
+//				IFACE_STATE_UNREGISTERED,
+//				(ros_msg_buildup_t *)rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
+//				(size_t *)rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
+//				(size_t *)rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
+//				(size_t *)rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
+//				IFACE_TYPE_TOPIC_SUBSCRIBER,
+//				&ros_handler};
 
 int main()
 {

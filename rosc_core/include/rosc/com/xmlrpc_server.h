@@ -48,7 +48,16 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
+typedef enum
+{
+	XMLRPC_TYPE_SERVER,
+	XMLRPC_TYPE_CLIENT,
+}xmlrpc_t;
 
+typedef struct
+{
+	xmlrpc_t type;
+}xmlrpc_init_data_t;
 
 typedef enum
 {

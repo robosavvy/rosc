@@ -50,10 +50,10 @@ typedef enum
 	IFACE_TYPE_SERVICE_CLIENT,
 	IFACE_TYPE_TOPIC_PUBLISHER,
 	IFACE_TYPE_TOPIC_SUBSCRIBER,
-	IFACE_TYPE_XMLRPC_CLIENT,
-	IFACE_TYPE_XMLRPC_SERVER,
 	IFACE_TYPE_ROSRPC_CLIENT,
 	IFACE_TYPE_ROSRPC_SERVER,
+	IFACE_TYPE_XMLRPC_CLIENT,
+	IFACE_TYPE_XMLRPC_SERVER,
 }iface_type_t;
 
 /**
@@ -77,17 +77,13 @@ typedef struct iface_t
 {
 	bool isListHub;
 	char *name;	//!< This is the topic / server name of the interface
-	iface_state_t state;
-	ros_msg_buildup_t *buildup;
-	size_t *submessage_sizes;
-	size_t *array_lengths;
-	size_t *memory_offsets;
-	uint8_t init_mode;
 	sebs_parse_function_t handler_function;
-	struct iface_t *next;
+	void *init_data;
 #ifdef __SYSTEM_HAS_MALLOC__
 	size_t handler_mem_size;
 #endif
+	iface_state_t state;
+	struct iface_t *next;
 }iface_t;
 
 void rosc_init_interface_list();

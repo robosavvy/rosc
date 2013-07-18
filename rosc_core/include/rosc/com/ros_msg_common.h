@@ -32,6 +32,8 @@
 #ifndef ROS_MSG_COMMON_H_
 #define ROS_MSG_COMMON_H_
 
+#include <rosc/system/types.h>
+
 typedef enum
 {
 	ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
@@ -63,10 +65,5 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
 }ros_msg_buildup_type_t;
 
-typedef struct ros_msg_buildup_t
-{
-	const ros_msg_buildup_type_t *const buildup_types;
-	const struct ros_msg_buildup_t *const submessages;
-}ros_msg_buildup_t;
 
 #endif /* ROS_MSG_COMMON_H_ */
