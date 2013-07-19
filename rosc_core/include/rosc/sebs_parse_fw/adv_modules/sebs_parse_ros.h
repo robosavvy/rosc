@@ -117,10 +117,8 @@ typedef struct
 	}parsed_value;
 
 	ros_msg_init_t *init_data;
-	/**
-	 * Storage for message information
-	 */
-
+	int8_t* msg_storage;
+	rosc_msg_array_state_t *array_state;
 
 	/**
 	 * Submode data storage

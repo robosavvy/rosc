@@ -42,8 +42,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	{
 		pdata->function_init=false;
 		fdata->state=SEBS_PARSE_ROSPRC_MESSAGE_LENGTH;
-
-		DEBUG_PRINT_STR("ROS PARSER");
+		fdata->msg_storage=pdata->additional_storage;
+		fdata->array_state=pdata->additional_storage+fdata->init_data->array_states_offset;
+		DEBUG_PRINT_STR("ROS PARSER INIT");
 	}
 
 	while (*pdata->len > 0
@@ -101,6 +102,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				}
 				break;
 			case SEBS_PARSE_ROSRPC_FIELD_CONTENT:
+
+
 				if(fdata->field_length>0)
 				{
 					skipchar=true;

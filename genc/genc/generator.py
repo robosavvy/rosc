@@ -71,6 +71,9 @@ class msg_static(object):
         self.__struct_define_recursive_create(msg_spec)
     
     
+    def get_array_depth(self):
+        return self.__max_array_depth
+    
     def get_static_member_offsets(self):
         return self.__msg_static_member_offsets
     

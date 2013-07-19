@@ -59,7 +59,6 @@ typedef enum
 typedef struct iface_t
 {
 	bool isListHub;
-	char *name;	//!< This is the topic / server name of the interface
 	sebs_parse_function_t handler_function;
 	void *init_data;
 #ifdef __SYSTEM_HAS_MALLOC__

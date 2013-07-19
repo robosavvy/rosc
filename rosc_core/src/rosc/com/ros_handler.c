@@ -47,7 +47,7 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		pdata->security_len=1024;
 		hdata->ros.init_data=idata;
 
-		switch(idata->handler_type)
+		switch(idata->ros_type)
 		{
 			case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
 				break;
