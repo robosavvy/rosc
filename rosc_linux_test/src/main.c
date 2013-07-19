@@ -218,16 +218,16 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,mycallback)
 	/*Callback Function stuff here*/
 }
 
-
 ros_msg_init_t init_test={ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
 							rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
 							rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
 							rosc_static_msg_array_size_list__rosc_linux_test__testbuiltin__test,
 							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
+							rosc_static_msg_message_definition__rosc_linux_test__testbuiltin,
+							rosc_static_msg_md5sum__rosc_linux_test__testbuiltin,
 							&mycallback
 							};
-iface_t sub={
-		     false,
+iface_t sub={false,
 		     "/topicName",
 		     &ros_handler,
 		     &init_test};

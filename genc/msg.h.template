@@ -52,7 +52,9 @@
 import genmsg.msgs 
 import gencpp
 import genmsg.msg_loader
+import genmsg.gentools
 import genc.generator
+
 
 msg_definition = gencpp.escape_message_definition(msg_definition)
 rosc_gen = genc.generator.msg_static(spec, search_path)
@@ -172,8 +174,9 @@ ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 @[ end if]@
 @[for i in range(indent)]    @[end for]@(entry)@
 @[end for]\
-}
-
+};\
+const int8_t  @(rosc_pref)_message_definition__@(rosc_name_pack)[]="@(msg_definition)";\
+const int8_t  @(rosc_pref)_md5sum__@(rosc_name_pack)[]= "@(genmsg.gentools.compute_md5(msg_context, spec))";
                                
                                     
 /* **************************************************

@@ -82,9 +82,11 @@ typedef struct
 {
 	const ros_handler_type_t handler_type;
 	const ros_msg_buildup_type_t* const buildup;
-	const size_t *submessage_sizes;
-	const size_t *array_lengths;
-	const size_t *memory_offsets;
+	const size_t* const submessage_sizes;
+	const size_t* const array_lengths;
+	const size_t* const memory_offsets;
+	const int8_t* const message_definition;
+	const int8_t* const md5sum;
 	const ros_callbackFkt_t callback;
 }ros_msg_init_t;
 
