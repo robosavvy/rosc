@@ -63,7 +63,7 @@ typedef enum
 	ROS_MSG_BUILDUP_TYPE_BOOL,
 
 	ROS_MSG_BUILDUP_TYPE_MESSAGE_END,
-}ros_msg_buildup_type_t;
+}ros_buildup_type_t;
 
 
 typedef enum
@@ -90,7 +90,7 @@ typedef struct
 {
 	const int8_t* iface_name;
 	const ros_type_t ros_type;
-	const ros_msg_buildup_type_t* const buildup;
+	const ros_buildup_type_t* const buildup;
 	const size_t* const submessage_sizes;
 	const size_t* const array_lengths;
 	const size_t* const memory_offsets;

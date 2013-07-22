@@ -41,16 +41,30 @@
 
 
 
-#define SEBS_PARSE_ROS_INIT(PARSER_DATA, DATA_STORAGE)\
+#define SEBS_PARSE_ROS_INIT_RPC(PARSER_DATA, DATA_STORAGE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.mode=SEBS_PARSE_ROS_MODE_ROSRPC;\
 		return (SEBS_PARSE_RETURN_INIT_ADV)
+
+#define SEBS_PARSE_ROS_INIT_MSG(PARSER_DATA, DATA_STORAGE,BUILDUP,SUBSIZES,ARRAY_LENGTHS,MEM_OFFSETS,MSG_DEF,MSG_STORE,ARRAY_STATES)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.mode=SEBS_PARSE_ROS_MODE_BINARY;\
+		DATA_STORAGE.buildup=BUILDUP;\
+		DATA_STORAGE.submessage_sizes=SUBSIZES;\
+		DATA_STORAGE.array_lengths=ARRAY_LENGTHS;\
+		DATA_STORAGE.memory_offsets=MEM_OFFSETS;\
+		DATA_STORAGE.message_definition=MSG_DEF;\
+		DATA_STORAGE.msg_storage=MSG_STORE;\
+		DATA_STORAGE.array_state=ARRAY_STATES;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
+
 
 typedef enum
 {
-	SEBS_PARSE_ROS_MODE_CONNECTION_ROSRPC,
-	SEBS_PARSE_ROS_MODE_CONNECTION_TOPIC_HEADER,
-	SEBS_PARSE_ROS_MODE_CONNECTION_TOPIC_BINARY,
+	SEBS_PARSE_ROS_MODE_ROSRPC,
+	SEBS_PARSE_ROS_MODE_BINARY,
 }sebs_parse_ros_mode_t;
 
 typedef enum
@@ -61,9 +75,9 @@ typedef enum
 	SEBS_PARSE_ROSRPC_FIELD_VALUE,
 	SEBS_PARSE_ROSRPC_FIELD_EQUAL,
 	SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT,
-	SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH,
-	SEBS_PARSE_ROSTOPIC_ARRAY_LENGTH,
-	SEBS_PARSE_ROSTOPIC_VALUE,
+	SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH,
+	SEBS_PARSE_ROSBINARY_ARRAY_LENGTH,
+	SEBS_PARSE_ROSBINARY_VALUE,
 }sebs_parse_ros_state_t;
 
 
@@ -84,16 +98,16 @@ typedef struct
 {
 	uint32_t message_length;
 	uint32_t field_length;
-	sebs_parse_ros_state_t state;
 	sebs_parse_ros_mode_t mode;
+	sebs_parse_ros_state_t state;
 	sebs_parse_ros_rpc_field_t rpc_field_id;
 
-	const ros_msg_buildup_type_t* binary_buildup;
+	const ros_buildup_type_t* binary_buildup;
 
 	void *binary_data_io;
 
 	/**
-	 * Storage for value events
+	 * Storage for value events (RPC)
 	 */
 	union
 	{
@@ -113,7 +127,13 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
-	ros_msg_init_t *init_data;
+
+
+	const ros_buildup_type_t*  buildup;
+	const size_t* submessage_sizes;
+	const size_t* array_lengths;
+	const size_t* memory_offsets;
+	const int8_t* message_definition;
 	int8_t* msg_storage;
 	rosc_msg_array_state_t *array_state;
 

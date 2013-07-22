@@ -176,13 +176,14 @@ const size_t @(rosc_pref)_memory_offsets__@(rosc_name_pack)__ ## USER_TYPE []=\
 @##############################
 @# Static array state offset ##
 @##############################
-#define @(rosc_static_array_state) @(rosc_gen.get_array_depth()) 
+#define @(rosc_static_array_state)(USER_TYPE)\
+    offsetof(@(rosc_usertype_storage),array_state)
 
 @##############################
 @# Buildup,Definition,MD5Sum ##
 @##############################
 #define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)()\
-ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
+ros_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 {\
 @{first = True}@
 @[for (indent, entry, additionalreturn) in rosc_gen.get_static_buildup_array()]@

@@ -231,7 +231,7 @@ ros_msg_init_t init_test={
 							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
 							rosc_static_msg_message_definition__rosc_linux_test__testbuiltin,
 							rosc_static_msg_md5sum__rosc_linux_test__testbuiltin,
-							ROSC_STATIC_ARRAY_STATES_MEMORY_OFFSET__rosc_linux_test__testbuiltin,
+							ROSC_STATIC_ARRAY_STATES_MEMORY_OFFSET__rosc_linux_test__testbuiltin(test),
 							&mycallback
 							};
 
@@ -245,7 +245,7 @@ int main()
 	rosc_init();
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
+	((rosc_static_msg_user_def_msg_storage__rosc_linux_test__testbuiltin__test_t*)(rosc_static_port_mem))[0].array_state[0].current_item=3213;
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
-
 	printf("\n---END---\n");
 }

@@ -42,32 +42,14 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 	{
 		DEBUG_PRINT_STR("ROS HANDLER INIT");
 		pdata->handler_init=false;
+		pdata->function_init=true;
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
 		pdata->security_len=1024;
-		hdata->ros.init_data=idata;
 		hdata->hstate=ROS_HANDLER_STATE_NONE;
 		hdata->iface_ok=false;
 		hdata->md5sum_ok=false;
-
-		switch(idata->ros_type)
-		{
-			case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
-				break;
-			case ROS_HANDLER_TYPE_ROSRPC_SERVER:
-				break;
-
-			case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
-				break;
-			case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
-				break;
-			default:
-				ROSC_FATAL("ros handler: Not a ros handler type!");
-				break;
-		}
-
-
-		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
+		SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
@@ -151,6 +133,28 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 					break;
 				case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
 					DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+					switch(idata->ros_type)
+					{
+						case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
+						case ROS_HANDLER_TYPE_ROSRPC_SERVER:
+
+							break;
+
+						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+							break;
+
+						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+							DEBUG_PRINT_STR("ROSRPC END->BINARY PARSING...")
+							SEBS_PARSE_ROS_INIT_MSG(pdata,hdata->ros,idata->buildup,idata->submessage_sizes,idata->array_lengths,idata->memory_offsets,idata->message_definition,pdata->additional_storage,pdata->additional_storage+idata->array_states_offset);
+							break;
+						default:
+							ROSC_FATAL("ros handler: Not a ros handler type!");
+							break;
+					}
+
+
+
+
 					break;
 
 				default: //TODO check

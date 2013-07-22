@@ -41,19 +41,30 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	if(pdata->function_init)
 	{
 		pdata->function_init=false;
-		fdata->state=SEBS_PARSE_ROSPRC_MESSAGE_LENGTH;
-		fdata->msg_storage=pdata->additional_storage;
-		fdata->array_state=pdata->additional_storage+fdata->init_data->array_states_offset;
+
+		switch(fdata->mode)
+		{
+			case SEBS_PARSE_ROS_MODE_ROSRPC:
+				fdata->state=SEBS_PARSE_ROSPRC_MESSAGE_LENGTH;
+			break;
+
+			case SEBS_PARSE_ROS_MODE_BINARY:
+				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH;
+			break;
+		}
+
 		DEBUG_PRINT_STR("ROS PARSER INIT");
 	}
 
 	while (*pdata->len > 0
-			&& (fdata->message_length>0 || fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH))
+			&& (fdata->message_length>0 ||
+					fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH
+					||fdata->state ==SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH
+			))
 	{
 		bool skipchar=false;
 		switch(fdata->state)
 		{
-
 			/* ******
 			 *ROSPRC*
 			 ********/
@@ -113,6 +124,32 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
 				}
 				break;
+
+				/* *****************
+				 *ROSMSG and ROSSRV*
+				 *******************/
+
+			case SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH:
+
+				printf("NARF %i\n",fdata->buildup[0]);
+
+
+				printf("-> %i \n",fdata->array_state[0].current_item);
+
+				while(1);
+				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
+				break;
+
+
+
+
+
+
+
+
+
+
+
 
 
 			default: //TODO check
