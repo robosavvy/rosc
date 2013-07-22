@@ -77,12 +77,12 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					//TODO ERROR
 				}
 				DEBUG_PRINT(INT,"Field LEN",fdata->field_length);
-				SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,ros_field_strings, ROS_FIELD_STRINGS_LEN, "=",true, fdata->message_length);
+				SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,ros_field_strings, ROS_FIELD_STRINGS_LEN, "=",true, fdata->field_length);
 				break;
 
 			case SEBS_PARSE_ROSRPC_FIELD_EQUAL:
 				DEBUG_PRINT(INT,"Current Pos",fdata->seekstring.curChrPos);
-				fdata->state=SEBS_PARSE_ROSRPC_FIELD_CONTENT;
+				fdata->state=SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT;
 				//Subtract length
 
 				fdata->field_length-=fdata->seekstring.curChrPos;
@@ -101,8 +101,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					//TODO ERROR -> NO '='
 				}
 				break;
-			case SEBS_PARSE_ROSRPC_FIELD_CONTENT:
 
+			case SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT:
 
 				if(fdata->field_length>0)
 				{
@@ -114,14 +114,6 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				}
 				break;
 
-		    /* ********
-			 *ROSTOPIC*
-			 **********/
-
-			case SEBS_PARSE_ROSTOPIC_MESSAGE_LENGTH:
-				fdata->state=SEBS_PARSE_ROSRPC_FIELD_LENGTH;
-				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
-			break;
 
 			default: //TODO check
 				break;

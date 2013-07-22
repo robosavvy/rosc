@@ -46,6 +46,9 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		pdata->overall_len=0;
 		pdata->security_len=1024;
 		hdata->ros.init_data=idata;
+		hdata->hstate=ROS_HANDLER_STATE_NONE;
+		hdata->iface_ok=false;
+		hdata->md5sum_ok=false;
 
 		switch(idata->ros_type)
 		{
@@ -71,25 +74,91 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 
 
 
-
-
-
-
-	switch(*ros_event)
+	switch(hdata->hstate)
 	{
-		case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
-			DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
-			DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
-			break;
-		case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
-			DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+		case ROS_HANDLER_STATE_CHECK_MD5SUM:
+			if (hdata->ros.seekstring.result==0)
+			{
+				DEBUG_PRINT_STR("MD5SUM OK!");
+				hdata->md5sum_ok=false;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("MD5SUM DOES NOT MATCH!!!!");
+			}
+			hdata->ros.field_length-=hdata->ros.seekstring.curChrPos;
+			hdata->ros.message_length-=hdata->ros.seekstring.curChrPos;
 			break;
 
-		default: //TODO check
+		case ROS_HANDLER_STATE_CHECK_IFACE_NAME:
+			if (hdata->ros.seekstring.result==0)
+			{
+				DEBUG_PRINT_STR("IFACE NAME OK!");
+				hdata->iface_ok=false;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("IFACE NAME DOES NOT MATCH!!!!");
+			}
+			hdata->ros.field_length-=hdata->ros.seekstring.curChrPos;
+			hdata->ros.message_length-=hdata->ros.seekstring.curChrPos;
+			break;
+
+		case ROS_HANDLER_STATE_NONE:
+			switch(*ros_event)
+			{
+				case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
+					DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
+					DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
+
+
+					/* ********************
+						  ROS RPC INFO
+					 **********************/
+
+					switch(hdata->ros.rpc_field_id)
+					{
+						case SEBS_PARSE_ROS_FIELD_MD5SUM:
+							switch(idata->ros_type)
+							{
+								case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+								case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+								case ROS_HANDLER_TYPE_SERVICE_CLIENT:
+								case ROS_HANDLER_TYPE_SERVICE_SERVER:
+									hdata->hstate=ROS_HANDLER_STATE_CHECK_MD5SUM;
+									SEBS_PARSE_SEEKSTRING_INIT(pdata,hdata->ros.seekstring,(const char**)&idata->md5sum, 1, "",true, hdata->ros.field_length);
+								break;
+
+								default:
+									break;
+							}
+							break;
+
+						case SEBS_PARSE_ROS_FIELD_SERVICE:
+						case SEBS_PARSE_ROS_FIELD_TOPIC:
+							switch(idata->ros_type)
+							{
+								case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+								case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+								case ROS_HANDLER_TYPE_SERVICE_CLIENT:
+								case ROS_HANDLER_TYPE_SERVICE_SERVER:
+									hdata->hstate=ROS_HANDLER_STATE_CHECK_IFACE_NAME;
+									SEBS_PARSE_SEEKSTRING_INIT(pdata,hdata->ros.seekstring,(const char**)&idata->iface_name, 1, "",true, hdata->ros.field_length);
+								break;
+							}
+					}
+
+					break;
+				case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
+					DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+					break;
+
+				default: //TODO check
+					break;
+			}
 			break;
 	}
-
-
+	hdata->hstate=ROS_HANDLER_STATE_NONE;
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

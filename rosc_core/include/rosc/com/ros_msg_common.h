@@ -80,7 +80,9 @@ typedef void (*ros_callbackFkt_t)(const void* const __msg);
 
 typedef struct
 {
-	char dummy;//TODO
+	uint32_t current_item;
+	void * array_start;
+	size_t item_size;
 }rosc_msg_array_state_t;
 
 

@@ -39,11 +39,21 @@
 
 
 
-
+typedef enum
+{
+	ROS_HANDLER_STATE_NONE,
+	ROS_HANDLER_STATE_CHECK_MD5SUM,
+	ROS_HANDLER_STATE_CHECK_IFACE_NAME,
+}ros_handler_state;
 
 
 typedef struct
 {
+	ros_handler_state hstate;
+	bool md5sum_ok;
+	bool iface_ok;
+
+
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;
 

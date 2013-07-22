@@ -45,6 +45,9 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 
 	while (*pdata->len > 0)
 	{
+
+
+
 		//Check if current char in buffer one is a separator
 		bool isSeparator = false;
 		const char *sep = fdata->endchrs;
@@ -100,7 +103,24 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 					break;
 				}
 			}
+
+
 		}
+
+		//Check if maxlength is set and reached...
+		if(fdata->max_length!=0 && fdata->curChrPos==fdata->max_length-1)
+		{
+			if(fdata->endchrs[0]=='\0') //If there is no endchr, max legth is the specified ending...
+			{
+				curChrBuf = '\0';
+			}
+			else
+			{
+				fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH;
+				return (SEBS_PARSE_RETURN_FINISHED);
+			}
+		}
+
 		//If we have a separator the string must end here so
 		if (curChrBuf == '\0')
 		{
@@ -121,11 +141,6 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 		--*pdata->len;
 
 
-		if(fdata->max_length!=0 && fdata->curChrPos>=fdata->max_length)
-		{
-			fdata->result = SEBS_PARSE_SEEKSTRING_NOT_FOUND_MAX_LENGTH;
-			return (SEBS_PARSE_RETURN_FINISHED);
-		}
 
 	}
 	return (SEBS_PARSE_RETURN_GO_AHEAD);

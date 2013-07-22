@@ -220,7 +220,7 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,mycallback)
 }
 
 
-char topic[]="test";
+char topic[]="/test";
 
 ros_msg_init_t init_test={
 							topic,
