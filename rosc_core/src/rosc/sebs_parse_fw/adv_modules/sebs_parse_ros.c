@@ -131,18 +131,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH:
 
-				printf("NARF %i\n",fdata->buildup[0]);
 
-
-				printf("-> %i \n",fdata->array_state[0].current_item);
-
-				printf("------------------------------------------>%u\n",&(fdata->array_state[0].current_item));
-
-
-
-//				6302304
-//				6302360
-				while(1);
 				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->message_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0);
 				break;
 

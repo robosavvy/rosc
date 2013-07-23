@@ -214,22 +214,10 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__testbuiltin(test)
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
-					rosc_port_memory_size_def_t* mem_test=(void *)__rosc_static_port_mem;
-
-
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,mycallback)
 	/*Callback Function stuff here*/
 }
-
-
-//typedef struct\
-//{\
-//    rosc_static_msg_user_def__rosc_linux_test__testbuiltin__test_t __msg;\
-//    rosc_msg_array_state_t array_state[2];\
-//}rosc_static_msg_user_def_msg_storage__rosc_linux_test__testbuiltin__test_t;\
-//
-
 
 char topic[]="/test";
 
@@ -256,14 +244,6 @@ int main()
 	rosc_init();
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
-	mem_test[0].message_data.user_type_entry__rosc_linux_test__testbuiltin__test.array_state[0].current_item=1234;
-	printf("----MEMSIZE--------------------------->%u\n",rosc_static_port_mem_size);
-	printf("------------------------------------------>%u\n",&(mem_test[0]));
-	printf("-----------------------------------%u----->%u\n",&(mem_test[1]),&(mem_test[0])+rosc_static_port_mem_size);
-	printf("------------------------------------------>%u\n",&(mem_test[2]));
-
-
-
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
 	printf("\n---END---\n");
 }
