@@ -76,8 +76,9 @@ typedef enum
 	SEBS_PARSE_ROSRPC_FIELD_EQUAL,
 	SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT,
 	SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH,
-	SEBS_PARSE_ROSBINARY_ARRAY_LENGTH,
-	SEBS_PARSE_ROSBINARY_VALUE,
+	SEBS_PARSE_ROSBINARY_MESSAGE_FIELD,
+	SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY,
+	SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY,
 }sebs_parse_ros_state_t;
 
 
@@ -102,9 +103,7 @@ typedef struct
 	sebs_parse_ros_state_t state;
 	sebs_parse_ros_rpc_field_t rpc_field_id;
 
-	const ros_buildup_type_t* binary_buildup;
 
-	void *binary_data_io;
 
 	/**
 	 * Storage for value events (RPC)
@@ -129,13 +128,31 @@ typedef struct
 
 
 
+	bool builtin_array;
+	uint32_t builtin_array_size;
+
+
 	const ros_buildup_type_t*  buildup;
+	uint32_t current_buildup_field;
+
+	uint32_t current_submessage_depth;
+
 	const size_t* submessage_sizes;
+	uint32_t current_submessage_size;
+
 	const size_t* array_lengths;
+	uint32_t current_array_length;
+
 	const size_t* memory_offsets;
+	uint32_t current_memory_offset;
+
+	rosc_msg_array_state_t *array_state;
+	uint32_t current_array_depth;
+
+
+
 	const int8_t* message_definition;
 	int8_t* msg_storage;
-	rosc_msg_array_state_t *array_state;
 
 	/**
 	 * Submode data storage

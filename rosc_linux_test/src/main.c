@@ -217,6 +217,61 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__testbuiltin__(test,mycallback)
 	/*Callback Function stuff here*/
+
+/*
+rostopic pub /test rosc_linux_test/testbuiltin "tbi_int8: 34
+tbi_int16: 123
+tbi_int32: 456
+tbi_int64: 7890
+tbi_uint8: 30
+tbi_uint16: 50
+tbi_uint32: 60
+tbi_uint64: 70
+tbi_float32: 80.0
+tbi_float64: 80.0
+tbi_bool: true
+tbi_string: 'asdfasdfasdfasdf'
+tbi_time: {secs: 3434, nsecs: 34}
+tbi_duration: {secs: 56556, nsecs: 56}
+tbi_int8_A: [34,34,34]
+tbi_int16_A: [4, 4]
+tbi_int32_A: [3,4,4]
+tbi_int64_A: [555,555,5555]
+tbi_uint8_A: [45,12,34]
+tbi_uint16_A: [815,33,44]
+tbi_uint32_A: [234, 34343]
+tbi_uint64_A: [3452335]
+tbi_float32_A: [12.34, 56.78]
+tbi_float64_A: [12345678]
+tbi_bool_A: [true,false,true]
+tbi_string_A: ['string1','string2']
+tbi_time_A:
+- {secs: 445, nsecs: 54}
+- {secs: 34, nsecs: 234}
+tbi_duration_A:
+- {secs: 45, nsecs: 53}
+t_nbi_sub: {tbi_tm_bool: true, tbi_tm_int8: 34}
+t_nbi_sub_A:
+- {tbi_tm_bool: false, tbi_tm_int8: 6}
+- {tbi_tm_bool: true, tbi_tm_int8: 5}"
+*/
+
+printf("tbi_int8: %i\n",msg->tbi_int8);
+printf("tbi_int16: %i\n",msg->tbi_int16);
+printf("tbi_int32: %i\n",msg->tbi_int32);
+printf("tbi_int64: %lu\n",msg->tbi_int64);
+printf("tbi_uint8: %i\n",msg->tbi_uint8);
+printf("tbi_uint16: %i\n",msg->tbi_uint16);
+printf("tbi_uint32: %i\n",msg->tbi_uint32);
+printf("tbi_uint64: %lu\n",msg->tbi_uint64);
+printf("tbi_float32: %f\n",msg->tbi_float32);
+printf("tbi_float64: %f\n",msg->tbi_float64);
+printf("tbi_bool: %i\n",msg->tbi_bool);
+
+
+
+
+
 }
 
 char topic[]="/test";

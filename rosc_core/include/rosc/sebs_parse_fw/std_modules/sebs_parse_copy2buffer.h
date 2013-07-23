@@ -35,7 +35,7 @@
 #include <rosc/system/types.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-#define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS, BYTE_ORDER_CORRECT,IS_STRING)\
+#define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS, BYTE_ORDER_CORRECT,IS_STRING,REPEATS)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_copy2buffer;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.buffer=BUFFER;\
@@ -43,6 +43,7 @@
 		DATA_STORAGE.endChrs=END_CHARS;\
 		DATA_STORAGE.byteOrderCorrection=(int8_t*)BYTE_ORDER_CORRECT;\
 		DATA_STORAGE.is_string=IS_STRING;\
+		DATA_STORAGE.repeats=REPEATS;\
 		return (SEBS_PARSE_RETURN_INIT)
 
 typedef enum
@@ -60,6 +61,7 @@ typedef struct
 	int8_t* byteOrderCorrection; //!< if this is set to a non zero value; The numbers in the array will be used to change the byte order. Must be as big as the datatype
 	sebs_parse_copy2buffer_result_t result; //!< stores the result of the submode
 	bool is_string; //!< if set to one the max length will be reduced by one and a string terminator will be inserted
+	uint32_t repeats; //!< if this is greater zero the operation will repeated as many times as given here
 }sebs_parse_copy2buffer_data_t;
 
 /**
