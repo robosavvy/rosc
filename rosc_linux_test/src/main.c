@@ -255,6 +255,7 @@ t_nbi_sub_A:
 - {tbi_tm_bool: false, tbi_tm_int8: 6}
 - {tbi_tm_bool: true, tbi_tm_int8: 5}"
 */
+int i;
 
 printf("tbi_int8: %i\n",msg->tbi_int8);
 printf("tbi_int16: %i\n",msg->tbi_int16);
@@ -267,11 +268,13 @@ printf("tbi_uint64: %lu\n",msg->tbi_uint64);
 printf("tbi_float32: %f\n",msg->tbi_float32);
 printf("tbi_float64: %f\n",msg->tbi_float64);
 printf("tbi_bool: %i\n",msg->tbi_bool);
-
-
-
-
-
+printf("tbi_string:\n");
+printf("\t size: %i\n",msg->tbi_string.size);
+printf("\t oversize: %i\n",msg->tbi_string.oversize);
+printf("\t str_data: %s\n",msg->tbi_string.str_data);
+printf("tbi_time:\n");
+printf("secs: %i\n",msg->tbi_time.sec);
+printf("nsecs: %i\n",msg->tbi_time.nsec);
 }
 
 char topic[]="/test";

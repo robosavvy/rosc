@@ -185,6 +185,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						basic_byteorder=g_byte_order_correction_to_system->SIZE_8_B;
 					break;
 
+					case ROS_MSG_BUILDUP_TYPE_STRING:
+
+						break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
 						++fdata->current_buildup_field;

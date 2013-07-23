@@ -35,7 +35,6 @@
 #include <rosc/system/types.h>
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
