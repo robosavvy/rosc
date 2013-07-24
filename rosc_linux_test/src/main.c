@@ -207,7 +207,7 @@ uint8_t peer0_0[] = {
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,3,3,3,3,3,3,3,3,3,3,3,3);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,16,3,3,3,3,3,3,3,3,3,3,3);
 
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
