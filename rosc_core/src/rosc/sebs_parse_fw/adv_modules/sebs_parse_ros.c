@@ -186,7 +186,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					break;
 
 					case ROS_MSG_BUILDUP_TYPE_STRING:
-
+						fdata->state=SEBS_PARSE_ROSBINARY_STRING;
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->string_size,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
@@ -218,6 +219,10 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						break;
 				}
 
+
+
+
+
 				if(basic_size!=0)
 				{
 					++fdata->current_memory_offset;
@@ -226,11 +231,44 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->builtin_array=false;
 					SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset],basic_size,0,basic_byteorder,0,basic_repeat);
 				}
+
+
+
+
 			}
 			break;
 
 
+			case SEBS_PARSE_ROSBINARY_STRING:
+			{
+				uint32_t repeat;
+				if(fdata->string_size>(fdata->array_lengths[fdata->current_array_length]-1)) //Check if the reserved size is too small (-1 cause of terminator '\0')
+				{
+					fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
+					//Size = maximum length -1 (terminator)
+					*((uint32_t*)(fdata->memory_offsets[fdata->current_memory_offset+1]))=(fdata->array_lengths[fdata->current_array_length]-1);
+					repeat=(fdata->array_lengths[fdata->current_array_length]-1);
+					//Oversize -> True
+					*((bool*)(fdata->memory_offsets[fdata->current_memory_offset+2]))=true;
+					fdata->skip_bytes=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]-1);
+				}
+				else
+				{
+					fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
+					//Size = maximum length
+					*((uint32_t*)(fdata->memory_offsets[fdata->current_memory_offset+1]))=fdata->string_size;
+					repeat=fdata->string_size;
+					*((bool*)(fdata->memory_offsets[fdata->current_memory_offset+2]))=false;
+				}
+					fdata->current_memory_offset+=3;
+				SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset],1,0,0,0,repeat);
+			}
+				break;
 
+			case SEBS_PARSE_ROSBINARY_SKIP_BYTES:
+				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
+				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->skip_bytes);
+				break;
 
 
 

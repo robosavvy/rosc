@@ -34,6 +34,7 @@
 
 #include <endian.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skip.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/string_res/msg_strings.h>
@@ -77,8 +78,10 @@ typedef enum
 	SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT,
 	SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH,
 	SEBS_PARSE_ROSBINARY_MESSAGE_FIELD,
+	SEBS_PARSE_ROSBINARY_SKIP_BYTES,
 	SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY,
 	SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY,
+	SEBS_PARSE_ROSBINARY_STRING,
 }sebs_parse_ros_state_t;
 
 
@@ -128,6 +131,11 @@ typedef struct
 
 
 
+
+	uint32_t skip_bytes;  //!< bytes to skip when oversize
+
+	uint32_t string_size; //!< stores the size for a string
+
 	bool builtin_array;
 	uint32_t builtin_array_size;
 
@@ -161,6 +169,7 @@ typedef struct
 	{
 		sebs_parse_copy2buffer_data_t copy2buffer;
 		sebs_parse_seekstring_data_t seekstring;
+		sebs_parse_skip_data_t skip;
 	};
 
 }sebs_parse_ros_data_t;

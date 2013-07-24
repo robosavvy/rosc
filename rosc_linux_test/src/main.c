@@ -279,8 +279,7 @@ printf("nsecs: %i\n",msg->tbi_time.nsec);
 
 char topic[]="/test";
 
-ros_msg_init_t init_test={
-							topic,
+ros_msg_init_t init_test={	topic,
 							ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,
 							rosc_static_msg_buildup__rosc_linux_test__testbuiltin,
 							rosc_static_msg_submessage_size_list__rosc_linux_test__testbuiltin__test,
