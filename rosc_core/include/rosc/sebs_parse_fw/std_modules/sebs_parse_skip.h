@@ -37,9 +37,10 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 #define SEBS_PARSE_SKIP_INIT(PARSER_DATA, DATA_STORAGE, LEN)\
-				PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_seekstring;\
+				PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_skip;\
 				PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
-				DATA_STORAGE.len=LEN;
+				DATA_STORAGE.len=LEN;\
+				return (SEBS_PARSE_RETURN_INIT)
 
 
 typedef struct

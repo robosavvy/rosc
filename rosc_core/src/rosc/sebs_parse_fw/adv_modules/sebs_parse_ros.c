@@ -149,12 +149,11 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_FIELD:
 			{
-
-
 				int8_t basic_size=0;
 				const int8_t* basic_byteorder=0;
 				int8_t basic_repeat=0;
 
+				mycallback(fdata->msg_storage);
 				switch(fdata->buildup[fdata->current_buildup_field])
 				{
 					case ROS_MSG_BUILDUP_TYPE_BOOL:
@@ -197,9 +196,11 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 					case ROS_MSG_BUILDUP_TYPE_DURATION:
 					case ROS_MSG_BUILDUP_TYPE_TIME:
-						basic_size=4;
-						basic_byteorder=g_byte_order_correction_to_system->SIZE_4_B;
-						basic_repeat=1;
+						{
+							int8_t *strct=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
+							fdata->current_memory_offset+=3;
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,strct,8,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
+						}
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_ARRAY:
@@ -241,10 +242,6 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_STRING:
 			{
-				mycallback(fdata->msg_storage);
-
-
-
 				uint32_t repeat;
 				fdata->current_buildup_field++;
 				fdata->current_array_length++;
@@ -256,14 +253,14 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				fdata->current_memory_offset+=4;
 
 
-				if(fdata->string_size>(fdata->array_lengths[fdata->current_array_length]-1)) //Check if the reserved size is too small (-1 cause of terminator '\0')
+				if(fdata->string_size>(fdata->array_lengths[fdata->current_array_length])) //Check if the reserved size is too small (-1 cause of terminator '\0')
 				{
 					fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 					//Size = maximum length -1 (terminator)
-					*size=fdata->array_lengths[fdata->current_array_length]-1;
+					*size=fdata->array_lengths[fdata->current_array_length];
 					*oversize=true;
 					//bytes to skip
-					fdata->skip_bytes=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]-1);
+					fdata->skip_bytes=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]);
 				}
 				else
 				{

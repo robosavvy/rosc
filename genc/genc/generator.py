@@ -306,7 +306,7 @@ class msg_static(object):
         elif field.base_type == 'string':
            output= self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t size;' + '\n'
            output+= self.__add_tabs(self.__message_struct_indent_depth) + 'bool oversize;' + '\n'
-           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'];' + '\n' 
+           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'+1];' + '\n' 
            self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field.name)
            self.__msg_static_struct+=output
 
