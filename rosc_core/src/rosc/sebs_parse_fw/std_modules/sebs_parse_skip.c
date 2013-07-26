@@ -44,6 +44,7 @@ sebs_parse_return_t sebs_parse_skip(sebs_parser_data_t* pdata)
 
 	while (*pdata->len > 0)
 	{
+		printf("skipping byte: %x \n ",(unsigned int)**pdata->buf);
 		++*pdata->buf;
 		--*pdata->len;
 		++fdata->curPos;

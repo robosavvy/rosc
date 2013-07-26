@@ -197,15 +197,19 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					case ROS_MSG_BUILDUP_TYPE_DURATION:
 					case ROS_MSG_BUILDUP_TYPE_TIME:
 						{
-							int8_t *strct=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
-							fdata->current_memory_offset+=3;
-							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,strct,8,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
+							fdata->current_buildup_field++;
+							int8_t *sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
+							fdata->current_memory_offset+=3;//increase offset number and hop over differences to struct address...
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,sec,8,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
 						}
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_ARRAY:
+						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY;
+						break;
+
 					case ROS_MSG_BUILDUP_TYPE_ARRAY_UL:
-						fdata->builtin_array=true;
+						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY;
 						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->builtin_array_size,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 						break;
 
@@ -226,11 +230,22 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 				if(basic_size!=0)
 				{
-					++fdata->current_memory_offset;
-					++fdata->current_buildup_field;
-					//reset array
-					fdata->builtin_array=false;
-					SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset],basic_size,0,basic_byteorder,0,basic_repeat);
+						++fdata->current_buildup_field;
+						++fdata->current_memory_offset;
+					if(fdata->builtin_array)//is it a array?
+					{
+						fdata->builtin_array=false;
+						if(fdata->skip_bytes)
+						{
+							fdata->skip_bytes*=basic_size;
+							fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
+						}
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset-(2+fdata->dyn_array)]+fdata->memory_offsets[fdata->current_memory_offset],basic_size*fdata->builtin_array_size,0,basic_byteorder,0,basic_size);
+					}
+					else
+					{
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset],basic_size,0,basic_byteorder,0,basic_size);
+					}
 				}
 
 
@@ -274,14 +289,47 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			}
 				break;
 
-			case SEBS_PARSE_ROSBINARY_SKIP_BYTES:
-				mycallback(fdata->msg_storage);
+			case SEBS_PARSE_ROSBINARY_SKIP_BYTES: //skipping bytes of an oversized dynamic array ...
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
 				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->skip_bytes);
 				break;
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY:
+			{
+				uint32_t *size=(uint32_t*)(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]/*struct base offset*/
+				                                 +fdata->memory_offsets[fdata->current_memory_offset+2])           /*oversize offset*/;
+				bool *oversize=(bool *)(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]   /*struct base offset*/
+												            +fdata->memory_offsets[fdata->current_memory_offset+3])/*oversize offset*/;
+				fdata->current_array_length++; //next array length
+				fdata->builtin_array=true;
+				if(fdata->buildup[fdata->current_buildup_field]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
+				{
+					fdata->dyn_array=true;
+					fdata->current_memory_offset+=3;//increase memory offset to oversize
+					if(fdata->builtin_array_size>fdata->array_lengths[fdata->current_array_length])
+					{
+						*oversize=true;
+						fdata->skip_bytes=fdata->builtin_array_size-fdata->array_lengths[fdata->current_array_length]; //here we add only the number of entries to skip bytes!!!
+						fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
+					}
+					else
+					{
+						*oversize=false;
+						fdata->skip_bytes=0;
+					}
+				}
+				else
+				{
+					fdata->dyn_array=false;
+					fdata->current_memory_offset+=2;//increase memory offset to size
+					fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
+					fdata->skip_bytes=0;
+				}
 
+				*size=fdata->builtin_array_size;
+				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
+				fdata->current_buildup_field++; //next array length//Next buildup field for type ....
+			}
 				break;
 
 			default: //TODO check

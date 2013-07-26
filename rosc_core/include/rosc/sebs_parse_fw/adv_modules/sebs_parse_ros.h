@@ -129,14 +129,12 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
-
-
-
 	uint32_t skip_bytes;  //!< bytes to skip when oversize
 
 	uint32_t string_size; //!< stores the size for a string
 
 	bool builtin_array;
+	bool dyn_array;
 	uint32_t builtin_array_size;
 
 
@@ -156,8 +154,6 @@ typedef struct
 
 	rosc_msg_array_state_t *array_state;
 	uint32_t current_array_depth;
-
-
 
 	const int8_t* message_definition;
 	int8_t* msg_storage;

@@ -207,7 +207,7 @@ uint8_t peer0_0[] = {
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,15,3,3,3,3,3,3,3,3,3,3,3);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,15,2,2,2,2,2,2,2,2,2,3,3);
 
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
@@ -256,7 +256,7 @@ t_nbi_sub_A:
 - {tbi_tm_bool: true, tbi_tm_int8: 5}"
 */
 int i;
-
+printf("\x1B[2J");
 printf("tbi_int8: %i\n",msg->tbi_int8);
 printf("tbi_int16: %i\n",msg->tbi_int16);
 printf("tbi_int32: %i\n",msg->tbi_int32);
@@ -271,13 +271,105 @@ printf("tbi_bool: %i\n",msg->tbi_bool);
 printf("tbi_string:\n");
 printf("\t size: %i\n",msg->tbi_string.size);
 printf("\t oversize: %i\n",msg->tbi_string.oversize);
-printf("\t str_data: %s\n",msg->tbi_string.str_data);
+printf("\t data: %s\n",msg->tbi_string.str_data);
 printf("tbi_time:\n");
 printf("secs: %i\n",msg->tbi_time.sec);
 printf("nsecs: %i\n",msg->tbi_time.nsec);
 printf("tbi_duration:\n");
 printf("secs: %i\n",msg->tbi_duration.sec);
 printf("nsecs: %i\n",msg->tbi_duration.nsec);
+
+
+printf("tbi_int8_A:\n");
+printf("\t size: %i\n",msg->tbi_int8_A.size);
+printf("\t oversize: %i\n",msg->tbi_int8_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_int8_A.size;i++)
+	printf("%i ",msg->tbi_int8_A.data[i]);
+printf("\n");
+
+printf("tbi_int16_A:\n");
+printf("\t size: %i\n",msg->tbi_int16_A.size);
+printf("\t data: ");
+for(i=0;i<msg->tbi_int16_A.size;i++)
+	printf("%i ",msg->tbi_int16_A.data[i]);
+printf("\n");
+
+printf("tbi_int32_A:\n");
+printf("\t size: %i\n",msg->tbi_int32_A.size);
+printf("\t oversize: %i\n",msg->tbi_int32_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_int32_A.size;i++)
+	printf("%i ",msg->tbi_int32_A.data[i]);
+printf("\n");
+
+
+printf("tbi_int64_A:\n");
+printf("\t size: %i\n",msg->tbi_int64_A.size);
+printf("\t oversize: %i\n",msg->tbi_int64_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_int64_A.size;i++)
+	printf("%lu ",msg->tbi_int64_A.data[i]);
+printf("\n");
+
+printf("tbi_uint8_A:\n");
+printf("\t size: %i\n",msg->tbi_uint8_A.size);
+printf("\t oversize: %i\n",msg->tbi_uint8_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_uint8_A.size;i++)
+	printf("%i ",msg->tbi_uint8_A.data[i]);
+printf("\n");
+
+printf("tbi_uint16_A:\n");
+printf("\t size: %i\n",msg->tbi_uint16_A.size);
+printf("\t oversize: %i\n",msg->tbi_uint16_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_uint16_A.size;i++)
+	printf("%i ",msg->tbi_uint16_A.data[i]);
+printf("\n");
+
+printf("tbi_uint32_A:\n");
+printf("\t size: %i\n",msg->tbi_uint32_A.size);
+printf("\t data: ");
+for(i=0;i<msg->tbi_uint32_A.size;i++)
+	printf("%i ",msg->tbi_uint32_A.data[i]);
+printf("\n");
+
+printf("tbi_uint64_A:\n");
+printf("\t size: %i\n",msg->tbi_uint64_A.size);
+printf("\t data: ");
+for(i=0;i<msg->tbi_uint64_A.size;i++)
+	printf("%lu ",msg->tbi_uint64_A.data[i]);
+printf("\n");
+
+printf("tbi_float32_A:\n");
+printf("\t size: %i\n",msg->tbi_float32_A.size);
+printf("\t data: ");
+for(i=0;i<msg->tbi_float32_A.size;i++)
+	printf("%f ",msg->tbi_float32_A.data[i]);
+printf("\n");
+
+
+printf("tbi_float64_A:\n");
+printf("\t size: %i\n",msg->tbi_float64_A.size);
+printf("\t oversize: %i\n",msg->tbi_float64_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_float64_A.size;i++)
+	printf("%f ",msg->tbi_float64_A.data[i]);
+printf("\n");
+
+printf("tbi_bool_A:\n");
+printf("\t size: %i\n",msg->tbi_bool_A.size);
+printf("\t oversize: %i\n",msg->tbi_bool_A.oversize);
+printf("\t data: ");
+for(i=0;i<msg->tbi_bool_A.size;i++)
+	printf("%i ",msg->tbi_bool_A.data[i]);
+printf("\n");
+
+
+
+
+
 }
 
 char topic[]="/test";
@@ -299,8 +391,11 @@ iface_t sub={false,
 		     &init_test};
 
 
+
 int main()
 {
+	__rosc_static_port_mem[0];
+
 	rosc_init();
 	register_interface(&sub);
 	rosc_open_port(&sub,0);

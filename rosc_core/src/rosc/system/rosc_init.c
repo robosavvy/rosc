@@ -42,6 +42,7 @@
 
 void rosc_init()
 {
+
 	//Initialize the byte order arrays
 	rosc_init_endian();
 	rosc_ports_init();
