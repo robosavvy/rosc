@@ -205,6 +205,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_ARRAY:
+						fdata->string_array_item_number=0;
 						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY;
 						break;
 
@@ -235,9 +236,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					if(fdata->builtin_array)//is it a array?
 					{
 						fdata->builtin_array=false;
-						if(fdata->skip_bytes)
+						if(fdata->skip_items)
 						{
-							fdata->skip_bytes*=basic_size;
+							fdata->skip_items*=basic_size;
 							fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 						}
 						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset-(2+fdata->dyn_array)]+fdata->memory_offsets[fdata->current_memory_offset],basic_size*fdata->builtin_array_size,0,basic_byteorder,0,basic_size);
@@ -258,14 +259,65 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_ROSBINARY_STRING:
 			{
 				uint32_t repeat;
-				fdata->current_buildup_field++;
-				fdata->current_array_length++;
-				//Adresses
-				void *strct=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
-				uint32_t *size=(uint32_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+2]);
-				bool *oversize=(bool *)(strct+fdata->memory_offsets[fdata->current_memory_offset+3]);
-				int8_t *str_data=(int8_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+4]);
-				fdata->current_memory_offset+=4;
+				void *strct;
+				uint32_t *size;
+				bool *oversize;
+				int8_t *str_data;
+
+				if(!fdata->builtin_array) //Is no array
+				{
+					//Adresses
+					fdata->current_buildup_field++;
+					fdata->current_array_length++;
+					strct=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
+					size=(uint32_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+2]);
+					oversize=(bool *)(strct+fdata->memory_offsets[fdata->current_memory_offset+3]);
+					str_data=(int8_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+4]);
+					fdata->current_memory_offset+=4;
+				}
+				else //is array of strings
+				{
+
+					if(fdata->string_array_item_number == 0) //is this the start of the array?
+					{
+						fdata->current_array_length++;	  //Select the length of the string array
+						fdata->current_submessage_size++; //Select the submessage size
+
+						fdata->string_skip=fdata->skip_items;
+						fdata->string_array_item_size=fdata->submessage_sizes[fdata->current_submessage_size];
+					}
+					strct=fdata->msg_storage
+						  +fdata->memory_offsets[fdata->current_memory_offset-2] //Array struct
+						  +fdata->memory_offsets[fdata->current_memory_offset+1] //data start
+						  +(fdata->string_array_item_size*fdata->string_array_item_number); //Size of string struct * items
+
+					size=(uint32_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+2]);
+					oversize=(bool *)(strct+fdata->memory_offsets[fdata->current_memory_offset+3]);
+					str_data=(int8_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+4]);
+
+					if(fdata->string_array_item_number < fdata->builtin_array_size)
+					{
+						fdata->string_array_item_number++;
+					}
+					else
+					{
+						if(fdata->string_skip>0)
+						{
+							fdata->string_skip--;
+							fdata->skip_items=4+fdata->string_size; // size + length
+							fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
+						}
+						else //Goto next message field
+						{
+							fdata->builtin_array=false;
+							fdata->current_buildup_field++;   //Select the next buildup field
+							fdata->current_memory_offset+=4;
+						}
+						break;
+					}
+
+				}
+
 
 
 				if(fdata->string_size>(fdata->array_lengths[fdata->current_array_length])) //Check if the reserved size is too small (-1 cause of terminator '\0')
@@ -275,7 +327,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					*size=fdata->array_lengths[fdata->current_array_length];
 					*oversize=true;
 					//bytes to skip
-					fdata->skip_bytes=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]);
+					fdata->skip_items=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]);
 				}
 				else
 				{
@@ -291,7 +343,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_SKIP_BYTES: //skipping bytes of an oversized dynamic array ...
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
-				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->skip_bytes);
+				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->skip_items);
 				break;
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY:
@@ -309,13 +361,13 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					if(fdata->builtin_array_size>fdata->array_lengths[fdata->current_array_length])
 					{
 						*oversize=true;
-						fdata->skip_bytes=fdata->builtin_array_size-fdata->array_lengths[fdata->current_array_length]; //here we add only the number of entries to skip bytes!!!
+						fdata->skip_items=fdata->builtin_array_size-fdata->array_lengths[fdata->current_array_length]; //here we add only the number of entries to skip bytes!!!
 						fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
 					}
 					else
 					{
 						*oversize=false;
-						fdata->skip_bytes=0;
+						fdata->skip_items=0;
 					}
 				}
 				else
@@ -323,7 +375,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->dyn_array=false;
 					fdata->current_memory_offset+=2;//increase memory offset to size
 					fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
-					fdata->skip_bytes=0;
+					fdata->skip_items=0;
 				}
 
 				*size=fdata->builtin_array_size;

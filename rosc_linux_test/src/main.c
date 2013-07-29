@@ -207,7 +207,7 @@ uint8_t peer0_0[] = {
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,15,2,2,2,2,2,2,2,2,2,3,3);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__testbuiltin(test,15,2,2,2,2,2,2,2,2,2,30,3);
 
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
@@ -256,7 +256,8 @@ t_nbi_sub_A:
 - {tbi_tm_bool: true, tbi_tm_int8: 5}"
 */
 int i;
-printf("\x1B[2J");
+
+printf("______________________________________________\n\n\n");
 printf("tbi_int8: %i\n",msg->tbi_int8);
 printf("tbi_int16: %i\n",msg->tbi_int16);
 printf("tbi_int32: %i\n",msg->tbi_int32);
@@ -367,8 +368,16 @@ for(i=0;i<msg->tbi_bool_A.size;i++)
 printf("\n");
 
 
-
-
+printf("tbi_string_A:\n");
+printf("\t size: %i\n",msg->tbi_string_A.size);
+printf("\t oversize: %i\n",msg->tbi_string_A.oversize);
+for (i = 0; i < msg->tbi_string_A.size; ++i)
+{
+	printf("Item %i: \n",i);
+	printf("\t size: %i\n",msg->tbi_string_A.data[i].size);
+	printf("\t oversize: %i\n",msg->tbi_string_A.data[i].oversize);
+	printf("\t str_data: %s\n",msg->tbi_string_A.data[i].str_data);
+}
 
 }
 

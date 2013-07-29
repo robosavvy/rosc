@@ -113,7 +113,7 @@ typedef struct
 	 */
 	union
 	{
-		bool	boolean;
+		bool boolean;
 
 		uint8_t uint8;
 		uint16_t uint16;
@@ -129,13 +129,19 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
-	uint32_t skip_bytes;  //!< bytes to skip when oversize
+	uint32_t skip_items;  //!< bytes to skip when oversize
 
 	uint32_t string_size; //!< stores the size for a string
 
 	bool builtin_array;
 	bool dyn_array;
 	uint32_t builtin_array_size;
+
+	uint32_t string_array_item_number; //!< stores the number of a string array
+	uint32_t string_array_item_size; //!< stores the size of a string array
+	uint32_t string_skip; //!< number of strings to skip
+	void *string_array_start;	//!< stores the beginning of a string array
+
 
 
 	const ros_buildup_type_t*  buildup;
