@@ -82,8 +82,10 @@ typedef struct
 {
 	bool is_submessage_array;
 	bool is_dynamic;
-	ros_buildup_type_t *message_definition_start; //!< points to the start of the message definition of the submessage when inside an array
-	uint32_t submessage_array_no; //!< stores the number of the current message if a submessage array
+	uint32_t submessage_buildup_start; //!< the start of the submessage definition of the submessage when inside an array
+	uint32_t submessage_offset_start; //!< the start of the submessage offset
+	uint32_t remaining_submessages; //!< stores the number of remaining submessages when in an array
+	uint32_t skip_submessages; //!< number of submessages which need to be skipped
 	size_t submessage_byte_size; //!< stores the message size of a submessage array
 	void * parent_message_start; //!< stores the start of the previous message, so it can be restored when going back up.
 }rosc_msg_submessage_state_t;
