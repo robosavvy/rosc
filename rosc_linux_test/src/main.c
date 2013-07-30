@@ -399,6 +399,10 @@ for (i = 0; i < msg->tbi_duration_A.size; ++i)
 	printf("\t nsec: %i\n",msg->tbi_duration_A.data[i].nsec);
 }
 
+printf("t_nbi_sub: \n");
+printf("tbi_tm_bool: %i\n",msg->t_nbi_sub.tbi_tm_bool);
+printf("tbi_tm_int8: %i\n",msg->t_nbi_sub.tbi_tm_int8);
+
 }
 
 char topic[]="/test";

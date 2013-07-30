@@ -58,7 +58,7 @@
 		DATA_STORAGE.memory_offsets=MEM_OFFSETS;\
 		DATA_STORAGE.message_definition=MSG_DEF;\
 		DATA_STORAGE.msg_storage=MSG_STORE;\
-		DATA_STORAGE.array_state=ARRAY_STATES;\
+		DATA_STORAGE.submessage_state=ARRAY_STATES;\
 		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 
@@ -158,7 +158,7 @@ typedef struct
 	const size_t* memory_offsets;
 	uint32_t current_memory_offset;
 
-	rosc_msg_submessage_state_t *array_state;
+	rosc_msg_submessage_state_t *submessage_state;
 	uint32_t current_array_depth;
 
 	const int8_t* message_definition;

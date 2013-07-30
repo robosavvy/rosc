@@ -80,9 +80,12 @@ typedef void (*ros_callbackFkt_t)(const void* const __msg);
 
 typedef struct
 {
-	uint32_t current_item;
-	void * array_start;
-	size_t item_size;
+	bool is_submessage_array;
+	bool is_dynamic;
+	ros_buildup_type_t *message_definition_start; //!< points to the start of the message definition of the submessage when inside an array
+	uint32_t submessage_array_no; //!< stores the number of the current message if a submessage array
+	size_t submessage_byte_size; //!< stores the message size of a submessage array
+	void * parent_message_start; //!< stores the start of the previous message, so it can be restored when going back up.
 }rosc_msg_submessage_state_t;
 
 
@@ -96,7 +99,7 @@ typedef struct
 	const size_t* const memory_offsets;
 	const int8_t* const message_definition;
 	const int8_t* const md5sum;
-	const size_t array_states_offset;
+	const size_t submessage_states_offset;
 	const ros_callbackFkt_t callback;
 }ros_msg_init_t;
 

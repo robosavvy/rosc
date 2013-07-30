@@ -193,6 +193,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
+						fdata->submessage_state[fdata->current_submessage_depth].parent_message_start=fdata->msg_storage;
+						fdata->msg_storage=fdata->msg_storage+fdata->memory_offsets[++fdata->current_memory_offset];
+						fdata->submessage_state[fdata->current_submessage_depth].is_submessage_array=false;
 						++fdata->current_buildup_field;
 						++fdata->current_submessage_depth;
 						break;
@@ -244,12 +247,21 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY:
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL:
-						++fdata->current_submessage_depth;
+						exit(1);
 						break;
 
 
 					case ROS_MSG_BUILDUP_TYPE_MESSAGE_END:
+						if(fdata->submessage_state->is_submessage_array)
+						{
 
+						}
+						else
+						{
+						++fdata->current_buildup_field;
+						--fdata->current_submessage_depth;
+						fdata->msg_storage=fdata->submessage_state[fdata->current_submessage_depth].parent_message_start;
+						}
 						break;
 				}
 

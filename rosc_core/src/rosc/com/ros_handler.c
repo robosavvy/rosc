@@ -145,7 +145,7 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 
 						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
 							DEBUG_PRINT_STR("ROSRPC END->BINARY PARSING...")
-							SEBS_PARSE_ROS_INIT_MSG(pdata,hdata->ros,idata->buildup,idata->submessage_sizes,idata->array_lengths,idata->memory_offsets,idata->message_definition,pdata->additional_storage,pdata->additional_storage+idata->array_states_offset);
+							SEBS_PARSE_ROS_INIT_MSG(pdata,hdata->ros,idata->buildup,idata->submessage_sizes,idata->array_lengths,idata->memory_offsets,idata->message_definition,pdata->additional_storage,pdata->additional_storage+idata->submessage_states_offset);
 							break;
 						default:
 							ROSC_FATAL("ros handler: Not a ros handler type!");
