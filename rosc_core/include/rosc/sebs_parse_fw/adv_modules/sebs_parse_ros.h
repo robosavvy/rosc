@@ -158,7 +158,7 @@ typedef struct
 	const size_t* memory_offsets;
 	uint32_t current_memory_offset;
 
-	rosc_msg_array_state_t *array_state;
+	rosc_msg_submessage_state_t *array_state;
 	uint32_t current_array_depth;
 
 	const int8_t* message_definition;

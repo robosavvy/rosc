@@ -411,7 +411,7 @@ ros_msg_init_t init_test={	topic,
 							rosc_static_msg_memory_offsets__rosc_linux_test__testbuiltin__test,
 							rosc_static_msg_message_definition__rosc_linux_test__testbuiltin,
 							rosc_static_msg_md5sum__rosc_linux_test__testbuiltin,
-							ROSC_STATIC_ARRAY_STATES_MEMORY_OFFSET__rosc_linux_test__testbuiltin(test),
+							ROSC_STATIC_SUBMESSAGE_STATES_MEMORY_OFFSET__rosc_linux_test__testbuiltin(test),
 							&mycallback
 							};
 

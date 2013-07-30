@@ -83,7 +83,7 @@ typedef struct
 	uint32_t current_item;
 	void * array_start;
 	size_t item_size;
-}rosc_msg_array_state_t;
+}rosc_msg_submessage_state_t;
 
 
 typedef struct
