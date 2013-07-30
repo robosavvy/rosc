@@ -379,6 +379,26 @@ for (i = 0; i < msg->tbi_string_A.size; ++i)
 	printf("\t str_data: %s\n",msg->tbi_string_A.data[i].str_data);
 }
 
+printf("tbi_time_A:\n");
+printf("\t size: %i\n",msg->tbi_time_A.size);
+for (i = 0; i < msg->tbi_time_A.size; ++i)
+{
+	printf("Item %i: \n",i);
+	printf("\t nsec: %i\n",msg->tbi_time_A.data[i].sec);
+	printf("\t nsec: %i\n",msg->tbi_time_A.data[i].nsec);
+}
+
+
+printf("tbi_duration_A:\n");
+printf("\t size: %i\n",msg->tbi_duration_A.size);
+printf("\t oversize: %i\n",msg->tbi_duration_A.oversize);
+for (i = 0; i < msg->tbi_duration_A.size; ++i)
+{
+	printf("Item %i: \n",i);
+	printf("\t nsec: %i\n",msg->tbi_duration_A.data[i].sec);
+	printf("\t nsec: %i\n",msg->tbi_duration_A.data[i].nsec);
+}
+
 }
 
 char topic[]="/test";

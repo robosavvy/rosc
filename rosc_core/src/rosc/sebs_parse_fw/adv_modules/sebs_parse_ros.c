@@ -186,7 +186,10 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 					case ROS_MSG_BUILDUP_TYPE_STRING:
 						fdata->state=SEBS_PARSE_ROSBINARY_STRING;
-						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->string_size,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
+						if(fdata->string_array_item_number < fdata->builtin_array_size || !fdata->builtin_array)
+						{
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->string_size,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
+						}
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
@@ -197,10 +200,35 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					case ROS_MSG_BUILDUP_TYPE_DURATION:
 					case ROS_MSG_BUILDUP_TYPE_TIME:
 						{
+
 							fdata->current_buildup_field++;
-							int8_t *sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
-							fdata->current_memory_offset+=3;//increase offset number and hop over differences to struct address...
-							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,sec,8,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
+							int8_t *sec;
+							uint32_t len=1;
+							if(fdata->builtin_array)
+							{
+
+								len=fdata->builtin_array_size;
+
+								sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset-(1+fdata->dyn_array)]+
+								                      +fdata->memory_offsets[fdata->current_memory_offset+1];
+
+
+								fdata->current_memory_offset+=3;
+
+								if(fdata->skip_items!=0)
+								{
+									fdata->skip_items*=8;
+									fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
+								}
+
+							}
+							else
+							{
+								sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
+								fdata->current_memory_offset+=3;//increase offset number and hop over differences to struct address...
+							}
+
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,sec,8*len,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
 						}
 						break;
 
@@ -312,6 +340,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 							fdata->builtin_array=false;
 							fdata->current_buildup_field++;   //Select the next buildup field
 							fdata->current_memory_offset+=4;
+							fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
 						}
 						break;
 					}
