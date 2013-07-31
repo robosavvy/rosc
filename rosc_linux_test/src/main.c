@@ -202,7 +202,7 @@ uint8_t peer0_0[] = {
 0x36, 0x00, 0x00, 0x00, 0x22, 0x00, 0x00, 0x00,
 0xea, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
 0x2d, 0x00, 0x00, 0x00, 0x35, 0x00, 0x00, 0x00,
-0x01, 0x22, 0x00, 0x06, 0x01, 0x05 };
+0x01, 0x22, 0x01, 0x06, 0x01, 0x05 };
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__testbuiltin();
 
@@ -252,7 +252,7 @@ tbi_duration_A:
 - {secs: 45, nsecs: 53}
 t_nbi_sub: {tbi_tm_bool: true, tbi_tm_int8: 34}
 t_nbi_sub_A:
-- {tbi_tm_bool: false, tbi_tm_int8: 6}
+- {tbi_tm_bool: true, tbi_tm_int8: 6}
 - {tbi_tm_bool: true, tbi_tm_int8: 5}"
 */
 int i;
@@ -408,6 +408,8 @@ printf("t_nbi_sub_A: \n");
 printf("size: %i\n",msg->t_nbi_sub_A.size);
 for (i = 0; i < msg->t_nbi_sub_A.size; ++i) {
 printf("tbi_tm_bool: %i\n",msg->t_nbi_sub_A.data[i].tbi_tm_bool);
+printf("tbi_tm_bool_addr: %lu\n",(unsigned long)&msg->t_nbi_sub_A.data[i].tbi_tm_bool);
+
 printf("tbi_tm_int8: %i\n",msg->t_nbi_sub_A.data[i].tbi_tm_int8);
 }
 
