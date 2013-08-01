@@ -57,12 +57,11 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			break;
 		}
 
-		fdata->current_array_depth=0;
-		fdata->current_array_length=0;
-		fdata->current_buildup_field=0;
-		fdata->current_memory_offset=0;
-		fdata->current_submessage_size=0;
-		fdata->builtin_array=false;
+		fdata->array_length_current_element=0;
+		fdata->buildup_type_current_field=0;
+		fdata->memory_offset_current_element=0;
+		fdata->submessage_size_current_element=0;
+		fdata->builtin_is_array=false;
 		fdata->builtin_array_size=0;
 
 		DEBUG_PRINT_STR("ROS PARSER INIT");
@@ -153,11 +152,11 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				const int8_t* basic_byteorder=0;
 				int8_t basic_repeat=0;
 
-				if(fdata->current_submessage_depth)
-				mycallback(fdata->submessage_state[0].parent_message_start);
+				if(fdata->submessage_depth)
+				mycallback(fdata->submessage_state_array[0].parent_message_start);
 				else
 				mycallback(fdata->msg_storage);
-				switch(fdata->buildup[fdata->current_buildup_field])
+				switch(fdata->buildup_type_array[fdata->buildup_type_current_field])
 				{
 					case ROS_MSG_BUILDUP_TYPE_BYTE:
 					case ROS_MSG_BUILDUP_TYPE_BOOL:
@@ -190,7 +189,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 					case ROS_MSG_BUILDUP_TYPE_STRING:
 						fdata->state=SEBS_PARSE_ROSBINARY_STRING;
-						if(fdata->string_array_item_number < fdata->builtin_array_size || !fdata->builtin_array)
+						if(fdata->string_array_element_number < fdata->builtin_array_size || !fdata->builtin_is_array)
 						{
 							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->string_size,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 						}
@@ -201,31 +200,31 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					case ROS_MSG_BUILDUP_TYPE_TIME:
 						{
 
-							fdata->current_buildup_field++;
+							fdata->buildup_type_current_field++;
 							int8_t *sec;
 							uint32_t len=1;
-							if(fdata->builtin_array)
+							if(fdata->builtin_is_array)
 							{
 
 								len=fdata->builtin_array_size;
 
-								sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset-(1+fdata->dyn_array)]+
-								                      +fdata->memory_offsets[fdata->current_memory_offset+1];
+								sec=fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element-(1+fdata->builtin_is_dyn_array)]+
+								                      +fdata->memory_offset_array[fdata->memory_offset_current_element+1];
 
 
-								fdata->current_memory_offset+=3;
+								fdata->memory_offset_current_element+=3;
 
-								if(fdata->skip_items!=0)
+								if(fdata->builtin_array_elements_to_skip!=0)
 								{
-									fdata->skip_items*=8;
+									fdata->builtin_array_elements_to_skip*=8;
 									fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 								}
 
 							}
 							else
 							{
-								sec=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
-								fdata->current_memory_offset+=3;//increase offset number and hop over differences to struct address...
+								sec=fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1];
+								fdata->memory_offset_current_element+=3;//increase offset number and hop over differences to struct address...
 							}
 
 							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,sec,8*len,0,g_byte_order_correction_to_system->SIZE_4_B,0,4);
@@ -235,7 +234,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 
 					case ROS_MSG_BUILDUP_TYPE_ARRAY:
-						fdata->string_array_item_number=0;
+						fdata->string_array_element_number=0;
 						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY;
 						break;
 
@@ -245,67 +244,67 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
-						fdata->submessage_state->is_submessage_array=false;
-						fdata->submessage_state[fdata->current_submessage_depth].parent_message_start=fdata->msg_storage;
-						fdata->msg_storage=fdata->msg_storage+fdata->memory_offsets[++fdata->current_memory_offset];
-						fdata->submessage_state[fdata->current_submessage_depth].is_submessage_array=false;
-						++fdata->current_buildup_field;
-						++fdata->current_submessage_depth;
+						fdata->submessage_state_array->is_submessage_array=false;
+						fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
+						fdata->msg_storage=fdata->msg_storage+fdata->memory_offset_array[++fdata->memory_offset_current_element];
+						fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=false;
+						++fdata->buildup_type_current_field;
+						++fdata->submessage_depth;
 						break;
 
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY:
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL:
-						fdata->submessage_state[fdata->current_submessage_depth].is_submessage_array=true;
-						fdata->submessage_state[fdata->current_submessage_depth].submessage_buildup_start=fdata->current_buildup_field+1; //Message begin;
-						fdata->submessage_state[fdata->current_submessage_depth].submessage_offset_start=fdata->current_memory_offset+3; //point to first variable of struct
-						fdata->submessage_state[fdata->current_submessage_depth].parent_message_start=fdata->msg_storage;
-						fdata->submessage_state[fdata->current_submessage_depth].submessage_byte_size=fdata->submessage_sizes[++fdata->current_submessage_size];
+						fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=true;
+						fdata->submessage_state_array[fdata->submessage_depth].submessage_buildup_start=fdata->buildup_type_current_field+1; //Message begin;
+						fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start=fdata->memory_offset_current_element+3; //point to first variable of struct
+						fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
+						fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start=fdata->submessage_size_array[++fdata->submessage_size_current_element];
 
-						if(fdata->buildup[fdata->current_buildup_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
+						if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 						{
-							fdata->submessage_state[fdata->current_submessage_depth].is_dynamic=true;
-							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->submessage_state[fdata->current_submessage_depth].remaining_submessages,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
+							fdata->submessage_state_array[fdata->submessage_depth].is_dynamic=true;
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->submessage_state_array[fdata->submessage_depth].remaining_submessages,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 						}
 						else
 						{
-							fdata->submessage_state[fdata->current_submessage_depth].is_dynamic=false;
+							fdata->submessage_state_array[fdata->submessage_depth].is_dynamic=false;
 						}
 						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY;
 						break;
 
 					case ROS_MSG_BUILDUP_TYPE_MESSAGE_END:
-						if(fdata->current_submessage_depth > 0)
+						if(fdata->submessage_depth > 0)
 						{
-							if(fdata->submessage_state->is_submessage_array)
+							if(fdata->submessage_state_array->is_submessage_array)
 							{
-								fdata->submessage_state->remaining_submessages--;
-								if(fdata->submessage_state>0)
+								fdata->submessage_state_array->remaining_submessages--;
+								if(fdata->submessage_state_array>0)
 								{
-									fdata->msg_storage+=fdata->submessage_state[fdata->current_submessage_depth-1].submessage_byte_size;
-									fdata->current_buildup_field=fdata->submessage_state[fdata->current_submessage_depth-1].submessage_buildup_start;
-									fdata->current_memory_offset=fdata->submessage_state[fdata->current_submessage_depth-1].submessage_offset_start;
+									fdata->msg_storage+=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_byte_size;
+									fdata->buildup_type_current_field=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_buildup_start;
+									fdata->memory_offset_current_element=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_offset_start;
 								}
 								else
 								{
-									if(fdata->submessage_state[0].skip_submessages>0)
+									if(fdata->submessage_state_array[0].skip_submessages>0)
 									{
 										fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
-										fdata->skip_items=fdata->submessage_state[0].skip_submessages*fdata->submessage_state[0].submessage_byte_size;
+										fdata->builtin_array_elements_to_skip=fdata->submessage_state_array[0].skip_submessages*fdata->submessage_state_array[0].submessage_byte_size;
 									}
 									else
 									{
-										fdata->msg_storage=fdata->submessage_state[fdata->current_submessage_depth-1].parent_message_start;
-										++fdata->current_buildup_field;
-										--fdata->current_submessage_depth;
+										fdata->msg_storage=fdata->submessage_state_array[fdata->submessage_depth-1].parent_message_start;
+										++fdata->buildup_type_current_field;
+										--fdata->submessage_depth;
 									}
 								}
 							}
 							else
 							{
-								fdata->msg_storage=fdata->submessage_state[fdata->current_submessage_depth-1].parent_message_start;
-								++fdata->current_buildup_field;
-								--fdata->current_submessage_depth;
+								fdata->msg_storage=fdata->submessage_state_array[fdata->submessage_depth-1].parent_message_start;
+								++fdata->buildup_type_current_field;
+								--fdata->submessage_depth;
 							}
 						}
 						else
@@ -321,21 +320,21 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 				if(basic_size!=0)
 				{
-						++fdata->current_buildup_field;
-						++fdata->current_memory_offset;
-					if(fdata->builtin_array)//is it a array?
+						++fdata->buildup_type_current_field;
+						++fdata->memory_offset_current_element;
+					if(fdata->builtin_is_array)//is it a array?
 					{
-						fdata->builtin_array=false;
-						if(fdata->skip_items)
+						fdata->builtin_is_array=false;
+						if(fdata->builtin_array_elements_to_skip)
 						{
-							fdata->skip_items*=basic_size;
+							fdata->builtin_array_elements_to_skip*=basic_size;
 							fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 						}
-						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset-(2+fdata->dyn_array)]+fdata->memory_offsets[fdata->current_memory_offset],basic_size*fdata->builtin_array_size,0,basic_byteorder,0,basic_size);
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element-(2+fdata->builtin_is_dyn_array)]+fdata->memory_offset_array[fdata->memory_offset_current_element],basic_size*fdata->builtin_array_size,0,basic_byteorder,0,basic_size);
 					}
 					else
 					{
-						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset],basic_size,0,basic_byteorder,0,basic_size);
+						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element],basic_size,0,basic_byteorder,0,basic_size);
 					}
 				}
 
@@ -349,43 +348,43 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY:
 			{
 				size_t* size=(size_t*)(fdata->msg_storage+
-						fdata->memory_offsets[fdata->current_memory_offset+1]+ //struct
-						fdata->memory_offsets[fdata->current_memory_offset+2]); //size 2 struct
+						fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ //struct
+						fdata->memory_offset_array[fdata->memory_offset_current_element+2]); //size 2 struct
 
 				int8_t *data;
 
 				// DYNAMIC ARRAY
-				if(fdata->buildup[fdata->current_buildup_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
+				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 				{
 					bool *oversize=(bool*)(fdata->msg_storage+
-							fdata->memory_offsets[fdata->current_memory_offset+1]+ //struct
-							fdata->memory_offsets[fdata->current_memory_offset+3]); //oversize 2 struct
-					fdata->submessage_state[fdata->current_submessage_depth].submessage_offset_start+=1; //add one because of the oversize field
+							fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ //struct
+							fdata->memory_offset_array[fdata->memory_offset_current_element+3]); //oversize 2 struct
+					fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start+=1; //add one because of the oversize field
 
-					if(fdata->submessage_state->remaining_submessages>fdata->array_lengths[fdata->current_array_length+1])
+					if(fdata->submessage_state_array->remaining_submessages>fdata->array_length_array[fdata->array_length_current_element+1])
 					{
-						fdata->submessage_state->skip_submessages=fdata->submessage_state->remaining_submessages-fdata->array_lengths[fdata->current_array_length+1];
-						fdata->submessage_state->remaining_submessages=fdata->array_lengths[fdata->current_array_length+1];
+						fdata->submessage_state_array->skip_submessages=fdata->submessage_state_array->remaining_submessages-fdata->array_length_array[fdata->array_length_current_element+1];
+						fdata->submessage_state_array->remaining_submessages=fdata->array_length_array[fdata->array_length_current_element+1];
 					}
 					else
 					{
-						fdata->submessage_state->skip_submessages=0;
+						fdata->submessage_state_array->skip_submessages=0;
 					}
-					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]+ //struct
-							fdata->memory_offsets[fdata->current_memory_offset+4]); //data[0]
-					fdata->current_memory_offset+=4;
+					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ //struct
+							fdata->memory_offset_array[fdata->memory_offset_current_element+4]); //data[0]
+					fdata->memory_offset_current_element+=4;
 				}
 				else //STATIC ARRAY
 				{
-					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]+ //struct
-									    fdata->memory_offsets[fdata->current_memory_offset+3]); //data[0]
-					*size=fdata->array_lengths[++fdata->current_array_length];
-					fdata->submessage_state->remaining_submessages=*size;
-					fdata->current_memory_offset+=3;
+					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ //struct
+									    fdata->memory_offset_array[fdata->memory_offset_current_element+3]); //data[0]
+					*size=fdata->array_length_array[++fdata->array_length_current_element];
+					fdata->submessage_state_array->remaining_submessages=*size;
+					fdata->memory_offset_current_element+=3;
 				}
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
-				fdata->current_buildup_field++;
-				fdata->current_submessage_depth++;
+				fdata->buildup_type_current_field++;
+				fdata->submessage_depth++;
 				break;
 			}
 
@@ -397,54 +396,54 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				bool *oversize;
 				int8_t *str_data;
 
-				if(!fdata->builtin_array) //Is no array
+				if(!fdata->builtin_is_array) //Is no array
 				{
 					//Adresses
-					fdata->current_buildup_field++;
-					fdata->current_array_length++;
-					strct=fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1];
-					size=(uint32_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+2]);
-					oversize=(bool *)(strct+fdata->memory_offsets[fdata->current_memory_offset+3]);
-					str_data=(int8_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+4]);
-					fdata->current_memory_offset+=4;
+					fdata->buildup_type_current_field++;
+					fdata->array_length_current_element++;
+					strct=fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1];
+					size=(uint32_t *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+2]);
+					oversize=(bool *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+3]);
+					str_data=(int8_t *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+4]);
+					fdata->memory_offset_current_element+=4;
 				}
 				else //is array of strings
 				{
 
-					if(fdata->string_array_item_number == 0) //is this the start of the array?
+					if(fdata->string_array_element_number == 0) //is this the start of the array?
 					{
-						fdata->current_array_length++;	  //Select the length of the string array
-						fdata->current_submessage_size++; //Select the submessage size
+						fdata->array_length_current_element++;	  //Select the length of the string array
+						fdata->submessage_size_current_element++; //Select the submessage size
 
-						fdata->string_skip=fdata->skip_items;
-						fdata->string_array_item_size=fdata->submessage_sizes[fdata->current_submessage_size];
+						fdata->string_array_elements_to_skip=fdata->builtin_array_elements_to_skip;
+						fdata->string_array_element_size=fdata->submessage_size_array[fdata->submessage_size_current_element];
 					}
 					strct=fdata->msg_storage
-						  +fdata->memory_offsets[fdata->current_memory_offset-2] //Array struct
-						  +fdata->memory_offsets[fdata->current_memory_offset+1] //data start
-						  +(fdata->string_array_item_size*fdata->string_array_item_number); //Size of string struct * items
+						  +fdata->memory_offset_array[fdata->memory_offset_current_element-2] //Array struct
+						  +fdata->memory_offset_array[fdata->memory_offset_current_element+1] //data start
+						  +(fdata->string_array_element_size*fdata->string_array_element_number); //Size of string struct * items
 
-					size=(uint32_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+2]);
-					oversize=(bool *)(strct+fdata->memory_offsets[fdata->current_memory_offset+3]);
-					str_data=(int8_t *)(strct+fdata->memory_offsets[fdata->current_memory_offset+4]);
+					size=(uint32_t *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+2]);
+					oversize=(bool *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+3]);
+					str_data=(int8_t *)(strct+fdata->memory_offset_array[fdata->memory_offset_current_element+4]);
 
-					if(fdata->string_array_item_number < fdata->builtin_array_size)
+					if(fdata->string_array_element_number < fdata->builtin_array_size)
 					{
-						fdata->string_array_item_number++;
+						fdata->string_array_element_number++;
 					}
 					else
 					{
-						if(fdata->string_skip>0)
+						if(fdata->string_array_elements_to_skip>0)
 						{
-							fdata->string_skip--;
-							fdata->skip_items=4+fdata->string_size; // size + length
+							fdata->string_array_elements_to_skip--;
+							fdata->builtin_array_elements_to_skip=4+fdata->string_size; // size + length
 							fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 						}
 						else //Goto next message field
 						{
-							fdata->builtin_array=false;
-							fdata->current_buildup_field++;   //Select the next buildup field
-							fdata->current_memory_offset+=4;
+							fdata->builtin_is_array=false;
+							fdata->buildup_type_current_field++;   //Select the next buildup field
+							fdata->memory_offset_current_element+=4;
 							fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
 						}
 						break;
@@ -454,14 +453,14 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 
 
-				if(fdata->string_size>(fdata->array_lengths[fdata->current_array_length])) //Check if the reserved size is too small (-1 cause of terminator '\0')
+				if(fdata->string_size>(fdata->array_length_array[fdata->array_length_current_element])) //Check if the reserved size is too small (-1 cause of terminator '\0')
 				{
 					fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
 					//Size = maximum length -1 (terminator)
-					*size=fdata->array_lengths[fdata->current_array_length];
+					*size=fdata->array_length_array[fdata->array_length_current_element];
 					*oversize=true;
 					//bytes to skip
-					fdata->skip_items=fdata->string_size-(fdata->array_lengths[fdata->current_array_length]);
+					fdata->builtin_array_elements_to_skip=fdata->string_size-(fdata->array_length_array[fdata->array_length_current_element]);
 				}
 				else
 				{
@@ -477,44 +476,44 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_SKIP_BYTES: //skipping bytes of an oversized dynamic array ...
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
-				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->skip_items);
+				SEBS_PARSE_SKIP_INIT(pdata,fdata->skip,fdata->builtin_array_elements_to_skip);
 				break;
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY:
 			{
-				uint32_t *size=(uint32_t*)(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]/*struct base offset*/
-				                                 +fdata->memory_offsets[fdata->current_memory_offset+2])           /*oversize offset*/;
-				bool *oversize=(bool *)(fdata->msg_storage+fdata->memory_offsets[fdata->current_memory_offset+1]   /*struct base offset*/
-												            +fdata->memory_offsets[fdata->current_memory_offset+3])/*oversize offset*/;
-				fdata->current_array_length++; //next array length
-				fdata->builtin_array=true;
-				if(fdata->buildup[fdata->current_buildup_field]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
+				uint32_t *size=(uint32_t*)(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]/*struct base offset*/
+				                                 +fdata->memory_offset_array[fdata->memory_offset_current_element+2])           /*oversize offset*/;
+				bool *oversize=(bool *)(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]   /*struct base offset*/
+												            +fdata->memory_offset_array[fdata->memory_offset_current_element+3])/*oversize offset*/;
+				fdata->array_length_current_element++; //next array length
+				fdata->builtin_is_array=true;
+				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
 				{
-					fdata->dyn_array=true;
-					fdata->current_memory_offset+=3;//increase memory offset to oversize
-					if(fdata->builtin_array_size>fdata->array_lengths[fdata->current_array_length])
+					fdata->builtin_is_dyn_array=true;
+					fdata->memory_offset_current_element+=3;//increase memory offset to oversize
+					if(fdata->builtin_array_size>fdata->array_length_array[fdata->array_length_current_element])
 					{
 						*oversize=true;
-						fdata->skip_items=fdata->builtin_array_size-fdata->array_lengths[fdata->current_array_length]; //here we add only the number of entries to skip bytes!!!
-						fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
+						fdata->builtin_array_elements_to_skip=fdata->builtin_array_size-fdata->array_length_array[fdata->array_length_current_element]; //here we add only the number of entries to skip bytes!!!
+						fdata->builtin_array_size=fdata->array_length_array[fdata->array_length_current_element];
 					}
 					else
 					{
 						*oversize=false;
-						fdata->skip_items=0;
+						fdata->builtin_array_elements_to_skip=0;
 					}
 				}
 				else
 				{
-					fdata->dyn_array=false;
-					fdata->current_memory_offset+=2;//increase memory offset to size
-					fdata->builtin_array_size=fdata->array_lengths[fdata->current_array_length];
-					fdata->skip_items=0;
+					fdata->builtin_is_dyn_array=false;
+					fdata->memory_offset_current_element+=2;//increase memory offset to size
+					fdata->builtin_array_size=fdata->array_length_array[fdata->array_length_current_element];
+					fdata->builtin_array_elements_to_skip=0;
 				}
 
 				*size=fdata->builtin_array_size;
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
-				fdata->current_buildup_field++; //next array length//Next buildup field for type ....
+				fdata->buildup_type_current_field++; //next array length//Next buildup field for type ....
 			}
 				break;
 

@@ -33,6 +33,7 @@
 #define SEBS_PARSE_ROS_H_
 
 #include <endian.h>
+#include <rosc/system/types.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skip.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>
@@ -52,13 +53,13 @@
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_ros;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.mode=SEBS_PARSE_ROS_MODE_BINARY;\
-		DATA_STORAGE.buildup=BUILDUP;\
-		DATA_STORAGE.submessage_sizes=SUBSIZES;\
-		DATA_STORAGE.array_lengths=ARRAY_LENGTHS;\
-		DATA_STORAGE.memory_offsets=MEM_OFFSETS;\
+		DATA_STORAGE.buildup_type_array=BUILDUP;\
+		DATA_STORAGE.submessage_size_array=SUBSIZES;\
+		DATA_STORAGE.array_length_array=ARRAY_LENGTHS;\
+		DATA_STORAGE.memory_offset_array=MEM_OFFSETS;\
 		DATA_STORAGE.message_definition=MSG_DEF;\
 		DATA_STORAGE.msg_storage=MSG_STORE;\
-		DATA_STORAGE.submessage_state=ARRAY_STATES;\
+		DATA_STORAGE.submessage_state_array=ARRAY_STATES;\
 		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 
@@ -129,40 +130,40 @@ typedef struct
 		float32_t float32;
 	}parsed_value;
 
-	uint32_t skip_items;  //!< bytes to skip when oversize
+	
+	/*
+	 * ROSMSG Variables
+	 */
 
-	uint32_t string_size; //!< stores the size for a string
+	bool     builtin_is_array; 				 /**< true if the current field is a builtin type array */
+	bool     builtin_is_dyn_array;			 /**< true if the current array is a dynamic one */
+	uint32_t builtin_array_size; 			 /**< stores the current array size of a builtin type array */
+	uint32_t builtin_array_elements_to_skip; /**< stores the number of bytes to skip when a builtin array is bigger than memory */
 
-	bool builtin_array;
-	bool dyn_array;
-	uint32_t builtin_array_size;
+	uint32_t string_size; 					/**<  stores the size for a string */
+	uint32_t string_array_element_number;   /**<  stores the number of strings in an string array */
+	uint32_t string_array_element_size;     /**<  stores the number of elements in an string array */
+	uint32_t string_array_elements_to_skip; /**<  stores the number of strings to skip in an dynamic string array*/
+	void *string_array_memory;	    		/**<  stores the location of the memory of the string array */
 
-	uint32_t string_array_item_number; //!< stores the number of a string array
-	uint32_t string_array_item_size; //!< stores the size of a string array
-	uint32_t string_skip; //!< number of strings to skip
-	void *string_array_start;	//!< stores the beginning of a string array
+	const ros_buildup_type_t*  buildup_type_array;		/**< contains the message bildup information*/
+	uint32_t buildup_type_current_field;				/**< stores array element number of the current buildup information*/
 
+	const size_t* submessage_size_array;		/**< contains the information for the size of submessages and string array elements*/
+	uint32_t submessage_size_current_element;	/**< contains the number of the current element*/
 
+	rosc_msg_submessage_state_t *submessage_state_array;	/**< this array contains data for submessages or submessage arrays*/
+	uint32_t submessage_depth;								/**< this is the current message depth, which is used to access data inside submessage_state array*/
 
-	const ros_buildup_type_t*  buildup;
-	uint32_t current_buildup_field;
+	const size_t* array_length_array;			/**< this array contains all array lengths of the current message */
+	uint32_t array_length_current_element;		/**< this is the number of the current array length */
 
-	uint32_t current_submessage_depth;
+	const size_t* memory_offset_array;			/**< this array contains all offsets to the msg_storage or to the current struct */
+	uint32_t memory_offset_current_element;		/**< this points to the current element in the memory offset array */
 
-	const size_t* submessage_sizes;
-	uint32_t current_submessage_size;
+	const int8_t* message_definition;		/**< this points to the message definition string*/
 
-	const size_t* array_lengths;
-	uint32_t current_array_length;
-
-	const size_t* memory_offsets;
-	uint32_t current_memory_offset;
-
-	rosc_msg_submessage_state_t *submessage_state;
-	uint32_t current_array_depth;
-
-	const int8_t* message_definition;
-	int8_t* msg_storage;
+	int8_t* msg_storage;					/**< this points to the place in memory where the message will be stored*/
 
 	/**
 	 * Submode data storage
