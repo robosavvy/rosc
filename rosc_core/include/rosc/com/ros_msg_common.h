@@ -34,6 +34,9 @@
 
 #include <rosc/system/types.h>
 
+/**
+ * These are the values to specify a message buildup
+ */
 typedef enum
 {
 	ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY,
@@ -76,33 +79,43 @@ typedef enum
 	ROS_HANDLER_TYPE_ROSRPC_SERVER,
 }ros_type_t;
 
+/**
+ * callback funktion type
+ * @param[in] __msg pointer to the message memory
+ */
 typedef void (*ros_callbackFkt_t)(const void* const __msg);
 
+/**
+ * If the message contains a submessage or submessage array, a array of this is used to store the information
+ * for processing it.
+ */
 typedef struct
 {
 	bool is_submessage_array;
-	bool is_dynamic;
-	uint32_t submessage_buildup_start; //!< the start of the submessage definition of the submessage when inside an array
-	uint32_t submessage_offset_start; //!< the start of the submessage offset
-	uint32_t remaining_submessages; //!< stores the number of remaining submessages when in an array
-	uint32_t skip_submessages; //!< number of submessages which need to be skipped
-	size_t submessage_byte_size; //!< stores the message size of a submessage array
-	void * parent_message_start; //!< stores the start of the previous message, so it can be restored when going back up.
+	bool is_dynamic_array;
+	uint32_t submessage_buildup_start; /**<  the start of the submessage definition of the submessage when inside an array */
+	uint32_t submessage_offset_start;  /**<  the start of the submessage offsets of a submessage */
+	size_t 	 submessage_byte_size; 	   /**<  stores the message size of a submessage array*/
+	uint32_t submessages_remaining;    /**<  stores the number of remaining submessages when in an array*/
+	uint32_t submessages_to_skip;      /**<  number of submessages which need to be skipped*/
+	void * parent_message_start;       /**<  stores the start of the previous message, so it can be restored when going back up.*/
 }rosc_msg_submessage_state_t;
 
-
+/**
+ * This is the initial data object for the ros handler
+ */
 typedef struct
 {
-	const int8_t* iface_name;
-	const ros_type_t ros_type;
-	const ros_buildup_type_t* const buildup;
-	const size_t* const submessage_sizes;
-	const size_t* const array_lengths;
-	const size_t* const memory_offsets;
-	const int8_t* const message_definition;
-	const int8_t* const md5sum;
-	const size_t submessage_states_offset;
-	const ros_callbackFkt_t callback;
+	const int8_t* iface_name;	/**< the name of the interface **/
+	const ros_type_t ros_type;	/**< the interface type */
+	const ros_buildup_type_t* const buildup;/**< the buildup information */
+	const size_t* const submessage_sizes;   /**< array with sizes of the submessage or strings in arrays*/
+	const size_t* const array_lengths;      /**< array with the legthgs of arrays inside the message*/
+	const size_t* const memory_offsets;		/**< array with memory offsets*/
+	const int8_t* const message_definition; /**< message definition string*/
+	const int8_t* const md5sum;				/**< message checksum */
+	const size_t submessage_states_offset;	/**< offset to the submessage_state_array */
+	const ros_callbackFkt_t callback;		/**< the callback function for that interface */
 }ros_msg_init_t;
 
 #endif /* ROS_MSG_COMMON_H_ */
