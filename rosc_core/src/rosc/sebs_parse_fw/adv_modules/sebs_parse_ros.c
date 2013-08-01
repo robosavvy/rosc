@@ -159,6 +159,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				mycallback(fdata->msg_storage);
 				switch(fdata->buildup[fdata->current_buildup_field])
 				{
+					case ROS_MSG_BUILDUP_TYPE_BYTE:
 					case ROS_MSG_BUILDUP_TYPE_BOOL:
 					case ROS_MSG_BUILDUP_TYPE_CHAR:
 					case ROS_MSG_BUILDUP_TYPE_INT8:
