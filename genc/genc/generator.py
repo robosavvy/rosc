@@ -57,8 +57,8 @@ class msg_static(object):
     __msg_static_substructure_components=[] #current component calls (c)
     __msg_static_substructure_sizes=[] #substructure component list for creating size array
     __msg_static_member_offsets=[] #message member memory offsets
-    __array_depth=0 #current array depth of the message
-    __max_array_depth=0 #maximum array depth of the message
+    __current_submessage_depth=0 #current array depth of the message
+    __submessage_depth=0 #maximum array depth of the message
     __message_struct_indent_depth=0 #current message depth for structs
     __message_buildup_indent_depth=0
     
@@ -70,6 +70,9 @@ class msg_static(object):
         self.__search_path=search_path
         self.__struct_define_recursive_create(msg_spec)
     
+    
+    def get_submessage_depth(self):
+        return self.__submessage_depth
     
     def get_static_member_offsets(self):
         return self.__msg_static_member_offsets
@@ -303,7 +306,7 @@ class msg_static(object):
         elif field.base_type == 'string':
            output= self.__add_tabs(self.__message_struct_indent_depth) + 'uint32_t size;' + '\n'
            output+= self.__add_tabs(self.__message_struct_indent_depth) + 'bool oversize;' + '\n'
-           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'];' + '\n' 
+           output+= self.__add_tabs(self.__message_struct_indent_depth) + 'char str_data['  "MAX_SIZE_STRING" + prev_names + "_" + field.name +'+1];' + '\n' 
            self.__msg_static_size_fields.append("MAX_SIZE_STRING" + prev_names + "_" + field.name)
            self.__msg_static_struct+=output
 
@@ -337,9 +340,9 @@ class msg_static(object):
                                
                 #####ARRAY DEPTH SIZE DETERMINATION#####
                 if (field.is_array):
-                    self.__array_depth+=1 
-                    if (self.__array_depth+1 > self.__max_array_depth):
-                        self.__max_array_depth+=1
+                    self.__current_submessage_depth+=1 
+                    if (self.__current_submessage_depth+1 > self.__submessage_depth):
+                        self.__submessage_depth+=1
                 ########################################
                 
 
@@ -353,26 +356,11 @@ class msg_static(object):
                 
                 #####ARRAY DEPTH SIZE DETERMINATION#####
                 if(field.is_array):
-                    self.__array_depth-=1
+                    self.__current_submessage_depth-=1
                 ########################################   
             else:                
                 self.__struct_define_add_variable(field, prev_names_new)
 
-                if(field.is_array):
-                    #####ARRAY DEPTH SIZE DETERMINATION###################
-                    if(field.base_type == 'string'): #Stringarray ...
-                        if (self.__array_depth+2 >self.__max_array_depth):
-                            self.__max_array_depth=self.__array_depth+2
-                    else:
-                        if (self.__array_depth+1 >self.__max_array_depth):
-                            self.max_array_depth=self.__array_depth+1
-                    #######################################################
-                    
-                #####ARRAY DEPTH SIZE DETERMINATION###################               
-                if(field.base_type == 'string'):#String type, which is actually a array itself
-                    if (self.__array_depth+1 >self.__max_array_depth):
-                        self.max_array_depth=self.__array_depth+1
-                #######################################################
         self.__msg_buildup_array.append((self.__message_buildup_indent_depth,'ROS_MSG_BUILDUP_TYPE_MESSAGE_END',1))
         self.__message_buildup_indent_depth-=1
         self.__padding_close_bracket()

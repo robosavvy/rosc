@@ -46,7 +46,6 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
 
 typedef enum
 {

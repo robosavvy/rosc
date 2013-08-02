@@ -29,6 +29,7 @@
  *  ros_handler.c created by Christian Holl
  */
 
+#include <rosc/system/types.h>
 #include <rosc/com/ros_handler.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/status.h>
@@ -37,59 +38,144 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_handler_data_t *hdata=pdata->handler_data;
 	ros_msg_init_t *idata=(ros_msg_init_t*)pdata->init_data;
+	sebs_parse_ros_data_t *fdata=(sebs_parse_ros_data_t *)pdata->current_parser.parser_data;
+
 
 	if(pdata->handler_init)
 	{
 		DEBUG_PRINT_STR("ROS HANDLER INIT");
 		pdata->handler_init=false;
+		pdata->function_init=true;
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
 		pdata->security_len=1024;
-		hdata->ros.init_data=idata;
-
-		switch(idata->handler_type)
-		{
-			case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
-				break;
-			case ROS_HANDLER_TYPE_ROSRPC_SERVER:
-				break;
-
-			case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
-				break;
-			case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
-				break;
-			default:
-				ROSC_FATAL("ros handler: Not a ros handler type!");
-				break;
-		}
-
-
-		SEBS_PARSE_ROS_INIT(pdata,hdata->ros);
+		hdata->hstate=ROS_HANDLER_STATE_NONE;
+		hdata->iface_ok=false;
+		hdata->md5sum_ok=false;
+		SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
 
 
 
-
-
-
-
-	switch(*ros_event)
+	switch(hdata->hstate)
 	{
-		case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
-			DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
-			DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
-			break;
-		case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
-			DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+		case ROS_HANDLER_STATE_CHECK_MD5SUM:
+			if (hdata->ros.seekstring.result==0)
+			{
+				DEBUG_PRINT_STR("MD5SUM OK!");
+				hdata->md5sum_ok=false;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("MD5SUM DOES NOT MATCH!!!!");
+			}
+			hdata->ros.field_length-=hdata->ros.seekstring.curChrPos;
+			hdata->ros.message_length-=hdata->ros.seekstring.curChrPos;
 			break;
 
-		default: //TODO check
+		case ROS_HANDLER_STATE_CHECK_IFACE_NAME:
+			if (hdata->ros.seekstring.result==0)
+			{
+				DEBUG_PRINT_STR("IFACE NAME OK!");
+				hdata->iface_ok=false;
+			}
+			else
+			{
+				DEBUG_PRINT_STR("IFACE NAME DOES NOT MATCH!!!!");
+			}
+			hdata->ros.field_length-=hdata->ros.seekstring.curChrPos;
+			hdata->ros.message_length-=hdata->ros.seekstring.curChrPos;
+			break;
+
+		case ROS_HANDLER_STATE_NONE:
+			switch(*ros_event)
+			{
+				case SEBS_PARSE_ROS_EVENT_RPC_FIELD_START:
+					DEBUG_PRINT(STR,"Field",ros_field_strings[hdata->ros.rpc_field_id]);
+					DEBUG_PRINT(INT,"Field Content Length", hdata->ros.field_length);
+
+
+					/* ********************
+						  ROS RPC INFO
+					 **********************/
+
+					switch(hdata->ros.rpc_field_id)
+					{
+						case SEBS_PARSE_ROS_FIELD_MD5SUM:
+							switch(idata->ros_type)
+							{
+								case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+								case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+								case ROS_HANDLER_TYPE_SERVICE_CLIENT:
+								case ROS_HANDLER_TYPE_SERVICE_SERVER:
+									hdata->hstate=ROS_HANDLER_STATE_CHECK_MD5SUM;
+									SEBS_PARSE_SEEKSTRING_INIT(pdata,hdata->ros.seekstring,(const char**)&idata->md5sum, 1, "",true, hdata->ros.field_length);
+								break;
+
+								default:
+									break;
+							}
+							break;
+
+						case SEBS_PARSE_ROS_FIELD_SERVICE:
+						case SEBS_PARSE_ROS_FIELD_TOPIC:
+							switch(idata->ros_type)
+							{
+								case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+								case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+								case ROS_HANDLER_TYPE_SERVICE_CLIENT:
+								case ROS_HANDLER_TYPE_SERVICE_SERVER:
+									hdata->hstate=ROS_HANDLER_STATE_CHECK_IFACE_NAME;
+									SEBS_PARSE_SEEKSTRING_INIT(pdata,hdata->ros.seekstring,(const char**)&idata->iface_name, 1, "",true, hdata->ros.field_length);
+								break;
+							}
+					}
+
+					break;
+				case SEBS_PARSE_ROS_EVENT_MESSAGE_END:
+					DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
+					switch(idata->ros_type)
+					{
+						case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
+						case ROS_HANDLER_TYPE_ROSRPC_SERVER:
+
+							break;
+
+						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+							break;
+
+						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+							DEBUG_PRINT_STR("ROSRPC END->BINARY PARSING...")
+							switch(fdata->mode)
+							{
+								case SEBS_PARSE_ROS_MODE_BINARY:
+										idata->callback(fdata->msg_storage);
+										SEBS_PARSE_ROS_INIT_MSG(pdata,hdata->ros,idata->buildup,idata->submessage_sizes,idata->array_lengths,idata->memory_offsets,idata->message_definition,pdata->additional_storage,pdata->additional_storage+idata->submessage_states_offset);
+									break;
+								case SEBS_PARSE_ROS_MODE_ROSRPC:
+										SEBS_PARSE_ROS_INIT_MSG(pdata,hdata->ros,idata->buildup,idata->submessage_sizes,idata->array_lengths,idata->memory_offsets,idata->message_definition,pdata->additional_storage,pdata->additional_storage+idata->submessage_states_offset);
+									break;
+							}
+
+							break;
+						default:
+							ROSC_FATAL("ros handler: Not a ros handler type!");
+							break;
+					}
+
+
+
+
+					break;
+
+				default: //TODO check
+					break;
+			}
 			break;
 	}
-
-
+	hdata->hstate=ROS_HANDLER_STATE_NONE;
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

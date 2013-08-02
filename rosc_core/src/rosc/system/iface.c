@@ -37,7 +37,6 @@ static iface_t interface_list_hub;
 void rosc_init_interface_list()
 {
 	interface_list_hub.isListHub=true;
-	interface_list_hub.name=0;
 	interface_list_hub.next=0;
 }
 

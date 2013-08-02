@@ -26,25 +26,38 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  sebs_parse_skipwholemessage.c created by Christian Holl
+ *  sebs_parse_skip.h created by Christian Holl
  */
 
+#ifndef SEBS_PARSE_SKIP_H_
+#define SEBS_PARSE_SKIP_H_
 
-#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skipwholemessage.h>
+#include <rosc/system/types.h>
+#include <rosc/debug/debug_out.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
-sebs_parse_return_t sebs_parse_skipwholemessage(sebs_parser_data_t* pdata)
+#define SEBS_PARSE_SKIP_INIT(PARSER_DATA, DATA_STORAGE, LEN)\
+				PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_parse_skip;\
+				PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+				DATA_STORAGE.len=LEN;\
+				return (SEBS_PARSE_RETURN_INIT)
+
+
+typedef struct
 {
-	if(pdata->function_init)
-	{
-		pdata->function_init=false;
-
-	}
-	while(*pdata->len>0)
-	{
-		++*pdata->buf;
-		--*pdata->len;
-	}
-	return (SEBS_PARSE_RETURN_GO_AHEAD);
-}
+	uint32_t len;
+	uint32_t curPos;
+}sebs_parse_skip_data_t;
 
 
+/**
+ * This function skips a given amount of bytes
+ *
+ * @param buf A pointer to the storage of the buffer
+ * @param len The variable pointing to the length variable of the current buffer
+ * @param data the function data storage, must be initialized in the beginning!
+ * @return true when finished
+ */
+sebs_parse_return_t sebs_parse_skip(sebs_parser_data_t* pdata);
+
+#endif /* SEBS_PARSE_SKIP_H_ */

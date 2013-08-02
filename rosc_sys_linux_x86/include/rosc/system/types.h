@@ -35,7 +35,14 @@
 #include<inttypes.h>
 #include<stdint.h>
 #include<stdio.h>
-#include<stdbool.h>
+#include<rosc/system/spec.h>
+
+#ifndef bool
+	#define false 0
+	#define true 1
+	#define bool unsigned char
+#endif
+
 
 typedef float  float32_t;
 typedef double float64_t;

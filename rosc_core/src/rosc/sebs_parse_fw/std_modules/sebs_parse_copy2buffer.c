@@ -40,6 +40,7 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 	{
 		pdata->function_init=false;
 		fdata->cur_pos=0;
+		fdata->byteorder_pos=0;
 	}
 
 	const char *sep=fdata->endChrs;
@@ -70,15 +71,20 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 			}
 		}
 
-		if((fdata->cur_pos<(fdata->max_len-(!!fdata->is_string /*subtract one if string(for terminator)*/
-				))) && !isEndChar )
+		if((fdata->cur_pos<(fdata->max_len)) && !isEndChar )
 		{
 			if(correct==0)
 				buffer_c[fdata->cur_pos]=**pdata->buf;
 			else //Byte order correction
-				buffer_c[fdata->cur_pos+correct[fdata->cur_pos]]=**pdata->buf;
+			{
+				buffer_c[fdata->cur_pos+correct[fdata->byteorder_pos]]=**pdata->buf;
+				if(fdata->byteorder_pos < fdata->repeats && fdata->repeats!=0)
+					++fdata->byteorder_pos;
+				else
+					fdata->byteorder_pos=0;
+			}
 
-			fdata->cur_pos++;
+			++fdata->cur_pos;
 			++*pdata->buf;
 			--*pdata->len;
 		}
@@ -92,10 +98,17 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 			{
 				fdata->result=COPY2BUFFER_MAXLEN;
 			}
-			if(fdata->is_string)buffer_c[fdata->cur_pos]='\0';
-			return SEBS_PARSE_RETURN_FINISHED; //Finished!
+			if(fdata->is_string)buffer_c[fdata->cur_pos+1]='\0';
+
+			return (SEBS_PARSE_RETURN_FINISHED); //Finished!
 		}
 	}
+	if((fdata->cur_pos>=(fdata->max_len)))
+	{
+		return (SEBS_PARSE_RETURN_FINISHED);
+	}
+
+
 	return (SEBS_PARSE_RETURN_GO_AHEAD); //Not finished yet
 }
 

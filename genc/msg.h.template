@@ -52,7 +52,9 @@
 import genmsg.msgs 
 import gencpp
 import genmsg.msg_loader
+import genmsg.gentools
 import genc.generator
+
 
 msg_definition = gencpp.escape_message_definition(msg_definition)
 rosc_gen = genc.generator.msg_static(spec, search_path)
@@ -89,6 +91,8 @@ for field in spec.parsed_fields():
 rosc_name_pack=package + '__' + name
 rosc_pref= 'rosc_static_msg' 
 rosc_usertype = rosc_pref + '_user_def' + "__" + rosc_name_pack + "__ ## USER_TYPE ## _t"
+rosc_usertype_storage = rosc_pref + '_user_def_msg_storage' + "__" + rosc_name_pack + "__ ## USER_TYPE ## _t"
+rosc_static_submessage_state = "ROSC_STATIC_SUBMESSAGE_STATES_MEMORY_OFFSET__" + rosc_name_pack
 rosc_usertype_def = rosc_pref.upper() + '_USER_DEF' + "__" + rosc_name_pack
 rosc_buildup = rosc_pref + '_buildup'
 rosc_padding = rosc_pref + '_padding__' + rosc_name_pack
@@ -124,6 +128,16 @@ rosc_len = rosc_pref + '_array_size_list__' + rosc_name_pack
 @# Printing the struct ##
 @########################
 typedef @(rosc_gen.get_static_struct().replace('\n','\\\n'))@(rosc_usertype);\
+@##########################
+@# Memory Storage Struct ##
+@##########################
+typedef struct\
+{\
+    @(rosc_usertype) __msg;\
+@[ if rosc_gen.get_submessage_depth()>0 ]@
+    rosc_msg_submessage_state_t submessage_state[@(rosc_gen.get_submessage_depth())];\
+@[end if]@
+}@(rosc_usertype_storage);\
 @########################################
 @# Printing the array size information ##
 @########################################
@@ -158,10 +172,23 @@ const size_t @(rosc_pref)_memory_offsets__@(rosc_name_pack)__ ## USER_TYPE []=\
 @[ end if]@
 @[end for]\
 }
- 
 
+@##############################
+@# Static array state offset ##
+@##############################
+#define @(rosc_static_submessage_state)(USER_TYPE)\
+@[ if rosc_gen.get_submessage_depth()>0 ]@
+    offsetof(@(rosc_usertype_storage),submessage_state)
+@[else]@
+    0
+@[end if]@
+
+
+@##############################
+@# Buildup,Definition,MD5Sum ##
+@##############################
 #define @(rosc_pref.upper())_BUILDUP__@(rosc_name_pack)()\
-ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
+ros_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 {\
 @{first = True}@
 @[for (indent, entry, additionalreturn) in rosc_gen.get_static_buildup_array()]@
@@ -172,15 +199,16 @@ ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 @[ end if]@
 @[for i in range(indent)]    @[end for]@(entry)@
 @[end for]\
-}
-
+};\
+const int8_t  @(rosc_pref)_message_definition__@(rosc_name_pack)[]="@(msg_definition)";\
+const int8_t  @(rosc_pref)_md5sum__@(rosc_name_pack)[]= "@(genmsg.gentools.compute_md5(msg_context, spec))";
                                
                                     
 /* **************************************************
 ** Static subscriber topics memory size list entry **
 ****************************************************/
 #define ROSC_SIZE_LIST_ENTRY__@(rosc_name_pack)(USER_TYPE)\
-    @(rosc_usertype)  user_type_entry__@(rosc_name_pack)__ ## USER_TYPE;
+    @(rosc_usertype_storage)  user_type_entry__@(rosc_name_pack)__ ## USER_TYPE;
 
 /* **************************************
 ** Callback function head for usertype **
@@ -189,7 +217,7 @@ ros_msg_buildup_type_t @(rosc_pref)_buildup__@(rosc_name_pack)[]=\
 void CALLBACK_NAME(const void* const __msg)\
 {\
     const @(rosc_usertype)* const msg=(const @(rosc_usertype)* const) __msg;\
-
+ 
 
 
 

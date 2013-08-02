@@ -26,28 +26,30 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  sebs_parse_skipwholemessage.h created by Christian Holl
+ *  sebs_parse_skip.c created by Christian Holl
  */
 
-#ifndef SEBS_PARSE_SKIPWHOLEMESSAGE_H_
-#define SEBS_PARSE_SKIPWHOLEMESSAGE_H_
+#include <rosc/sebs_parse_fw/std_modules/sebs_parse_skip.h>
 
-#include <rosc/system/types.h>
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+//decrease stringlist len instead of fit_max
+sebs_parse_return_t sebs_parse_skip(sebs_parser_data_t* pdata)
+{
+	sebs_parse_skip_data_t *fdata =
+			(sebs_parse_skip_data_t *) pdata->current_parser.parser_data;
+	if (pdata->function_init)
+	{
+		pdata->function_init = false;
+		fdata->curPos=0;
+	}
 
-#define SEBS_PARSE_INIT_SKIPWHOLEMESSAGE(NEXT_PARSER_FUNC)\
-		NEXT_PARSER_FUNC=(parser_submode_function_t)&skipwholemessage;\
-		return (SEBS_PARSE_RETURN_INIT)
-
-/**
- * This function skips every incoming char which is in the buffer.
- * It's used for skipping the message in case of errors.
- *
- * @param buf A pointer to the storage of the buffer
- * @param len The variable pointing to the length variable of the current buffer
- * @param unused not used by this function it needs no data storage..
- * @return This function will only return false because it can be only stopped by reseting the whole message handling
- */
-sebs_parse_return_t sebs_parse_skipwholemessage(sebs_parser_data_t* pdata);
-
-#endif /* SEBS_PARSE_SKIPWHOLEMESSAGE_H_ */
+	while (*pdata->len > 0)
+	{
+		printf("skipping byte: %x \n ",(unsigned int)**pdata->buf);
+		++*pdata->buf;
+		--*pdata->len;
+		++fdata->curPos;
+		if(fdata->curPos >= fdata->len)
+			return (SEBS_PARSE_RETURN_FINISHED);
+	}
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
+}
