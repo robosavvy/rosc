@@ -257,7 +257,9 @@ t_nbi_sub_A:
 */
 int i;
 
-printf("______________________________________________\n\n\n");
+printf("\n\n______________________________________________\n");
+printf("____________________CALLBACK!_________________\n");
+printf("______________________________________________\n");
 printf("tbi_int8: %i\n",msg->tbi_int8);
 printf("tbi_int16: %i\n",msg->tbi_int16);
 printf("tbi_int32: %i\n",msg->tbi_int32);
