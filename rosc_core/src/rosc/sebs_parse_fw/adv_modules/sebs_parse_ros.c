@@ -44,14 +44,17 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	{
 		pdata->function_init = false;
 
+
 		switch(fdata->mode)
 		{
 			case SEBS_PARSE_ROS_MODE_ROSRPC:
 				fdata->state = SEBS_PARSE_ROSPRC_MESSAGE_LENGTH;
+				pdata->always_call_on_finish=false;
 				break;
 
 			case SEBS_PARSE_ROS_MODE_BINARY:
 				fdata->state = SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH;
+				pdata->always_call_on_finish=true;
 				break;
 		}
 
@@ -65,12 +68,14 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 		DEBUG_PRINT_STR("ROS PARSER INIT");
 	}
 
-	while (*pdata->len > 0
+
+	bool skipchar = false;
+	while ((*pdata->len > 0
 			&& (fdata->message_length > 0
 					|| fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH
 					|| fdata->state == SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH))
+					|| pdata->finish_call)
 	{
-		bool skipchar = false;
 
 		switch(fdata->state)
 		{
@@ -243,6 +248,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
 						fdata->msg_storage=fdata->msg_storage+fdata->memory_offset_array[++fdata->memory_offset_current_element];
 						fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=false;
+
+
 						++fdata->buildup_type_current_field;
 						++fdata->submessage_depth;
 						break;
@@ -253,7 +260,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						fdata->submessage_state_array[fdata->submessage_depth].submessage_buildup_start=fdata->buildup_type_current_field+1; /* Message begin; */
 						fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start=fdata->memory_offset_current_element+3;/* point to first variable of struct */
 						fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
-						fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start=fdata->submessage_size_array[++fdata->submessage_size_current_element];
+						fdata->submessage_state_array[fdata->submessage_depth].submessage_byte_size=fdata->submessage_size_array[++fdata->submessage_size_current_element];
 
 						if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 						{
@@ -273,7 +280,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 							if(fdata->submessage_state_array->is_submessage_array)
 							{
 								fdata->submessage_state_array->submessages_remaining--;
-								if(fdata->submessage_state_array>0)
+								if(fdata->submessage_state_array->submessages_remaining>0)
 								{
 									fdata->msg_storage+=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_byte_size;
 									fdata->buildup_type_current_field=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_buildup_start;
@@ -290,8 +297,9 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 									{
 										fdata->msg_storage=fdata->submessage_state_array[fdata->submessage_depth-1].parent_message_start;
 										++fdata->buildup_type_current_field;
-										--fdata->submessage_depth;
 									}
+									fdata->submessage_state_array->is_submessage_array=false;
+									fdata->submessage_depth--;
 								}
 							}
 							else
@@ -304,6 +312,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						else
 						{
 							DEBUG_PRINT_STR("END OF MESSAGE!");
+							while(1);
 						}
 						break;
 					}
@@ -515,9 +524,11 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			if (fdata->message_length == 0
 					&& fdata->state != SEBS_PARSE_ROSPRC_MESSAGE_LENGTH)
 			{
+
 				pdata->event = SEBS_PARSE_ROS_EVENT_MESSAGE_END;
 				DEBUG_PRINT_STR("ROSRPC MESSAGE END!");
 			}
+			skipchar = false;
 		}
 
 		if (pdata->event != SEBS_PARSE_EVENT_NONE)

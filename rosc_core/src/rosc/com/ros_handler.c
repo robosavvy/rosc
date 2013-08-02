@@ -29,6 +29,7 @@
  *  ros_handler.c created by Christian Holl
  */
 
+#include <rosc/system/types.h>
 #include <rosc/com/ros_handler.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/status.h>
