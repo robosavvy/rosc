@@ -104,7 +104,25 @@ typedef struct sebs_parser_data_t
 	void *init_data;
 
 
+	/**
+	 * If this is true the function initializer shall be called in the current function
+	 */
 	bool function_init;
+
+
+	/**
+	 * If this is finished and a subfunction returns with true, it will call the handler/function which called the current function,
+	 * even when the buffer is already finished.
+	 */
+	bool always_call_on_finish;
+
+
+	/**
+	 * This is set to one if the buffer is currently empty, but the current function is called because of a returning function
+	 * can be used to enter a loop even if the buffer is already finished.
+	 */
+	bool finish_call;
+
 
 	/**
 	 * This is the function with its data
