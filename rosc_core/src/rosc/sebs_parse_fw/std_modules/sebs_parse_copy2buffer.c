@@ -83,6 +83,7 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 				else
 					fdata->byteorder_pos=0;
 			}
+
 			++fdata->cur_pos;
 			++*pdata->buf;
 			--*pdata->len;
@@ -101,6 +102,10 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 
 			return (SEBS_PARSE_RETURN_FINISHED); //Finished!
 		}
+	}
+	if((fdata->cur_pos>=(fdata->max_len)))
+	{
+		return (SEBS_PARSE_RETURN_FINISHED);
 	}
 
 
