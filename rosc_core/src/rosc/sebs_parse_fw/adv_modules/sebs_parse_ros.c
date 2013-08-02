@@ -29,7 +29,7 @@
  *  sebs_parse_ros.c created by Christian Holl
  */
 
-extern void mycallback(const void* const __msg);
+//extern void mycallback(const void* const __msg);
 
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/debug/debug_out.h>
@@ -156,10 +156,10 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					const int8_t* basic_byteorder=0;
 					int8_t basic_repeat=0;
 
-					if(fdata->submessage_depth)
-					mycallback(fdata->submessage_state_array[0].parent_message_start);
-					else
-					mycallback(fdata->msg_storage);
+//					if(fdata->submessage_depth)
+//					mycallback(fdata->submessage_state_array[0].parent_message_start);
+//					else
+//					mycallback(fdata->msg_storage);
 					switch(fdata->buildup_type_array[fdata->buildup_type_current_field])
 					{
 						case ROS_MSG_BUILDUP_TYPE_BYTE:
@@ -311,8 +311,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 						}
 						else
 						{
-							DEBUG_PRINT_STR("END OF MESSAGE!");
-							while(1);
+							pdata->event=SEBS_PARSE_ROS_EVENT_MESSAGE_END;
+							return (SEBS_PARSE_RETURN_GO_AHEAD);
 						}
 						break;
 					}

@@ -408,7 +408,7 @@ printf("t_nbi_sub_A: \n");
 printf("size: %i\n",msg->t_nbi_sub_A.size);
 for (i = 0; i < msg->t_nbi_sub_A.size; ++i) {
 printf("tbi_tm_bool: %i\n",msg->t_nbi_sub_A.data[i].tbi_tm_bool);
-printf("tbi_tm_bool_addr: %lu\n",(unsigned long)&msg->t_nbi_sub_A.data[i].tbi_tm_bool);
+//printf("tbi_tm_bool_addr: %lu\n",(unsigned long)&msg->t_nbi_sub_A.data[i].tbi_tm_bool);
 
 printf("tbi_tm_int8: %i\n",msg->t_nbi_sub_A.data[i].tbi_tm_int8);
 }
