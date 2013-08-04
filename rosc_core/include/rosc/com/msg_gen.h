@@ -33,78 +33,58 @@
 #define MSG_GEN_H_
 
 #include <rosc/system/types.h>
+#include <rosc/system/ports.h>
 
 typedef enum
 {
-	MSG_GEN_TYPE_CHAR,  // char 2
-	MSG_GEN_TYPE_STRING_LIST, //list / string 3
-	MSG_GEN_TYPE_STRING_POINTER,
-	MSG_GEN_TYPE_TAG,    //list / string 3
-	MSG_GEN_TYPE_CLOSE_TAG, //list /string 3
-	MSG_GEN_TYPE_ROSRPC_FIELD, //list / string / string 4
-	MSG_GEN_TYPE_URL,// ipaddr / ipaddr / ipaddr/ ipaddr / port(2) 7
-	MSG_GEN_TYPE_FLOAT, // size
-	MSG_GEN_TYPE_INT,  // size
-	MSG_GEN_TYPE_UINT, //size
+	MSG_GEN_TYPE_WHOLE_LEN,
+	MSG_GEN_TYPE_CHAR,
+	MSG_GEN_TYPE_STRING,
+	MSG_GEN_TYPE_STRING_PTR,
+	MSG_GEN_TYPE_TAG,
+	MSG_GEN_TYPE_CLOSE_TAG,
+	MSG_GEN_TYPE_ROSRPC_FIELD,
+	MSG_GEN_TYPE_URL,
+	MSG_GEN_TYPE_FLOAT32,
+	MSG_GEN_TYPE_FLOAT64,
+	MSG_GEN_TYPE_INT8,
+	MSG_GEN_TYPE_UINT8,
+	MSG_GEN_TYPE_INT16,
+	MSG_GEN_TYPE_UINT16,
+	MSG_GEN_TYPE_INT32,
+	MSG_GEN_TYPE_UINT32,
+	MSG_GEN_TYPE_INT64,
+	MSG_GEN_TYPE_UINT64,
+	MSG_GEN_TYPE_END
 }msg_gen_type_t;
 
-typedef struct
+typedef struct msg_gen_command_t
 {
-	 const char **cmd_spec_str;
-
-}msg_gen_command;
-
-
-typedef struct
-{
+	uint32_t len;
 	msg_gen_type_t type;
+	struct msg_gen_command_t *size_storage;
 	union
 	{
-		char chr;
-
-		char *string;
-
+		char *string_ptr;
+		bool boolean;
+		uint8_t uint8;
+		uint16_t uint16;
+		uint32_t uint32;
+		uint64_t uint64;
+		int8_t int8;
+		int16_t int16;
+		int32_t int32;
+		int64_t int64;
+		float32_t float32;
+		float64_t float64;
 		struct
 		{
-			uint8_t list;
-			uint8_t entry;
-		}string_list;
-
-		struct
-		{
-			bool string_list;
-			union
-			{
-				char *string;
-				struct
-				{
-					uint8_t list;
-					uint8_t entry;
-				}string_list;
-			};
-		}tag;
-
-		struct
-		{
-			bool string_list;
-			union
-			{
-				char *string[2];
-				struct
-				{
-					uint8_t list;
-					uint8_t entry;
-				}string_list[2];
-			};
-			uint16_t port;
-		}rpc_field;
+			int8_t list;
+			int8_t string;
+		};
 	};
 }msg_gen_command_t;
 
-uint32_t msg_gen(const char *** const char_arrays);
-
-
-
-
+uint32_t send_msg(port_t port, const char *** const string_arrays, msg_gen_command_t* message_def);
 
 #endif /* MSG_GEN_H_ */
