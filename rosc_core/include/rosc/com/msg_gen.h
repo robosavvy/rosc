@@ -62,7 +62,10 @@ typedef struct msg_gen_command_t
 {
 	uint32_t len;
 	msg_gen_type_t type;
-	struct msg_gen_command_t *size_storage;
+	uint32_t size;
+	bool belongs_to_previous;
+	uint64_t uint64;
+
 	union
 	{
 		char *string_ptr;

@@ -37,15 +37,15 @@ uint32_t send_msg(port_t port, const char *** const string_arrays,
 		msg_gen_command_t* message_def)
 {
 	bool dryrun=false;
-	int def = 0;
+	uint32_t def = 0;
 	uint32_t size = 0;
 	uint32_t subsize=0;
+	uint32_t sub_size_storage;
 	do
 	{
 		if(dryrun ==true)
 		{
-			const char * str0;
-			const char * str1;
+			const char * str=0;
 			subsize=0;
 			switch(message_def[def].type)
 			{
@@ -57,31 +57,26 @@ uint32_t send_msg(port_t port, const char *** const string_arrays,
 					break;
 
 				case MSG_GEN_TYPE_STRING:
-					str0=string_arrays[message_def[def].list][message_def[def].string];
-					str1=0;
+					str=string_arrays[message_def[def].list][message_def[def].string];
 					break;
 
 				case MSG_GEN_TYPE_STRING_PTR:
-					str0=message_def[def].string_ptr;
-					str1=0;
+					str=message_def[def].string_ptr;
 					break;
 
 				case MSG_GEN_TYPE_TAG:
 					subsize+=2; // < + >
-					str0=string_arrays[message_def[def].list][message_def[def].string];
-					str1=0;
+					str=string_arrays[message_def[def].list][message_def[def].string];
 					break;
 
 				case MSG_GEN_TYPE_CLOSE_TAG:
 					subsize+=3; //</ >
-					str0=string_arrays[message_def[def].list][message_def[def].string];
-					str1=0;
+					str=string_arrays[message_def[def].list][message_def[def].string];
 					break;
 
 				case MSG_GEN_TYPE_ROSRPC_FIELD:
 					subsize+=1; //=
-					str0=string_arrays[message_def[def].list][message_def[def].string];
-					str1=0;
+					str=string_arrays[message_def[def].list][message_def[def].string];
 					break;
 
 				case MSG_GEN_TYPE_URL:
@@ -116,14 +111,23 @@ uint32_t send_msg(port_t port, const char *** const string_arrays,
 					break;
 
 			}
+
+			//get string length
+			if(str!=0)
+				while(str!='\0')
+					subsize++;
+
 			size+=subsize;
-			if(message_def[def].size_storage!=0)
+
+			for(sub_size_storage=def; message_def[def].belongs_to_previous!=0 && sub_size_storage != 0; --sub_size_storage)
 			{
-				message_def[def].size_storage->uint32+=subsize;
+				message_def[def].size+=subsize;
 			}
 		}
 		else
 		{
+			switch(message_def[def].type)
+			{
 			case MSG_GEN_TYPE_WHOLE_LEN: /*If that statement is used anywhere else than in the beginning it does nothing*/
 				if(def==0)
 					dryrun=true;
@@ -214,8 +218,8 @@ uint32_t send_msg(port_t port, const char *** const string_arrays,
 
 				break;
 
+			}
 		}
-
 		if(message_def[def].type == MSG_GEN_TYPE_END && dryrun==true)
 		{
 			def=1; //Message size calculated, now sending it ...
