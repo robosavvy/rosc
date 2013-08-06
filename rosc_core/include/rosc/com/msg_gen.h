@@ -37,13 +37,14 @@
 
 typedef enum
 {
-	MSG_GEN_TYPE_WHOLE_LEN,
+	MSG_GEN_TYPE_WHOLE_LEN_BIN,
+	MSG_GEN_TYPE_WHOLE_LEN_STRING,
 	MSG_GEN_TYPE_CHAR,
 	MSG_GEN_TYPE_STRING,
-	MSG_GEN_TYPE_STRING_PTR,
 	MSG_GEN_TYPE_TAG,
 	MSG_GEN_TYPE_CLOSE_TAG,
 	MSG_GEN_TYPE_ROSRPC_FIELD,
+	MSG_GEN_TYPE_BOOL,
 	MSG_GEN_TYPE_URL,
 	MSG_GEN_TYPE_FLOAT32,
 	MSG_GEN_TYPE_FLOAT64,
@@ -60,34 +61,13 @@ typedef enum
 
 typedef struct msg_gen_command_t
 {
-	uint32_t len;
 	msg_gen_type_t type;
-	uint32_t size;
+	void * data;
 	bool belongs_to_previous;
-	uint64_t uint64;
 
-	union
-	{
-		char *string_ptr;
-		bool boolean;
-		uint8_t uint8;
-		uint16_t uint16;
-		uint32_t uint32;
-		uint64_t uint64;
-		int8_t int8;
-		int16_t int16;
-		int32_t int32;
-		int64_t int64;
-		float32_t float32;
-		float64_t float64;
-		struct
-		{
-			int8_t list;
-			int8_t string;
-		};
-	};
+	uint32_t size;
 }msg_gen_command_t;
 
-uint32_t send_msg(port_t port, const char *** const string_arrays, msg_gen_command_t* message_def);
+uint32_t send_msg(port_t *port, msg_gen_command_t* message_def);
 
 #endif /* MSG_GEN_H_ */

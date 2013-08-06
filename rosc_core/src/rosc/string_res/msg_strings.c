@@ -123,7 +123,7 @@ const char *xmlrpc_slave_methodnames[] =
 	"shutdown"
 };
 
-const char *ros_field_strings[] =
+const char * const ros_field_strings[] =
 {
 	"callerid",
 	"error",

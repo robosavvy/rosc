@@ -35,6 +35,10 @@
 #include <rosc/rosc.h>
 #include <rosc/com/ros_handler.h>
 
+
+#include <rosc/com/msg_gen.h>
+#include <rosc/string_res/msg_strings.h>
+
 uint8_t peer0_0[] = {
 0x27, 0x04, 0x00, 0x00, 0x8d, 0x03, 0x00, 0x00,
 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f,
@@ -439,11 +443,49 @@ iface_t sub={false,
 
 int main()
 {
+
+	enum
+	{
+		ROS_FIELD_STRINGS(GEN_RPC)
+	};
+
+
+	bool tcpNoDelay;
+	msg_gen_command_t message[]=
+	{
+			{MSG_GEN_TYPE_WHOLE_LEN_BIN},
+
+			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_MESSAGE_DEFINITION],0},
+			{MSG_GEN_TYPE_STRING,(void *)init_test.message_definition,1},
+
+			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_CALLERID],0},
+			{MSG_GEN_TYPE_STRING,(void *)"narf",1},
+
+			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_TCP_NODELAY],0},
+			{MSG_GEN_TYPE_BOOL,&tcpNoDelay,1},
+
+			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_MD5SUM],0},
+			{MSG_GEN_TYPE_STRING,(void *)init_test.md5sum,1},
+
+			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_TOPIC],0},
+			{MSG_GEN_TYPE_STRING,(void *)init_test.iface_name,1},
+
+			{MSG_GEN_TYPE_END}
+	};
+
+
+
+
 	__rosc_static_port_mem[0];
 
 	rosc_init();
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
+	send_msg(0 ,message);
 	printf("\n---END---\n");
+
+
+
+
 }

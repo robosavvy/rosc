@@ -235,7 +235,7 @@ extern const char *xmlrpc_slave_methodnames[];
 /**
  * This array contains the strings for field id strings for the ros protocol
  */
-extern const char *ros_field_strings[];
+extern const char * const ros_field_strings[];
 
 
 /**
