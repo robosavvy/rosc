@@ -3,7 +3,8 @@
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met: 
+ *	modification, are permitted provided that the following conditions are met:
+
  *
  *	1. Redistributions of source code must retain the above copyright notice, this
  *	   list of conditions and the following disclaimer. 
@@ -54,20 +55,106 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 	switch (hdata->handler_state)
 	{
 		case MSG_GEN_HANDLER_STATE_SIZE:
+
 			hdata->handler_state=MSG_GEN_HANDLER_STATE_OUTPUT;//state on next handler call
 			SIZE_DETER_INIT(pdata,hdata->size_deter,idata->message_definition);
 			break;
 
 		case MSG_GEN_HANDLER_STATE_OUTPUT:
-			hdata->handler_state=MSG_GEN_HANDLER_STATE_FINISH;//state on next handler call
+
+			hdata->message_size=hdata->size_deter.message_size; //Get message size
+
+			switch(hdata->message_definition[hdata->msg_def].type)
+			{
+				case MSG_GEN_TYPE_BOOL:
+
+				break;
+
+				break;
+				case MSG_GEN_TYPE_CHAR:
+
+				break;
+
+				break;
+				case MSG_GEN_TYPE_CLOSE_TAG:
+
+				break;
+
+				case MSG_GEN_TYPE_END:
+				break;
+
+				case MSG_GEN_TYPE_FLOAT32:
+
+				break;
+
+				case MSG_GEN_TYPE_FLOAT64:
+
+				break;
+
+				case MSG_GEN_TYPE_INT16:
+
+				break;
+
+				case MSG_GEN_TYPE_INT32:
+
+				break;
+
+				case MSG_GEN_TYPE_INT64:
+
+				break;
+
+				case MSG_GEN_TYPE_INT8:
+
+				break;
+
+				case MSG_GEN_TYPE_RESET_LEN:
+
+				break;
+
+				case MSG_GEN_TYPE_ROSRPC_FIELD:
+
+				break;
+
+				case MSG_GEN_TYPE_STRING:
+
+				break;
+
+				case MSG_GEN_TYPE_TAG:
+
+				break;
+
+				case MSG_GEN_TYPE_UINT8:
+
+				break;
+
+				case MSG_GEN_TYPE_UINT16:
+
+				break;
+
+				case MSG_GEN_TYPE_UINT32:
+
+				break;
+
+				case MSG_GEN_TYPE_UINT64:
+
+				break;
+
+				case MSG_GEN_TYPE_WHOLE_LEN_BIN:
+
+				break;
+
+				case MSG_GEN_TYPE_WHOLE_LEN_STRING:
+
+				break;
+
+			}
 
 			break;
 
-		case MSG_GEN_HANDLER_STATE_FINISH:
-			//End...
-			break;
+
 
 		default:
+
 			break;
 	}
 

@@ -42,7 +42,6 @@ typedef enum
 {
 	MSG_GEN_HANDLER_STATE_SIZE,
 	MSG_GEN_HANDLER_STATE_OUTPUT,
-	MSG_GEN_HANDLER_STATE_FINISH,
 }msg_gen_handler_state_t;
 
 
@@ -67,6 +66,9 @@ typedef struct
 	msg_gen_handler_state_t handler_state;
 	union
 	{
+		uint32_t message_size;
+		uint32_t msg_def;
+
 		buffer_fill_data_t buffer_fill;
 		size_deter_data_t size_deter;
 	};

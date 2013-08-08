@@ -35,12 +35,21 @@
 #include <rosc/system/endian.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+
+#define BUFFER_FILL_INIT(PARSER_DATA,DATA_STORAGE, DATA, SIZE, CORRECT_SIZE)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &buffer_fill;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.data=DATA;\
+		DATA_STORAGE.size=SIZE;\
+		DATA_STORAGE.correct_size=CORRECT_SIZE;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
+
 typedef enum
 {
 	BUFFER_FILL_NONE=SEBS_PARSE_EVENT_NONE,
 	BUFFER_FILL_FINISHED,
 	BUFFER_FILL_FULL,
-};
+}buffer_fill_event_t;
 
 
 typedef struct
