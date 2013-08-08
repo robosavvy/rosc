@@ -8,6 +8,9 @@ src/rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.c
+src/rosc/sebs_parse_fw/gen_modules/size_deter.c
+src/rosc/sebs_parse_fw/gen_modules/buffer_fill.c
+src/rosc/sebs_parse_fw/gen_modules/msg_gen_handler.c
 src/rosc/system/endian.c
 src/rosc/system/rosc_spin.c
 src/rosc/system/ports.c
