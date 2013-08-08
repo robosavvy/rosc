@@ -144,9 +144,10 @@ sebs_parse_return_t size_deter(sebs_parser_data_t* pdata)
 	//Some debug info
 	DEBUG_PRINT(INT,"\nElement",sub_size_storage);
 	DEBUG_PRINT(INT,"Size",message_def[sub_size_storage].size);
+	def++;
 	}while (message_def[def].type != MSG_GEN_TYPE_END); //return when message end reached...
 
-
+	DEBUG_PRINT(INT,"\nMessage:",fdata->message_size);
 
 	return (SEBS_PARSE_RETURN_FINISHED);
 }

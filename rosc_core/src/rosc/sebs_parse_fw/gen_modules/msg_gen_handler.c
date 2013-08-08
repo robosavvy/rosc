@@ -55,9 +55,7 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 	{
 		case MSG_GEN_HANDLER_STATE_SIZE:
 			hdata->handler_state=MSG_GEN_HANDLER_STATE_OUTPUT;//state on next handler call
-			//Determine sizes ...
-
-
+			SIZE_DETER_INIT(pdata,hdata->size_deter,idata->message_definition);
 			break;
 
 		case MSG_GEN_HANDLER_STATE_OUTPUT:

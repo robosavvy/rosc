@@ -34,6 +34,7 @@
 #include <rosc/msg/rosc_linux_test/testbuiltin.h>
 #include <rosc/rosc.h>
 #include <rosc/com/ros_handler.h>
+#include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
 
 
 #include <rosc/com/msg_gen.h>
@@ -450,7 +451,7 @@ int main()
 	};
 
 
-	bool tcpNoDelay;
+	bool tcpNoDelay=0;
 	msg_gen_command_t message[]=
 	{
 			{MSG_GEN_TYPE_WHOLE_LEN_BIN},
@@ -482,7 +483,22 @@ int main()
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
-	gen_msg(0 ,message);
+
+
+
+	char buffer[100];
+	uint32_t size=100;
+	sebs_parser_data_t pdata;
+	msg_gen_handler_data_t h;
+	msg_gen_handler_init_t i={message};
+	h.message_definition=message;
+	pdata.handler_data=(void *)&h;
+	pdata.init_data=(void *)&i;
+	pdata.handler_init=true;
+	pdata.handler_function=&msg_gen_handler;
+	sebs_parser_frame(buffer,size,&pdata);
+
+
 	printf("\n---END---\n");
 
 

@@ -36,6 +36,7 @@
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
 #include <rosc/sebs_parse_fw/gen_modules/size_deter.h>
 #include <rosc/sebs_parse_fw/gen_modules/buffer_fill.h>
+#include <rosc/debug/debug_out.h>
 
 typedef enum
 {

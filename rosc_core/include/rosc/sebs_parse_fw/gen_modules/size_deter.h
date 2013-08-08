@@ -34,6 +34,13 @@
 #ifndef _MSG_GEN_H_
 #define _MSG_GEN_H_
 
+
+#define SIZE_DETER_INIT(PARSER_DATA,DATA_STORAGE, MESSAGE_INFO_ARRAY)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &size_deter;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.message_info_array=MESSAGE_INFO_ARRAY;\
+		return (SEBS_PARSE_RETURN_INIT)
+
 typedef struct
 {
 	msg_gen_command_t *message_info_array;
