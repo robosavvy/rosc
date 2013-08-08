@@ -68,6 +68,6 @@ typedef struct msg_gen_command_t
 	uint32_t size;
 }msg_gen_command_t;
 
-uint32_t send_msg(port_t *port, msg_gen_command_t* message_def);
+uint32_t gen_msg(port_t *port, msg_gen_command_t* message_def);
 
 #endif /* MSG_GEN_H_ */

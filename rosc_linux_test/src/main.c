@@ -482,7 +482,7 @@ int main()
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
-	send_msg(0 ,message);
+	gen_msg(0 ,message);
 	printf("\n---END---\n");
 
 
