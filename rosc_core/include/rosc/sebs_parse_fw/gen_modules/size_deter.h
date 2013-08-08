@@ -31,6 +31,9 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
 
+#ifndef _MSG_GEN_H_
+#define _MSG_GEN_H_
+
 typedef struct
 {
 	msg_gen_command_t *message_info_array;
@@ -38,3 +41,5 @@ typedef struct
 }size_deter_data_t;
 
 sebs_parse_return_t size_deter(sebs_parser_data_t* pdata);
+
+#endif /* MSG_GEN_H_ */

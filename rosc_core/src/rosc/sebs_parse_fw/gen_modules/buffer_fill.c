@@ -30,3 +30,72 @@
  */
 
 #include <rosc/sebs_parse_fw/gen_modules/buffer_fill.h>
+#include <rosc/system/status.h>
+
+
+
+sebs_parse_return_t buffer_fill(sebs_parser_data_t* pdata)
+{
+	buffer_fill_data_t *fdata =
+			(buffer_fill_data_t *) pdata->current_parser.parser_data;
+	if (pdata->function_init)
+	{
+		pdata->function_init = false;
+		fdata->cur_byte=0;
+	}
+	int8_t const *correct;
+	switch(fdata->correct_size)
+	{
+		case 0:
+		case 1:
+			correct=0;
+			break;
+		case 2:
+			correct=g_byte_order_correction_to_system->SIZE_2_B; //to_system because we catch it from a systems variable with the correction
+			break;												 //if I am wrong change to network :-)
+		case 4:
+			correct=g_byte_order_correction_to_system->SIZE_4_B;
+			break;
+		case 8:
+			correct=g_byte_order_correction_to_system->SIZE_8_B;
+			break;
+
+		default:
+			ROSC_FATAL("BUFFER_FILL: NO CORRECTION FOR THAT BYTE SIZE!!!!");
+			break;
+	}
+
+	while(pdata->len>0)
+	{
+		if(correct)
+		{
+			if(fdata->cur_byte<fdata->size)
+			{
+				**pdata->buf=*((char *)(fdata->data
+						               +(fdata->cur_byte/fdata->correct_size)
+						               +correct[fdata->cur_byte%fdata->correct_size]));
+
+
+				fdata->cur_byte++;
+			}
+		}
+		else
+		{
+			if(fdata->cur_byte<fdata->size)
+			{
+				**pdata->buf=*((char *)fdata->data);
+				fdata->data++;
+				--*pdata->len;
+				++*pdata->buf;
+				++fdata->cur_byte;
+			}
+			else
+			{
+				pdata->event=BUFFER_FILL_FINISHED;
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
+			}
+		}
+	}
+	pdata->event=BUFFER_FILL_FULL;
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
+}

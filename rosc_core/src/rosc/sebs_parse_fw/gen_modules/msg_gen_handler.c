@@ -47,18 +47,26 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 		pdata->overall_len=0;
 		pdata->security_len=0;
 		hdata->handler_state=MSG_GEN_HANDLER_STATE_SIZE;
-		hdata->buffer_size=pdata->len; //Get buffer len
+		hdata->buffer_size=*pdata->len; //Get buffer len
 	}
 
 
 	switch (hdata->handler_state)
 	{
 		case MSG_GEN_HANDLER_STATE_SIZE:
+			hdata->handler_state=MSG_GEN_HANDLER_STATE_OUTPUT;//state on next handler call
+			//Determine sizes ...
+
 
 			break;
 
 		case MSG_GEN_HANDLER_STATE_OUTPUT:
+			hdata->handler_state=MSG_GEN_HANDLER_STATE_FINISH;//state on next handler call
 
+			break;
+
+		case MSG_GEN_HANDLER_STATE_FINISH:
+			//End...
 			break;
 
 		default:

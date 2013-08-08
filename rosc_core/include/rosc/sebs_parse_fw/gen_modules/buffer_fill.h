@@ -32,6 +32,25 @@
 #ifndef BUFFER_FILL_H_
 #define BUFFER_FILL_H_
 
+#include <rosc/system/endian.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
+typedef enum
+{
+	BUFFER_FILL_NONE=SEBS_PARSE_EVENT_NONE,
+	BUFFER_FILL_FINISHED,
+	BUFFER_FILL_FULL,
+};
+
+
+typedef struct
+{
+	void *data;
+	uint32_t cur_byte;
+	uint32_t size;
+	uint8_t correct_size;
+}buffer_fill_data_t;
+
+sebs_parse_return_t buffer_fill(sebs_parser_data_t* pdata);
 
 #endif /* BUFFER_FILL_H_ */

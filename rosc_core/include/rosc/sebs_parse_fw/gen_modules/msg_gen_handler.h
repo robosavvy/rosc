@@ -41,6 +41,7 @@ typedef enum
 {
 	MSG_GEN_HANDLER_STATE_SIZE,
 	MSG_GEN_HANDLER_STATE_OUTPUT,
+	MSG_GEN_HANDLER_STATE_FINISH,
 }msg_gen_handler_state_t;
 
 
@@ -65,8 +66,9 @@ typedef struct
 	msg_gen_handler_state_t handler_state;
 	union
 	{
+		buffer_fill_data_t buffer_fill;
 		size_deter_data_t size_deter;
-	}subdata;
+	};
 }msg_gen_handler_data_t;
 
 sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata);
