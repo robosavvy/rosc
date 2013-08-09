@@ -64,10 +64,11 @@ typedef struct
 	uint32_t buffer_size;
 	msg_gen_command_t *message_definition;
 	msg_gen_handler_state_t handler_state;
+	uint32_t message_size;
+	uint32_t msg_def;
+	uint8_t def_state;
 	union
 	{
-		uint32_t message_size;
-		uint32_t msg_def;
 
 		buffer_fill_data_t buffer_fill;
 		size_deter_data_t size_deter;

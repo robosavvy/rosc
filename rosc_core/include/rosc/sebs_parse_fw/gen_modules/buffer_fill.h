@@ -36,12 +36,21 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
-#define BUFFER_FILL_INIT(PARSER_DATA,DATA_STORAGE, DATA, SIZE, CORRECT_SIZE)\
+#define BUFFER_FILL_INIT_SIZE(PARSER_DATA,DATA_STORAGE, DATA, SIZE, CORRECT_SIZE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &buffer_fill;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
-		DATA_STORAGE.data=DATA;\
+		DATA_STORAGE.data=(void*)DATA;\
+		DATA_STORAGE.is_string=false;\
 		DATA_STORAGE.size=SIZE;\
 		DATA_STORAGE.correct_size=CORRECT_SIZE;\
+		return (SEBS_PARSE_RETURN_INIT_ADV)
+
+#define BUFFER_FILL_INIT_STRING(PARSER_DATA,DATA_STORAGE,STRING)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &buffer_fill;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.data=(void*)STRING;\
+		DATA_STORAGE.is_string=true;\
+		DATA_STORAGE.correct_size=0;\
 		return (SEBS_PARSE_RETURN_INIT_ADV)
 
 typedef enum
@@ -55,6 +64,7 @@ typedef enum
 typedef struct
 {
 	void *data;
+	bool is_string;
 	uint32_t cur_byte;
 	uint32_t size;
 	uint8_t correct_size;

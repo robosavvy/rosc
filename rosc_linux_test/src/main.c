@@ -498,10 +498,5 @@ int main()
 	pdata.handler_function=&msg_gen_handler;
 	sebs_parser_frame(buffer,size,&pdata);
 
-
 	printf("\n---END---\n");
-
-
-
-
 }

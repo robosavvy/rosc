@@ -65,23 +65,29 @@ sebs_parse_return_t buffer_fill(sebs_parser_data_t* pdata)
 			break;
 	}
 
-	while(pdata->len>0)
+	while(*pdata->len>0)
 	{
-		if(correct)
+		if(correct && !fdata->is_string)
 		{
 			if(fdata->cur_byte<fdata->size)
 			{
 				**pdata->buf=*((char *)(fdata->data
 						               +(fdata->cur_byte/fdata->correct_size)
 						               +correct[fdata->cur_byte%fdata->correct_size]));
-
-
-				fdata->cur_byte++;
+				fdata->data++;
+				--*pdata->len;
+				++*pdata->buf;
+				++fdata->cur_byte;
+			}
+			else
+			{
+				pdata->event=BUFFER_FILL_FINISHED;
+				return (SEBS_PARSE_RETURN_FINISHED);
 			}
 		}
 		else
 		{
-			if(fdata->cur_byte<fdata->size)
+			if(fdata->cur_byte<fdata->size || (fdata->is_string && (*((char *)fdata->data) != '\0')) )
 			{
 				**pdata->buf=*((char *)fdata->data);
 				fdata->data++;
@@ -92,8 +98,17 @@ sebs_parse_return_t buffer_fill(sebs_parser_data_t* pdata)
 			else
 			{
 				pdata->event=BUFFER_FILL_FINISHED;
-				return (SEBS_PARSE_RETURN_GO_AHEAD);
+				return (SEBS_PARSE_RETURN_FINISHED);
 			}
+		}
+
+		if(*(*pdata->buf-1) > ' ' && *(*pdata->buf-1)< '~')
+		{
+			printf("%c", *(*pdata->buf-1));
+		}
+		else
+		{
+			printf("[%x]", (unsigned int) *(*pdata->buf-1));
 		}
 	}
 	pdata->event=BUFFER_FILL_FULL;
