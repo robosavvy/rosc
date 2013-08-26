@@ -36,6 +36,44 @@
 #define OUT_BUFFER_SIZE 1000
 
 
+	const msg_type_t topic_header_type[]=
+						 {MSG_TYPE_PAYLOAD_SIZE_BINARY,
+						  MSG_TYPE_PAYLOAD_SIZE_START,
+
+						  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
+						  MSG_TYPE_STRING, //MESSAGE DEFINITION
+						  MSG_TYPE_ROS_FIELD_END,
+
+						  MSG_TYPE_ROS_FIELD_CALLERID,
+						  MSG_TYPE_STRING,//CALLERID
+						  MSG_TYPE_ROS_FIELD_END,
+
+						  MSG_TYPE_ROS_FIELD_TCP_NODELAY,
+						  MSG_TYPE_UINT8_STRING, //NODEDELAY
+						  MSG_TYPE_ROS_FIELD_END,
+
+						  MSG_TYPE_ROS_FIELD_MD5SUM,
+						  MSG_TYPE_STRING, //MD5
+						  MSG_TYPE_ROS_FIELD_END,
+
+						  MSG_TYPE_ROS_FIELD_TOPIC,
+						  MSG_TYPE_STRING, //TOPIC
+						  MSG_TYPE_ROS_FIELD_END,
+
+						  MSG_TYPE_END};
+	void *topic_header_storage[5];
+	msg_gen_command_t topic_header={topic_header_type, topic_header_storage};
+
+
+
+
+
+
+
+
+
+
+
 
 uint32_t gen_msg(port_t *port,	msg_gen_command_t* message_def)
 {

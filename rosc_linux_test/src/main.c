@@ -37,8 +37,8 @@
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
 
 
-#include <rosc/com/msg_gen.h>
 #include <rosc/string_res/msg_strings.h>
+#include <rosc/com/msg_gen.h>
 
 uint8_t peer0_0[] = {
 0x27, 0x04, 0x00, 0x00, 0x8d, 0x03, 0x00, 0x00,
@@ -473,7 +473,6 @@ int main()
 
 			{MSG_GEN_TYPE_END}
 	};
-
 
 
 

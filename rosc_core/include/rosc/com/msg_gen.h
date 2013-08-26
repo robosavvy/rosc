@@ -28,12 +28,75 @@
  *
  *  msg_gen.h created by Christian Holl
  */
+#include <rosc/system/types.h>
+#include <rosc/system/ports.h>
+#include <rosc/string_res/msg_strings.h>
 
 #ifndef MSG_GEN_H_
 #define MSG_GEN_H_
 
-#include <rosc/system/types.h>
-#include <rosc/system/ports.h>
+
+#define FLOATTYPES(ENUM,TYPE)\
+	__##ENUM##_FLOAT_##TYPE##_SEP,\
+	ENUM##_FLOAT_32_##TYPE,\
+	ENUM##_FLOAT_64_##TYPE
+
+
+
+#define INTTYPES(ENUM,TYPE)\
+	__##ENUM##_INT_##TYPE##_SEP,\
+	ENUM##_INT8_##TYPE,\
+	ENUM##_INT16_##TYPE,\
+	ENUM##_INT32_##TYPE,\
+	ENUM##_INT64_##TYPE,\
+	__##ENUM##_UINT_##TYPE##_SEP,\
+	ENUM##_UINT8_##TYPE,\
+	ENUM##_UINT16_##TYPE,\
+	ENUM##_UINT32_##TYPE,\
+	ENUM##_UINT64_##TYPE\
+
+typedef enum
+{
+	MSG_TYPE_PAYLOAD_SIZE_BINARY,
+	MSG_TYPE_PAYLOAD_SIZE_STRING,
+	MSG_TYPE_PAYLOAD_SIZE_START,
+
+	MSG_TYPE_CHAR,
+	MSG_TYPE_STRING,
+
+	FLOATTYPES(MSG_TYPE, BINARY),
+	INTTYPES(MSG_TYPE, BINARY),
+
+	FLOATTYPES(MSG_TYPE, STRING),
+	INTTYPES(MSG_TYPE, STRING),
+
+	__MSG_TYPE_DESCRIPTORS,
+	XMLRPC_HTTP_DESCRIPTORS(MSG_TYPE),
+
+	__MSG_TYPE_XMLRPC_OPEN_TAGS,
+	XMLRPC_TAG_STRINGS(MSG_TYPE_OPEN),
+
+	__MSG_TYPE_XMLRPC_CLOSE_TAGS,
+	XMLRPC_TAG_STRINGS(MSG_TYPE_CLOSE),
+
+	__MSG_TYPE_ROS_FIELD_STRINGS,
+	ROS_FIELD_STRINGS(MSG_TYPE),
+	ROS_FIELD_END,
+
+	MSG_TYPE_ROS_FIELD_END,
+
+	MSG_TYPE_END,
+}msg_type_t;
+
+
+
+
+
+
+
+
+
+
 
 typedef enum
 {
@@ -61,13 +124,28 @@ typedef enum
 
 typedef struct msg_gen_command_t
 {
-	msg_gen_type_t type;
-	void * data;
-	bool belongs_to_previous;
+	const msg_type_t const *ntype;
+	void * const data;
 
+
+
+
+
+	//TODO delete
+	msg_gen_type_t type;
+	bool belongs_to_previous;
 	uint32_t size;
+
 }msg_gen_command_t;
 
-uint32_t gen_msg(port_t *port, msg_gen_command_t* message_def);
+
+//Defined messages
+extern msg_gen_command_t topic_header;
+
+
+
+uint32_t gen_msg(port_t *port, msg_gen_command_t *message_def);
+
+
 
 #endif /* MSG_GEN_H_ */
