@@ -51,6 +51,7 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 		hdata->message_definition = idata->message_definition;
 		hdata->buffer_size = *pdata->len; //Get buffer len
 		hdata->def_state = 0;
+		hdata->insert_byte=false;
 	}
 
 	while(1)
@@ -76,6 +77,15 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 			if(pdata->event!=SEBS_PARSE_EVENT_NONE)
 				return (SEBS_PARSE_RETURN_GO_AHEAD);
 
+		}
+		if(hdata->insert_byte)
+		{
+			hdata->insert_byte=false;
+			**pdata->buf=hdata->byte;
+			++*pdata->buf;
+			--*pdata->len;
+			++hdata->def_state;
+			++hdata->msg_def;
 		}
 
 		switch(hdata->handler_state)
@@ -106,7 +116,7 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 						if(!hdata->payload_size_available) //Was the payload size already calculated?
 						{//No, then do it now...
 							hdata->payload_size_available=true;
-							SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type, hdata->message_definition->data, SIZE_DETER_PAYLOAD_SIZE);
+							SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type++, hdata->message_definition->data++, SIZE_DETER_PAYLOAD_SIZE);
 						}
 						else
 						{
@@ -122,25 +132,26 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 					break;
 
 					case MSG_TYPE_PAYLOAD_SIZE_START:
-						SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type, hdata->message_definition->data, SIZE_DETER_PAYLOAD_SIZE);
+						SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type++, hdata->message_definition->data++, SIZE_DETER_PAYLOAD_SIZE);
 					break;
 
 					case MSG_TYPE_CHAR:
-						BUFFER_FILL_INIT_BINARY(pdata, hdata->buffer_fill, *hdata->message_data_fields, 1, 1);
+						hdata->insert_byte=true;
+						hdata->byte=*((char *)hdata->message_data_fields);
 						++hdata->message_data_fields;
+						++hdata->message_definition;
 					break;
 
 					case MSG_TYPE_STRING:
-						BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill, *hdata->message_data_fields);
-						++hdata->message_data_fields;
+						BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill, (hdata->message_data_fields++));
 					break;
 
 					case MSG_TYPE_ROSRPC_FIELD_END:
-
+						++hdata->message_definition;
 					break;
 
 					case MSG_TYPE_MESSAGE_END:
-
+						//TODO END
 					break;
 
 					default:
@@ -151,11 +162,11 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 						{
 							case 0://Determine field size
 								hdata->def_state=1;
-								SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type, hdata->message_definition->data, SIZE_DETER_ROSRPC_FIELD);
+								SIZE_DETER_INIT(pdata, hdata->size_deter, hdata->message_definition->type++, hdata->message_definition->data++, SIZE_DETER_ROSRPC_FIELD);
 								break;
 							case 1://Write field size
 								hdata->def_state=2;
-								BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->size_deter.size,4,4);
+								BUFFER_FILL_INIT_BINARY(pdata,hdata->buffer_fill,&hdata->size_deter.size,4,4);
 								break;
 							case 2://id string
 								hdata->def_state=3;
@@ -163,28 +174,76 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 								break;
 							case 3://equal
 								hdata->def_state=0;
-								**pdata->buf='=';
-								++*pdata->buf;
-								--*pdata->len;
-								++hdata->def_state;
-								++hdata->msg_def;
+								hdata->insert_byte=true;
+								hdata->byte='=';
+								++hdata->message_data_fields;
+								++hdata->message_definition;
 								break;
 						}
+						++hdata->message_data_fields;
 					}
-					else if(*hdata->message_definition->type>__MSG_TYPE_XMLRPC_CLOSE_TAGS)
+					else if(*hdata->message_definition->type>__MSG_TYPE_XMLRPC_CLOSE_TAGS ||
+							*hdata->message_definition->type>__MSG_TYPE_XMLRPC_OPEN_TAGS)
 					{
+						switch(hdata->def_state)
+						{
+							case 0:// '<'
+								if(*hdata->message_definition->type>__MSG_TYPE_XMLRPC_CLOSE_TAGS)
+									hdata->def_state=1;
+								else
+									hdata->def_state=2;
+
+								hdata->insert_byte=true;
+								hdata->byte='<';
+								break;
+							case 1://   '/'
+								hdata->def_state=2;
+								hdata->insert_byte=true;
+								hdata->byte='/';
+								break;
+							case 2://id string
+								hdata->def_state=3;
+								BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,xmlrpc_tag_strings[*hdata->message_definition->type - __MSG_TYPE_XMLRPC_CLOSE_TAGS -1]);
+								break;
+							case 3:// '>'
+								hdata->def_state=0;
+								hdata->insert_byte=true;
+								hdata->byte='>';
+								++hdata->message_data_fields;
+								++hdata->message_definition;
+								break;
+						}
 
 					}
-					else if(*hdata->message_definition->type>__MSG_TYPE_XMLRPC_OPEN_TAGS)
-					{
 
-					}
 					else if(*hdata->message_definition->type>__MSG_TYPE_DESCRIPTORS)
 					{
+						switch(hdata->def_state)
+						{
+							case 0:// DESCRIPTOR
+								hdata->def_state=1;
+								BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,xmlrpc_tag_strings[*hdata->message_definition->type - __MSG_TYPE_XMLRPC_CLOSE_TAGS -1]);
+								break;
 
+							case 1:// ':'
+								hdata->def_state=2;
+								hdata->insert_byte=true;
+								hdata->byte=':';
+								break;
+
+							case 2:// ' '
+								hdata->def_state=0;
+								hdata->insert_byte=true;
+								hdata->byte=' ';
+								++hdata->message_data_fields;
+								++hdata->message_definition;
+								break;
+						}
+						++hdata->message_data_fields;
 					}
 					else if(*hdata->message_definition->type>__MSG_TYPE_UINT_STRING_SEP)
 					{
+
 
 					}
 					else if(*hdata->message_definition->type>__MSG_TYPE_INT_STRING_SEP)
@@ -198,6 +257,7 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 					else if(*hdata->message_definition->type>__MSG_TYPE_UINT_BINARY_SEP)
 					{
 
+						++hdata->message_data_fields;
 					}
 					else if(*hdata->message_definition->type>__MSG_TYPE_INT_BINARY_SEP)
 					{
@@ -210,7 +270,6 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 					break;
 
 				}
-				hdata->message_definition->type++;
 				break;
 
 			}

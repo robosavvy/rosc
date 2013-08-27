@@ -55,7 +55,6 @@ sebs_parse_return_t size_deter(sebs_parser_data_t* pdata)
 		uint32_t outstr_size;
 
 		str=0;
-		subsize=0;
 
 
 	}while(1);

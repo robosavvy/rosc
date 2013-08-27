@@ -65,10 +65,17 @@ typedef struct
 	msg_gen_command_t *message_definition;
 	void **message_data_fields;
 	msg_gen_handler_state_t handler_state;
+
+
+	bool insert_byte;
+	bool byte;
+
+
 	bool payload_size_available;
 	uint32_t payload_size;
 	uint32_t msg_def;
 	uint8_t def_state;
+
 	union
 	{
 
