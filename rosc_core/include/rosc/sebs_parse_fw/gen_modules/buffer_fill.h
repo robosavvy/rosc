@@ -36,7 +36,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
-#define BUFFER_FILL_INIT_SIZE(PARSER_DATA,DATA_STORAGE, DATA, SIZE, CORRECT_SIZE)\
+#define BUFFER_FILL_INIT_BINARY(PARSER_DATA,DATA_STORAGE, DATA, SIZE, CORRECT_SIZE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &buffer_fill;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.data=(void*)DATA;\

@@ -35,16 +35,27 @@
 #define _MSG_GEN_H_
 
 
-#define SIZE_DETER_INIT(PARSER_DATA,DATA_STORAGE, MESSAGE_INFO_ARRAY)\
+
+typedef enum
+{
+	SIZE_DETER_PAYLOAD_SIZE,
+	SIZE_DETER_ROSRPC_FIELD,
+}size_mode_t;
+
+#define SIZE_DETER_INIT(PARSER_DATA,DATA_STORAGE, TYPE, CONTENTS, MODE)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &size_deter;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
-		DATA_STORAGE.message_info_array=MESSAGE_INFO_ARRAY;\
+		DATA_STORAGE.type=TYPE;\
+		DATA_STORAGE.contents=CONTENTS;\
+		DATA_STORAGE.mode=MODE;\
 		return (SEBS_PARSE_RETURN_INIT)
 
 typedef struct
 {
-	msg_gen_command_t *message_info_array;
-	uint32_t message_size;
+	size_mode_t mode;
+	const msg_gen_type_t *type;
+	void ** contents;
+	uint32_t size;
 }size_deter_data_t;
 
 sebs_parse_return_t size_deter(sebs_parser_data_t* pdata);

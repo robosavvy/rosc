@@ -39,15 +39,15 @@ sebs_parse_return_t size_deter(sebs_parser_data_t* pdata)
 	if (pdata->function_init)
 	{
 		pdata->function_init = false;
-		fdata->message_size = 0;
+		fdata->size = 0;
+		uint32_t current_out_buffer_size=0;
+		uint32_t def = 0;
+		uint32_t size = 0;
+		uint32_t subsize=0;
+		uint32_t sub_size_storage;
 	}
 
-	uint32_t current_out_buffer_size=0;
-	uint32_t def = 0;
-	uint32_t size = 0;
-	uint32_t subsize=0;
-	uint32_t sub_size_storage;
-	msg_gen_command_t *message_def=fdata->message_info_array;
+	//const msg_gen_command_t *message_def=fdata->message_def;
 	do
 	{
 		bool part_finished=false;
@@ -56,98 +56,8 @@ sebs_parse_return_t size_deter(sebs_parser_data_t* pdata)
 
 		str=0;
 		subsize=0;
-//
-//	switch(message_def[def].type)
-//	{
-//		case MSG_GEN_TYPE_WHOLE_LEN_BIN:
-//		case MSG_GEN_TYPE_WHOLE_LEN_STRING:
-//		case MSG_GEN_TYPE_END:
-//			break;
-//
-//		case MSG_GEN_TYPE_CHAR:
-//			subsize += 1;
-//			break;
-//
-//		case MSG_GEN_TYPE_STRING:
-//			str = (char *) message_def[def].data;
-//			break;
-//
-//		case MSG_GEN_TYPE_TAG:
-//			subsize += 2; // < + >
-//			str = (char *) message_def[def].data;
-//			break;
-//
-//		case MSG_GEN_TYPE_CLOSE_TAG:
-//			subsize += 3; //</ >
-//			str = (char *) message_def[def].data;
-//			break;
-//
-//		case MSG_GEN_TYPE_ROSRPC_FIELD:
-//			subsize += 1; //=
-//			str = (char *) message_def[def].data;
-//			break;
-//
-//		case MSG_GEN_TYPE_FLOAT32:
-//			subsize += 4;
-//			break;
-//
-//		case MSG_GEN_TYPE_FLOAT64:
-//			subsize += 8;
-//			break;
-//
-//		case MSG_GEN_TYPE_BOOL:
-//		case MSG_GEN_TYPE_INT8:
-//		case MSG_GEN_TYPE_UINT8:
-//			subsize += 1;
-//			break;
-//
-//		case MSG_GEN_TYPE_INT16:
-//		case MSG_GEN_TYPE_UINT16:
-//			subsize += 2;
-//			break;
-//
-//		case MSG_GEN_TYPE_INT32:
-//		case MSG_GEN_TYPE_UINT32:
-//			subsize += 4;
-//			break;
-//
-//		case MSG_GEN_TYPE_INT64:
-//		case MSG_GEN_TYPE_UINT64:
-//			subsize += 8;
-//			break;
-//
-//		case MSG_GEN_TYPE_RESET_LEN:
-//			fdata->message_size = 0;
-//			break;
-//
-//	}
-//
-//	//If there is a string, get it's length
-//	if (str != 0)
-//		while (*str != '\0')
-//		{
-//			subsize++;
-//			++str;
-//		}
-//
-//	//Add the current size to the whole message size
-//	fdata->message_size += subsize;
-//
-//	//Where to store the size?
-//	for (sub_size_storage = def;
-//			message_def[sub_size_storage].belongs_to_previous
-//					&& sub_size_storage != 0; --sub_size_storage)
-//		;
-//	//Store the size...
-//	message_def[sub_size_storage].size += subsize;
-//
-//	//Some debug info
-//	DEBUG_PRINT(INT,"\nElement",sub_size_storage);
-//	DEBUG_PRINT(INT,"Size",message_def[sub_size_storage].size);
-//	def++;
-//	}while (message_def[def].type != MSG_GEN_TYPE_END); //return when message end reached...
-//
-//	DEBUG_PRINT(INT,"\nMessage:",fdata->message_size);
+
+
 	}while(1);
 	return (SEBS_PARSE_RETURN_FINISHED);
 }

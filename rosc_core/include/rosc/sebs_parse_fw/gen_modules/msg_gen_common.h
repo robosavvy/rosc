@@ -40,8 +40,6 @@
 	ENUM##_FLOAT_32_##TYPE,\
 	ENUM##_FLOAT_64_##TYPE
 
-
-
 #define INTTYPES(ENUM,TYPE)\
 	__##ENUM##_INT_##TYPE##_SEP,\
 	ENUM##_INT8_##TYPE,\
@@ -54,11 +52,10 @@
 	ENUM##_UINT32_##TYPE,\
 	ENUM##_UINT64_##TYPE\
 
-
-
-
 typedef enum
 {
+	__MSG_TYPE_NONE,
+	//Single Values
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_PAYLOAD_SIZE_STRING,
 	MSG_TYPE_PAYLOAD_SIZE_START,
@@ -66,6 +63,12 @@ typedef enum
 	MSG_TYPE_CHAR,
 	MSG_TYPE_STRING,
 
+	MSG_TYPE_MESSAGE_END,
+	MSG_TYPE_ROSRPC_FIELD_END,
+
+
+
+	//Ranged values //Do not change order!
 	FLOATTYPES(MSG_TYPE, BINARY),
 	INTTYPES(MSG_TYPE, BINARY),
 
@@ -81,13 +84,9 @@ typedef enum
 	__MSG_TYPE_XMLRPC_CLOSE_TAGS,
 	XMLRPC_TAG_STRINGS(MSG_TYPE_CLOSE),
 
-	__MSG_TYPE_ROS_FIELD_STRINGS,
+	__MSG_TYPE_ROSRPC_FIELD_STRINGS,
 	ROS_FIELD_STRINGS(MSG_TYPE),
-	ROS_FIELD_END,
 
-	MSG_TYPE_ROS_FIELD_END,
-
-	MSG_TYPE_END,
 }msg_gen_type_t;
 
 typedef struct msg_gen_command_t
@@ -95,8 +94,6 @@ typedef struct msg_gen_command_t
 	const msg_gen_type_t const *type;
 	void **data;
 }msg_gen_command_t;
-
-
 
 #define MSG_DEF_ROS_TOPIC_HEADER(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
 		&msg_def_ros_topic_header;\
