@@ -30,15 +30,20 @@
  */
 #include <stdio.h>
 #include <stdbool.h>
+
 #include <inttypes.h>
 #include <rosc/msg/rosc_linux_test/testbuiltin.h>
 #include <rosc/rosc.h>
 #include <rosc/com/ros_handler.h>
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
+#include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
+
+
+
+#if 1
 
 
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/com/msg_gen.h>
 
 uint8_t peer0_0[] = {
 0x27, 0x04, 0x00, 0x00, 0x8d, 0x03, 0x00, 0x00,
@@ -439,40 +444,14 @@ ros_msg_init_t init_test={	topic,
 iface_t sub={false,
 		     &ros_handler,
 		     &init_test};
+#endif
 
 
 
 int main()
 {
 
-	enum
-	{
-		ROS_FIELD_STRINGS(GEN_RPC)
-	};
 
-
-	bool tcpNoDelay=0;
-	msg_gen_command_t message[]=
-	{
-			{MSG_GEN_TYPE_WHOLE_LEN_BIN},
-
-			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_MESSAGE_DEFINITION],0},
-			{MSG_GEN_TYPE_STRING,(void *)init_test.message_definition,1},
-
-			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_CALLERID],0},
-			{MSG_GEN_TYPE_STRING,(void *)"narf",1},
-
-			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_TCP_NODELAY],0},
-			{MSG_GEN_TYPE_BOOL,&tcpNoDelay,1},
-
-			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_MD5SUM],0},
-			{MSG_GEN_TYPE_STRING,(void *)init_test.md5sum,1},
-
-			{MSG_GEN_TYPE_ROSRPC_FIELD,(void *)ros_field_strings[GEN_RPC_ROS_FIELD_TOPIC],0},
-			{MSG_GEN_TYPE_STRING,(void *)init_test.iface_name,1},
-
-			{MSG_GEN_TYPE_END}
-	};
 
 
 
@@ -485,17 +464,21 @@ int main()
 
 
 
-	char buffer[100];
-	uint32_t size=100;
-	sebs_parser_data_t pdata;
-	msg_gen_handler_data_t h;
-	msg_gen_handler_init_t i={message};
-	h.message_definition=message;
-	pdata.handler_data=(void *)&h;
-	pdata.init_data=(void *)&i;
-	pdata.handler_init=true;
-	pdata.handler_function=&msg_gen_handler;
-	sebs_parser_frame(buffer,size,&pdata);
+	msg_gen_type_t *message=MSG_DEF_ROS_TOPIC_HEADER(0,0,0,0,0);
+
+
+
+//	char buffer[100];
+//	uint32_t size=100;
+//	sebs_parser_data_t pdata;
+//	msg_gen_handler_data_t h;
+//	//msg_gen_handler_init_t i={message};
+//	//h.message_definition=message;
+//	pdata.handler_data=(void *)&h;
+//	pdata.init_data=(void *)&i;
+//	pdata.handler_init=true;
+//	pdata.handler_function=&msg_gen_handler;
+//	sebs_parser_frame(buffer,size,&pdata);
 
 	printf("\n---END---\n");
 }

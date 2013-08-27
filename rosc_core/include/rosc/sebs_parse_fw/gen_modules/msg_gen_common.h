@@ -29,40 +29,84 @@
  *  msg_gen.h created by Christian Holl
  */
 
-#ifndef MSG_GEN_H_
-#define MSG_GEN_H_
+#ifndef MSG_GEN_COMMON_H_
+#define MSG_GEN_COMMON_H_
+
+
+#include <rosc/string_res/msg_strings.h>
+
+#define FLOATTYPES(ENUM,TYPE)\
+	__##ENUM##_FLOAT_##TYPE##_SEP,\
+	ENUM##_FLOAT_32_##TYPE,\
+	ENUM##_FLOAT_64_##TYPE
+
+
+
+#define INTTYPES(ENUM,TYPE)\
+	__##ENUM##_INT_##TYPE##_SEP,\
+	ENUM##_INT8_##TYPE,\
+	ENUM##_INT16_##TYPE,\
+	ENUM##_INT32_##TYPE,\
+	ENUM##_INT64_##TYPE,\
+	__##ENUM##_UINT_##TYPE##_SEP,\
+	ENUM##_UINT8_##TYPE,\
+	ENUM##_UINT16_##TYPE,\
+	ENUM##_UINT32_##TYPE,\
+	ENUM##_UINT64_##TYPE\
+
+
+
 
 typedef enum
 {
-	MSG_GEN_TYPE_RESET_LEN,
-	MSG_GEN_TYPE_WHOLE_LEN_BIN,
-	MSG_GEN_TYPE_WHOLE_LEN_STRING,
-	MSG_GEN_TYPE_CHAR,
-	MSG_GEN_TYPE_STRING,
-	MSG_GEN_TYPE_TAG,
-	MSG_GEN_TYPE_CLOSE_TAG,
-	MSG_GEN_TYPE_ROSRPC_FIELD,
-	MSG_GEN_TYPE_BOOL,
-	MSG_GEN_TYPE_URL,
-	MSG_GEN_TYPE_FLOAT32,
-	MSG_GEN_TYPE_FLOAT64,
-	MSG_GEN_TYPE_INT8,
-	MSG_GEN_TYPE_UINT8,
-	MSG_GEN_TYPE_INT16,
-	MSG_GEN_TYPE_UINT16,
-	MSG_GEN_TYPE_INT32,
-	MSG_GEN_TYPE_UINT32,
-	MSG_GEN_TYPE_INT64,
-	MSG_GEN_TYPE_UINT64,
-	MSG_GEN_TYPE_END
+	MSG_TYPE_PAYLOAD_SIZE_BINARY,
+	MSG_TYPE_PAYLOAD_SIZE_STRING,
+	MSG_TYPE_PAYLOAD_SIZE_START,
+
+	MSG_TYPE_CHAR,
+	MSG_TYPE_STRING,
+
+	FLOATTYPES(MSG_TYPE, BINARY),
+	INTTYPES(MSG_TYPE, BINARY),
+
+	FLOATTYPES(MSG_TYPE, STRING),
+	INTTYPES(MSG_TYPE, STRING),
+
+	__MSG_TYPE_DESCRIPTORS,
+	XMLRPC_HTTP_DESCRIPTORS(MSG_TYPE),
+
+	__MSG_TYPE_XMLRPC_OPEN_TAGS,
+	XMLRPC_TAG_STRINGS(MSG_TYPE_OPEN),
+
+	__MSG_TYPE_XMLRPC_CLOSE_TAGS,
+	XMLRPC_TAG_STRINGS(MSG_TYPE_CLOSE),
+
+	__MSG_TYPE_ROS_FIELD_STRINGS,
+	ROS_FIELD_STRINGS(MSG_TYPE),
+	ROS_FIELD_END,
+
+	MSG_TYPE_ROS_FIELD_END,
+
+	MSG_TYPE_END,
 }msg_gen_type_t;
 
 typedef struct msg_gen_command_t
 {
-	msg_gen_type_t type;
-	void * data;
-	bool belongs_to_previous;
-	uint32_t size;
+	const msg_gen_type_t const *type;
+	void **data;
 }msg_gen_command_t;
 
-#endif /* MSG_GEN_H_ */
+
+
+#define MSG_DEF_ROS_TOPIC_HEADER(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
+		&msg_def_ros_topic_header;\
+		msg_def_ros_topic_header.data[0]=(void*)MESSAGE_DEFINITION;\
+		msg_def_ros_topic_header.data[1]=(void*)CALLERID;\
+		msg_def_ros_topic_header.data[2]=(void*)NODEDELAY;\
+		msg_def_ros_topic_header.data[3]=(void*)MD5;\
+		msg_def_ros_topic_header.data[4]=(void*)TOPIC;
+extern msg_gen_command_t msg_def_ros_topic_header;
+
+
+
+#endif /* MSG_GEN_COMMON_H_ */

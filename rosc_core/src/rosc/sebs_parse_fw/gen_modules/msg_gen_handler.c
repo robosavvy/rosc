@@ -67,154 +67,154 @@ sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata)
 
 		while(1)
 		{
-			if(*pdata->len>0)
-			switch(hdata->message_definition[hdata->msg_def].type)
-			{
-				case MSG_GEN_TYPE_BOOL:
-				case MSG_GEN_TYPE_CHAR:
-				case MSG_GEN_TYPE_INT8:
-				case MSG_GEN_TYPE_UINT8:
-					**pdata->buf=*((char *)hdata->message_definition[hdata->msg_def].data);
-					++*pdata->buf;
-					--*pdata->len;
-					++hdata->msg_def;
-				break;
-
-				case MSG_GEN_TYPE_TAG:
-					if(hdata->def_state==0)
-					{
-						**pdata->buf='<';
-						++*pdata->buf;
-						--*pdata->len;
-						hdata->def_state=1;
-						//TODO CALL BUFF_FILL HERE
-					}
-					else if(hdata->def_state==1)
-					{
-						**pdata->buf='>';
-						++*pdata->buf;
-						--*pdata->len;
-						hdata->def_state=0;
-						++hdata->msg_def;
-					}
-					break;
-
-				case MSG_GEN_TYPE_CLOSE_TAG:
-					if(hdata->def_state==0)
-					{
-						**pdata->buf='<';
-						++*pdata->buf;
-						--*pdata->len;
-						hdata->def_state=1;
-						//TODO CALL BUFF_FILL HERE
-					}
-					else if(hdata->def_state==1)
-					{
-						**pdata->buf='/';
-						++*pdata->buf;
-						--*pdata->len;
-						hdata->def_state=2;
-					}
-					else
-					{
-						**pdata->buf='>';
-						++*pdata->buf;
-						--*pdata->len;
-						hdata->def_state=0;
-						++hdata->msg_def;
-					}
-				break;
-
-				case MSG_GEN_TYPE_INT16:
-				case MSG_GEN_TYPE_UINT16:
-					++hdata->msg_def;
-					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,2,2);
-				break;
-
-				case MSG_GEN_TYPE_FLOAT32:
-				case MSG_GEN_TYPE_INT32:
-				case MSG_GEN_TYPE_UINT32:
-					++hdata->msg_def;
-					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,4,4);
-				break;
-
-				case MSG_GEN_TYPE_UINT64:
-				case MSG_GEN_TYPE_INT64:
-				case MSG_GEN_TYPE_FLOAT64:
-					++hdata->msg_def;
-					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,8,8);
-				break;
-
-				case MSG_GEN_TYPE_RESET_LEN:
-				break;
-
-				case MSG_GEN_TYPE_ROSRPC_FIELD:
-					DEBUG_PRINT_STR("\nROSRPC");
-					switch(hdata->def_state)
-					{
-						case 0://Field size
-							hdata->def_state=1;
-							BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,4,4);
-							break;
-						case 1://id string
-							hdata->def_state=2;
-							BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,hdata->message_definition[hdata->msg_def].data);
-							break;
-						case 2://equal
-							hdata->def_state=0;
-							**pdata->buf='=';
-							++*pdata->buf;
-							--*pdata->len;
-							++hdata->def_state;
-							++hdata->msg_def;
-							break;
-					}
-				break;
-
-				case MSG_GEN_TYPE_STRING:
-					DEBUG_PRINT(STR,"\nSTRING: ",(char*)hdata->message_definition[hdata->msg_def].data);
-					BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,hdata->message_definition[hdata->msg_def++].data);
-				break;
-
-				case MSG_GEN_TYPE_WHOLE_LEN_BIN:
-					DEBUG_PRINT_STR("\nLEN BIN");
-					++hdata->msg_def;
-					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_size,4,4);
-				break;
-
-				case MSG_GEN_TYPE_WHOLE_LEN_STRING:
-
-				break;
-
-				case MSG_GEN_TYPE_END:
-					pdata->len=0;
-					return SEBS_PARSE_RETURN_GO_AHEAD;
-				break;
-			}
-
-			printf("len %i\n",*pdata->len);
-			if(*pdata->len==0)
-			{
-				int byte;
-				*pdata->len+=hdata->buffer_size;
-				*pdata->buf-=hdata->buffer_size;
-				printf("current package: ");
-				for (byte = 0; byte < *pdata->len; ++byte)
-				{
-					if((*pdata->buf)[byte] > ' ' && (*pdata->buf)[byte]< '~')
-					{
-						printf("%c", (*pdata->buf)[byte]);
-					}
-					else
-					{
-						printf("[%x]", (unsigned int) (*pdata->buf)[byte]);
-					}
-				}
-				printf("\n");
-				if(pdata->event!=SEBS_PARSE_EVENT_NONE)
-					return (SEBS_PARSE_RETURN_GO_AHEAD);
-
-			}
+//			if(*pdata->len>0)
+//			switch(hdata->message_definition[hdata->msg_def].type)
+//			{
+//				case MSG_GEN_TYPE_BOOL:
+//				case MSG_GEN_TYPE_CHAR:
+//				case MSG_GEN_TYPE_INT8:
+//				case MSG_GEN_TYPE_UINT8:
+//					**pdata->buf=*((char *)hdata->message_definition[hdata->msg_def].data);
+//					++*pdata->buf;
+//					--*pdata->len;
+//					++hdata->msg_def;
+//				break;
+//
+//				case MSG_GEN_TYPE_TAG:
+//					if(hdata->def_state==0)
+//					{
+//						**pdata->buf='<';
+//						++*pdata->buf;
+//						--*pdata->len;
+//						hdata->def_state=1;
+//						//TODO CALL BUFF_FILL HERE
+//					}
+//					else if(hdata->def_state==1)
+//					{
+//						**pdata->buf='>';
+//						++*pdata->buf;
+//						--*pdata->len;
+//						hdata->def_state=0;
+//						++hdata->msg_def;
+//					}
+//					break;
+//
+//				case MSG_GEN_TYPE_CLOSE_TAG:
+//					if(hdata->def_state==0)
+//					{
+//						**pdata->buf='<';
+//						++*pdata->buf;
+//						--*pdata->len;
+//						hdata->def_state=1;
+//						//TODO CALL BUFF_FILL HERE
+//					}
+//					else if(hdata->def_state==1)
+//					{
+//						**pdata->buf='/';
+//						++*pdata->buf;
+//						--*pdata->len;
+//						hdata->def_state=2;
+//					}
+//					else
+//					{
+//						**pdata->buf='>';
+//						++*pdata->buf;
+//						--*pdata->len;
+//						hdata->def_state=0;
+//						++hdata->msg_def;
+//					}
+//				break;
+//
+//				case MSG_GEN_TYPE_INT16:
+//				case MSG_GEN_TYPE_UINT16:
+//					++hdata->msg_def;
+//					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,2,2);
+//				break;
+//
+//				case MSG_GEN_TYPE_FLOAT32:
+//				case MSG_GEN_TYPE_INT32:
+//				case MSG_GEN_TYPE_UINT32:
+//					++hdata->msg_def;
+//					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,4,4);
+//				break;
+//
+//				case MSG_GEN_TYPE_UINT64:
+//				case MSG_GEN_TYPE_INT64:
+//				case MSG_GEN_TYPE_FLOAT64:
+//					++hdata->msg_def;
+//					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,8,8);
+//				break;
+//
+//				case MSG_GEN_TYPE_RESET_LEN:
+//				break;
+//
+//				case MSG_GEN_TYPE_ROSRPC_FIELD:
+//					DEBUG_PRINT_STR("\nROSRPC");
+//					switch(hdata->def_state)
+//					{
+//						case 0://Field size
+//							hdata->def_state=1;
+//							BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_definition[hdata->msg_def].size,4,4);
+//							break;
+//						case 1://id string
+//							hdata->def_state=2;
+//							BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,hdata->message_definition[hdata->msg_def].data);
+//							break;
+//						case 2://equal
+//							hdata->def_state=0;
+//							**pdata->buf='=';
+//							++*pdata->buf;
+//							--*pdata->len;
+//							++hdata->def_state;
+//							++hdata->msg_def;
+//							break;
+//					}
+//				break;
+//
+//				case MSG_GEN_TYPE_STRING:
+//					DEBUG_PRINT(STR,"\nSTRING: ",(char*)hdata->message_definition[hdata->msg_def].data);
+//					BUFFER_FILL_INIT_STRING(pdata,hdata->buffer_fill,hdata->message_definition[hdata->msg_def++].data);
+//				break;
+//
+//				case MSG_GEN_TYPE_WHOLE_LEN_BIN:
+//					DEBUG_PRINT_STR("\nLEN BIN");
+//					++hdata->msg_def;
+//					BUFFER_FILL_INIT_SIZE(pdata,hdata->buffer_fill,&hdata->message_size,4,4);
+//				break;
+//
+//				case MSG_GEN_TYPE_WHOLE_LEN_STRING:
+//
+//				break;
+//
+//				case MSG_GEN_TYPE_END:
+//					pdata->len=0;
+//					return SEBS_PARSE_RETURN_GO_AHEAD;
+//				break;
+//			}
+//
+//			printf("len %i\n",*pdata->len);
+//			if(*pdata->len==0)
+//			{
+//				int byte;
+//				*pdata->len+=hdata->buffer_size;
+//				*pdata->buf-=hdata->buffer_size;
+//				printf("current package: ");
+//				for (byte = 0; byte < *pdata->len; ++byte)
+//				{
+//					if((*pdata->buf)[byte] > ' ' && (*pdata->buf)[byte]< '~')
+//					{
+//						printf("%c", (*pdata->buf)[byte]);
+//					}
+//					else
+//					{
+//						printf("[%x]", (unsigned int) (*pdata->buf)[byte]);
+//					}
+//				}
+//				printf("\n");
+//				if(pdata->event!=SEBS_PARSE_EVENT_NONE)
+//					return (SEBS_PARSE_RETURN_GO_AHEAD);
+//
+//			}
 
 
 		}
