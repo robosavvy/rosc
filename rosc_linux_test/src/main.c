@@ -467,18 +467,7 @@ int main()
 
 
 
-
-	char buffer[100];
-	uint32_t size=100;
-	sebs_parser_data_t pdata;
-	msg_gen_handler_data_t h;
-    msg_gen_handler_init_t i;
-	h.message_definition=i.message_definition=MSG_DEF_ROS_TOPIC_HEADER(init_test.message_definition,MyCallerId,nodeDelay,init_test.md5sum,init_test.iface_name);
-	pdata.handler_data=(void *)&h;
-	pdata.init_data=(void *)&i;
-	pdata.handler_init=true;
-	pdata.handler_function=&msg_gen_handler;
-	sebs_parser_frame(buffer,size,&pdata);
+	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_HEADER(init_test.message_definition,MyCallerId,nodeDelay,init_test.md5sum,init_test.iface_name);
 
 	printf("\n---END---\n");
 }

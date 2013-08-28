@@ -67,7 +67,7 @@ typedef struct
 	msg_gen_handler_state_t handler_state;
 
 
-	bool insert_byte;
+	bool insert_data;
 	bool byte;
 
 
@@ -85,5 +85,11 @@ typedef struct
 }msg_gen_handler_data_t;
 
 sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata);
+
+
+
+void rosc_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
+
+
 
 #endif /* MSG_GEN_HANDLER_H_ */

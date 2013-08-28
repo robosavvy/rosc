@@ -31,8 +31,9 @@
 
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
 static const msg_gen_type_t topic_header_type[]=
-						 {MSG_TYPE_PAYLOAD_SIZE_BINARY,
+						{ MSG_TYPE_PAYLOAD_SIZE_BINARY,
 						  MSG_TYPE_PAYLOAD_SIZE_START,
+
 
 						  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
 						  MSG_TYPE_STRING, //MESSAGE DEFINITION
