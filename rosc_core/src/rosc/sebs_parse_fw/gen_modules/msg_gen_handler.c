@@ -497,38 +497,72 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_comman
 						}
 						else if(*size.type>__MSG_TYPE_UINT_STRING || *size.type>__MSG_TYPE_INT_STRING)
 						{
-
-
-							uint8_t s, i;
+							uint8_t bytesize, i;
 							bool sign=false;
 							uint64_t var_uint;
 
 
 							if(*size.type>__MSG_TYPE_UINT_STRING)
 							{
-								s=(1<<*size.type-__MSG_TYPE_UINT_STRING-1);
+								bytesize=(1<<*size.type-__MSG_TYPE_UINT_STRING-1);
 							}
 							else
 							{
 								sign=true;
-								s=(1<<*size.type-__MSG_TYPE_INT_STRING-1);
+								bytesize=(1<<*size.type-__MSG_TYPE_INT_STRING-1);
 							}
 
+							switch(bytesize) //transfer the value to our 64 bit variable
+							{
+								case 1:
+									var_uint = *((uint8_t *)(*size.data));
+									break;
+								case 2:
+									var_uint = *((uint16_t *)(*size.data));
+									break;
+								case 4:
+									var_uint = *((uint32_t *)(*size.data));
+									break;
+								case 8:
+									var_uint = *((uint64_t *)(*size.data));
+									break;
+								default:
+									break;
+							}
 
+							if(sign)//is it signed?
+							{
+								if(var_uint & (1UL<<((bytesize*8)-1))) //is it negative?
+								{
+									s+=1; //add 1 to string length for the minus
+									for(i=bytesize;i<8;++i)
+									{
+										var_uint|=(0xFFUL<<i*8); //set the upper bytes to FF
+									}
+									*((int64_t *)&var_uint)*=(-1); //interpred value as int64, multiply by -1 to get rid of the negative value
+								}
+							}
 
+							do //get the number of digits for the string output
+							{
+								++*s;
+							}
+							while(var_uint/=10);
 
-
+							//Next data field...
+							++size.data;
 						}
 						else if(*size.type>__MSG_TYPE_FLOAT_STRING)
 						{
-
+							//TODO Implement if necessary or remove MSG_TYPE_FLOAT if not
+							//If necessary - How to figure out the count of the digits after the dot???? hmmm....
 						}
 						else if(*size.type>__MSG_TYPE_BINARY_OUT)
 						{
 							//Shift for 2^x
 							//8421
 							//   1<<x
-							s+=(1<<*size.type - __MSG_TYPE_BINARY_OUT -1);
+							s+=(1<<*size.type - __MSG_TYPE_BINARY_OUT-1);
 						}
 						else
 						{
@@ -536,7 +570,6 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_comman
 						}
 						break;
 					}
-
 
 					//count string size
 					if(add_string!=0)
