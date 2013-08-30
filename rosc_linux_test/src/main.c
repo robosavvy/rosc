@@ -28,22 +28,12 @@
  *
  *  main.c created by Christian Holl
  */
-#include <stdio.h>
-#include <stdbool.h>
 
-#include <inttypes.h>
-#include <rosc/msg/rosc_linux_test/testbuiltin.h>
 #include <rosc/rosc.h>
-#include <rosc/com/ros_handler.h>
+
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
-#include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
-
-
-
-#if 1
-
-
-#include <rosc/string_res/msg_strings.h>
+#include <rosc/msg/rosc_linux_test/testbuiltin.h>
+#include <rosc/com/ros_handler.h>
 
 uint8_t peer0_0[] = {
 0x27, 0x04, 0x00, 0x00, 0x8d, 0x03, 0x00, 0x00,
@@ -444,16 +434,11 @@ ros_msg_init_t init_test={	topic,
 iface_t sub={false,
 		     &ros_handler,
 		     &init_test};
-#endif
 
 
 
 int main()
 {
-
-
-
-
 
 	__rosc_static_port_mem[0];
 
@@ -467,7 +452,12 @@ int main()
 
 
 
-	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_HEADER(init_test.message_definition,MyCallerId,nodeDelay,init_test.md5sum,init_test.iface_name);
+	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,nodeDelay,init_test.md5sum,init_test.iface_name);
+
+
+	char *buffer[200];
+	send_rpc(buffer, 200,message_definition);
+
 
 	printf("\n---END---\n");
 }

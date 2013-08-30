@@ -30,34 +30,44 @@
  */
 
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
-static const msg_gen_type_t topic_header_type[]=
-						{ MSG_TYPE_PAYLOAD_SIZE_BINARY,
-						  MSG_TYPE_PAYLOAD_SIZE_START,
 
+static const msg_gen_type_t rosrpc_message_header[]=
+{
+	MSG_TYPE_PAYLOAD_SIZE_BINARY,
+	MSG_TYPE_HEADER_END,
+};
 
-						  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
-						  MSG_TYPE_STRING, //MESSAGE DEFINITION
-						  MSG_TYPE_ROSRPC_FIELD_END,
+static const msg_gen_type_t rosrpc_topic_init_payload[]=
+{
+	  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
+	  MSG_TYPE_STRING, //MESSAGE DEFINITION
+	  MSG_TYPE_ROSRPC_FIELD_END,
 
-						  MSG_TYPE_ROS_FIELD_CALLERID,
-						  MSG_TYPE_STRING,//CALLERID
-						  MSG_TYPE_ROSRPC_FIELD_END,
+	  MSG_TYPE_ROS_FIELD_CALLERID,
+	  MSG_TYPE_STRING,//CALLERID
+	  MSG_TYPE_ROSRPC_FIELD_END,
 
-						  MSG_TYPE_ROS_FIELD_TCP_NODELAY,
-						  MSG_TYPE_UINT8_STRING, //NODEDELAY
-						  MSG_TYPE_ROSRPC_FIELD_END,
+	  MSG_TYPE_ROS_FIELD_TCP_NODELAY,
+	  MSG_TYPE_UINT8_STRING, //NODEDELAY
+	  MSG_TYPE_ROSRPC_FIELD_END,
 
-						  MSG_TYPE_ROS_FIELD_MD5SUM,
-						  MSG_TYPE_STRING, //MD5
-						  MSG_TYPE_ROSRPC_FIELD_END,
+	  MSG_TYPE_ROS_FIELD_MD5SUM,
+	  MSG_TYPE_STRING, //MD5
+	  MSG_TYPE_ROSRPC_FIELD_END,
 
-						  MSG_TYPE_ROS_FIELD_TOPIC,
-						  MSG_TYPE_STRING, //TOPIC
-						  MSG_TYPE_ROSRPC_FIELD_END,
+	  MSG_TYPE_ROS_FIELD_TOPIC,
+	  MSG_TYPE_STRING, //TOPIC
+	  MSG_TYPE_ROSRPC_FIELD_END,
 
-						  MSG_TYPE_MESSAGE_END};
+	  MSG_TYPE_MESSAGE_END
+};
+
 	static void *topic_header_storage[5];
-	msg_gen_command_t msg_def_ros_topic_header={topic_header_type, topic_header_storage};
+
+
+	msg_gen_command_t msg_def_ros_topic_init={rosrpc_message_header,
+											  rosrpc_topic_init_payload,
+											 (const void const **)topic_header_storage};
 
 
 

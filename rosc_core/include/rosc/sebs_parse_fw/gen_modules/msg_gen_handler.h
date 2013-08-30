@@ -29,6 +29,8 @@
  *  msg_gen_handler.h created by Christian Holl
  */
 
+
+
 #ifndef MSG_GEN_HANDLER_H_
 #define MSG_GEN_HANDLER_H_
 
@@ -86,9 +88,7 @@ typedef struct
 
 sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata);
 
-
-
-void rosc_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
+void rpc_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
 
 
 

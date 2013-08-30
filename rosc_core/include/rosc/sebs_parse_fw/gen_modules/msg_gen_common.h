@@ -58,13 +58,12 @@ typedef enum
 	//Single Values
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_PAYLOAD_SIZE_STRING,
-	MSG_TYPE_PAYLOAD_SIZE_START,
-	MSG_TYPE_PAYLOAD_END,
 
 	MSG_TYPE_BOOL_STRING,
 	MSG_TYPE_STRING,
 
 	MSG_TYPE_MESSAGE_END,
+	MSG_TYPE_HEADER_END,
 	MSG_TYPE_ROSRPC_FIELD_END,
 
 	__MSG_TYPE_BINARY_OUT,
@@ -110,18 +109,19 @@ typedef enum
 
 typedef struct msg_gen_command_t
 {
-	const msg_gen_type_t const *type;
+	const msg_gen_type_t const *header;
+	const msg_gen_type_t const *payload;
 	const void const **data;
 }msg_gen_command_t;
 
-#define MSG_DEF_ROS_TOPIC_HEADER(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
-		&msg_def_ros_topic_header;\
-		msg_def_ros_topic_header.data[0]=(void*)MESSAGE_DEFINITION;\
-		msg_def_ros_topic_header.data[1]=(void*)CALLERID;\
-		msg_def_ros_topic_header.data[2]=(void*)NODEDELAY;\
-		msg_def_ros_topic_header.data[3]=(void*)MD5;\
-		msg_def_ros_topic_header.data[4]=(void*)TOPIC;
-extern msg_gen_command_t msg_def_ros_topic_header;
+#define MSG_DEF_ROS_TOPIC_INIT(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
+		&msg_def_ros_topic_init;\
+		msg_def_ros_topic_init.data[0]=(void*)MESSAGE_DEFINITION;\
+		msg_def_ros_topic_init.data[1]=(void*)CALLERID;\
+		msg_def_ros_topic_init.data[2]=(void*)NODEDELAY;\
+		msg_def_ros_topic_init.data[3]=(void*)MD5;\
+		msg_def_ros_topic_init.data[4]=(void*)TOPIC;
+extern msg_gen_command_t msg_def_ros_topic_init;
 
 
 
