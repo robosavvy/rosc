@@ -111,16 +111,17 @@ typedef struct msg_gen_command_t
 {
 	const msg_gen_type_t const *header;
 	const msg_gen_type_t const *payload;
-	const void const **data;
+	const void const **header_data;
+	const void const **payload_data;
 }msg_gen_command_t;
 
 #define MSG_DEF_ROS_TOPIC_INIT(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
 		&msg_def_ros_topic_init;\
-		msg_def_ros_topic_init.data[0]=(void*)MESSAGE_DEFINITION;\
-		msg_def_ros_topic_init.data[1]=(void*)CALLERID;\
-		msg_def_ros_topic_init.data[2]=(void*)NODEDELAY;\
-		msg_def_ros_topic_init.data[3]=(void*)MD5;\
-		msg_def_ros_topic_init.data[4]=(void*)TOPIC;
+		msg_def_ros_topic_init.payload_data[0]=(void*)MESSAGE_DEFINITION;\
+		msg_def_ros_topic_init.payload_data[1]=(void*)CALLERID;\
+		msg_def_ros_topic_init.payload_data[2]=(void*)NODEDELAY;\
+		msg_def_ros_topic_init.payload_data[3]=(void*)MD5;\
+		msg_def_ros_topic_init.payload_data[4]=(void*)TOPIC;
 extern msg_gen_command_t msg_def_ros_topic_init;
 
 

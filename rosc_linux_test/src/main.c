@@ -452,7 +452,7 @@ int main()
 
 
 
-	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,nodeDelay,init_test.md5sum,init_test.iface_name);
+	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,&nodeDelay,init_test.md5sum,init_test.iface_name);
 
 
 	char *buffer[200];

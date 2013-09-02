@@ -66,7 +66,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 
 	msg_gen_command_t msg_def_ros_topic_init={rosrpc_message_header,
-											  rosrpc_topic_init_payload,
+											  rosrpc_topic_init_payload,0,
 											 (const void const **)topic_header_storage};
 
 
