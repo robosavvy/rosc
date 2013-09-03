@@ -81,12 +81,12 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 		const char* data;
 		union
 		{
-			char single_chr;
 
 			struct
 			{
 				uint32_t size;
 				uint8_t correct;
+				char single_chr;
 			};
 
 			struct
@@ -122,10 +122,10 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 	while (1)
 	{
 
-		if (buf.size == 0 || *type==MSG_TYPE_MESSAGE_END)
+		if (buf.size == 0 || *type==MSG_TYPE_MESSAGE_END && !size.mode)
 		{
 			int byte;
-			printf("current package: ");
+			printf("\n##paket===============================================##\n");
 			for (byte = 0; byte < buffer_size - buf.size; ++byte)
 			{
 				if ((buffer[byte] >= ' ' && buffer[byte] <= '~')
@@ -137,6 +137,13 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 				{
 					printf("[%x]", (unsigned int) buffer[byte]);
 				}
+			}
+			printf("\n##===================================================##\n");
+			BUFFER_RESET;
+
+			if(*type==MSG_TYPE_MESSAGE_END)
+			{
+				break;
 			}
 		}
 
@@ -179,8 +186,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					{
 						if (out.size > out.curPos )
 						{
-							*buf.ptr = *((char *) (out.data
-									+ (out.curPos / out.correct)
+							*buf.ptr = *((char *) (out.data + out.curPos
 									+ correct[out.curPos % out.correct]));
 							BUFFER_NEXT_BYTE
 							;
@@ -306,14 +312,17 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						{
 							conv /= 10;
 						}
-						*buf.ptr = conv - 48;
+						*buf.ptr = conv + 48;
 						++out.curPos;
 						BUFFER_NEXT_BYTE
 						;
 
-						if ((out.digits - out.curPos) == 0) //if there are no more digits to convert leave
+						//note: +1 because the sign is the first
+						if ((out.digits+1 - out.curPos) == 0) //if there are no more digits to convert leave
 						{
+							submode = MSG_GEN_MODE_TYPE;
 							NEXT_BUILDUP;
+							break;
 						}
 					}
 				}
@@ -441,6 +450,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 											size.data = data;
 											size.type = type;
 											size.selectedSize = &size.rosrpc_size;
+											size.rosrpc_size=0;
 											size.mode =
 													MSG_GEN_SIZE_MODE_ROSFIELD;
 										break;
