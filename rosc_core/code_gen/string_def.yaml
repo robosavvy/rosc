@@ -89,14 +89,6 @@ xmlrpc_stdtext:
       'http://': HTTP_URL_HEAD,
       TCPROS,
       'rosrpc://': ROSRPC_URL_HEAD,
-      registerPublisher,
-      registerSubscriber,
-      unregisterPublisher,
-      unregisterSubscriber,
-      registerService,
-      unregisterService,
-      hasParam,
-      requestTopic,
   }
 
 #Method names for RPC
@@ -115,6 +107,20 @@ xmlrpc_slave_methodnames:
       getPublications,
       paramUpdate,
       publisherUpdate,
+      requestTopic,
+      registerPublisher,
+      registerSubscriber,
+      unregisterPublisher,
+      unregisterSubscriber,
+      registerService,
+      unregisterService,
+      hasParam,
+      subscribeParam,
+      getParamNames,
+      unsubscribeParam,
+      searchParam,
+      setParam,
+      deleteParam,
       requestTopic,
   }
 

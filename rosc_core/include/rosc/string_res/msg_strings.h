@@ -64,7 +64,7 @@ extern const char *http_header_stdtext[];
 /**
  * Length of the string array xmlrpc_stdtext
  */
-#define XMLRPC_STDTEXT_LEN 	14
+#define XMLRPC_STDTEXT_LEN 	6
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
@@ -74,16 +74,8 @@ extern const char *http_header_stdtext[];
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
 	 ENUM ## _STDTXT_TCPROS, \
-	 ENUM ## _STDTXT_HASPARAM, \
 	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
-	 ENUM ## _STDTXT_REGISTERPUBLISHER, \
-	 ENUM ## _STDTXT_REGISTERSERVICE, \
-	 ENUM ## _STDTXT_REGISTERSUBSCRIBER, \
-	 ENUM ## _STDTXT_REQUESTTOPIC, \
-	 ENUM ## _STDTXT_ROSRPC_URL_HEAD, \
-	 ENUM ## _STDTXT_UNREGISTERPUBLISHER, \
-	 ENUM ## _STDTXT_UNREGISTERSERVICE, \
-	 ENUM ## _STDTXT_UNREGISTERSUBSCRIBER
+	 ENUM ## _STDTXT_ROSRPC_URL_HEAD
 
 /**
  * This array contains the strings for standard XMLRPC text pieces
@@ -186,22 +178,35 @@ extern const char *xmlrpc_http_descriptors[];
 /**
  * Length of the string array xmlrpc_slave_methodnames
  */
-#define XMLRPC_SLAVE_METHODNAMES_LEN 	10
+#define XMLRPC_SLAVE_METHODNAMES_LEN 	23
 
 /**
  * Macro for inserting Strings for known methods of the slave api string numbers into any enum
  */
 #define XMLRPC_SLAVE_METHODNAMES(ENUM) \
+	 ENUM ## _METHODNAME_DELETEPARAM, \
 	 ENUM ## _METHODNAME_GETBUSINFO, \
 	 ENUM ## _METHODNAME_GETBUSSTATS, \
 	 ENUM ## _METHODNAME_GETMASTERURI, \
+	 ENUM ## _METHODNAME_GETPARAMNAMES, \
 	 ENUM ## _METHODNAME_GETPID, \
 	 ENUM ## _METHODNAME_GETPUBLICATIONS, \
 	 ENUM ## _METHODNAME_GETSUBSCRIPTIONS, \
+	 ENUM ## _METHODNAME_HASPARAM, \
 	 ENUM ## _METHODNAME_PARAMUPDATE, \
 	 ENUM ## _METHODNAME_PUBLISHERUPDATE, \
+	 ENUM ## _METHODNAME_REGISTERPUBLISHER, \
+	 ENUM ## _METHODNAME_REGISTERSERVICE, \
+	 ENUM ## _METHODNAME_REGISTERSUBSCRIBER, \
 	 ENUM ## _METHODNAME_REQUESTTOPIC, \
-	 ENUM ## _METHODNAME_SHUTDOWN
+	 ENUM ## _METHODNAME_SEARCHPARAM, \
+	 ENUM ## _METHODNAME_SETPARAM, \
+	 ENUM ## _METHODNAME_SHUTDOWN, \
+	 ENUM ## _METHODNAME_SUBSCRIBEPARAM, \
+	 ENUM ## _METHODNAME_UNREGISTERPUBLISHER, \
+	 ENUM ## _METHODNAME_UNREGISTERSERVICE, \
+	 ENUM ## _METHODNAME_UNREGISTERSUBSCRIBER, \
+	 ENUM ## _METHODNAME_UNSUBSCRIBEPARAM
 
 /**
  * This array contains the strings for Strings for known methods of the slave api
@@ -235,7 +240,7 @@ extern const char *xmlrpc_slave_methodnames[];
 /**
  * This array contains the strings for field id strings for the ros protocol
  */
-extern const char * const ros_field_strings[];
+extern const char *ros_field_strings[];
 
 
 /**
