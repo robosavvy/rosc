@@ -122,7 +122,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 	while (1)
 	{
 
-		if (buf.size == 0 || *type==MSG_TYPE_MESSAGE_END && !size.mode)
+		if (buf.size == 0 || (*type==MSG_TYPE_MESSAGE_END && !size.mode && submode == MSG_GEN_MODE_TYPE))
 		{
 			int byte;
 			printf("\n##paket===============================================##\n");
@@ -228,6 +228,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 			case MSG_GEN_MODE_NUMBER_TO_STRING:
 			{
 				uint8_t bytesize, i;
+				uint64_t conv;
 				bool sign = false;
 
 				if (out.curPos == 0) //Check if the current Position is zero (beginning)
@@ -237,10 +238,14 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					{
 						bytesize = (1 << (*type - __MSG_TYPE_UINT_STRING - 1));
 					}
-					else
+					else if (*type > __MSG_TYPE_INT_STRING)
 					{
 						sign = true;
 						bytesize = (1 << (*type - __MSG_TYPE_INT_STRING - 1));
+					}
+					else if(*type == MSG_TYPE_PAYLOAD_SIZE_STRING)
+					{
+						bytesize = 4;
 					}
 
 					switch(bytesize)
@@ -287,11 +292,11 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					}
 
 					out.digits = 0;
-					uint64_t var_uint=out.int_number;
+					conv=out.int_number;
 					do //get the number of digits for the string output
 					{
 						++out.digits;
-					} while (var_uint /=10);
+					} while (conv /=10);
 					++out.curPos;
 				}
 
@@ -306,13 +311,14 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					while (buf.size > 0)
 					{
 						uint8_t i;
-						uint64_t conv = out.int_number;
+						conv=1;
 
 						for (i = 0; i < out.digits - out.curPos; ++i)
 						{
-							conv /= 10;
+							conv *= 10;
 						}
-						*buf.ptr = conv + 48;
+						*buf.ptr = out.int_number/conv + 48;
+						out.int_number-=out.int_number/conv * conv;
 						++out.curPos;
 						BUFFER_NEXT_BYTE
 						;
@@ -363,13 +369,13 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 								if (*type == MSG_TYPE_PAYLOAD_SIZE_BINARY)
 								{
 									DATA_TO_BUFFER(&size.payload_size, 4, 4);
+									NEXT_BUILDUP;
 								}
 								else
 								{
 									NUMBER_TO_BUFFER(&size.payload_size,
 											MSG_GEN_NUMBERTYPE_UINT, 4);
 								}
-								NEXT_BUILDUP;
 							}
 						break;
 
@@ -387,16 +393,15 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						break;
 
 					case MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END:
-					case MSG_TYPE_DESCRIPTOR_END:
-						if (size.mode)
-						{
-							size.selectedSize += 1;
-						}
-						else
-						{
 							BYTE_TO_BUFFER('\n');
-						}
-						NEXT_BUILDUP;
+							type = def->payload;
+							data = def->payload_data;
+						break;
+
+
+					case MSG_TYPE_DESCRIPTOR_END:
+							BYTE_TO_BUFFER('\n');
+							NEXT_BUILDUP;
 						break;
 
 					case MSG_TYPE_ROSRPC_FIELD_END:
@@ -495,11 +500,11 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 							{
 								if (*type > __MSG_TYPE_XMLRPC_CLOSE_TAGS)
 								{ //'</>'
-									size.selectedSize += 3;
+									*size.selectedSize += 3;
 								}
 								else //'<>'
 								{
-									size.selectedSize += 2;
+									*size.selectedSize += 2;
 								}
 
 								//Get tag string size
@@ -517,7 +522,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 													- __MSG_TYPE_XMLRPC_OPEN_TAGS
 													- 1]);
 								}
-
+								NEXT_BUILDUP;
 							}
 							else
 								switch(def_state)
@@ -570,14 +575,6 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 
 						else if (*type > __MSG_TYPE_DESCRIPTORS)
 						{
-							if (size.mode != MSG_GEN_SIZE_MODE_NONE)
-							{
-								size.selectedSize += 2;
-								STRING_SIZE(
-										xmlrpc_http_descriptors[*type
-												- __MSG_TYPE_DESCRIPTORS - 1]);
-							}
-							else
 								switch(def_state)
 								{
 									case 0: // DESCRIPTOR

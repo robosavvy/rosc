@@ -62,12 +62,35 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 	  MSG_TYPE_MESSAGE_END
 };
 
-	static void *topic_header_storage[5];
 
 
-	msg_gen_command_t msg_def_ros_topic_init={rosrpc_message_header,
-											  rosrpc_topic_init_payload,0,
-											 (const void const **)topic_header_storage};
+	static void *header_storage[5];
+	static void *payload_storage[5];
+
+
+//	msg_gen_command_t msg_def_ros_topic_init={rosrpc_message_header,
+//											  rosrpc_topic_init_payload,(const void const **)header_storage,
+//											 (const void const **)payload_storage};
 
 
 
+	static const msg_gen_type_t xmlrpc_common_header[]=
+	{
+		MSG_TYPE_DESCRIPTOR_USER_AGENT,
+		MSG_TYPE_DESCRIPTOR_END,
+		MSG_TYPE_DESCRIPTOR_CONTENT_LENGTH,
+			MSG_TYPE_PAYLOAD_SIZE_STRING,
+		MSG_TYPE_DESCRIPTOR_END,
+		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
+	};
+
+	static const msg_gen_type_t xmlrpc_topic_init_payload[]=
+	{
+			MSG_TYPE_OPEN_TAG_DATA,
+			MSG_TYPE_CLOSE_TAG_DATA,
+			MSG_TYPE_MESSAGE_END
+	};
+
+	msg_gen_command_t msg_def_ros_topic_init={xmlrpc_common_header,
+											  xmlrpc_topic_init_payload,(const void const **)header_storage,
+											  (const void const **)payload_storage};
