@@ -444,7 +444,51 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 
 					default:
 						//Do not change the order here! Otherwise the order must be change in msg_gen_type_t as well!
-						if (*type > __MSG_TYPE_ROSRPC_FIELD_STRINGS)
+						if(*type > __MSG_TYPE_STRINGS)
+						{
+							const char *ptr;
+
+
+							if(*type > __MSG_TYPE_HTTP_HEADER_STDTEXT)
+							{
+								ptr=http_header_stdtext[*type
+										- __MSG_TYPE_HTTP_HEADER_STDTEXT
+										- 1];
+							}
+							else if(*type > __MSG_TYPE_XMLRPC_STDTEXT)
+							{
+								ptr=xmlrpc_stdtext[*type
+										- __MSG_TYPE_XMLRPC_STDTEXT
+										- 1];
+							}
+							else if(*type > __MSG_TYPE_XMLRPC_SLAVE_METHODNAMES)
+							{
+								ptr=xmlrpc_slave_methodnames[*type
+										- __MSG_TYPE_XMLRPC_SLAVE_METHODNAMES
+										- 1];
+							}
+							else if(*type > __MSG_TYPE_HTTP_ACTIONS)
+							{
+								ptr=xmlrpc_http_actions[*type
+										- __MSG_TYPE_HTTP_ACTIONS
+										- 1];
+							}
+
+
+
+
+							if (size.mode)
+							{
+								STRING_SIZE(ptr);
+							}
+							else
+							{
+								STRING_TO_BUFFER(ptr);
+							}
+							NEXT_CONTENT;
+							NEXT_BUILDUP;
+						}
+						else if (*type > __MSG_TYPE_ROSRPC_FIELD_STRINGS)
 						{
 							if (size.mode == MSG_GEN_SIZE_MODE_NONE)
 							{

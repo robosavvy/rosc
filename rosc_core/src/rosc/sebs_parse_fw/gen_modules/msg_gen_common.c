@@ -74,23 +74,52 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 
 
-	static const msg_gen_type_t xmlrpc_common_header[]=
+	static const msg_gen_type_t xmlrpc_common_request_header[]=
 	{
 		MSG_TYPE_DESCRIPTOR_USER_AGENT,
+		MSG_TYPE_VAL_XMLRPC_ROSC_NODELIB,
 		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_ACCEPT_ENCODING,
+		MSG_TYPE_VAL_TEXT_XML,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_CONTENT_ENCODING,
+		MSG_TYPE_VAL_TEXT_XML,
+		MSG_TYPE_DESCRIPTOR_END,
+
 		MSG_TYPE_DESCRIPTOR_CONTENT_LENGTH,
 			MSG_TYPE_PAYLOAD_SIZE_STRING,
 		MSG_TYPE_DESCRIPTOR_END,
 		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
 	};
 
+
+
+
+
+
 	static const msg_gen_type_t xmlrpc_topic_init_payload[]=
 	{
-			MSG_TYPE_OPEN_TAG_DATA,
-			MSG_TYPE_CLOSE_TAG_DATA,
+			MSG_TYPE_OPEN_TAG_METHODCALL,
+				MSG_TYPE_OPEN_TAG_METHODNAME,
+					MSG_TYPE_METHODNAME_GETBUSINFO,
+				MSG_TYPE_CLOSE_TAG_METHODNAME,
+
+				MSG_TYPE_OPEN_TAG_PARAMS,
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+				MSG_TYPE_CLOSE_TAG_PARAMS,
+
+
+			MSG_TYPE_CLOSE_TAG_METHODCALL,
+
 			MSG_TYPE_MESSAGE_END
 	};
 
-	msg_gen_command_t msg_def_ros_topic_init={xmlrpc_common_header,
+	msg_gen_command_t msg_def_ros_topic_init={xmlrpc_common_request_header,
 											  xmlrpc_topic_init_payload,(const void const **)header_storage,
 											  (const void const **)payload_storage};
