@@ -88,6 +88,7 @@ xmlrpc_stdtext:
       '/tcp_keepalive': TCP_KEEPALIVE,
       'http://': HTTP_URL_HEAD,
       TCPROS,
+      ROS,
       'rosrpc://': ROSRPC_URL_HEAD,
   }
 

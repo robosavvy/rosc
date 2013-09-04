@@ -36,8 +36,7 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
-#include <rosc/sebs_parse_fw/gen_modules/size_deter.h>
-#include <rosc/sebs_parse_fw/gen_modules/buffer_fill.h>
+#include <rosc/system/endian.h>
 #include <rosc/debug/debug_out.h>
 
 typedef enum
@@ -61,30 +60,7 @@ typedef enum
 	MSG_GEN_HANDLER_EVENT_END_MESSAGE,
 }msg_gen_handler_event_t;
 
-typedef struct
-{
-	uint32_t buffer_size;
-	msg_gen_command_t *message_definition;
-	void **message_data_fields;
-	msg_gen_handler_state_t handler_state;
 
-
-	bool insert_data;
-	bool byte;
-
-
-	bool payload_size_available;
-	uint32_t payload_size;
-	uint32_t msg_def;
-	uint8_t def_state;
-
-	union
-	{
-
-		buffer_fill_data_t buffer_fill;
-		size_deter_data_t size_deter;
-	};
-}msg_gen_handler_data_t;
 
 sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata);
 

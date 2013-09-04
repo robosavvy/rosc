@@ -444,11 +444,18 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 
 					default:
 						//Do not change the order here! Otherwise the order must be change in msg_gen_type_t as well!
-						if(*type > __MSG_TYPE_STRINGS)
+						if(*type > MSG_TYPE_SKIP_ENTRIES)
+						{
+							uint8_t skip=*type - MSG_TYPE_SKIP_ENTRIES;
+							while(skip>0)
+							{
+								++type;
+								--skip;
+							}
+						}
+						else if(*type > __MSG_TYPE_STRINGS)
 						{
 							const char *ptr;
-
-
 							if(*type > __MSG_TYPE_HTTP_HEADER_STDTEXT)
 							{
 								ptr=http_header_stdtext[*type

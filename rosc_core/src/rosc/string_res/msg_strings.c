@@ -52,6 +52,7 @@ const char *xmlrpc_stdtext[] =
 	"/tcp_keepalive",
 	"<?xml version=\"1.0\"?>",
 	"Error code",
+	"ROS",
 	"TCPROS",
 	"http://",
 	"rosrpc://"

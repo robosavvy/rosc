@@ -54,6 +54,7 @@
 
 typedef enum
 {
+
 	__MSG_TYPE_NONE,
 	//Single Values
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
@@ -91,6 +92,7 @@ typedef enum
 	MSG_TYPE_UINT64_STRING,
 
 
+
 	__MSG_TYPE_DESCRIPTORS,
 	XMLRPC_HTTP_DESCRIPTORS(MSG_TYPE),
 	MSG_TYPE_DESCRIPTOR_END,
@@ -117,12 +119,15 @@ typedef enum
 
 	__MSG_TYPE_HTTP_HEADER_STDTEXT,
 	HTTP_HEADER_STDTEXT(MSG_TYPE),
+
+	MSG_TYPE_SKIP_ENTRIES,
+
 }msg_gen_type_t;
 
 typedef struct msg_gen_command_t
 {
-	const msg_gen_type_t const *header;
-	const msg_gen_type_t const *payload;
+	msg_gen_type_t const *header;
+	msg_gen_type_t const *payload;
 	const void const **header_data;
 	const void const **payload_data;
 }msg_gen_command_t;

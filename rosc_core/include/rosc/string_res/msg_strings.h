@@ -64,7 +64,7 @@ extern const char *http_header_stdtext[];
 /**
  * Length of the string array xmlrpc_stdtext
  */
-#define XMLRPC_STDTEXT_LEN 	6
+#define XMLRPC_STDTEXT_LEN 	7
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
@@ -73,6 +73,7 @@ extern const char *http_header_stdtext[];
 	 ENUM ## _STDTXT_TCP_KEEPALIVE, \
 	 ENUM ## _STDTXT_XML_DEF, \
 	 ENUM ## _STDTXT_ERROR_CODE, \
+	 ENUM ## _STDTXT_ROS, \
 	 ENUM ## _STDTXT_TCPROS, \
 	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
 	 ENUM ## _STDTXT_ROSRPC_URL_HEAD
