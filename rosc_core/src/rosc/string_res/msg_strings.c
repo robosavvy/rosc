@@ -52,17 +52,10 @@ const char *xmlrpc_stdtext[] =
 	"/tcp_keepalive",
 	"<?xml version=\"1.0\"?>",
 	"Error code",
+	"ROS",
 	"TCPROS",
-	"hasParam",
 	"http://",
-	"registerPublisher",
-	"registerService",
-	"registerSubscriber",
-	"requestTopic",
-	"rosrpc://",
-	"unregisterPublisher",
-	"unregisterService",
-	"unregisterSubscriber"
+	"rosrpc://"
 };
 
 const char *xmlrpc_attribute_strings[] =
@@ -111,16 +104,29 @@ const char *xmlrpc_http_descriptors[] =
 
 const char *xmlrpc_slave_methodnames[] =
 {
+	"deleteParam",
 	"getBusInfo",
 	"getBusStats",
 	"getMasterUri",
+	"getParamNames",
 	"getPid",
 	"getPublications",
 	"getSubscriptions",
+	"hasParam",
 	"paramUpdate",
 	"publisherUpdate",
+	"registerPublisher",
+	"registerService",
+	"registerSubscriber",
 	"requestTopic",
-	"shutdown"
+	"searchParam",
+	"setParam",
+	"shutdown",
+	"subscribeParam",
+	"unregisterPublisher",
+	"unregisterService",
+	"unregisterSubscriber",
+	"unsubscribeParam"
 };
 
 const char *ros_field_strings[] =

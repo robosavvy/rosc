@@ -8,6 +8,8 @@ src/rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.c
+src/rosc/sebs_parse_fw/gen_modules/msg_gen_common.c
+src/rosc/sebs_parse_fw/gen_modules/msg_gen_handler.c
 src/rosc/system/endian.c
 src/rosc/system/rosc_spin.c
 src/rosc/system/ports.c
@@ -16,6 +18,5 @@ src/rosc/system/system.c
 src/rosc/system/rosc_init.c
 src/rosc/com/ros_handler.c
 src/rosc/com/xmlrpc.c
-src/rosc/msg_generators/xml_msg_gen.c
 src/rosc/string_res/msg_strings.c
 )

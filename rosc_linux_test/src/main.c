@@ -28,11 +28,11 @@
  *
  *  main.c created by Christian Holl
  */
-#include <stdio.h>
-#include <stdbool.h>
-#include <inttypes.h>
-#include <rosc/msg/rosc_linux_test/testbuiltin.h>
+
 #include <rosc/rosc.h>
+
+#include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
+#include <rosc/msg/rosc_linux_test/testbuiltin.h>
 #include <rosc/com/ros_handler.h>
 
 uint8_t peer0_0[] = {
@@ -439,11 +439,25 @@ iface_t sub={false,
 
 int main()
 {
+
 	__rosc_static_port_mem[0];
 
 	rosc_init();
 	register_interface(&sub);
 	rosc_open_port(&sub,0);
 	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
+
+	char *MyCallerId="NARF";
+	bool nodeDelay=true;
+
+
+
+	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,&nodeDelay,init_test.md5sum,init_test.iface_name);
+
+
+	char *buffer[1000];
+	send_rpc(buffer, 1000,message_definition);
+
+
 	printf("\n---END---\n");
 }
