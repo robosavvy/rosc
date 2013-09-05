@@ -107,6 +107,7 @@ typedef struct
 typedef struct
 {
 	const int8_t* iface_name;	/**< the name of the interface **/
+	const int8_t* type_name; /**< the name of the service**/
 	const ros_type_t ros_type;	/**< the interface type */
 	const ros_buildup_type_t* const buildup;/**< the buildup information */
 	const size_t* const submessage_sizes;   /**< array with sizes of the submessage or strings in arrays*/

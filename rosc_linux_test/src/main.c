@@ -455,8 +455,8 @@ int main()
 	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,&nodeDelay,init_test.md5sum,init_test.iface_name);
 
 
-	char *buffer[200];
-	send_rpc(buffer, 200,message_definition);
+	char *buffer[1000];
+	send_rpc(buffer, 1000,message_definition);
 
 
 	printf("\n---END---\n");

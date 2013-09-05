@@ -31,7 +31,26 @@
 
 #include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
 
-static const msg_gen_type_t rosrpc_message_header[]=
+static void *header_storage[5];
+static void *payload_storage[5];
+
+
+
+#define XMLRPC_METHODCALL_HASPARAM(STR_CALLERID, STR_PARAM)
+
+#define XMLRPC_METHODCALL_SEARCHPARAM(STR_CALLERID, STR_PARAM)
+
+#define XMLRPC_METHODCALL_DELETEPARAM(STR_CALLERID, STR_PARAM)
+
+
+
+
+
+
+
+
+
+static const msg_gen_type_t rosrpc_common_message_header[]=
 {
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_HEADER_END,
@@ -62,30 +81,18 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 	  MSG_TYPE_MESSAGE_END
 };
 
-
-
-	static void *header_storage[5];
-	static void *payload_storage[5];
-
-//
-//	msg_gen_command_t msg_def_ros_topic_init={rosrpc_message_header,
-//											  rosrpc_topic_init_payload,(const void const **)header_storage,
-//											 (const void const **)payload_storage};
-
-
-
 	static const msg_gen_type_t xmlrpc_request_header[]=
 	{
+		MSG_TYPE_VAL_METHOD_POST,
+		MSG_TYPE_DESCRIPTOR_END,
 		MSG_TYPE_DESCRIPTOR_USER_AGENT,
 		MSG_TYPE_VAL_XMLRPC_ROSC_NODELIB,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_ACCEPT_ENCODING,
-		MSG_TYPE_VAL_TEXT_XML,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_CONTENT_ENCODING,
-		MSG_TYPE_VAL_TEXT_XML,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_CONTENT_LENGTH,
@@ -99,7 +106,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 			MSG_TYPE_OPEN_TAG_METHODCALL,
 
 				MSG_TYPE_OPEN_TAG_METHODNAME,
-					MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER,
+					MSG_TYPE_METHODNAME_GETSUBSCRIPTIONS,
 				MSG_TYPE_CLOSE_TAG_METHODNAME,
 
 				MSG_TYPE_OPEN_TAG_PARAMS,
@@ -109,25 +116,6 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 							//MSG_TYPE_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
-
-					MSG_TYPE_OPEN_TAG_PARAM,
-						MSG_TYPE_OPEN_TAG_VALUE,
-							//MSG_TYPE_STRING,
-						MSG_TYPE_CLOSE_TAG_VALUE,
-					MSG_TYPE_CLOSE_TAG_PARAM,
-
-					MSG_TYPE_OPEN_TAG_PARAM,
-						MSG_TYPE_OPEN_TAG_VALUE,
-							//MSG_TYPE_STRING,
-						MSG_TYPE_CLOSE_TAG_VALUE,
-					MSG_TYPE_CLOSE_TAG_PARAM,
-
-					MSG_TYPE_OPEN_TAG_PARAM,
-						MSG_TYPE_OPEN_TAG_VALUE,
-							//MSG_TYPE_STRING,
-						MSG_TYPE_CLOSE_TAG_VALUE,
-					MSG_TYPE_CLOSE_TAG_PARAM,
-
 
 				MSG_TYPE_CLOSE_TAG_PARAMS,
 			MSG_TYPE_CLOSE_TAG_METHODCALL,
@@ -153,7 +141,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 									MSG_TYPE_CLOSE_TAG_INT,
 								MSG_TYPE_CLOSE_TAG_VALUE,
 
-								MSG_TYPE_SKIP_ENTRIES+5,
+								MSG_TYPE_SKIP_ENTRIES,
 
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_STRING,
@@ -164,6 +152,8 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_ARRAY,
 										MSG_TYPE_OPEN_TAG_DATA,
+
+											MSG_TYPE_SKIP_ENTRIES,
 
 											MSG_TYPE_OPEN_TAG_VALUE,
 												MSG_TYPE_STDTXT_TCPROS,
@@ -189,6 +179,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 			MSG_TYPE_CLOSE_TAG_METHODRESPONSE
 	};
+
 
 		msg_gen_command_t msg_def_ros_topic_init={xmlrpc_request_header,
 												  xmlrpc_request,(const void const **)header_storage,
