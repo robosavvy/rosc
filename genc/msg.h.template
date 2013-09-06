@@ -213,10 +213,12 @@ const int8_t  @(rosc_pref)_md5sum__@(rosc_name_pack)[]= "@(genmsg.gentools.compu
 /* **************************************
 ** Callback function head for usertype **
 ****************************************/
-#define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)__(USER_TYPE, CALLBACK_NAME)\
+#define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)(USER_TYPE, CALLBACK_NAME)\
 void CALLBACK_NAME(const void* const __msg)\
 {\
     const @(rosc_usertype)* const msg=(const @(rosc_usertype)* const) __msg;\
+ 
+ 
  
 
 
