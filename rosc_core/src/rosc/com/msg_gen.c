@@ -350,6 +350,33 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						DEBUG_PRINT_STR("msg_gen_handler: FOUND SYMBOL NOT TO BE USED AS MESSAGE DEFINITION!");
 						break;
 
+					case MSG_TYPE_DOT:
+					case MSG_TYPE_COLON:
+						if(size.mode)
+						{
+							++size.selectedSize;
+						}
+						else
+						{
+							char b;
+							switch(*type)
+							{
+							case MSG_TYPE_DOT:
+								b='.';
+								break;
+
+							case MSG_TYPE_COLON:
+								b=':';
+								break;
+
+							default:
+								break;
+							}
+							BYTE_TO_BUFFER(b);
+						}
+						NEXT_BUILDUP;
+						break;
+
 					case MSG_TYPE_PAYLOAD_SIZE_STRING:
 					case MSG_TYPE_PAYLOAD_SIZE_BINARY:
 						if (size.mode == MSG_GEN_SIZE_MODE_NONE) //Are we already finding the size?
