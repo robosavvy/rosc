@@ -31,11 +31,10 @@
 
 
 
-#ifndef MSG_GEN_HANDLER_H_
-#define MSG_GEN_HANDLER_H_
+#ifndef MSG_GEN_H_
+#define MSG_GEN_H_
 
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-#include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
+#include <rosc/com/msg_gen_common.h>
 #include <rosc/system/endian.h>
 #include <rosc/debug/debug_out.h>
 
@@ -53,19 +52,10 @@ typedef struct
 }msg_gen_handler_init_t;
 
 
-typedef enum
-{
-	MSG_GEN_HANDLER_EVENT_NONE=SEBS_PARSE_EVENT_NONE,
-	MSG_GEN_HANDLER_EVENT_BUFFER_FULL,
-	MSG_GEN_HANDLER_EVENT_END_MESSAGE,
-}msg_gen_handler_event_t;
+
+
+void msggen_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
 
 
 
-sebs_parse_return_t msg_gen_handler(sebs_parser_data_t* pdata);
-
-void rpc_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
-
-
-
-#endif /* MSG_GEN_HANDLER_H_ */
+#endif /* MSG_GEN_H_ */

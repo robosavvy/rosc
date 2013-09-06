@@ -31,7 +31,6 @@
 
 #include <rosc/rosc.h>
 
-#include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
 #include <rosc/msg/rosc_linux_test/simple1.h>
 #include <rosc/msg/rosc_linux_test/simple2.h>
 

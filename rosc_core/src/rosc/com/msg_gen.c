@@ -1,4 +1,4 @@
-#include <rosc/sebs_parse_fw/gen_modules/msg_gen_handler.h>
+#include <rosc/com/msg_gen.h>
 #include <rosc/system/status.h>
 
 typedef enum

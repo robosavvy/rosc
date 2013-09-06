@@ -29,7 +29,7 @@
  *  msg_gen_common.c created by Christian Holl
  */
 
-#include <rosc/sebs_parse_fw/gen_modules/msg_gen_common.h>
+#include <rosc/com/msg_gen_common.h>
 
 static void *header_storage[5];
 static void *payload_storage[5];
@@ -41,13 +41,6 @@ static void *payload_storage[5];
 #define XMLRPC_METHODCALL_SEARCHPARAM(STR_CALLERID, STR_PARAM)
 
 #define XMLRPC_METHODCALL_DELETEPARAM(STR_CALLERID, STR_PARAM)
-
-
-
-
-
-
-
 
 
 static const msg_gen_type_t rosrpc_common_message_header[]=
