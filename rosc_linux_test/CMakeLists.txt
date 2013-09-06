@@ -24,6 +24,8 @@ add_message_files(
    FILES
    testbuiltin.msg
    testsubmessage.msg
+   simple1.msg
+   simple2.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -37,7 +37,7 @@
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_handler_data_t *hdata=pdata->handler_data;
-	ros_msg_init_t *idata=(ros_msg_init_t*)pdata->init_data;
+	ros_iface_init_t *idata=(ros_iface_init_t*)pdata->init_data;
 	sebs_parse_ros_data_t *fdata=(sebs_parse_ros_data_t *)pdata->current_parser.parser_data;
 
 

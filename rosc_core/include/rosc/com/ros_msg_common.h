@@ -107,7 +107,7 @@ typedef struct
 typedef struct
 {
 	const int8_t* iface_name;	/**< the name of the interface **/
-	const int8_t* type_name; /**< the name of the service**/
+	const int8_t* type_name; /**< type of the topic or service**/
 	const ros_type_t ros_type;	/**< the interface type */
 	const ros_buildup_type_t* const buildup;/**< the buildup information */
 	const size_t* const submessage_sizes;   /**< array with sizes of the submessage or strings in arrays*/
@@ -117,6 +117,6 @@ typedef struct
 	const int8_t* const md5sum;				/**< message checksum */
 	const size_t submessage_states_offset;	/**< offset to the submessage_state_array */
 	const ros_callbackFkt_t callback;		/**< the callback function for that interface */
-}ros_msg_init_t;
+}ros_iface_init_t;
 
 #endif /* ROS_MSG_COMMON_H_ */
