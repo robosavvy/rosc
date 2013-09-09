@@ -62,6 +62,10 @@ typedef enum
 
 	MSG_TYPE_DOT,
 	MSG_TYPE_COLON,
+	MSG_TYPE_SLASH,
+
+	MSG_TYPE_NODENAME,
+	MSG_TYPE_HOSTNAME,
 
 	MSG_TYPE_BOOL_STRING,
 	MSG_TYPE_STRING,
@@ -135,13 +139,14 @@ typedef struct msg_gen_command_t
 }msg_gen_command_t;
 
 #define MSG_DEF_ROS_TOPIC_INIT(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
-		&msg_def_ros_topic_init;\
-		msg_def_ros_topic_init.payload_data[0]=(void*)MESSAGE_DEFINITION;\
-		msg_def_ros_topic_init.payload_data[1]=(void*)CALLERID;\
-		msg_def_ros_topic_init.payload_data[2]=(void*)NODEDELAY;\
-		msg_def_ros_topic_init.payload_data[3]=(void*)MD5;\
-		msg_def_ros_topic_init.payload_data[4]=(void*)TOPIC;
-extern msg_gen_command_t msg_def_ros_topic_init;
+		&msg_def_xmlrpc;\
+		msg_def_xmlrpc.payload_data[0]=(void*)MESSAGE_DEFINITION;\
+		msg_def_xmlrpc.payload_data[2]=(void*)NODEDELAY;\
+		msg_def_xmlrpc.payload_data[3]=(void*)MD5;\
+		msg_def_xmlrpc.payload_data[4]=(void*)TOPIC;
+
+
+extern msg_gen_command_t msg_def_xmlrpc;
 
 
 

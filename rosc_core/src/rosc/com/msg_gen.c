@@ -1,4 +1,5 @@
 #include <rosc/com/msg_gen.h>
+#include <rosc/system/setup.h>
 #include <rosc/system/status.h>
 
 typedef enum
@@ -352,9 +353,10 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 
 					case MSG_TYPE_DOT:
 					case MSG_TYPE_COLON:
+					case MSG_TYPE_SLASH:
 						if(size.mode)
 						{
-							++size.selectedSize;
+							++*size.selectedSize;
 						}
 						else
 						{
@@ -369,10 +371,38 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 								b=':';
 								break;
 
+							case MSG_TYPE_SLASH:
+								b='/';
+								break;
+
 							default:
 								break;
 							}
 							BYTE_TO_BUFFER(b);
+						}
+						NEXT_BUILDUP;
+						break;
+
+					case MSG_TYPE_HOSTNAME:
+						if (size.mode == MSG_GEN_SIZE_MODE_NONE)
+						{
+							STRING_TO_BUFFER(host_name);
+						}
+						else
+						{
+							STRING_SIZE(host_name);
+						}
+						NEXT_BUILDUP;
+						break;
+
+					case MSG_TYPE_NODENAME:
+						if (size.mode == MSG_GEN_SIZE_MODE_NONE)
+						{
+							STRING_TO_BUFFER(node_name);
+						}
+						else
+						{
+							STRING_SIZE(node_name);
 						}
 						NEXT_BUILDUP;
 						break;

@@ -36,6 +36,8 @@
 
 #include <rosc/com/ros_handler.h>
 
+#include <rosc/com/msg_gen_common.h>
+
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
@@ -60,6 +62,8 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic2)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
 
+NODE_NAME("Node");
+HOST_NAME("Host");
 
 int main()
 {
@@ -69,19 +73,11 @@ int main()
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
 
-//	rosc_open_port(&sub,0);
-//	rosc_receive_by_socketid(1,peer0_0,sizeof(peer0_0));
-//
-//	char *MyCallerId="NARF";
-//	bool nodeDelay=true;
-//
-//
-//
-//	msg_gen_command_t *message_definition=MSG_DEF_ROS_TOPIC_INIT(init_test.message_definition,MyCallerId,&nodeDelay,init_test.md5sum,init_test.iface_name);
-//
-//
-//	char *buffer[1000];
-//	send_rpc(buffer, 1000,message_definition);
+
+
+
+	char *buffer[1000];
+	send_rpc(buffer, 1000, &msg_def_xmlrpc);
 //
 //
 //	printf("\n---END---\n");

@@ -39,6 +39,14 @@
 #include <rosc/system/spec.h>
 #include <rosc/system/hosts.h>
 
+
+#define HOST_NAME(INITIAL_NAME)\
+	hostname_t host_name=INITIAL_NAME;
+
+#define NODE_NAME(INITIAL_NAME)\
+	nodename_t node_name=INITIAL_NAME;
+
+
 #ifndef __SYSTEM_HAS_MALLOC__
 
 	#ifndef __HOSTNAME_MAX_LEN__
@@ -88,9 +96,12 @@ typedef enum
 }connection_type_t;
 
 
-extern hostname_t node_name;
+extern hostname_t host_name;
+extern nodename_t node_name;
+
 extern ip_address_t node_ip;
 extern ip_address_t master_ip;
+
 
 #define IP_ADDR(IP3,IP2,IP1,IP0)\
 		{IP3,IP2,IP1,IP0}
