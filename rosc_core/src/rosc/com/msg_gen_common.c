@@ -43,13 +43,13 @@ static void *payload_storage[5];
 #define XMLRPC_METHODCALL_DELETEPARAM(STR_CALLERID, STR_PARAM)
 
 
-static const msg_gen_type_t rosrpc_common_message_header[]=
+static msg_gen_type_t rosrpc_common_message_header[]=
 {
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_HEADER_END,
 };
 
-static const msg_gen_type_t rosrpc_topic_init_payload[]=
+static msg_gen_type_t rosrpc_topic_init_payload[]=
 {
 	  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
 	  MSG_TYPE_STRING, //MESSAGE DEFINITION
@@ -74,7 +74,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 	  MSG_TYPE_MESSAGE_END
 };
 
-	static const msg_gen_type_t xmlrpc_request_header[]=
+	static msg_gen_type_t xmlrpc_request_header[]=
 	{
 		MSG_TYPE_VAL_METHOD_POST,
 		MSG_TYPE_DESCRIPTOR_END,
@@ -141,7 +141,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STDTXT_ROSRPC_URL_HEAD,
-							MSG_TYPE_HOSTNAME,
+							MSG_TYPE_HOSTNAME_OR_IP,
 							MSG_TYPE_COLON,
 							MSG_TYPE_UINT16_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
@@ -153,7 +153,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STDTXT_HTTP_URL_HEAD,
-							MSG_TYPE_HOSTNAME,
+							MSG_TYPE_HOSTNAME_OR_IP,
 							MSG_TYPE_COLON,
 							MSG_TYPE_UINT16_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
@@ -245,6 +245,6 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 		msg_gen_command_t msg_def_xmlrpc={xmlrpc_request_header,
 										  xmlrpc_request,
-										  (const void const **)header_storage,
-										  (const void const **)payload_storage};
+										  header_storage,
+										  payload_storage};
 

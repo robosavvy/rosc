@@ -382,7 +382,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						NEXT_BUILDUP;
 						break;
 
-					case MSG_TYPE_HOSTNAME:
+					case MSG_TYPE_HOSTNAME_OR_IP:
 						if (size.mode == MSG_GEN_SIZE_MODE_NONE)
 						{
 							STRING_TO_BUFFER(host_name);
