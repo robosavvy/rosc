@@ -152,7 +152,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 					MSG_TYPE_SKIP_ENTRIES,//42
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
-							MSG_TYPE_STDTXT_ROSRPC_URL_HEAD,
+							MSG_TYPE_STDTXT_HTTP_URL_HEAD,
 							MSG_TYPE_HOSTNAME,
 							MSG_TYPE_COLON,
 							MSG_TYPE_UINT16_STRING,
