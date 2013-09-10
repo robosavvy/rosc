@@ -112,29 +112,32 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
 
-					MSG_TYPE_SKIP_ENTRIES+6,
+					MSG_TYPE_SKIP_ENTRIES, //11
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
 
-					MSG_TYPE_SKIP_ENTRIES+6,
+					MSG_TYPE_SKIP_ENTRIES,//18
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
 
-					MSG_TYPE_SKIP_ENTRIES+6,
+					MSG_TYPE_SKIP_ENTRIES,//25
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
 
 					//SERVICE PORT
-					MSG_TYPE_SKIP_ENTRIES+9,
+					MSG_TYPE_SKIP_ENTRIES,//32
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STDTXT_ROSRPC_URL_HEAD,
@@ -143,9 +146,10 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 							MSG_TYPE_UINT16_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
 
 					//XMLRPC PORT
-					MSG_TYPE_SKIP_ENTRIES+9,
+					MSG_TYPE_SKIP_ENTRIES,//42
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_STDTXT_ROSRPC_URL_HEAD,
@@ -154,9 +158,10 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 							MSG_TYPE_UINT16_STRING,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
 
 					//Protocols
-					MSG_TYPE_SKIP_ENTRIES+9,
+					MSG_TYPE_SKIP_ENTRIES,//52
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
 							MSG_TYPE_OPEN_TAG_ARRAY,
@@ -168,7 +173,7 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 							MSG_TYPE_CLOSE_TAG_ARRAY,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
-
+					MSG_TYPE_SKIP_END,
 
 
 				MSG_TYPE_CLOSE_TAG_PARAMS,
@@ -176,6 +181,9 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 			MSG_TYPE_MESSAGE_END
 	};
+
+
+
 
 
 	static msg_gen_type_t xmlrpc_response[]=

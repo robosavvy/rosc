@@ -121,3 +121,9 @@ typedef struct
 
 
 #endif /* ROS_MSG_COMMON_H_ */
+
+//The message definition for xmlrpc messages
+
+
+
+

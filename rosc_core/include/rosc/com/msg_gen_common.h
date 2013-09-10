@@ -55,7 +55,10 @@
 typedef enum
 {
 
-	__MSG_TYPE_NONE,
+	MSG_TYPE_NONE,
+	MSG_TYPE_SKIP_ENTRIES,
+	MSG_TYPE_SKIP_END,
+
 	//Single Values
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_PAYLOAD_SIZE_STRING,
@@ -126,16 +129,14 @@ typedef enum
 	__MSG_TYPE_HTTP_HEADER_STDTEXT,
 	HTTP_HEADER_STDTEXT(MSG_TYPE),
 
-	MSG_TYPE_SKIP_ENTRIES,
-
 }msg_gen_type_t;
 
 typedef struct msg_gen_command_t
 {
-	msg_gen_type_t const *header;
-	msg_gen_type_t const *payload;
-	const void const **header_data;
-	const void const **payload_data;
+	msg_gen_type_t * const header;
+	msg_gen_type_t * const payload;
+	void ** header_data;
+	void ** payload_data;
 }msg_gen_command_t;
 
 #define MSG_DEF_ROS_TOPIC_INIT(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
@@ -148,6 +149,47 @@ typedef struct msg_gen_command_t
 
 extern msg_gen_command_t msg_def_xmlrpc;
 
+
+
+
+#define XMLRPC_MESSAGE_CALLERID_ONLY(COMMAND)\
+		msg_def_xmlrpc.payload[2]=COMMAND;\
+		msg_def_xmlrpc.payload[11]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[52]=MSG_TYPE_SKIP_ENTRIES;
+
+#define XMLRPC_MESSAGE_ONE_STRING(COMMAND, STRING)\
+		msg_def_xmlrpc.payload[2]=COMMAND;\
+		msg_def_xmlrpc.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload[52]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc.payload_data[0]=STRING;\
+
+#define GETPID
+//	msg_def_xmlrpc.header[]
+//	msg_def_xmlrpc.header[]
+//	msg_def_xmlrpc.header[]
+
+
+#define HASPARAM
+#define SEARCHPARAM
+#define DELETEPARAM
+#define SETPARAM
+#define REQUESTTOPIC
+#define REGISTERPUBLISHER
+#define REGISTERSUBSCRIBER
+#define UNSUBSCRIBEPARAM
+#define UNREGISTERSUBSCRIBER
+#define UNREGISTERPUBLISHER
+#define UNREGISTERSERVICE
+#define REGISTERSERVICE
+#define SUBSCRIBEPARAM
 
 
 #endif /* MSG_GEN_COMMON_H_ */
