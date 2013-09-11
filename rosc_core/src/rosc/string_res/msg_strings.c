@@ -37,13 +37,14 @@
 
 const char *http_header_stdtext[] =
 {
+	"200 OK",
 	"BaseHTTP/ROSc-NodeLib",
 	"HTTP/1.0",
 	"HTTP/1.1",
-	"OK",
 	"POST / HTTP/1.1",
 	"XMLRPC ROSc-NodeLib",
 	"http://",
+	"text/plain",
 	"text/xml"
 };
 

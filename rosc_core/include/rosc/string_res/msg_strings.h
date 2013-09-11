@@ -40,19 +40,20 @@
 /**
  * Length of the string array http_header_stdtext
  */
-#define HTTP_HEADER_STDTEXT_LEN 	8
+#define HTTP_HEADER_STDTEXT_LEN 	9
 
 /**
  * Macro for inserting some standard values for http headers string numbers into any enum
  */
 #define HTTP_HEADER_STDTEXT(ENUM) \
+	 ENUM ## _VAL_200_OK, \
 	 ENUM ## _VAL_BASEHTTP_ROSC_NODELIB, \
 	 ENUM ## _VAL_HTTP1_0, \
 	 ENUM ## _VAL_HTTP1_1, \
-	 ENUM ## _VAL_OK, \
 	 ENUM ## _VAL_METHOD_POST, \
 	 ENUM ## _VAL_XMLRPC_ROSC_NODELIB, \
 	 ENUM ## _VAL_HTTP_URL_HEAD, \
+	 ENUM ## _VAL_ENCODING_PLAIN, \
 	 ENUM ## _VAL_TEXT_XML
 
 /**

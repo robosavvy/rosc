@@ -156,7 +156,8 @@ http_header_stdtext:
     'BaseHTTP/ROSc-NodeLib',
     'text/xml',
     'http://':HTTP_URL_HEAD,
-    'OK'
+    '200 OK',
+    'text/plain': ENCODING_PLAIN
   }
 
 #Method strings
