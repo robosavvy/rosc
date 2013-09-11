@@ -353,6 +353,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					case MSG_TYPE_DOT:
 					case MSG_TYPE_COLON:
 					case MSG_TYPE_SLASH:
+					case MSG_TYPE_SPACE:
 						if(size.mode)
 						{
 							++*size.selectedSize;
@@ -374,6 +375,9 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 								b='/';
 								break;
 
+							case MSG_TYPE_SPACE:
+								b=' ';
+								break;
 							default:
 								break;
 							}
