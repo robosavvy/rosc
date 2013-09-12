@@ -218,18 +218,16 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 						MSG_TYPE_OPEN_TAG_ARRAY,
 							MSG_TYPE_OPEN_TAG_DATA,
 
-							MSG_TYPE_SKIP_ENTRIES,
 
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_INT,
-										MSG_TYPE_UINT8_STRING,
+										MSG_TYPE_VAL_ONE, //SUCCESS = 1, FAILURE = 0, ERROR=-1
 									MSG_TYPE_CLOSE_TAG_INT,
 								MSG_TYPE_CLOSE_TAG_VALUE,
 
-
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_STRING,
-										MSG_TYPE_STRING,
+										MSG_TYPE_NONE, //Currently no user info
 									MSG_TYPE_CLOSE_TAG_STRING,
 								MSG_TYPE_CLOSE_TAG_VALUE,
 
@@ -238,19 +236,38 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 										MSG_TYPE_OPEN_TAG_DATA,
 
 
+											MSG_TYPE_SKIP_ENTRIES, //19
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_STDTXT_TCPROS,
+												MSG_TYPE_OPEN_TAG_INT,
+													MSG_TYPE_VAL_ZERO,
+												MSG_TYPE_CLOSE_TAG_INT,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
+											MSG_TYPE_SKIP_ENTRIES, //26
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_STDTXT_ROS,
+												MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_STDTXT_TCPROS,
+												MSG_TYPE_CLOSE_TAG_STRING,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
+											MSG_TYPE_SKIP_ENTRIES, //33
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_INT16_STRING,
+												MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_HOSTNAME_OR_IP,
+												MSG_TYPE_CLOSE_TAG_STRING,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
-			MSG_TYPE_SKIP_END,
+											MSG_TYPE_SKIP_ENTRIES, //40
+											MSG_TYPE_OPEN_TAG_VALUE,
+												MSG_TYPE_OPEN_TAG_INT,
+													MSG_TYPE_INT16_STRING,
+												MSG_TYPE_CLOSE_TAG_INT,
+											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
+
 										MSG_TYPE_CLOSE_TAG_DATA,
 									MSG_TYPE_CLOSE_TAG_ARRAY,
 								MSG_TYPE_CLOSE_TAG_VALUE,

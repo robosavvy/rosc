@@ -37,6 +37,9 @@
 
 const char *http_header_stdtext[] =
 {
+	"-1",
+	"0",
+	"1",
 	"200 OK",
 	"BaseHTTP/ROSc-NodeLib",
 	"HTTP/1.0",
@@ -44,6 +47,8 @@ const char *http_header_stdtext[] =
 	"POST / HTTP/1.1",
 	"XMLRPC ROSc-NodeLib",
 	"http://",
+	"publications",
+	"subscribtions",
 	"text/plain",
 	"text/xml"
 };

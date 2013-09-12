@@ -243,6 +243,8 @@ extern msg_gen_command_t msg_def_xmlrpc_response;
 #define XMLRPC_MSG_CALL_SUBSCRIBEPARAM XMLRPC_MESSAGE_ONE_STRING_RPCURI(MSG_TYPE_METHODNAME_SUBSCRIBEPARAM)
 
 
+
+
 #define XMLRPC_MSG_CALL_REQUESTTOPIC(TOPIC)\
 		msg_def_xmlrpc_request.payload[2]=MSG_TYPE_METHODNAME_REQUESTTOPIC;\
 		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
@@ -251,6 +253,20 @@ extern msg_gen_command_t msg_def_xmlrpc_response;
 		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
 		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
 		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_NONE;\
-		msg_def_xmlrpc_request.payload_data[0]=TOPIC;\
+		msg_def_xmlrpc_request.payload_data[0]=TOPIC;
+
+
+#define XMLRPC_MSG_RESPONSE_NO_RETURN()\
+	msg_def_xmlrpc_response.payload[19]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[26]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[33]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[40]=MSG_TYPE_SKIP_ENTRIES;
+
+#define XMLRPC_MSG_RESPONSE_REQUESTTOPIC(PORT)\
+	msg_def_xmlrpc_response.payload[19]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[26]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[33]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[40]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_request.payload_data[0]=PORT;
 
 #endif /* MSG_GEN_COMMON_H_ */

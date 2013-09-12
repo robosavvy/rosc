@@ -47,6 +47,13 @@
 	nodename_t node_name=INITIAL_NAME;
 
 
+#define MASTER_HOST_NAME(INITIAL_NAME)\
+	hostname_t master_hostname=INITIAL_NAME;
+
+#define MASTER_PORT(INITIAL_PORT)\
+	 master_port=INITIAL_NAME;
+
+
 #ifndef __SYSTEM_HAS_MALLOC__
 
 	#ifndef __HOSTNAME_MAX_LEN__

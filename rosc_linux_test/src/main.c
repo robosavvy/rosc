@@ -62,7 +62,7 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic2)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
 
-NODE_NAME("Node");
+NODE_NAME("master");
 HOST_NAME("Host");
 
 int main()
@@ -76,9 +76,19 @@ int main()
 
 
 
+	char *narf="narf";
+	uint16_t port=99;
+
+
+	XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port)
+
 	char *buffer[1000];
-	send_rpc(buffer, 1000, &msg_def_xmlrpc);
+	send_rpc(buffer, 1000, &msg_def_xmlrpc_response);
+
+
+
+
 //
 //
-//	printf("\n---END---\n");
+	printf("\n---END---\n");
 }
