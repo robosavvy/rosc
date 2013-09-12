@@ -119,4 +119,11 @@ typedef struct
 	const ros_callbackFkt_t callback;		/**< the callback function for that interface */
 }ros_iface_init_t;
 
+
 #endif /* ROS_MSG_COMMON_H_ */
+
+//The message definition for xmlrpc messages
+
+
+
+

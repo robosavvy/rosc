@@ -36,20 +36,13 @@ static void *payload_storage[5];
 
 
 
-#define XMLRPC_METHODCALL_HASPARAM(STR_CALLERID, STR_PARAM)
-
-#define XMLRPC_METHODCALL_SEARCHPARAM(STR_CALLERID, STR_PARAM)
-
-#define XMLRPC_METHODCALL_DELETEPARAM(STR_CALLERID, STR_PARAM)
-
-
-static const msg_gen_type_t rosrpc_common_message_header[]=
+static msg_gen_type_t rosrpc_common_message_header[]=
 {
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_HEADER_END,
 };
 
-static const msg_gen_type_t rosrpc_topic_init_payload[]=
+static msg_gen_type_t rosrpc_topic_init_payload[]=
 {
 	  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
 	  MSG_TYPE_STRING, //MESSAGE DEFINITION
@@ -74,18 +67,22 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 	  MSG_TYPE_MESSAGE_END
 };
 
-	static const msg_gen_type_t xmlrpc_request_header[]=
+
+	static msg_gen_type_t xmlrpc_request_header[]=
 	{
 		MSG_TYPE_VAL_METHOD_POST,
 		MSG_TYPE_DESCRIPTOR_END,
+
 		MSG_TYPE_DESCRIPTOR_USER_AGENT,
-		MSG_TYPE_VAL_XMLRPC_ROSC_NODELIB,
+			MSG_TYPE_VAL_XMLRPC_ROSC_NODELIB,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_CONTENT_TYPE,
+			MSG_TYPE_VAL_TEXT_XML,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_ACCEPT_ENCODING,
-		MSG_TYPE_DESCRIPTOR_END,
-
-		MSG_TYPE_DESCRIPTOR_CONTENT_ENCODING,
+			MSG_TYPE_VAL_ENCODING_PLAIN,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_CONTENT_LENGTH,
@@ -93,6 +90,31 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 		MSG_TYPE_DESCRIPTOR_END,
 		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
 	};
+
+	static msg_gen_type_t xmlrpc_response_header[]=
+	{
+		MSG_TYPE_VAL_HTTP1_0, MSG_TYPE_SPACE, MSG_TYPE_VAL_200_OK,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_SERVER,
+			MSG_TYPE_VAL_XMLRPC_ROSC_NODELIB,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_CONTENT_TYPE,
+			MSG_TYPE_VAL_TEXT_XML,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_CONTENT_ENCODING,
+			MSG_TYPE_VAL_ENCODING_PLAIN,
+		MSG_TYPE_DESCRIPTOR_END,
+
+		MSG_TYPE_DESCRIPTOR_CONTENT_LENGTH,
+			MSG_TYPE_PAYLOAD_SIZE_STRING,
+		MSG_TYPE_DESCRIPTOR_END,
+		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
+	};
+
+
 
 	static msg_gen_type_t xmlrpc_request[]=
 	{
@@ -104,17 +126,86 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 				MSG_TYPE_OPEN_TAG_PARAMS,
 
+					//Nodename is always send
 					MSG_TYPE_OPEN_TAG_PARAM,
 						MSG_TYPE_OPEN_TAG_VALUE,
-							//MSG_TYPE_STRING,
+						MSG_TYPE_SLASH,
+							MSG_TYPE_NODENAME,
 						MSG_TYPE_CLOSE_TAG_VALUE,
 					MSG_TYPE_CLOSE_TAG_PARAM,
+
+					MSG_TYPE_SKIP_ENTRIES, //11
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_STRING,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
+					MSG_TYPE_SKIP_ENTRIES,//18
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_STRING,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
+					MSG_TYPE_SKIP_ENTRIES,//25
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_STRING,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
+					//SERVICE PORT
+					MSG_TYPE_SKIP_ENTRIES,//32
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_STDTXT_ROSRPC_URL_HEAD,
+							MSG_TYPE_HOSTNAME_OR_IP,
+							MSG_TYPE_COLON,
+							MSG_TYPE_UINT16_STRING,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
+					//XMLRPC PORT
+					MSG_TYPE_SKIP_ENTRIES,//42
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_STDTXT_HTTP_URL_HEAD,
+							MSG_TYPE_HOSTNAME_OR_IP,
+							MSG_TYPE_COLON,
+							MSG_TYPE_UINT16_STRING,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
+					//Protocols
+					MSG_TYPE_SKIP_ENTRIES,//52
+					MSG_TYPE_OPEN_TAG_PARAM,
+						MSG_TYPE_OPEN_TAG_VALUE,
+							MSG_TYPE_OPEN_TAG_ARRAY,
+								MSG_TYPE_OPEN_TAG_DATA,
+									MSG_TYPE_OPEN_TAG_VALUE,
+										MSG_TYPE_STDTXT_TCPROS,
+									MSG_TYPE_CLOSE_TAG_VALUE,
+								MSG_TYPE_CLOSE_TAG_DATA,
+							MSG_TYPE_CLOSE_TAG_ARRAY,
+						MSG_TYPE_CLOSE_TAG_VALUE,
+					MSG_TYPE_CLOSE_TAG_PARAM,
+					MSG_TYPE_SKIP_END,
+
 
 				MSG_TYPE_CLOSE_TAG_PARAMS,
 			MSG_TYPE_CLOSE_TAG_METHODCALL,
 
 			MSG_TYPE_MESSAGE_END
 	};
+
+
+
 
 
 	static msg_gen_type_t xmlrpc_response[]=
@@ -130,15 +221,13 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_INT,
-										MSG_TYPE_UINT8_STRING,
+										MSG_TYPE_VAL_ONE, //SUCCESS = 1, FAILURE = 0, ERROR=-1
 									MSG_TYPE_CLOSE_TAG_INT,
 								MSG_TYPE_CLOSE_TAG_VALUE,
 
-								MSG_TYPE_SKIP_ENTRIES,
-
 								MSG_TYPE_OPEN_TAG_VALUE,
 									MSG_TYPE_OPEN_TAG_STRING,
-										MSG_TYPE_STRING,
+										MSG_TYPE_NONE, //Currently no user info
 									MSG_TYPE_CLOSE_TAG_STRING,
 								MSG_TYPE_CLOSE_TAG_VALUE,
 
@@ -146,19 +235,38 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 									MSG_TYPE_OPEN_TAG_ARRAY,
 										MSG_TYPE_OPEN_TAG_DATA,
 
-											MSG_TYPE_SKIP_ENTRIES,
 
+											MSG_TYPE_SKIP_ENTRIES, //19
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_STDTXT_TCPROS,
+												MSG_TYPE_OPEN_TAG_INT,
+													MSG_TYPE_VAL_ZERO,
+												MSG_TYPE_CLOSE_TAG_INT,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
+											MSG_TYPE_SKIP_ENTRIES, //26
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_STDTXT_ROS,
+												MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_STDTXT_TCPROS,
+												MSG_TYPE_CLOSE_TAG_STRING,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
+											MSG_TYPE_SKIP_ENTRIES, //33
 											MSG_TYPE_OPEN_TAG_VALUE,
-												MSG_TYPE_INT16_STRING,
+												MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_HOSTNAME_OR_IP,
+												MSG_TYPE_CLOSE_TAG_STRING,
 											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
+
+											MSG_TYPE_SKIP_ENTRIES, //40
+											MSG_TYPE_OPEN_TAG_VALUE,
+												MSG_TYPE_OPEN_TAG_INT,
+													MSG_TYPE_INT16_STRING,
+												MSG_TYPE_CLOSE_TAG_INT,
+											MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
 
 										MSG_TYPE_CLOSE_TAG_DATA,
 									MSG_TYPE_CLOSE_TAG_ARRAY,
@@ -170,11 +278,20 @@ static const msg_gen_type_t rosrpc_topic_init_payload[]=
 				MSG_TYPE_CLOSE_TAG_PARAM,
 			MSG_TYPE_CLOSE_TAG_PARAMS,
 
-			MSG_TYPE_CLOSE_TAG_METHODRESPONSE
+
+			MSG_TYPE_CLOSE_TAG_METHODRESPONSE,
+
+			MSG_TYPE_MESSAGE_END
 	};
 
 
-		msg_gen_command_t msg_def_ros_topic_init={xmlrpc_request_header,
-												  xmlrpc_request,(const void const **)header_storage,
-												 (const void const **)payload_storage};
 
+		msg_gen_command_t msg_def_xmlrpc_request={xmlrpc_request_header,
+										  xmlrpc_request,
+										  header_storage,
+										  payload_storage};
+
+		msg_gen_command_t msg_def_xmlrpc_response={xmlrpc_response_header,
+										  xmlrpc_response,
+										  header_storage,
+										  payload_storage};

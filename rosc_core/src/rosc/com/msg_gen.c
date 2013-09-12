@@ -1,4 +1,5 @@
 #include <rosc/com/msg_gen.h>
+#include <rosc/system/setup.h>
 #include <rosc/system/status.h>
 
 typedef enum
@@ -73,7 +74,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 	msg_gen_mode_t submode = MSG_GEN_MODE_TYPE;
 	uint8_t def_state = 0;
 	const msg_gen_type_t *type = def->header;
-	const void** data = def->header_data;
+	void** data = def->header_data;
 
 	struct
 	{
@@ -104,7 +105,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 		msg_gen_size_mode mode;
 		bool payload_size_available;
 		const msg_gen_type_t *type;
-		const void **data;
+		void **data;
 		uint32_t payload_size;
 		uint32_t rosrpc_size;
 		uint32_t *selectedSize;
@@ -338,7 +339,6 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 			case MSG_GEN_MODE_TYPE:
 				switch(*type)
 				{
-					case __MSG_TYPE_NONE:
 					case __MSG_TYPE_DESCRIPTORS:
 					case __MSG_TYPE_BINARY_OUT:
 					case __MSG_TYPE_FLOAT_STRING:
@@ -348,6 +348,66 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 					case __MSG_TYPE_XMLRPC_CLOSE_TAGS:
 					case __MSG_TYPE_XMLRPC_OPEN_TAGS:
 						DEBUG_PRINT_STR("msg_gen_handler: FOUND SYMBOL NOT TO BE USED AS MESSAGE DEFINITION!");
+						break;
+
+					case MSG_TYPE_DOT:
+					case MSG_TYPE_COLON:
+					case MSG_TYPE_SLASH:
+					case MSG_TYPE_SPACE:
+						if(size.mode)
+						{
+							++*size.selectedSize;
+						}
+						else
+						{
+							char b;
+							switch(*type)
+							{
+							case MSG_TYPE_DOT:
+								b='.';
+								break;
+
+							case MSG_TYPE_COLON:
+								b=':';
+								break;
+
+							case MSG_TYPE_SLASH:
+								b='/';
+								break;
+
+							case MSG_TYPE_SPACE:
+								b=' ';
+								break;
+							default:
+								break;
+							}
+							BYTE_TO_BUFFER(b);
+						}
+						NEXT_BUILDUP;
+						break;
+
+					case MSG_TYPE_HOSTNAME_OR_IP:
+						if (size.mode == MSG_GEN_SIZE_MODE_NONE)
+						{
+							STRING_TO_BUFFER(host_name);
+						}
+						else
+						{
+							STRING_SIZE(host_name);
+						}
+						NEXT_BUILDUP;
+						break;
+
+					case MSG_TYPE_NODENAME:
+						if (size.mode == MSG_GEN_SIZE_MODE_NONE)
+						{
+							STRING_TO_BUFFER(node_name);
+						}
+						else
+						{
+							STRING_SIZE(node_name);
+						}
+						NEXT_BUILDUP;
 						break;
 
 					case MSG_TYPE_PAYLOAD_SIZE_STRING:
@@ -417,6 +477,19 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						}
 						break;
 
+					case MSG_TYPE_SKIP_ENTRIES:
+						while(*type != MSG_TYPE_SKIP_END)
+						{
+							++type;
+						}
+						++type;
+						break;
+
+					case MSG_TYPE_NONE:
+					case MSG_TYPE_SKIP_END:
+						++type;
+						break;
+
 					case MSG_TYPE_HEADER_END:
 						//DEBUG - things never should happen in release...
 						if (size.mode == MSG_GEN_SIZE_MODE_PAYLOAD
@@ -444,16 +517,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 
 					default:
 						//Do not change the order here! Otherwise the order must be change in msg_gen_type_t as well!
-						if(*type > MSG_TYPE_SKIP_ENTRIES)
-						{
-							uint8_t skip=*type - MSG_TYPE_SKIP_ENTRIES;
-							while(skip>0)
-							{
-								++type;
-								--skip;
-							}
-						}
-						else if(*type > __MSG_TYPE_STRINGS)
+						if(*type > __MSG_TYPE_STRINGS)
 						{
 							const char *ptr;
 							if(*type > __MSG_TYPE_HTTP_HEADER_STDTEXT)
@@ -481,9 +545,6 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 										- 1];
 							}
 
-
-
-
 							if (size.mode)
 							{
 								STRING_SIZE(ptr);
@@ -492,7 +553,6 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 							{
 								STRING_TO_BUFFER(ptr);
 							}
-							NEXT_CONTENT;
 							NEXT_BUILDUP;
 						}
 						else if (*type > __MSG_TYPE_ROSRPC_FIELD_STRINGS)

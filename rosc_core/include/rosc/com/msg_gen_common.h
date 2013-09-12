@@ -55,10 +55,23 @@
 typedef enum
 {
 
-	__MSG_TYPE_NONE,
+	MSG_TYPE_NONE,
+	MSG_TYPE_SKIP_ENTRIES,
+	MSG_TYPE_SKIP_END,
+
 	//Single Values
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_PAYLOAD_SIZE_STRING,
+
+	MSG_TYPE_DOT,
+	MSG_TYPE_COLON,
+	MSG_TYPE_SLASH,
+	MSG_TYPE_SPACE,
+
+	MSG_TYPE_NODENAME,
+	MSG_TYPE_HOSTNAME_OR_IP,
+
+	//MSG_TYPE_NODEAPI_PORT TODO implement
 
 	MSG_TYPE_BOOL_STRING,
 	MSG_TYPE_STRING,
@@ -73,7 +86,6 @@ typedef enum
 	MSG_TYPE_BINARY_16BIT,
 	MSG_TYPE_BINARY_32BIT,
 	MSG_TYPE_BINARY_64BIT,
-
 
 	__MSG_TYPE_FLOAT_STRING,
 	MSG_TYPE_FLOAT_32_STRING,
@@ -120,27 +132,141 @@ typedef enum
 	__MSG_TYPE_HTTP_HEADER_STDTEXT,
 	HTTP_HEADER_STDTEXT(MSG_TYPE),
 
-	MSG_TYPE_SKIP_ENTRIES,
-
 }msg_gen_type_t;
 
 typedef struct msg_gen_command_t
 {
-	msg_gen_type_t const *header;
-	msg_gen_type_t const *payload;
-	const void const **header_data;
-	const void const **payload_data;
+	msg_gen_type_t * const header;
+	msg_gen_type_t * const payload;
+	void ** header_data;
+	void ** payload_data;
 }msg_gen_command_t;
 
-#define MSG_DEF_ROS_TOPIC_INIT(MESSAGE_DEFINITION, CALLERID, NODEDELAY, MD5, TOPIC)\
-		&msg_def_ros_topic_init;\
-		msg_def_ros_topic_init.payload_data[0]=(void*)MESSAGE_DEFINITION;\
-		msg_def_ros_topic_init.payload_data[1]=(void*)CALLERID;\
-		msg_def_ros_topic_init.payload_data[2]=(void*)NODEDELAY;\
-		msg_def_ros_topic_init.payload_data[3]=(void*)MD5;\
-		msg_def_ros_topic_init.payload_data[4]=(void*)TOPIC;
-extern msg_gen_command_t msg_def_ros_topic_init;
+
+extern msg_gen_command_t msg_def_xmlrpc_request;
+extern msg_gen_command_t msg_def_xmlrpc_response;
+
+#define XMLRPC_MESSAGE_CALLERID_ONLY(COMMAND)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_SKIP_ENTRIES;
+#define XMLRPC_MESSAGE_ONE_STRING(COMMAND, STRING)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING;\
+
+#define XMLRPC_MESSAGE_ONE_STRING_RPCURI(COMMAND, STRING)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING;\
+
+#define XMLRPC_MESSAGE_ONE_STRING_SERVICEURI(COMMAND, STRING, SERVICEPORT)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING;\
+		msg_def_xmlrpc_request.payload_data[0]=&SERVICEPORT;\
+
+#define XMLRPC_MESSAGE_ONE_STRING_SERVICEURI_RPCURI(COMMAND, STRING, SERVICEPORT)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING;\
+		msg_def_xmlrpc_request.payload_data[1]=&SERVICEPORT;\
+
+#define XMLRPC_MESSAGE_TWO_STRING(COMMAND, STRING1, STRING2)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING1;\
+		msg_def_xmlrpc_request.payload_data[1]=STRING2;\
+
+#define XMLRPC_MESSAGE_TWO_STRING_RPCURI(COMMAND, STRING1, STRING2)\
+		msg_def_xmlrpc_request.payload[2]=COMMAND;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload_data[0]=STRING1;\
+		msg_def_xmlrpc_request.payload_data[1]=STRING2;\
 
 
+
+#define XMLRPC_RMESSAGE_GETMASTERURI
+#define XMLRPC_RMESSAGE_SHUTDOWN
+#define XMLRPC_RMESSAGE_REQUESTTOPIC
+#define XMLRPC_RMESSAGE_GETPID
+#define XMLRPC_RMESSAGE_PUBLISHERUPDATE
+#define XMLRPC_RMESSAGE_PARAMUPDATE
+
+
+
+#define XMLRPC_MSG_CALL_GETPID() XMLRPC_MESSAGE_CALLERID_ONLY(MSG_TYPE_METHODNAME_GETPID)
+#define XMLRPC_MSG_CALL_HASPARAM(PARAM) XMLRPC_MESSAGE_ONE_STRING(MSG_TYPE_METHODNAME_HASPARAM, PARAM)
+#define XMLRPC_MSG_CALL_SEARCHPARAM(PARAM) XMLRPC_MESSAGE_ONE_STRING(MSG_TYPE_METHODNAME_SEARCHPARAM, PARAM)
+#define XMLRPC_MSG_CALL_DELETEPARAM(PARAM) XMLRPC_MESSAGE_ONE_STRING(MSG_TYPE_METHODNAME_DELETEPARAM, PARAM)
+#define XMLRPC_MSG_CALL_UNSUBSCRIBEPARAM(PARAM) XMLRPC_MESSAGE_ONE_STRING_RPCURI(MSG_TYPE_METHODNAME_UNSUBSCRIBEPARAM, PARAM)
+#define XMLRPC_MSG_CALL_REGISTERPUBLISHER(TOPIC, TOPICTYPE)	XMLRPC_MESSAGE_TWO_STRING_RPCURI(MSG_TYPE_METHODNAME_REGISTERPUBLISHER, TOPIC,TOPICTYPE)
+#define XMLRPC_MSG_CALL_UNREGISTERPUBLISHER(TOPIC) XMLRPC_MESSAGE_ONE_STRING_RPCURI(MSG_TYPE_METHODNAME_UNREGISTERPUBLISHER, TOPIC)
+#define XMLRPC_MSG_CALL_REGISTERSUBSCRIBER(TOPIC, TOPICTYPE) XMLRPC_MESSAGE_TWO_STRING_RPCURI(MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER, TOPIC, TOPICTYPE)
+#define XMLRPC_MSG_CALL_UNREGISTERSUBSCRIBER(TOPIC) XMLRPC_MESSAGE_ONE_STRING_RPCURI(MSG_TYPE_METHODNAME_UNREGISTERPUBLISHER, TOPIC)
+#define XMLRPC_MSG_CALL_UNREGISTERSERVICE(SERVICENAME, SERVICEPORT) XMLRPC_MESSAGE_ONE_STRING_SERVICEURI_RPCURI(MSG_TYPE_METHODNAME_REGISTERSERVICE, SERVICENAME, SERVICEPORT)
+#define XMLRPC_MSG_CALL_REGISTERSERVICE(SERVICENAME, SERVICEPORT) XMLRPC_MESSAGE_ONE_STRING_SERVICEURI_RPCURI(MSG_TYPE_METHODNAME_REGISTERSERVICE, SERVICENAME, SERVICEPORT)
+#define XMLRPC_MSG_CALL_SUBSCRIBEPARAM XMLRPC_MESSAGE_ONE_STRING_RPCURI(MSG_TYPE_METHODNAME_SUBSCRIBEPARAM)
+
+
+
+
+#define XMLRPC_MSG_CALL_REQUESTTOPIC(TOPIC)\
+		msg_def_xmlrpc_request.payload[2]=MSG_TYPE_METHODNAME_REQUESTTOPIC;\
+		msg_def_xmlrpc_request.payload[11]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload[18]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[25]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[32]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[42]=MSG_TYPE_SKIP_ENTRIES;\
+		msg_def_xmlrpc_request.payload[52]=MSG_TYPE_NONE;\
+		msg_def_xmlrpc_request.payload_data[0]=TOPIC;
+
+
+#define XMLRPC_MSG_RESPONSE_NO_RETURN()\
+	msg_def_xmlrpc_response.payload[19]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[26]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[33]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[40]=MSG_TYPE_SKIP_ENTRIES;
+
+#define XMLRPC_MSG_RESPONSE_REQUESTTOPIC(PORT)\
+	msg_def_xmlrpc_response.payload[19]=MSG_TYPE_SKIP_ENTRIES;\
+	msg_def_xmlrpc_response.payload[26]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[33]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_response.payload[40]=MSG_TYPE_NONE;\
+	msg_def_xmlrpc_request.payload_data[0]=PORT;
 
 #endif /* MSG_GEN_COMMON_H_ */
