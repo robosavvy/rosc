@@ -26,61 +26,25 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  iface.c created by Christian Holl
+ *  types.h created by Christian Holl
  */
 
-#include <rosc/system/iface.h>
+#ifndef TYPES_H_
+#define TYPES_H_
 
-static iface_t interface_list_hub;
+#include<inttypes.h>
+#include<stdint.h>
+#include<stdio.h>
+#include<rosc/system/spec.h>
 
-
-void rosc_init_interface_list()
-{
-	interface_list_hub.isListHub=true;
-	interface_list_hub.next=0;
-}
-
-
-void register_interface(iface_t *interface)
-{
-	iface_t* cur=&interface_list_hub;
-	//Go to the end of the list
-	while(cur->next != 0 && cur->next != interface) cur=cur->next;
-
-	if(cur->next != interface && cur->next == 0)
-	{
-		cur->next=interface;
-		cur->next->next=0;
-		cur->state=IFACE_STATE_DO_REGISTER;
-	}
-}
+#ifndef bool
+	#define false 0
+	#define true 1
+	#define bool unsigned char
+#endif
 
 
-void unregister_interface(iface_t *interface)
-{
-	iface_t* cur=&interface_list_hub;
-	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+typedef float  float32_t;
+typedef double float64_t;
 
-	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
-	if(cur == interface)
-	{
-		cur->state=IFACE_STATE_DO_UNREGISTER;
-	}
-}
-
-void remove_interface(iface_t *interface)
-{
-	iface_t* cur=&interface_list_hub;
-	iface_t* last;
-	//Go to the entry of the list
-	while(cur && cur != interface)
-	{
-		last=cur;
-		cur=cur->next;
-	}
-
-	if(cur==interface)
-	{
-		last->next=cur->next;
-	}
-}
+#endif /* TYPES_H_ */
