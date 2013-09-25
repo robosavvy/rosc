@@ -36,13 +36,8 @@
 #include <rosc/system/endian.h>
 #include <rosc/system/iface.h>
 
-
-
-
-
 void rosc_init()
 {
-
 	//Initialize the byte order arrays
 	rosc_init_endian();
 	rosc_sockets_init();

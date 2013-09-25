@@ -61,11 +61,11 @@ typedef enum
 
 typedef struct socket_t
 {
-	uint16_t port_number;
+	port_t port_number;
 	sebs_parser_data_t pdata;
 	struct iface_t *interface;
 	void* data;
-	uint32_t socket_id;
+	socket_id_t socket_id;
 	socket_type_t type;
 	socket_state_t state;
 	struct socket_t *next;
@@ -101,7 +101,6 @@ typedef enum
  */
 extern port_t start_listening_on_port(port_t port);
 
-
 extern port_status_t stop_listening_on_port(port_t port);
 
 /**
@@ -124,5 +123,9 @@ extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
  * @return
  */
 uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
+
+extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
+
+extern void close_socket(socket_id_t socket);
 
 #endif /* ETH_H_ */
