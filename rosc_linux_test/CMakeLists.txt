@@ -4,7 +4,7 @@ project(rosc_linux_test)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_x86 std_msgs message_generation)
+find_package(catkin REQUIRED rosc_core a_test_pkg rosc_sys_linux_static std_msgs message_generation)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -67,7 +67,7 @@ catkin_package(
 include_directories(include 
                      ${catkin_INCLUDE_DIRS} 
                      ${rosc_core_INCLUDE_DIRS}
-                     ${rosc_sys_linux_x86_INCLUDE_DIRS}
+                     ${rosc_sys_linux_static_INCLUDE_DIRS}
                      ${a_test_pkg_INCLUDE_DIRS})
 
 ## Declare a cpp library
@@ -80,7 +80,7 @@ add_executable(rosc_linux_test_node src/main.c ${ROSC_EXAMPLE_MESSAGES_SRC})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(rosc_linux_test_node rosc_sys_linux_x86 a_test_pkg)
+add_dependencies(rosc_linux_test_node rosc_sys_linux_static a_test_pkg)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(rosc_linux_test_node
@@ -88,7 +88,7 @@ add_dependencies(rosc_linux_test_node rosc_sys_linux_x86 a_test_pkg)
 # )
 
 target_link_libraries(rosc_linux_test_node
-    rosc_sys_linux_x86
+    rosc_sys_linux_static
 )
 
 #############
@@ -139,4 +139,4 @@ target_link_libraries(rosc_linux_test_node
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-execute_process(COMMAND clang ${ROSC_CORE_SOURCES} ${CMAKE_CURRENT_LIST_DIR}/src/main.c -I/usr/include -I/usr/include/x86_64-linux-gnu -I${rosc_core_INCLUDE_DIRS} -I${rosc_sys_linux_x86_INCLUDE_DIRS})
+execute_process(COMMAND clang ${ROSC_CORE_SOURCES} ${CMAKE_CURRENT_LIST_DIR}/src/main.c -I/usr/include -I/usr/include/static_64-linux-gnu -I${rosc_core_INCLUDE_DIRS} -I${rosc_sys_linux_static_INCLUDE_DIRS})
