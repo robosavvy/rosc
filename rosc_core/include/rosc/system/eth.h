@@ -34,63 +34,95 @@
 
 #include <rosc/system/types.h>
 #include <rosc/system/setup.h>
-
 #include <rosc/system/hosts.h>
 
+
+typedef int16_t socket_id_t;
+typedef uint16_t port_t;
+
+typedef enum
+{
+	PORT_TYPE_HUB,
+	PORT_TYPE_UNUSED,
+	PORT_TYPE_INCOMING,
+	PORT_TYPE_INCOMING_ACCEPT,
+	PORT_TYPE_OUTGOING,
+}socket_type_t;
+
+typedef enum
+{
+	PORT_STATE_UNUSABLE,
+	PORT_STATE_CLOSED,
+	PORT_STATE_LISTEN,
+	PORT_STATE_OUTGOING,
+	PORT_STATE_INCOMING,
+}socket_state_t;
+
+
+typedef struct socket_t
+{
+	uint16_t port_number;
+	sebs_parser_data_t pdata;
+	struct iface_t *interface;
+	void* data;
+	uint32_t socket_id;
+	socket_type_t type;
+	socket_state_t state;
+	struct socket_t *next;
+}socket_t;
+
+
+
+
+void rosc_sockets_init();
+
 /**
- * This function opens a port for listening.
- * If port is 0 the next possible port is tried to be opened.
- * If port contains a positive number, it tries to open exactly this port.
- * @return Port identifier, if 0 opening a port was not possible.
- *
+ * Opens a port for a specific interface
+ * @param iface interface which will use the port
+ * @return True if successfull, False if not
  */
-extern port_id_t __listenPort(uint16_t port);
+bool rosc_use_socket( iface_t *iface, uint16_t port_number);
+
+
+
+typedef enum
+{
+	PORT_STATUS_OPENING_FAILED,
+	PORT_STATUS_OPENED,
+	PORT_STATUS_CLOSED,
+	PORT_STATUS_UNUSED,
+}port_status_t;
 
 /**
- * This function connects to a server
- * @param target_ip The IP address of the remote system
- * @param remote_port The port on the remote system
- * @param local_port The port on the local system, if 0 is supplied it will take the next free port.
- * @return Port identifier, if 0 connection was not possible.
+ * rosc uses this function to tell the network device to open a port.
+ * Normally this function is called by port number 0, for
+ * @param port port number
+ * @return port number or 0 if failed
  */
-extern port_id_t __connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port);
+extern port_t start_listening_on_port(port_t port);
 
 
-/**
- * Closes a port with the ID
- * @param portID
- */
-extern void __closeConnection(port_id_t portID);
+extern port_status_t stop_listening_on_port(port_t port);
 
 /**
- * This function receives data from a port when available and returns the data length.
- * If not it returns 0 and in a case of a error a negative value.
- * @param portID
+ * This function is from rosc to send out data. It needs to be implemented
+ * by the driver or platform package.
+ * @param socket_id
  * @param buffer
- * @param buffersize
- * @return number of received bytes
+ * @param size
  */
-extern int32_t receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersize);
+extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
 
 /**
- * This function transmittes something over a open port
- * @param portID
- * @param buffer this points to the output buffer
- * @param len length of the output buffer
- * @return number of transmitted bytes
+ * This function is called by the driver when something is received on a
+ * special socket. It then searches for the socket id inside the socket list
+ * and calls the parsing function for that socket. It needs to be called
+ * by the driver or platform package when there is data for a specific socket.
+ * @param socket_id
+ * @param buffer
+ * @param size
+ * @return
  */
-extern int32_t sendToPort(port_id_t portID, char* buffer, uint32_t len);
-
-
-
-extern port_id_t __acceptConnectionOnPort(uint16_t portID);
-
-/**
- * This function automatically determines the IP address of the system if the adress in the global variable is set to zero.
- */
-extern void __auto_aquire_system_ip();
-
-
-
+uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
 
 #endif /* ETH_H_ */

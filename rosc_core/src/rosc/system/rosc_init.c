@@ -31,7 +31,7 @@
 
 #include <rosc/system/rosc_init.h>
 #include <rosc/system/iface.h>
-#include <rosc/system/ports.h>
+#include <rosc/system/eth.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/endian.h>
 #include <rosc/system/iface.h>
@@ -45,6 +45,6 @@ void rosc_init()
 
 	//Initialize the byte order arrays
 	rosc_init_endian();
-	rosc_ports_init();
+	rosc_sockets_init();
 	rosc_init_interface_list();
 }

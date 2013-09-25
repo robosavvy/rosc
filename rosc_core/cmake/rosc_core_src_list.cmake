@@ -10,7 +10,7 @@ src/rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.c
 src/rosc/system/endian.c
 src/rosc/system/rosc_spin.c
-src/rosc/system/ports.c
+src/rosc/system/eth.c
 src/rosc/system/iface.c
 src/rosc/system/system.c
 src/rosc/system/rosc_init.c

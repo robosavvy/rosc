@@ -38,7 +38,7 @@
 
 
 #include <rosc/system/iface.h>
-#include <rosc/system/ports.h>
+#include <rosc/system/eth.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
