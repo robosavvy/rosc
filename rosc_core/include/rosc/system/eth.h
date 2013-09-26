@@ -44,9 +44,6 @@
 typedef int16_t socket_id_t;
 typedef uint16_t port_t;
 
-
-
-
 /**
  * This enum contains the different interface states
  */
@@ -125,7 +122,13 @@ typedef struct listen_socket_t
 	struct iface_t *interface;
 }listen_socket_t;
 
-
+typedef enum
+{
+	SEND_RESULT_OK=0,
+	SEND_RESULT_CONNECTION_CLOSE,
+	SEND_RESULT_CONNECTION_ERROR,
+	SEND_RESULT_CONNECTION_TIMEOUT,
+}send_result_t;
 
 void rosc_sockets_init();
 
@@ -153,9 +156,8 @@ typedef enum
  * @param socket_id
  * @param buffer
  * @param size
- * @return
  */
-uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
+void receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
 
 
 
@@ -167,26 +169,52 @@ uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
  **********************************
  **********************************/
 
+/**
+ * This function returns the hostname of the system
+ * @return hostname
+ */
+extern char* getHostname();
 
+/**
+ * This function resolves the IP from a hostname
+ * @param hostname The hostname terminated with 0
+ * @param ip[o] The storage for the ip address
+ */
+extern void resolveIP(const char* hostname, uint8_t* ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.
  * Normally this function is called by port number 0, for
- * @param port port number
+ * @param[io] port port number
  * @return port number or 0 if failed
  */
-extern port_t start_listening_on_port(port_t port);
+bool start_listening_on_port(port_t* port);
 
-extern port_status_t stop_listening_on_port(port_t port);
+/**
+ * rosc uses this function for closing a server port, if the current platform or hardware
+ * does not support closing ports, just return PORT_STATUS_UNUSED
+ * @param socket the socket info of the port
+ * @return PORT_STATUS_CLOSED or if not supported PORT_STATUS_UNUSED
+ */
+extern port_status_t stop_listening_on_port(listen_socket_t* socket);
 
 /**
  * This function is from rosc to send out data. It needs to be implemented
  * by the driver or platform package.
- * @param socket_id
- * @param buffer
+ * @param socket_id the socket_id
+ * @param buffer the output buffer
  * @param size
+ * @return result of sending
  */
-extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
+extern send_result_t send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
+
+/**
+ * Connect to a external server by ip and port
+ * @param iface
+ * @param ip
+ * @param port
+ * @return
+ */
 extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
 
 extern void close_socket(socket_id_t socket);

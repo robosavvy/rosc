@@ -34,7 +34,8 @@
 
 #include <rosc/rosc.h>
 
-typedef unsigned char ip_address_t[4];
+typedef uint8_t ip_address_t[4];
+typedef uint8_t* ip_address_ptr;
 typedef int16_t port_id_t;
 
 
