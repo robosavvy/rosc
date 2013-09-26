@@ -48,28 +48,48 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
-port_id_t __listenPort(uint16_t port)
-{
-	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
-	//The OS will then pick an available port for you. You can get the port
-	//that was chosen using sock.getsockname()[1], and pass it on to the slaves so
-	//that they can connect back.
 
-	int listenfd = 0;
-	struct sockaddr_in serv_addr;
 
-	listenfd = socket(AF_INET, SOCK_STREAM, 0);
-	if(listenfd<0) return -1;
+//
+//bool start_listening_on_port(port_t port)
+//{
+//	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
+//	//The OS will then pick an available port for you. You can get the port
+//	//that was chosen using sock.getsockname()[1], and pass it on to the slaves so
+//	//that they can connect back.
+//
+//	int listenfd = 0;
+//	struct sockaddr_in serv_addr;
+//
+//	listenfd = socket(AF_INET, SOCK_STREAM, 0);
+//	if(listenfd<0) return -1;
+//
+//	memset(&serv_addr, '0', sizeof(serv_addr));
+//	serv_addr.sin_family = AF_INET;
+//	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+//	serv_addr.sin_port = htons(port);
+//    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+//    listen(listenfd, 10);
+//	fcntl(listenfd, F_SETFL, O_NONBLOCK);
+//    return listenfd-3;
+//}
 
-	memset(&serv_addr, '0', sizeof(serv_addr));
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_port = htons(port);
-    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-    listen(listenfd, 10);
-	fcntl(listenfd, F_SETFL, O_NONBLOCK);
-    return listenfd-3;
-}
+extern port_status_t stop_listening_on_port(port_t port);
+
+
+extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
+
+extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
+
+extern void close_socket(socket_id_t socket);
+
+
+
+
+
+
+
+
 
 port_id_t __connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port)
 {

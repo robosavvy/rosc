@@ -37,7 +37,6 @@
 #define XMLRPC_SECURITY_MAX_MESSAGE_SIZE 1024
 
 
-#include <rosc/system/iface.h>
 #include <rosc/system/eth.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>

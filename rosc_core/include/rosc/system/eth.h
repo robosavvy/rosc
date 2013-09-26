@@ -35,10 +35,51 @@
 #include <rosc/system/types.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/hosts.h>
+#include <rosc/system/spec.h>
+#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/com/ros_msg_common.h>
+
 
 
 typedef int16_t socket_id_t;
 typedef uint16_t port_t;
+
+
+
+
+/**
+ * This enum contains the different interface states
+ */
+typedef enum
+{
+	IFACE_STATE_UNREGISTERED, //!< IFACE_STATE_UNREGISTERED
+	IFACE_STATE_DO_REGISTER,  //!< IFACE_STATE_DO_REGISTER
+	IFACE_STATE_WAIT_REGISTERED, //!< IFACE_STATE_WAIT_REGISTERED
+	IFACE_STATE_REGISTERED,   //!< IFACE_STATE_REGISTERED
+	IFACE_STATE_DO_UNREGISTER,//!< IFACE_STATE_DO_UNREGISTER
+	IFACE_STATE_WAIT_UNREGISTERED, //!< IFACE_STATE_WAIT_UNREGISTERED
+}iface_state_t;
+
+/**
+ * This is the definition of the struct containing various information for
+ * an interface
+ */
+typedef struct iface_t
+{
+#ifdef __SYSTEM_HAS_MALLOC__
+	size_t handler_mem_size;
+#endif
+	bool isListHub;
+	sebs_parse_function_t handler_function;
+	void *init_data;
+	iface_state_t state;
+	struct iface_t *next;
+}iface_t;
+
+void rosc_init_interface_list();
+void register_interface(iface_t *interface);
+void unregister_interface(iface_t *interface);
+
 
 typedef enum
 {
@@ -51,13 +92,18 @@ typedef enum
 
 typedef enum
 {
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
+	SOCKET_STATE_UNUSABLE,
+	SOCKET_STATE_CLOSED,
+	SOCKET_STATE_OUTGOING,
+	SOCKET_STATE_INCOMING,
 }socket_state_t;
 
+typedef enum
+{
+	PORT_STATE_CLOSED,
+	PORT_STATE_LISTEN,
+	PORT_STATE_UNUSED,
+}port_state_t;
 
 typedef struct socket_t
 {
@@ -71,6 +117,13 @@ typedef struct socket_t
 	struct socket_t *next;
 }socket_t;
 
+typedef struct listen_socket_t
+{
+	port_t port;
+	socket_id_t id;
+	port_state_t state;
+	struct iface_t *interface;
+}listen_socket_t;
 
 
 
@@ -92,6 +145,29 @@ typedef enum
 	PORT_STATUS_CLOSED,
 	PORT_STATUS_UNUSED,
 }port_status_t;
+/**
+ * This function is called by the driver when something is received on a
+ * special socket. It then searches for the socket id inside the socket list
+ * and calls the parsing function for that socket. It needs to be called
+ * by the driver or platform package when there is data for a specific socket.
+ * @param socket_id
+ * @param buffer
+ * @param size
+ * @return
+ */
+uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
+
+
+
+
+/* ********************************
+ **********************************
+ * FUNCTIONS TO BE IMPLEMENTED BY *
+ * PLATFORM OR HARDWARE PACKAGE   *
+ **********************************
+ **********************************/
+
+
 
 /**
  * rosc uses this function to tell the network device to open a port.
@@ -111,19 +187,6 @@ extern port_status_t stop_listening_on_port(port_t port);
  * @param size
  */
 extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
-
-/**
- * This function is called by the driver when something is received on a
- * special socket. It then searches for the socket id inside the socket list
- * and calls the parsing function for that socket. It needs to be called
- * by the driver or platform package when there is data for a specific socket.
- * @param socket_id
- * @param buffer
- * @param size
- * @return
- */
-uint32_t receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
-
 extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
 
 extern void close_socket(socket_id_t socket);

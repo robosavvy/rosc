@@ -66,9 +66,14 @@
 		#warning __NODENAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
 
-	#ifndef __PORT_MAXIMUM__
-		#define __PORT_MAXIMUM__
-		#warning __PORT_MAXIMUM__ undefined, it will be automatically set to 8
+	#ifndef __SOCKET_MAXIMUM__
+		#define __SOCKET_MAXIMUM__
+		#warning __SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
+	#endif
+
+	#ifndef __LISTEN_PORTS_MAXIMUM__
+		#define	__LISTEN_PORTS_MAXIMUM__
+		#warning __LISTEN_PORTS_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
 	#ifndef __SYSTEM_HAS_OS__

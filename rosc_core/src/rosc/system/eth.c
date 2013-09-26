@@ -96,7 +96,7 @@ void rosc_sockets_init()
 	port_list_hub.socket_id=0;
 	port_list_hub.port_number=0;
 	port_list_hub.type=PORT_TYPE_HUB;
-	port_list_hub.state=PORT_STATE_UNUSABLE;
+	port_list_hub.state=SOCKET_STATE_UNUSABLE;
 	port_list_hub.next=0;
 
 	//Init for static systems on
@@ -111,7 +111,7 @@ void rosc_sockets_init()
 			__port_mem_reservation[i].socket_id=0;
 			__port_mem_reservation[i].port_number=0;
 			__port_mem_reservation[i].type=PORT_TYPE_UNUSED;
-			__port_mem_reservation[i].state=PORT_STATE_CLOSED;
+			__port_mem_reservation[i].state=SOCKET_STATE_CLOSED;
 		}
 		__port_mem_reservation[i-1].next=0; //Set last items next address to zero
 	#endif
@@ -123,12 +123,12 @@ bool rosc_use_socket( iface_t *iface, uint16_t port_number)
 	while(1)
 	{
 		if(cur->next==0)break;
-		if(cur->state!=PORT_STATE_CLOSED ||
-			cur->state!=PORT_STATE_UNUSABLE) break;
+		if(cur->state!=SOCKET_STATE_CLOSED ||
+			cur->state!=SOCKET_STATE_UNUSABLE) break;
 		cur=cur->next;
 	}
 #ifndef __SYSTEM_HAS_MALLOC__
-	if(cur->state==PORT_STATE_CLOSED)
+	if(cur->state==SOCKET_STATE_CLOSED)
 	{
 		cur->interface=iface;
 		cur->pdata.handler_init=true;
@@ -167,3 +167,60 @@ void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 	}
 	sebs_parser_frame(buffer,len,&cur->pdata);
 }
+
+
+static iface_t interface_list_hub;
+
+
+void rosc_init_interface_list()
+{
+	interface_list_hub.isListHub=true;
+	interface_list_hub.next=0;
+}
+
+
+void register_interface(iface_t *interface)
+{
+	iface_t* cur=&interface_list_hub;
+	//Go to the end of the list
+	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+	if(cur->next != interface && cur->next == 0)
+	{
+		cur->next=interface;
+		cur->next->next=0;
+		cur->state=IFACE_STATE_DO_REGISTER;
+	}
+}
+
+
+void unregister_interface(iface_t *interface)
+{
+	iface_t* cur=&interface_list_hub;
+	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
+	if(cur == interface)
+	{
+		cur->state=IFACE_STATE_DO_UNREGISTER;
+	}
+}
+
+void remove_interface(iface_t *interface)
+{
+	iface_t* cur=&interface_list_hub;
+	iface_t* last;
+	//Go to the entry of the list
+	while(cur && cur != interface)
+	{
+		last=cur;
+		cur=cur->next;
+	}
+
+	if(cur==interface)
+	{
+		last->next=cur->next;
+	}
+}
+
+
