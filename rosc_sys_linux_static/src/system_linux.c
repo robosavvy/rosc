@@ -30,6 +30,9 @@
  */
 
 #include <rosc/system/eth.h>
+#include <rosc/system/spec.h>
+#include <rosc/system/types.h>
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -48,8 +51,9 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
+hostname_t system_hostname;
 
-bool start_listening_on_port(port_t* port)
+socket_id_t abstract_start_listening_on_port(port_t* port)
 {
 	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
 	//The OS will then pick an available port for you. You can get the port
@@ -59,7 +63,7 @@ bool start_listening_on_port(port_t* port)
 	struct sockaddr_in serv_addr;
 
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
-	if(listenfd<0) return (0);
+	if(listenfd<0) return (-1);
 
 	memset(&serv_addr, '0', sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
@@ -68,87 +72,99 @@ bool start_listening_on_port(port_t* port)
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     listen(listenfd, 10);
 	fcntl(listenfd, F_SETFL, O_NONBLOCK);
-    return (1);
+
+	int size=sizeof(serv_addr);
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	if (getsockname(listenfd, (struct sockaddr *)&serv_addr, &size) == -1)
+	    perror("getsockname");
+
+	*port=ntohs(serv_addr.sin_port);
+    return (listenfd);
 }
 
-
-
-//
-//extern port_status_t stop_listening_on_port(port_t port);
-//
-//
-//extern void send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
-//
-//extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
-//
-//extern void close_socket(socket_id_t socket);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//port_id_t __connectServer(ip_address_t target_ip, uint16_t remote_port, uint16_t *local_port)
-//{
-//    int sockfd = 0;
-//    struct sockaddr_in serv_addr;
-//
-//
-//    serv_addr.sin_addr.s_addr= (int)(target_ip[3]<<24 | target_ip[2]<<16 | target_ip[1]<<8 | target_ip[0]<<0);
-//
-//
-//    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-//    {
-//        return -1;
-//    }
-//    memset(&serv_addr, '0', sizeof(serv_addr));
-//    serv_addr.sin_family = AF_INET;
-//    serv_addr.sin_port = htons(remote_port);
-//    //inet_pton(AF_INET, "192.168.101.1", &serv_addr.sin_addr);
-//
-//    serv_addr.sin_addr.s_addr= (int)(target_ip[3]<<24 | target_ip[2]<<16 | target_ip[1]<<8 | target_ip[0]<<0);
-//    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-//    {
-//       printf("\n Error : Connect Failed \n");
-//       return -1;
-//    }
-//
-//    struct sockaddr_in sin;
-//    unsigned int addrlen = sizeof(sin);
-//    if(getsockname(sockfd, (struct sockaddr *)&sin, &addrlen) == 0 &&
-//       sin.sin_family == AF_INET &&
-//       addrlen == sizeof(sin))
-//    {
-//        *local_port = ntohs(sin.sin_port);
-//    }
-//
-//    return sockfd;
-//}
-//
-//void __closeConnection(port_id_t portID)
-//{
-//	close(portID+3);
-//}
-//
-//int32_t __receiveFromPort(port_id_t portID, char* buffer, uint32_t buffersize)
-//{
-//	return read(portID+3, buffer, buffersize);
-//}
-//
-//int32_t __sendToPort(port_id_t portID, char* buffer, uint32_t len)
-//{
-//	return write(portID+3, buffer,len);
-//}
-//
-//port_id_t __acceptConnectionOnPort(uint16_t portID)
+const char * abstract_static_getHostname()
 {
-	int id=accept(portID, (struct sockaddr*)NULL, NULL);
-		//printf("id %i\n",id);
-	return id;
+	gethostname(system_hostname,__HOSTNAME_MAX_LEN__);
+	return (system_hostname);
+}
+
+bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
+{
+	struct hostent *he;
+	struct in_addr **addr_list;
+	int i;
+
+	if ( (he = gethostbyname( hostname ) ) == NULL)
+	{
+		return true;
+	}
+	addr_list = (struct in_addr **) he->h_addr_list;
+
+
+	//Return only the first one;
+	strncpy(ip , addr_list[0],4);
+	return false;
+}
+
+port_status_t abstract_stop_listening_on_port(socket_id_t socket_id)
+{
+	close(socket_id);
+	return (PORT_STATUS_CLOSED);
+}
+
+socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
+{
+    int sockfd, n;
+    struct sockaddr_in serv_addr;
+	struct hostent *server;
+
+	server=gethostbyaddr(ip,4,AF_INET);
+    if (server == NULL) {
+    	return (-1);
+    }
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0)
+        return (-1);
+
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+        bcopy((char *)server->h_addr,
+             (char *)&serv_addr.sin_addr.s_addr,
+             server->h_length);
+        serv_addr.sin_port = htons(port);
+
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0)
+            return (-1);
+
+        if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
+        {
+        	close(sockfd);
+        	return (-1);
+        }
+        return (sockfd);
+}
+
+send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size)
+{
+	if(write(socket_id,buffer,size) == size)
+	{
+		return SEND_RESULT_OK;
+	}
+	else
+	{
+		return SEND_RESULT_CONNECTION_ERROR;
+	}
+}
+
+void abstract_close_socket(socket_id_t socket_id)
+{
+	close(socket_id);
 }
 
 
+void abstract_ros_spin_routine()
+{
 
+}

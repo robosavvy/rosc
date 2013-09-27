@@ -39,9 +39,12 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_msg_common.h>
 
+#ifndef SOCKET_ID_TYPE
+#define SOCKET_ID_TYPE int32_t
+#warning SOCKET_ID_TYPE undefined, now set to int32_t
+#endif
 
-
-typedef int16_t socket_id_t;
+typedef SOCKET_ID_TYPE socket_id_t;
 typedef uint16_t port_t;
 
 /**
@@ -170,25 +173,26 @@ void receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
  **********************************/
 
 /**
- * This function returns the hostname of the system
+ * This function returns the hostname of the static system
  * @return hostname
  */
-extern char* getHostname();
+extern const char* abstract_static_getHostname();
 
 /**
  * This function resolves the IP from a hostname
  * @param hostname The hostname terminated with 0
  * @param ip[o] The storage for the ip address
+ * return false if successfull
  */
-extern void resolveIP(const char* hostname, uint8_t* ip);
+extern bool abstract_resolveIP(const char* hostname, uint8_t* ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.
  * Normally this function is called by port number 0, for
  * @param[io] port port number
- * @return port number or 0 if failed
+ * @return socket_id or 0 if failed
  */
-bool start_listening_on_port(port_t* port);
+socket_id_t abstract_start_listening_on_port(port_t* port);
 
 /**
  * rosc uses this function for closing a server port, if the current platform or hardware
@@ -196,7 +200,16 @@ bool start_listening_on_port(port_t* port);
  * @param socket the socket info of the port
  * @return PORT_STATUS_CLOSED or if not supported PORT_STATUS_UNUSED
  */
-extern port_status_t stop_listening_on_port(listen_socket_t* socket);
+extern port_status_t abstract_stop_listening_on_port(socket_id_t socket_id);
+
+/**
+ * Connect to a external server by ip and port
+ * @param iface
+ * @param ip
+ * @param port
+ * @return
+ */
+socket_id_t abstract_connect_socket(ip_address_t ip, port_t port);
 
 /**
  * This function is from rosc to send out data. It needs to be implemented
@@ -206,17 +219,14 @@ extern port_status_t stop_listening_on_port(listen_socket_t* socket);
  * @param size
  * @return result of sending
  */
-extern send_result_t send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
+extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
+
+extern void abstract_close_socket(socket_id_t socket);
+
 
 /**
- * Connect to a external server by ip and port
- * @param iface
- * @param ip
- * @param port
- * @return
+ * This routine is exectuted every time ros spin is called.
  */
-extern socket_t* connect_socket(iface_t *iface, ip_address_t ip, port_t port);
-
-extern void close_socket(socket_id_t socket);
+extern void abstract_ros_spin_routine();
 
 #endif /* ETH_H_ */
