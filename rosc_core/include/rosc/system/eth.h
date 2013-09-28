@@ -34,7 +34,6 @@
 
 #include <rosc/system/types.h>
 #include <rosc/system/setup.h>
-#include <rosc/system/hosts.h>
 #include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_msg_common.h>
@@ -44,14 +43,21 @@
 #warning SOCKET_ID_TYPE undefined, now set to int32_t
 #endif
 
+typedef uint8_t ip_address_t[4];
+typedef uint8_t* ip_address_ptr;
+typedef int16_t port_id_t;
 typedef SOCKET_ID_TYPE socket_id_t;
 typedef uint16_t port_t;
+
+extern char host_name[];
+extern char node_name[];
 
 /**
  * This enum contains the different interface states
  */
 typedef enum
 {
+	IFACE_STATE_RPC_INTERFACE,
 	IFACE_STATE_UNREGISTERED, //!< IFACE_STATE_UNREGISTERED
 	IFACE_STATE_DO_REGISTER,  //!< IFACE_STATE_DO_REGISTER
 	IFACE_STATE_WAIT_REGISTERED, //!< IFACE_STATE_WAIT_REGISTERED
@@ -173,10 +179,9 @@ void receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
  **********************************/
 
 /**
- * This function returns the hostname of the static system
- * @return hostname
+ * This function initializes the hostname
  */
-extern const char* abstract_static_getHostname();
+extern void abstract_static_initHostname();
 
 /**
  * This function resolves the IP from a hostname

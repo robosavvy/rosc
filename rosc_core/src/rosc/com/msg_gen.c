@@ -1,6 +1,7 @@
 #include <rosc/com/msg_gen.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/status.h>
+#include <rosc/system/eth.h>
 
 typedef enum
 {

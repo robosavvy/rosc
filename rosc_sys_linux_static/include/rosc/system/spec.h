@@ -35,7 +35,8 @@
 
 
 
-#include <stddef.h> //Get offsetof function, if it's not defined here ... define it on your own...
+#include <stddef.h>
+//Get offsetof function, if it's not defined here ... define it on your own...
 //Example #define offsetof(TYPE, MEMBER) ( (size_t) &( ( (TYPE *) 0 )->MEMBER ) )
 
 

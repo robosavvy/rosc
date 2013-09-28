@@ -51,8 +51,6 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
-hostname_t system_hostname;
-
 socket_id_t abstract_start_listening_on_port(port_t* port)
 {
 	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
@@ -82,10 +80,9 @@ socket_id_t abstract_start_listening_on_port(port_t* port)
     return (listenfd);
 }
 
-const char * abstract_static_getHostname()
+void abstract_static_initHostname()
 {
-	gethostname(system_hostname,__HOSTNAME_MAX_LEN__);
-	return (system_hostname);
+	gethostname(host_name,__HOSTNAME_MAX_LEN__);
 }
 
 bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
