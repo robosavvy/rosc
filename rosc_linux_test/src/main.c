@@ -85,10 +85,5 @@ int main()
 	char *buffer[1000];
 	send_rpc(buffer, 1000, &msg_def_xmlrpc_response);
 
-
-
-
-//
-//
 	printf("\n---END---\n");
 }

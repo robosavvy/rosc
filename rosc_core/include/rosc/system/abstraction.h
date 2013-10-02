@@ -3,13 +3,13 @@
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met:
+ *	modification, are permitted provided that the following conditions are met: 
  *
  *	1. Redistributions of source code must retain the above copyright notice, this
- *	   list of conditions and the following disclaimer.
+ *	   list of conditions and the following disclaimer. 
  *	2. Redistributions in binary form must reproduce the above copyright notice,
  *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
+ *     and/or other materials provided with the distribution. 
  *
  *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  *	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -23,53 +23,48 @@
  *	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *	The views and conclusions contained in the software and documentation are those
- *	of the authors and should not be interpreted as representing official policies,
+ *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  rosc.h created by Christian Holl
+ *  abstraction.h created by Christian Holl
  */
 
-#ifndef ROSC_SPIN_H_
-#define ROSC_SPIN_H_
+#ifndef ABSTRACTION_H_
+#define ABSTRACTION_H_
 
-#include <rosc/debug/debug_out.h>
-#include <rosc/system/spec.h>
 #include <rosc/system/types.h>
-#include <rosc/system/mem.h>
-#include <rosc/com/ros_msg_common.h>
 
+#ifdef HW_IFACE_REQUIRED_I2C
+	extern void abstract_init_i2c(void *interface);
+	extern void abstract_i2c(void *interface, bool rw, uint16_t address, uint8_t reg,  uint8_t *data, size_t size);
+#endif
 
+#ifdef HW_IFACE_REQUIRED_SPI
+	extern void abstract_init_spi(void *interface);
+	extern void abstract_rw_spi(void* interface, uint8_t* in_buffer, uint8_t out_buffer, size_t size);
+#endif
 
-#ifndef offsetof
-	#error offsetof macro not found! Include stddef.h, or define it yourself inside spec.h
+#ifdef HW_IFACE_REQUIRED_PARALLEL
+	extern void abstract_init_parallel(void *interface);
+	extern void abstract_parallel(void* interface, bool rw, void* data_io);
+#endif
+
+#ifdef HW_IFACE_REQUIRED_SERIAL
+	extern void abstract_init_serial(void *interface);
+	extern void abstract_write_serial(void* interface, void* data_io);
+	extern void abstract_read_serial(void* interface, void* data_io);
+#endif
+
+#ifdef HW_IFACE_SUPPORT_TIME
+	extern void abstract_get_time(uint32_t* sec, uint32_t* nsec);
+#endif
+
+#ifdef HW_IFACE_SUPPORT_SET_TIME
+	extern void abstract_set_time(uint32_t* sec, uint32_t* nsec);
 #endif
 
 
-#ifndef __HOSTNAME_MAX_LEN__
-	#warning __HOSTNAME_MAX_LEN__ undefined! Automatically set to 50.
-	#define __HOSTNAME_MAX_LEN__ 50
-#endif
-
-#ifndef __NODENAME_MAX_LEN__
-	#warning __NODENAME_MAX_LEN__ undefined! Automatically set to 50.
-	#define __NODENAME_MAX_LEN__ 50
-#endif
-
-#ifndef __ROS_PARAMETER_MAX_LEN__
-	#warning __ROS_PARAMETER_MAX_LEN__ undefined! Automatically set to 50.
-	#define __ROS_PARAMETER_MAX_LEN__ 50
-#endif
-
-
-#ifdef __SYSTEM_HAS_MALLOC__
-#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK ____ATM____!
-#endif
-
-
-#include <rosc/system/setup.h>
-#include <rosc/system/rosc_spin.h>
-#include <rosc/system/rosc_init.h>
 
 
 
-#endif /* ROSC_SPIN_H_ */
+#endif /* ABSTRACTION_H_ */

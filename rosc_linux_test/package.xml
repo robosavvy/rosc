@@ -10,7 +10,7 @@
 
   <author email="choll@synapticon.com">Christian Holl</author>
 
-  <build_depend>rosc_sys_linux_x86</build_depend>
+  <build_depend>rosc_sys_linux_static</build_depend>
   <build_depend>a_test_pkg</build_depend>
 
   <build_depend>message_generation</build_depend>

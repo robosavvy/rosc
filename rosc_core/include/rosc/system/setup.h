@@ -37,14 +37,13 @@
 #include <stdbool.h>
 #include <rosc/system/types.h>
 #include <rosc/system/spec.h>
-#include <rosc/system/hosts.h>
 
 
 #define HOST_NAME(INITIAL_NAME)\
-	hostname_t host_name=INITIAL_NAME;
+	char host_name[__HOSTNAME_MAX_LEN__]=INITIAL_NAME;
 
 #define NODE_NAME(INITIAL_NAME)\
-	nodename_t node_name=INITIAL_NAME;
+	char node_name[__NODENAME_MAX_LEN__]=INITIAL_NAME;
 
 
 #define MASTER_HOST_NAME(INITIAL_NAME)\
@@ -66,9 +65,14 @@
 		#warning __NODENAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
 
-	#ifndef __PORT_MAXIMUM__
-		#define __PORT_MAXIMUM__
-		#warning __PORT_MAXIMUM__ undefined, it will be automatically set to 8
+	#ifndef __SOCKET_MAXIMUM__
+		#define __SOCKET_MAXIMUM__
+		#warning __SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
+	#endif
+
+	#ifndef __LISTEN_PORTS_MAXIMUM__
+		#define	__LISTEN_PORTS_MAXIMUM__
+		#warning __LISTEN_PORTS_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
 	#ifndef __SYSTEM_HAS_OS__
@@ -89,35 +93,9 @@
 #endif
 
 
-
-
-typedef enum
-{
-	CONNECTION_TYPE_OUTGOING,
-#ifdef __SYSTEM_NEEDS_CON_ACCEPT__
-	CONNECTION_TYPE_INCOMING_ACCEPTED,
-	CONNECTION_TYPE_INCOMING_ACCEPTING_PORT,
-#else
-	CONNECTION_TYPE_INCOMING,
-#endif
-}connection_type_t;
-
-
-extern hostname_t host_name;
-extern nodename_t node_name;
-
-extern ip_address_t node_ip;
-extern ip_address_t master_ip;
-
-
 #define IP_ADDR(IP3,IP2,IP1,IP0)\
 		{IP3,IP2,IP1,IP0}
 
-#define ROSC_SYSTEM_SETTING(NODE_NAME,NODE_IP,MASTER_IP,MASTER_PORT)\
-	hostname_t node_name=NODE_NAME;\
-	ip_address_t node_ip=NODE_IP;\
-	ip_address_t master_ip=MASTER_IP;\
-	port_t master_port=MASTER_PORT
 
 
 

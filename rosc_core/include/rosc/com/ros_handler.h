@@ -34,7 +34,6 @@
 
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
-#include <rosc/system/iface.h>
 #include <rosc/com/ros_msg_common.h>
 
 

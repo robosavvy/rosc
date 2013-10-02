@@ -26,63 +26,25 @@
  *	of the authors and should not be interpreted as representing official policies,
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  ports.h created by Christian Holl
+ *  types.h created by Christian Holl
  */
-#ifndef PORTS_H_
-#define PORTS_H_
+
+#ifndef TYPES_H_
+#define TYPES_H_
+
+#include<inttypes.h>
+#include<stdint.h>
+#include<stdio.h>
+#include<rosc/system/spec.h>
+
+#ifndef bool
+	#define false 0
+	#define true 1
+	#define bool unsigned char
+#endif
 
 
-#include <rosc/sebs_parse_fw/sebs_parser_frame.h>
-#include <rosc/com/xmlrpc.h>
-#include <rosc/com/ros_handler.h>
-typedef enum
-{
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}port_type_t;
+typedef float  float32_t;
+typedef double float64_t;
 
-typedef enum
-{
-	PORT_STATE_UNUSABLE,
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_OUTGOING,
-	PORT_STATE_INCOMING,
-}port_state_t;
-
-
-typedef struct port_t
-{
-	uint16_t port_number;
-	sebs_parser_data_t pdata;
-	struct iface_t *interface;
-	void* data;
-	uint32_t socket_id;
-	port_type_t type;
-	port_state_t state;
-	struct port_t *next;
-}port_t;
-
-
-
-
-void rosc_ports_init();
-
-/**
- * Opens a port for a specific interface
- * @param iface interface which will use the port
- * @return True if successfull, False if not
- */
-bool rosc_open_port( iface_t *iface, uint16_t port_number);
-
-
-
-
-
-
-
-
-#endif /* PORTS_H_ */
+#endif /* TYPES_H_ */
