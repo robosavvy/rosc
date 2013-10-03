@@ -3,28 +3,6 @@
 #include <rosc/system/status.h>
 #include <rosc/system/eth.h>
 
-typedef enum
-{
-	MSG_GEN_MODE_TYPE,
-	MSG_GEN_MODE_BUFFER_FILL,
-	MSG_GEN_MODE_NUMBER_TO_STRING,
-	MSG_GEN_MODE_STRING_SIZE,
-} msg_gen_mode_t;
-
-typedef enum
-{
-	MSG_GEN_SIZE_MODE_NONE = 0,
-	MSG_GEN_SIZE_MODE_PAYLOAD_START,
-	MSG_GEN_SIZE_MODE_ROSFIELD_START,
-	MSG_GEN_SIZE_MODE_PAYLOAD,
-	MSG_GEN_SIZE_MODE_ROSFIELD,
-} msg_gen_size_mode;
-
-typedef enum
-{
-	MSG_GEN_NUMBERTYPE_FLOAT, MSG_GEN_NUMBERTYPE_INT, MSG_GEN_NUMBERTYPE_UINT,
-} msg_gen_state_numbertype_t;
-
 #define DATA_TO_BUFFER(DATA, SIZE, CORRECTION)\
 		submode=MSG_GEN_MODE_BUFFER_FILL;\
 		out.data=(const char *) ((const void*)DATA);\
@@ -68,6 +46,9 @@ typedef enum
 
 #define NEXT_CONTENT ++data
 #define NEXT_BUILDUP ++type
+
+
+
 
 void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 		const msg_gen_command_t *def)
