@@ -82,7 +82,7 @@ int main()
 
 	XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port)
 
-	char *buffer[1000];
+	char buffer[1000];
 
 	//msg_gen_mode_t def->submode = MSG_GEN_MODE_TYPE;
 	//uint8_t def->def_state = 0;
@@ -95,6 +95,7 @@ int main()
 	//def->buf = { buffer_size, buffer };
 
 
+	int size=100;
 
 	msg_def_xmlrpc_response.submode =MSG_GEN_MODE_TYPE;
 	msg_def_xmlrpc_response.def_state = 0;
@@ -102,12 +103,22 @@ int main()
 	msg_def_xmlrpc_response.data = msg_def_xmlrpc_response.header_data;
 	msg_def_xmlrpc_response.out.curPos=0;
 	msg_def_xmlrpc_response.size.mode=MSG_GEN_SIZE_MODE_NONE;
-	msg_def_xmlrpc_response.buf.ptr=buffer;
-	msg_def_xmlrpc_response.buf.size=1000;
-
-	send_rpc(buffer, 1000, &msg_def_xmlrpc_response);
 
 
+	int i;
+	while(send_rpc(buffer, &size, &msg_def_xmlrpc_response))
+	{
+
+		for(i=0;i<100-size;i++)
+		{
+			printf("%c",buffer[i]);
+		}
+		size=100;
+	}
+	for(i=0;i<100-size;i++)
+	{
+		printf("%c",buffer[i]);
+	}
 
 
 

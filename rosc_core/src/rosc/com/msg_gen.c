@@ -28,12 +28,9 @@
 		def->out.data=(const char *) DATA;
 
 #define BUFFER_NEXT_BYTE\
-		--def->buf.size;\
-		++def->buf.ptr
+		--*buffer_size;\
+		++buffer
 
-#define BUFFER_RESET\
-		def->buf.size=buffer_size;\
-		def->buf.ptr=buffer
 
 #define BYTE_TO_BUFFER(BYTE)\
 	def->submode=MSG_GEN_MODE_BUFFER_FILL;\
@@ -50,7 +47,7 @@
 
 
 
-void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
+bool send_rpc(uint8_t * buffer, uint32_t *buffer_size,
 		msg_gen_command_t *def)
 {
 
@@ -58,28 +55,15 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 	while (1)
 	{
 
-		if (def->buf.size == 0 || (*def->type==MSG_TYPE_MESSAGE_END && !def->size.mode && def->submode == MSG_GEN_MODE_TYPE))
+		if (*buffer_size == 0 || (*def->type==MSG_TYPE_MESSAGE_END && !def->size.mode && def->submode == MSG_GEN_MODE_TYPE))
 		{
-			int byte;
-			printf("\n##paket===============================================##\n");
-			for (byte = 0; byte < buffer_size - def->buf.size; ++byte)
-			{
-				if ((buffer[byte] >= ' ' && buffer[byte] <= '~')
-						|| buffer[byte] == '\n')
-				{
-					printf("%c", buffer[byte]);
-				}
-				else
-				{
-					printf("[%x]", (unsigned int) buffer[byte]);
-				}
-			}
-			printf("\n##===================================================##\n");
-			BUFFER_RESET;
-
 			if(*def->type==MSG_TYPE_MESSAGE_END)
 			{
-				break;
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 
@@ -116,13 +100,13 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						break;
 				}
 
-				while (def->buf.size > 0)
+				while (*buffer_size > 0)
 				{
 					if (def->out.correct && def->out.size > 0) //==0 would be string terminated with 0
 					{
 						if (def->out.size > def->out.curPos )
 						{
-							*def->buf.ptr = *((char *) (def->out.data + def->out.curPos
+							*buffer = *((char *) (def->out.data + def->out.curPos
 									+ correct[def->out.curPos % def->out.correct]));
 							BUFFER_NEXT_BYTE
 							;
@@ -141,7 +125,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 										&& (*((char *) def->out.data) != '\0')))
 						{
 
-							*def->buf.ptr = *((char *) def->out.data);
+							*buffer = *((char *) def->out.data);
 							BUFFER_NEXT_BYTE
 							;
 
@@ -214,7 +198,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 							}
 							else
 							{
-								*def->buf.ptr = '-';
+								*buffer = '-';
 								BUFFER_NEXT_BYTE
 								;
 							}
@@ -244,7 +228,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 				}
 				else //Otherwise we want to convert and copy the digits to buffer
 				{
-					while (def->buf.size > 0)
+					while (*buffer_size > 0)
 					{
 						uint8_t i;
 						conv=1;
@@ -253,7 +237,7 @@ void send_rpc(uint8_t * const buffer, uint32_t buffer_size,
 						{
 							conv *= 10;
 						}
-						*def->buf.ptr = def->out.int_number/conv + 48;
+						*buffer = def->out.int_number/conv + 48;
 						def->out.int_number-=def->out.int_number/conv * conv;
 						++def->out.curPos;
 						BUFFER_NEXT_BYTE
