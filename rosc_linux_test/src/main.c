@@ -37,6 +37,7 @@
 #include <rosc/com/ros_handler.h>
 
 #include <rosc/com/msg_gen_common.h>
+#include <rosc/system/eth.h>
 
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
@@ -71,10 +72,6 @@ int main()
 	rosc_init();
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
-
-
-
-
 
 	char *narf="narf";
 	uint16_t port=99;
@@ -122,5 +119,35 @@ int main()
 
 
 
+
+	ip_address_t ip;
 	printf("\n---END---\n");
+	port_t p2=0;
+	int a=abstract_start_listening_on_port(&p2);
+
+
+	abstract_static_initHostname();
+	printf("Host: %s\n",host_name);
+	printf("Port: %i\n",p2);
+
+	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
+	{
+		int i;
+		for(i=0;i<4;i++)
+		{
+			if(i)printf(".");
+			printf("%i",ip[i]);
+		}
+		printf("\n");
+	}
+
+
+	socket_id_t sock=abstract_connect_socket(ip,12345);
+
+	abstract_send_packet(sock,"narf",4);
+
+	abstract_close_socket(sock);
+
+
+	while(1);
 }

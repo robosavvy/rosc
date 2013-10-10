@@ -70,8 +70,6 @@ bool send_rpc(uint8_t * buffer, uint32_t *buffer_size,
 		switch(def->submode)
 		{
 			case MSG_GEN_MODE_STRING_SIZE:
-				DEBUG_PRINT_STR("Counting String: ")
-				DEBUG_PRINT_STR(def->out.data);
 				while (*def->out.data != 0)
 				{
 					++*def->size.selectedSize;
