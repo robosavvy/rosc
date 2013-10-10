@@ -74,7 +74,7 @@
 	static socket_t __port_mem_reservation[PORTS_STATIC_MAX_NUMBER];
 
 	//point the hub pointer to the first array entry
-	static socket_t port_list_hub;
+	static socket_t* port_list_hub;
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
 	extern void* rosc_static_port_mem;
@@ -91,46 +91,43 @@
 void rosc_sockets_init()
 {
 	//Init list hub
-	port_list_hub.data=0;
-	port_list_hub.interface=0;
-	port_list_hub.socket_id=0;
-	port_list_hub.port_number=0;
-	port_list_hub.type=PORT_TYPE_HUB;
-	port_list_hub.state=SOCKET_STATE_UNUSABLE;
-	port_list_hub.next=0;
+	port_list_hub=__port_mem_reservation;
 
 	//Init for static systems on
 	#ifndef __SYSTEM_HAS_MALLOC__
-		port_list_hub.next=(socket_t*)__port_mem_reservation;
 		int i;
 		for(i=0;i<PORTS_STATIC_MAX_NUMBER;++i)
 		{
 			__port_mem_reservation[i].next=(socket_t *)__port_mem_reservation+sizeof(socket_t)*(i+1);
 			__port_mem_reservation[i].data=(void*)(rosc_static_port_mem+rosc_static_port_mem_size*i);
-			__port_mem_reservation[i].interface=0;
+			__port_mem_reservation[i].iface=0;
 			__port_mem_reservation[i].socket_id=0;
-			__port_mem_reservation[i].port_number=0;
-			__port_mem_reservation[i].type=PORT_TYPE_UNUSED;
-			__port_mem_reservation[i].state=SOCKET_STATE_CLOSED;
+			__port_mem_reservation[i].is_active=false;
 		}
 		__port_mem_reservation[i-1].next=0; //Set last items next address to zero
 	#endif
 }
 
-bool rosc_use_socket( iface_t *iface, uint16_t port_number)
+bool rosc_iface_listen( iface_t *iface, uint16_t port_number)
 {
-	socket_t *cur=port_list_hub.next;
+
+	socket_t *cur=port_list_hub;
 	while(1)
 	{
 		if(cur->next==0)break;
-		if(cur->state!=SOCKET_STATE_CLOSED ||
-			cur->state!=SOCKET_STATE_UNUSABLE) break;
+		if(!cur->is_active) break;
 		cur=cur->next;
 	}
 #ifndef __SYSTEM_HAS_MALLOC__
-	if(cur->state==SOCKET_STATE_CLOSED)
+	if(!cur->is_active)
 	{
-		cur->interface=iface;
+		//TODO try to open socket
+		//TODO create error
+
+
+
+
+		cur->iface=iface;
 		cur->pdata.handler_init=true;
 		cur->pdata.init_data=iface->init_data;
 		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
@@ -142,15 +139,15 @@ bool rosc_use_socket( iface_t *iface, uint16_t port_number)
 	{
 		return (false);
 	}
+
+
+
 #else
 	//TODO allocate new port memory and stuff here
 
 	//Needs additions for type sizes of ros message...
 #endif
 
-
-	cur->port_number=port_number;
-	cur->socket_id=1;  //TODO REMOVE BEFORE DOING ANY SERIOUS!!!
 	return (true);
 }
 
@@ -158,7 +155,7 @@ bool rosc_use_socket( iface_t *iface, uint16_t port_number)
 
 void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 {
-	socket_t *cur=port_list_hub.next;
+	socket_t *cur=port_list_hub;
 	while(1)
 	{
 		if(cur->next==0)break;
@@ -181,6 +178,9 @@ void rosc_init_interface_list()
 
 void register_interface(iface_t *interface)
 {
+	//TODO check if list start is 0 (when changed)
+
+
 	iface_t* cur=&interface_list_hub;
 	//Go to the end of the list
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
@@ -196,6 +196,9 @@ void register_interface(iface_t *interface)
 
 void unregister_interface(iface_t *interface)
 {
+	//TODO check if list start is 0 (when changed)
+	//TODO set list start to 0 when removing the last interface
+
 	iface_t* cur=&interface_list_hub;
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
 

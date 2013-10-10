@@ -39,6 +39,9 @@
 #include <rosc/system/spec.h>
 
 
+
+
+
 #define HOST_NAME(INITIAL_NAME)\
 	char host_name[__HOSTNAME_MAX_LEN__]=INITIAL_NAME;
 
@@ -70,9 +73,9 @@
 		#warning __SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
-	#ifndef __LISTEN_PORTS_MAXIMUM__
-		#define	__LISTEN_PORTS_MAXIMUM__
-		#warning __LISTEN_PORTS_MAXIMUM__ undefined, it will be automatically set to 8
+	#ifndef __LISTENING_SOCKETS_MAXIMUM__
+		#define	__LISTENING_SOCKETS_MAXIMUM__
+		#warning __LISTENING_SOCKETS_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
 	#ifndef __SYSTEM_HAS_OS__

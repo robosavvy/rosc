@@ -103,10 +103,10 @@ bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 	return false;
 }
 
-port_status_t abstract_stop_listening_on_port(socket_id_t socket_id)
+bool abstract_stop_listening_on_port(socket_id_t socket_id)
 {
 	close(socket_id);
-	return (PORT_STATUS_CLOSED);
+	return (1);
 }
 
 socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)

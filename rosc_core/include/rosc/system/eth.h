@@ -47,6 +47,8 @@ typedef uint8_t ip_address_t[4];
 typedef uint8_t* ip_address_ptr;
 typedef int16_t port_id_t;
 typedef SOCKET_ID_TYPE socket_id_t;
+typedef SOCKET_ID_TYPE listen_socket_id_t;
+
 typedef uint16_t port_t;
 
 extern char host_name[];
@@ -86,49 +88,33 @@ void rosc_init_interface_list();
 void register_interface(iface_t *interface);
 void unregister_interface(iface_t *interface);
 
-
 typedef enum
 {
-	PORT_TYPE_HUB,
-	PORT_TYPE_UNUSED,
-	PORT_TYPE_INCOMING,
-	PORT_TYPE_INCOMING_ACCEPT,
-	PORT_TYPE_OUTGOING,
-}socket_type_t;
-
-typedef enum
-{
-	SOCKET_STATE_UNUSABLE,
 	SOCKET_STATE_CLOSED,
-	SOCKET_STATE_OUTGOING,
-	SOCKET_STATE_INCOMING,
-}socket_state_t;
-
-typedef enum
-{
-	PORT_STATE_CLOSED,
-	PORT_STATE_LISTEN,
-	PORT_STATE_UNUSED,
-}port_state_t;
+	SOCKET_STATE_UNUSED,
+	SOCKET_STATE_ACTIVE,
+}listen_socket_state_t;
 
 typedef struct socket_t
 {
-	port_t port_number;
-	sebs_parser_data_t pdata;
-	struct iface_t *interface;
-	void* data;
-	socket_id_t socket_id;
-	socket_type_t type;
-	socket_state_t state;
 	struct socket_t *next;
+	bool is_active;
+	socket_id_t socket_id;
+
+
+
+	struct iface_t *iface;
+	sebs_parser_data_t pdata;
+	void* data;
 }socket_t;
 
 typedef struct listen_socket_t
 {
 	port_t port;
-	socket_id_t id;
-	port_state_t state;
+	listen_socket_id_t id;
+	listen_socket_state_t state;
 	struct iface_t *interface;
+	struct listen_socket_t *next;
 }listen_socket_t;
 
 typedef enum
@@ -146,17 +132,11 @@ void rosc_sockets_init();
  * @param iface interface which will use the port
  * @return True if successfull, False if not
  */
-bool rosc_use_socket( iface_t *iface, uint16_t port_number);
+bool rosc_iface_listen( iface_t *iface, uint16_t port_number);
 
 
 
-typedef enum
-{
-	PORT_STATUS_OPENING_FAILED,
-	PORT_STATUS_OPENED,
-	PORT_STATUS_CLOSED,
-	PORT_STATUS_UNUSED,
-}port_status_t;
+
 /**
  * This function is called by the driver when something is received on a
  * special socket. It then searches for the socket id inside the socket list
@@ -195,7 +175,7 @@ extern bool abstract_resolveIP(const char* hostname, uint8_t* ip);
  * rosc uses this function to tell the network device to open a port.
  * Normally this function is called by port number 0, for
  * @param[io] port port number
- * @return socket_id or 0 if failed
+ * @return socket_id or -1 if failed
  */
 socket_id_t abstract_start_listening_on_port(port_t* port);
 
@@ -205,7 +185,7 @@ socket_id_t abstract_start_listening_on_port(port_t* port);
  * @param socket the socket info of the port
  * @return PORT_STATUS_CLOSED or if not supported PORT_STATUS_UNUSED
  */
-extern port_status_t abstract_stop_listening_on_port(socket_id_t socket_id);
+extern bool abstract_stop_listening_on_port(socket_id_t socket_id);
 
 /**
  * Connect to a external server by ip and port
