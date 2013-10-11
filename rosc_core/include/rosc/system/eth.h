@@ -96,8 +96,6 @@ typedef struct socket_t
 	bool is_active;
 	socket_id_t socket_id;
 
-
-
 	struct iface_t *iface;
 	sebs_parser_data_t pdata;
 	void* data;

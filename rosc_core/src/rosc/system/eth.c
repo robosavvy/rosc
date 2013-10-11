@@ -58,9 +58,8 @@
 void rosc_sockets_init()
 {
 	int i;
-	//Init list hub
+	//Init listen socket list
 	listen_socket_list_start=__listen_socket_struct_mem_reservation;
-
 	for(i=0;i<__LISTENING_SOCKET_MAXIMUM__;++i)
 	{
 		__listen_socket_struct_mem_reservation[i].next=(listen_socket_t *)__listen_socket_struct_mem_reservation+sizeof(listen_socket_t)*(i+1);
@@ -71,6 +70,8 @@ void rosc_sockets_init()
 	}
 	__listen_socket_struct_mem_reservation[i-1].next=0; //Set last items next address to zero
 
+
+	//Init socket list
 	socket_list_start=__socket_struct_mem_reservation;
 	for(i=0;i<__SOCKET_MAXIMUM__;++i)
 	{
@@ -139,6 +140,8 @@ static iface_t interface_list_hub;
 
 void rosc_init_interface_list()
 {
+
+	//TODO change
 	interface_list_hub.isListHub=true;
 	interface_list_hub.next=0;
 }

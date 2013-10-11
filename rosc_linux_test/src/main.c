@@ -73,6 +73,12 @@ int main()
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
+
+
+
+
+
+
 	char *narf="narf";
 	uint16_t port=99;
 
