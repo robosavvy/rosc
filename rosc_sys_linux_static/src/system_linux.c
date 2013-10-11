@@ -51,7 +51,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
-socket_id_t abstract_start_listening_on_port(port_t* port)
+listen_socket_id_t abstract_start_listening_on_port(port_t* port)
 {
 	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
 	//The OS will then pick an available port for you. You can get the port

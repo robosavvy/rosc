@@ -75,7 +75,7 @@
 			}message_data;\
 		}rosc_port_memory_size_def_t;\
 		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
+		rosc_port_memory_size_def_t __rosc_static_port_mem[__SOCKET_MAXIMUM__];\
 		void *rosc_static_port_mem=(void *)__rosc_static_port_mem;\
 		const size_t rosc_static_port_mem_hdata_offset=offsetof(rosc_port_memory_size_def_t,handler);\
 		const size_t rosc_static_port_mem_message_offset=offsetof(rosc_port_memory_size_def_t,message_data);

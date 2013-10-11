@@ -90,9 +90,9 @@ void unregister_interface(iface_t *interface);
 
 typedef enum
 {
-	SOCKET_STATE_CLOSED,
-	SOCKET_STATE_UNUSED,
-	SOCKET_STATE_ACTIVE,
+	LISTEN_SOCKET_STATE_CLOSED,
+	LISTEN_SOCKET_STATE_UNUSED,
+	LISTEN_SOCKET_STATE_ACTIVE,
 }listen_socket_state_t;
 
 typedef struct socket_t

@@ -69,13 +69,13 @@
 	#endif
 
 	#ifndef __SOCKET_MAXIMUM__
-		#define __SOCKET_MAXIMUM__
+		#define __SOCKET_MAXIMUM__ 8
 		#warning __SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
-	#ifndef __LISTENING_SOCKETS_MAXIMUM__
-		#define	__LISTENING_SOCKETS_MAXIMUM__
-		#warning __LISTENING_SOCKETS_MAXIMUM__ undefined, it will be automatically set to 8
+	#ifndef __LISTENING_SOCKET_MAXIMUM__
+		#define	__LISTENING_SOCKET_MAXIMUM__ 8
+		#warning __LISTENING_SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
 
 	#ifndef __SYSTEM_HAS_OS__
