@@ -33,9 +33,7 @@
 
 
 #ifndef __SYSTEM_HAS_MALLOC__
-	#ifndef PORTS_STATIC_MAX_NUMBER
-		#error No port setting macro defined, define PORTS_DYNAMIC or PORTS_STATIC_MAX_NUMBER <maximal ports>
-	#endif
+
 
 	//Memory for the port structs itself
 	static socket_t __socket_struct_mem_reservation[__SOCKET_MAXIMUM__];
@@ -46,10 +44,10 @@
 	static listen_socket_t* listen_socket_list_start;
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
-	extern void* rosc_static_port_mem;
-	extern const size_t rosc_static_port_mem_size;
-	extern const size_t rosc_static_port_mem_message_offset;
-	extern const size_t rosc_static_port_mem_hdata_offset;
+	extern void* rosc_static_socket_mem;
+	extern const size_t rosc_static_socket_mem_size;
+	extern const size_t rosc_static_socket_mem_message_offset;
+	extern const size_t rosc_static_socket_mem_hdata_offset;
 
 #else
 	socket_t __port_list_hub;
@@ -97,8 +95,6 @@ bool rosc_iface_listen( iface_t *iface, port_t port_number)
 
 	if(!cur->is_active)
 	{
-
-
 		listen_socket_id_t sock;
 		sock=abstract_start_listening_on_port(&port_number);
 
@@ -111,8 +107,8 @@ bool rosc_iface_listen( iface_t *iface, port_t port_number)
 		cur->iface=iface;
 		cur->pdata.handler_init=true;
 		cur->pdata.init_data=iface->init_data;
-		cur->pdata.handler_data=cur->data+rosc_static_port_mem_hdata_offset;
-		cur->pdata.additional_storage=cur->data+rosc_static_port_mem_message_offset;
+		cur->pdata.handler_data=cur->data+rosc_static_socket_mem_hdata_offset;
+		cur->pdata.additional_storage=cur->data+rosc_static_socket_mem_message_offset;
 		cur->pdata.handler_function=iface->handler_function;
 		cur->pdata.communication_port=cur;
 	}
@@ -120,7 +116,6 @@ bool rosc_iface_listen( iface_t *iface, port_t port_number)
 	{
 		return (false);
 	}
-
 	return (true);
 }
 
@@ -171,7 +166,6 @@ void unregister_interface(iface_t *interface)
 {
 	//TODO check if list start is 0 (when changed)
 	//TODO set list start to 0 when removing the last interface
-
 	iface_t* cur=&interface_list_hub;
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
 

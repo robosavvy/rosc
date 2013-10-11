@@ -38,10 +38,6 @@
 #include <rosc/system/types.h>
 #include <rosc/system/spec.h>
 
-
-
-
-
 #define HOST_NAME(INITIAL_NAME)\
 	char host_name[__HOSTNAME_MAX_LEN__]=INITIAL_NAME;
 
@@ -77,6 +73,12 @@
 		#define	__LISTENING_SOCKET_MAXIMUM__ 8
 		#warning __LISTENING_SOCKET_MAXIMUM__ undefined, it will be automatically set to 8
 	#endif
+
+	#ifndef __SOCKET_ID_TYPE__
+		#define __SOCKET_ID_TYPE__ int32_t
+		#warning __SOCKET_ID_TYPE__ undefined, now set to int32_t
+	#endif
+
 
 	#ifndef __SYSTEM_HAS_OS__
 		#ifndef __DEFAULT_XMLRPC_PORT_OVERRIDE__

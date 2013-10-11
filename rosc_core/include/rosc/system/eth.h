@@ -34,20 +34,15 @@
 
 #include <rosc/system/types.h>
 #include <rosc/system/setup.h>
-#include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_msg_common.h>
-
-#ifndef SOCKET_ID_TYPE
-#define SOCKET_ID_TYPE int32_t
-#warning SOCKET_ID_TYPE undefined, now set to int32_t
-#endif
 
 typedef uint8_t ip_address_t[4];
 typedef uint8_t* ip_address_ptr;
 typedef int16_t port_id_t;
-typedef SOCKET_ID_TYPE socket_id_t;
-typedef SOCKET_ID_TYPE listen_socket_id_t;
+
+typedef __SOCKET_ID_TYPE__ socket_id_t;
+typedef __SOCKET_ID_TYPE__ listen_socket_id_t;
 
 typedef uint16_t port_t;
 
