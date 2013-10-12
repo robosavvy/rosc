@@ -37,6 +37,7 @@
 #include <rosc/com/ros_handler.h>
 
 #include <rosc/com/msg_gen_common.h>
+#include <rosc/system/eth.h>
 
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
@@ -72,18 +73,81 @@ int main()
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
-
-
-
-
 	char *narf="narf";
 	uint16_t port=99;
 
 
 	XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port)
 
-	char *buffer[1000];
-	send_rpc(buffer, 1000, &msg_def_xmlrpc_response);
+	char buffer[1000];
 
+	//msg_gen_mode_t def->submode = MSG_GEN_MODE_TYPE;
+	//uint8_t def->def_state = 0;
+	//const msg_gen_type_t *def->type = def->header;
+	//void** def->data = def->header_data;
+
+
+	//def->out={0,0,0};
+	//def->size ={ MSG_GEN_SIZE_MODE_NONE };
+	//def->buf = { buffer_size, buffer };
+
+
+	int size=100;
+
+	msg_def_xmlrpc_response.submode =MSG_GEN_MODE_TYPE;
+	msg_def_xmlrpc_response.def_state = 0;
+	msg_def_xmlrpc_response.type = msg_def_xmlrpc_response.header;
+	msg_def_xmlrpc_response.data = msg_def_xmlrpc_response.header_data;
+	msg_def_xmlrpc_response.out.curPos=0;
+	msg_def_xmlrpc_response.size.mode=MSG_GEN_SIZE_MODE_NONE;
+
+
+	int i;
+	while(send_rpc(buffer, &size, &msg_def_xmlrpc_response))
+	{
+
+		for(i=0;i<100-size;i++)
+		{
+			printf("%c",buffer[i]);
+		}
+		size=100;
+	}
+	for(i=0;i<100-size;i++)
+	{
+		printf("%c",buffer[i]);
+	}
+
+
+
+
+	ip_address_t ip;
 	printf("\n---END---\n");
+	port_t p2=0;
+	int a=abstract_start_listening_on_port(&p2);
+
+
+	abstract_static_initHostname();
+	printf("Host: %s\n",host_name);
+	printf("Port: %i\n",p2);
+
+	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
+	{
+		int i;
+		for(i=0;i<4;i++)
+		{
+			if(i)printf(".");
+			printf("%i",ip[i]);
+		}
+		printf("\n");
+	}
+
+
+	socket_id_t sock=abstract_connect_socket(ip,12345);
+
+	abstract_send_packet(sock,"narf",4);
+
+	abstract_close_socket(sock);
+
+
+	while(1);
 }
