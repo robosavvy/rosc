@@ -205,11 +205,6 @@ typedef struct msg_gen_command_t
 
 		} size;
 
-		struct
-		{
-			uint32_t size;
-			uint8_t *ptr;
-		} buf;
 }msg_gen_command_t;
 
 
