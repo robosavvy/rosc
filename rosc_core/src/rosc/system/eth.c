@@ -82,34 +82,33 @@ void rosc_lists_init()
 	interface_list_start=0;
 }
 
-bool rosc_iface_listen( iface_t *iface, port_t port_number)
+bool iface_listen( iface_t *iface, port_t port_number)
 {
 
-	socket_t *cur=socket_list_start;
+	listen_socket_t *cur=listen_socket_list_start;
 	while(1)
 	{
 		if(cur->next==0)break;
-		if(!cur->is_active) break;
+		if(cur->state!=LISTEN_SOCKET_STATE_ACTIVE) break;
 		cur=cur->next;
 	}
 
-	if(!cur->is_active)
+	if(cur->state!=LISTEN_SOCKET_STATE_ACTIVE)
 	{
 		listen_socket_id_t sock;
 		sock=abstract_start_listening_on_port(&port_number);
 
 		if(sock==-1)
 		{
+			ROSC_ERROR("Could not open socket!");
 			return false;
 		}
 
-		//TODO create error
-		cur->iface=iface;
-		cur->pdata.handler_init=true;
-		cur->pdata.init_data=iface->init_data;
-		cur->pdata.handler_data=cur->data+rosc_static_socket_mem_hdata_offset;
-		cur->pdata.additional_storage=cur->data+rosc_static_socket_mem_message_offset;
-		cur->pdata.handler_function=iface->handler_function;
+		cur->id=sock;
+		cur->interface=iface;
+		DEBUG_PRINT(INT,"Port opened",port_number)
+		cur->port=port_number;
+		cur->state=LISTEN_SOCKET_STATE_ACTIVE;
 	}
 	else
 	{
@@ -117,8 +116,6 @@ bool rosc_iface_listen( iface_t *iface, port_t port_number)
 	}
 	return (true);
 }
-
-
 
 void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 {
@@ -141,9 +138,9 @@ bool iface_list_insert(iface_t *interface)
 	if(cur)//Does the list already contain elements?
 	{
 		//Go to the end of the list
-		while(cur->next != 0 && cur->next != interface) cur=cur->next;
+		while(cur->next != 0 && cur!= interface) cur=cur->next;
 
-		if(cur->next != interface)
+		if(cur != interface)
 		{
 			cur->next=interface;
 			return 0;
@@ -166,9 +163,7 @@ bool iface_list_insert(iface_t *interface)
 
 void unregister_interface(iface_t *interface)
 {
-	//TODO check if list start is 0 (when changed)
-	//TODO set list start to 0 when removing the last interface
-	iface_t* cur=&interface_list_start;
+	iface_t* cur=interface_list_start;
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
 
 	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
@@ -176,12 +171,23 @@ void unregister_interface(iface_t *interface)
 	{
 		cur->state=IFACE_STATE_DO_UNREGISTER;
 	}
+	else
+	{
+		ROSC_ERROR("Could not find interface in the interface list!");
+	}
 }
 
-void remove_interface(iface_t *interface)
+void iface_list_remove(iface_t *interface)
 {
-	iface_t* cur=&interface_list_start;
+	//TODO check if list start is 0 (when changed)
+	//TODO set list start to 0 when removing the last interface
+
+	iface_t* cur=interface_list_start;
 	iface_t* last;
+
+	if(cur)
+		ROSC_ERROR("Can not remove a interface from a empty list!");
+
 	//Go to the entry of the list
 	while(cur && cur != interface)
 	{

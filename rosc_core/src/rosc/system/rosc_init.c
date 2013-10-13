@@ -34,9 +34,19 @@
 #include <rosc/system/setup.h>
 #include <rosc/system/endian.h>
 
+//TODO init structs
+iface_t rpc_client={};
+iface_t rpc_server={};
+
+
+
+
 void rosc_init()
 {
 	//Initialize the byte order arrays
 	rosc_init_endian();
 	rosc_lists_init();
+
+	iface_list_insert(&rpc_client);
+	iface_listen(&rpc_server, XMLRPC_PORT);
 }
