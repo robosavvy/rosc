@@ -57,7 +57,6 @@ typedef enum
 	IFACE_STATE_RPC_INTERFACE,
 	IFACE_STATE_UNREGISTERED, //!< IFACE_STATE_UNREGISTERED
 	IFACE_STATE_DO_REGISTER,  //!< IFACE_STATE_DO_REGISTER
-	IFACE_STATE_WAIT_REGISTERED, //!< IFACE_STATE_WAIT_REGISTERED
 	IFACE_STATE_REGISTERED,   //!< IFACE_STATE_REGISTERED
 	IFACE_STATE_DO_UNREGISTER,//!< IFACE_STATE_DO_UNREGISTER
 	IFACE_STATE_WAIT_UNREGISTERED, //!< IFACE_STATE_WAIT_UNREGISTERED
@@ -79,8 +78,7 @@ typedef struct iface_t
 	struct iface_t *next;
 }iface_t;
 
-void rosc_init_interface_list();
-void register_interface(iface_t *interface);
+bool iface_list_insert(iface_t *interface);
 void unregister_interface(iface_t *interface);
 
 typedef enum
@@ -92,13 +90,17 @@ typedef enum
 
 typedef struct socket_t
 {
-	struct socket_t *next;
-	bool is_active;
-	socket_id_t socket_id;
+	bool is_active;	/*!< If the this socket is used, this value is set to true*/
+	socket_id_t socket_id;/*!< This stores the socket id of the connection on the target system*/
+	struct iface_t *reserved;/*!< If this is not 0 the socket is reserved for a special interface*/
 
-	struct iface_t *iface;
-	sebs_parser_data_t pdata;
-	void* data;
+	struct iface_t *iface;/*!< This stores the current interface */
+
+	sebs_parser_data_t pdata;/*!< This is state information of the parser of the interface */
+	void* data; /*!< This is the data which is reserved for the interface */
+	struct socket_t *next;/*!< If not 0 it points to the next entry of the interface list*/
+
+
 }socket_t;
 
 typedef struct listen_socket_t
@@ -118,7 +120,7 @@ typedef enum
 	SEND_RESULT_CONNECTION_TIMEOUT,
 }send_result_t;
 
-void rosc_sockets_init();
+void rosc_lists_init();
 
 /**
  * Opens a port for a specific interface
@@ -126,9 +128,6 @@ void rosc_sockets_init();
  * @return True if successfull, False if not
  */
 bool rosc_iface_listen( iface_t *iface, uint16_t port_number);
-
-
-
 
 /**
  * This function is called by the driver when something is received on a
@@ -140,8 +139,6 @@ bool rosc_iface_listen( iface_t *iface, uint16_t port_number);
  * @param size
  */
 void receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
-
-
 
 
 /* ********************************

@@ -32,16 +32,12 @@
 #include <rosc/system/status.h>
 
 
-#ifndef __SYSTEM_HAS_MALLOC__
 
 
 	//Memory for the port structs itself
 	static socket_t __socket_struct_mem_reservation[__SOCKET_MAXIMUM__];
 	static listen_socket_t __listen_socket_struct_mem_reservation[__LISTENING_SOCKET_MAXIMUM__];
 
-	//point the hub pointer to the first array entry
-	static socket_t* socket_list_start;
-	static listen_socket_t* listen_socket_list_start;
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
 	extern void* rosc_static_socket_mem;
@@ -49,20 +45,21 @@
 	extern const size_t rosc_static_socket_mem_message_offset;
 	extern const size_t rosc_static_socket_mem_hdata_offset;
 
-#else
-	socket_t __port_list_hub;
-	const socket_t* socket_list_start=__port_list_hub;
-#endif
+	//pointers first elements of sockets, listensockets, interfaces lists
+	static socket_t* socket_list_start;
+	static listen_socket_t* listen_socket_list_start;
+	static iface_t* interface_list_start;
 
 
-void rosc_sockets_init()
+
+void rosc_lists_init()
 {
 	int i;
 	//Init listen socket list
 	listen_socket_list_start=__listen_socket_struct_mem_reservation;
 	for(i=0;i<__LISTENING_SOCKET_MAXIMUM__;++i)
 	{
-		__listen_socket_struct_mem_reservation[i].next=(listen_socket_t *)__listen_socket_struct_mem_reservation+sizeof(listen_socket_t)*(i+1);
+		__listen_socket_struct_mem_reservation[i].next=&(__listen_socket_struct_mem_reservation[i+1]);
 		__listen_socket_struct_mem_reservation[i].interface=0;
 		__listen_socket_struct_mem_reservation[i].state=LISTEN_SOCKET_STATE_CLOSED;
 		__listen_socket_struct_mem_reservation[i].port=-1;
@@ -70,17 +67,19 @@ void rosc_sockets_init()
 	}
 	__listen_socket_struct_mem_reservation[i-1].next=0; //Set last items next address to zero
 
-
 	//Init socket list
 	socket_list_start=__socket_struct_mem_reservation;
 	for(i=0;i<__SOCKET_MAXIMUM__;++i)
 	{
-		__socket_struct_mem_reservation[i].next=(socket_t *)__socket_struct_mem_reservation+sizeof(socket_t)*(i+1);
+		__socket_struct_mem_reservation[i].next=&(__socket_struct_mem_reservation[i+1]);
 		__socket_struct_mem_reservation[i].iface=0;
 		__socket_struct_mem_reservation[i].is_active=false;
+		__socket_struct_mem_reservation[i].data=(&rosc_static_socket_mem)+rosc_static_socket_mem_size*i;
 	}
 	__socket_struct_mem_reservation[i-1].next=0; //Set last items next address to zero
 
+
+	interface_list_start=0;
 }
 
 bool rosc_iface_listen( iface_t *iface, port_t port_number)
@@ -111,7 +110,6 @@ bool rosc_iface_listen( iface_t *iface, port_t port_number)
 		cur->pdata.handler_data=cur->data+rosc_static_socket_mem_hdata_offset;
 		cur->pdata.additional_storage=cur->data+rosc_static_socket_mem_message_offset;
 		cur->pdata.handler_function=iface->handler_function;
-		cur->pdata.communication_port=cur;
 	}
 	else
 	{
@@ -134,33 +132,34 @@ void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 	sebs_parser_frame(buffer,len,&cur->pdata);
 }
 
-
-static iface_t interface_list_hub;
-
-
-void rosc_init_interface_list()
+bool iface_list_insert(iface_t *interface)
 {
-
-	//TODO change
-	interface_list_hub.isListHub=true;
-	interface_list_hub.next=0;
-}
+	iface_t* cur=interface_list_start;
+	interface->next=0;
 
 
-void register_interface(iface_t *interface)
-{
-	//TODO check if list start is 0 (when changed)
-
-
-	iface_t* cur=&interface_list_hub;
-	//Go to the end of the list
-	while(cur->next != 0 && cur->next != interface) cur=cur->next;
-
-	if(cur->next != interface && cur->next == 0)
+	if(cur)//Does the list already contain elements?
 	{
-		cur->next=interface;
-		cur->next->next=0;
-		cur->state=IFACE_STATE_DO_REGISTER;
+		//Go to the end of the list
+		while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+		if(cur->next != interface)
+		{
+			cur->next=interface;
+			return 0;
+		}
+		else
+		{
+			//Element already in the list
+			ROSC_ERROR("Tried to insert a element into the list, which is already there!");
+			return 1;
+		}
+	}
+	else
+	{
+		interface_list_start=interface;
+		cur=interface;
+		return 0;
 	}
 }
 
@@ -169,7 +168,7 @@ void unregister_interface(iface_t *interface)
 {
 	//TODO check if list start is 0 (when changed)
 	//TODO set list start to 0 when removing the last interface
-	iface_t* cur=&interface_list_hub;
+	iface_t* cur=&interface_list_start;
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
 
 	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
@@ -181,7 +180,7 @@ void unregister_interface(iface_t *interface)
 
 void remove_interface(iface_t *interface)
 {
-	iface_t* cur=&interface_list_hub;
+	iface_t* cur=&interface_list_start;
 	iface_t* last;
 	//Go to the entry of the list
 	while(cur && cur != interface)

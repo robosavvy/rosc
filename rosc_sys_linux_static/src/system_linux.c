@@ -99,7 +99,7 @@ bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 
 
 	//Return only the first one;
-	strncpy(ip , addr_list[0],4);
+	strncpy(ip , (char *)addr_list[0],4);
 	return false;
 }
 
