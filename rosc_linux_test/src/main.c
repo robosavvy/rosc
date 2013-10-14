@@ -75,9 +75,20 @@ int main()
 
 
 
+	rosc_spin();
 
 
 
+
+
+
+
+
+
+
+
+
+	///TESTING STUFF
 
 	char *narf="narf";
 	uint16_t port=99;

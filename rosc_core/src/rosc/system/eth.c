@@ -46,9 +46,9 @@
 	extern const size_t rosc_static_socket_mem_hdata_offset;
 
 	//pointers first elements of sockets, listensockets, interfaces lists
-	static socket_t* socket_list_start;
-	static listen_socket_t* listen_socket_list_start;
-	static iface_t* interface_list_start;
+	socket_t* socket_list_start;
+	listen_socket_t* listen_socket_list_start;
+	iface_t* interface_list_start;
 
 
 

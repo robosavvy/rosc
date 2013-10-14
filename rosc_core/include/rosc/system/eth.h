@@ -49,6 +49,7 @@ typedef uint16_t port_t;
 extern char host_name[];
 extern char node_name[];
 
+
 /**
  * This enum contains the different interface states
  */
@@ -111,6 +112,12 @@ typedef struct listen_socket_t
 	struct iface_t *interface;
 	struct listen_socket_t *next;
 }listen_socket_t;
+
+extern socket_t* socket_list_start;
+extern listen_socket_t* listen_socket_list_start;
+extern iface_t* interface_list_start;
+
+
 
 typedef enum
 {
@@ -196,6 +203,15 @@ socket_id_t abstract_connect_socket(ip_address_t ip, port_t port);
  */
 extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
 
+enum
+{
+	SOCKET_NO_DATA = -1,
+	SOCKET_CLOSED = 0,
+};
+
+extern int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
+
+
 extern void abstract_close_socket(socket_id_t socket);
 
 
@@ -203,5 +219,11 @@ extern void abstract_close_socket(socket_id_t socket);
  * This routine is exectuted every time ros spin is called.
  */
 extern void abstract_ros_spin_routine();
+
+/**
+ * Accept sockets for polling
+ */
+extern socket_id_t abstract_socket_accept(listen_socket_id_t socket_id);
+
 
 #endif /* ETH_H_ */

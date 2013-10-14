@@ -29,20 +29,79 @@
  *  rosc_spin.c created by Christian Holl
  */
 
-
 #include <rosc/system/setup.h>
-
+#include <rosc/system/eth.h>
 #include <rosc/system/rosc_spin.h>
 
 void rosc_spin()
 {
+	int i;
 
-	//Go through publisher subscriber list
 
-	//Send out, pending requests
+	while(1)
+	{
 
-	//Receive network packages
+			//Check for new connections
+			listen_socket_t *lsock=listen_socket_list_start;
+			int i;
 
-	//Process incoming xmlrpc requests/responses
+			while(lsock)
+			{
+				socket_t* sock=socket_list_start;
+				while(sock)
+				{
+					if(!sock->is_active && ( sock->reserved == 0 ||  sock->reserved == lsock->interface))
+					{
+						break;
+					}
+					sock=sock->next;
+				}
 
+				if(sock)
+				{
+					socket_id_t asock = abstract_socket_accept(lsock->id);
+					if(asock >= 0)
+					{
+						sock->socket_id=asock;
+						sock->is_active=true;
+						DEBUG_PRINT_STR("New connection ... ");
+					}
+				}
+				lsock=lsock->next;
+			}
+
+
+
+			char buffer[3];
+			int size=3;
+			int s;
+
+			socket_t* sock=socket_list_start;
+			while(sock)
+			{
+				if(sock->is_active)
+				{
+					bool had_data=false;
+					do
+					{
+						s=recv_packet(sock->socket_id,buffer,size);
+
+						if(s>0)
+						{
+							had_data=true;
+							printf("%.*s", s, buffer);
+						}
+					}
+					while(s>0);
+					if(had_data)
+						printf("\n");
+				}
+
+				sock=sock->next;
+			}
+
+
+	}
 }
+
+

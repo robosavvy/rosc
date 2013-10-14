@@ -161,7 +161,32 @@ void abstract_close_socket(socket_id_t socket_id)
 }
 
 
-void abstract_ros_spin_routine()
+socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
 {
+	struct sockaddr cli_addr;
+	int clilen = sizeof(cli_addr);
+    int newsockfd = accept(socket_id,
+                (struct sockaddr *) &cli_addr,
+                &clilen);
 
+    if(newsockfd<0)
+    	return -1;
+}
+
+
+
+int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
+{
+	int n = read(socket_id,buffer,size);
+	if(n<=0)
+		switch(n)
+		{
+		case -1:
+			return SOCKET_NO_DATA;
+			break;
+		case 0:
+			return SOCKET_CLOSED;
+			break;
+		}
+	return n;
 }
