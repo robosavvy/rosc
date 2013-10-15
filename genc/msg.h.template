@@ -239,7 +239,7 @@ ros_iface_init_t rosc_static_subscriber_init_##USER_TYPE##__##TOPIC={#TOPIC,\
 @[end if]@
                             &rosc_static_callback_## TOPIC,\
                             };\
-iface_t rosc_static_subscriber_##USER_TYPE##__##TOPIC={false,\
+iface_t rosc_static_subscriber_##USER_TYPE##__##TOPIC={\
            &ros_handler,\
            &rosc_static_subscriber_init_##USER_TYPE##__##TOPIC};\
 

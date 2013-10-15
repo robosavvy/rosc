@@ -31,9 +31,6 @@
 #include <rosc/system/eth.h>
 #include <rosc/system/status.h>
 
-
-
-
 	//Memory for the port structs itself
 	static socket_t __socket_struct_mem_reservation[__SOCKET_MAXIMUM__];
 	static listen_socket_t __listen_socket_struct_mem_reservation[__LISTENING_SOCKET_MAXIMUM__];
@@ -74,7 +71,9 @@ void rosc_lists_init()
 		__socket_struct_mem_reservation[i].next=&(__socket_struct_mem_reservation[i+1]);
 		__socket_struct_mem_reservation[i].iface=0;
 		__socket_struct_mem_reservation[i].is_active=false;
-		__socket_struct_mem_reservation[i].data=(&rosc_static_socket_mem)+rosc_static_socket_mem_size*i;
+		__socket_struct_mem_reservation[i].data=(&rosc_static_socket_mem)+rosc_static_socket_mem_size*i; //TODO can we remove data ?!?!
+		__socket_struct_mem_reservation[i].pdata.handler_data=__socket_struct_mem_reservation[i].data+rosc_static_socket_mem_hdata_offset;
+		__socket_struct_mem_reservation[i].pdata.additional_storage=__socket_struct_mem_reservation[i].data+rosc_static_socket_mem_message_offset;
 	}
 	__socket_struct_mem_reservation[i-1].next=0; //Set last items next address to zero
 
@@ -101,7 +100,7 @@ bool iface_listen( iface_t *iface, port_t port_number)
 		if(sock==-1)
 		{
 			ROSC_ERROR("Could not open socket!");
-			return false;
+			return(false);
 		}
 
 		cur->id=sock;
@@ -143,20 +142,20 @@ bool iface_list_insert(iface_t *interface)
 		if(cur != interface)
 		{
 			cur->next=interface;
-			return 0;
+			return(0);
 		}
 		else
 		{
 			//Element already in the list
 			ROSC_ERROR("Tried to insert a element into the list, which is already there!");
-			return 1;
+			return(1);
 		}
 	}
 	else
 	{
 		interface_list_start=interface;
 		cur=interface;
-		return 0;
+		return(0);
 	}
 }
 

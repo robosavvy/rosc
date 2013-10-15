@@ -93,14 +93,14 @@ bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 
 	if ( (he = gethostbyname( hostname ) ) == NULL)
 	{
-		return true;
+		return(true);
 	}
 	addr_list = (struct in_addr **) he->h_addr_list;
 
 
 	//Return only the first one;
 	strncpy(ip , (char *)addr_list[0],4);
-	return false;
+	return(false);
 }
 
 bool abstract_stop_listening_on_port(socket_id_t socket_id)
@@ -147,11 +147,11 @@ send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint
 {
 	if(write(socket_id,buffer,size) == size)
 	{
-		return SEND_RESULT_OK;
+		return(SEND_RESULT_OK);
 	}
 	else
 	{
-		return SEND_RESULT_CONNECTION_ERROR;
+		return(SEND_RESULT_CONNECTION_ERROR);
 	}
 }
 
@@ -170,7 +170,9 @@ socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
                 &clilen);
 
     if(newsockfd<0)
-    	return -1;
+    	return(-1);
+    else
+    	return (newsockfd);
 }
 
 
@@ -182,11 +184,11 @@ int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 		switch(n)
 		{
 		case -1:
-			return SOCKET_NO_DATA;
+			return(SOCKET_NO_DATA);
 			break;
 		case 0:
-			return SOCKET_CLOSED;
+			return(SOCKET_CLOSED);
 			break;
 		}
-	return n;
+	return(n);
 }

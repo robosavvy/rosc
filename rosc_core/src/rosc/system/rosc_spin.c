@@ -90,6 +90,10 @@ void rosc_spin()
 						{
 							had_data=true;
 							printf("%.*s", s, buffer);
+
+
+							sebs_parser_frame(buffer,s, &sock->pdata);
+
 						}
 					}
 					while(s>0);

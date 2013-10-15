@@ -69,10 +69,6 @@ typedef enum
  */
 typedef struct iface_t
 {
-#ifdef __SYSTEM_HAS_MALLOC__
-	size_t handler_mem_size;
-#endif
-	bool isListHub;
 	sebs_parse_function_t handler_function;
 	void *init_data;
 	iface_state_t state;
@@ -113,11 +109,10 @@ typedef struct listen_socket_t
 	struct listen_socket_t *next;
 }listen_socket_t;
 
+
 extern socket_t* socket_list_start;
 extern listen_socket_t* listen_socket_list_start;
 extern iface_t* interface_list_start;
-
-
 
 typedef enum
 {
