@@ -34,6 +34,7 @@
 
 #include <rosc/com/xmlrpc.h>
 #include <rosc/system/status.h>
+#include <rosc/com/msg_gen.h>
 
 
 
@@ -242,8 +243,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
 			pdata->out_len=SOCKET_CLOSED;
-			pdata->len=0;
-
+			*pdata->len=0;
 			break;
 		default:
 			break;
@@ -577,10 +577,19 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 		}
 	}
+	else if (hdata->xmlrpc_state == XMLRPC_STATE_RESPOND)
+	{
+
+	}
 	else
 	{
 		ROSC_FATAL("xmlrpc_state value unexpected!");
 	}
+
+
+
+
+
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }
 

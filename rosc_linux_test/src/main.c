@@ -36,7 +36,7 @@
 
 #include <rosc/com/ros_handler.h>
 
-#include <rosc/com/msg_gen_common.h>
+#include <rosc/com/msg_gen.h>
 #include <rosc/system/eth.h>
 
 
@@ -119,7 +119,7 @@ int main()
 
 
 	int i;
-	while(send_rpc(buffer, &size, &msg_def_xmlrpc_response))
+	while(msggen(buffer, &size, &msg_def_xmlrpc_response))
 	{
 
 		for(i=0;i<100-size;i++)

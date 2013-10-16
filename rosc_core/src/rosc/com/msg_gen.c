@@ -1,7 +1,5 @@
 #include <rosc/com/msg_gen.h>
-#include <rosc/system/setup.h>
-#include <rosc/system/status.h>
-#include <rosc/system/eth.h>
+
 
 #define DATA_TO_BUFFER(DATA, SIZE, CORRECTION)\
 		def->submode=MSG_GEN_MODE_BUFFER_FILL;\
@@ -47,24 +45,14 @@
 
 
 
-bool send_rpc(uint8_t * buffer, uint32_t *buffer_size,
-		msg_gen_command_t *def)
+bool msggen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 {
-
-
 	while (1)
 	{
 
 		if (*buffer_size == 0 || (*def->type==MSG_TYPE_MESSAGE_END && !def->size.mode && def->submode == MSG_GEN_MODE_TYPE))
 		{
-			if(*def->type==MSG_TYPE_MESSAGE_END)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return (*def->type!=MSG_TYPE_MESSAGE_END);
 		}
 
 		switch(def->submode)
@@ -659,7 +647,6 @@ bool send_rpc(uint8_t * buffer, uint32_t *buffer_size,
 
 				break;
 		}
-
 	}
 
 }
