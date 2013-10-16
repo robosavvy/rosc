@@ -45,9 +45,9 @@ void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 	 * Network functions return len=-1 when connection was terminated for example.
 	 * in that case the handler function is called.
 	 */
-	if (len < 0)
+	if (len <= 0)
 	{
-		data->event = SEBS_PARSE_EVENT_LEN_SMALLER_ZERO;
+		data->event = SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO;
 		data->call_len=0;
 	}
 	else

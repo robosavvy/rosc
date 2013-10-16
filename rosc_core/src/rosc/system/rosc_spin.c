@@ -67,6 +67,7 @@ void rosc_spin()
 						con_sock->iface=listen_sock->interface;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=listen_sock->interface->handler_function;
+						con_sock->pdata.init_data=listen_sock->interface->init_data;
 
 
 						DEBUG_PRINT_STR("New connection ... ");
@@ -96,8 +97,29 @@ void rosc_spin()
 							had_data=true;
 							printf("%.*s", s, buffer);
 
+
+						}
+						if(s!=SOCKET_NO_DATA)
+						{
 							sebs_parser_frame(buffer,s, &con_sock->pdata);
 
+							switch(con_sock->pdata.out_len)
+							{
+							case SOCKET_CLOSED:
+								abstract_close_socket(con_sock->socket_id);
+								con_sock->is_active=0;
+								break;
+							case SOCKET_NO_DATA:
+								//Do nothing
+								break;
+
+							default:
+								if(con_sock->pdata.out_len>0)
+								{
+									//send ...
+								}
+								break;
+							}
 						}
 					}
 					while(s>0);

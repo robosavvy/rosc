@@ -40,13 +40,13 @@
 
 //TODO init structs
 
-iface_t rpc_client=
+static iface_t rpc_client=
 {
 	&xmlrpc,
 };
 
-xmlrpc_init_data_t rpc_server_init={XMLRPC_TYPE_SERVER};
-iface_t rpc_server=
+static xmlrpc_init_data_t rpc_server_init={XMLRPC_TYPE_SERVER};
+static iface_t rpc_server=
 {
 	&xmlrpc,
 	&rpc_server_init,

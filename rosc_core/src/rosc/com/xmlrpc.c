@@ -43,7 +43,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 
 	xmlrpc_data_t *hdata=pdata->handler_data;
-	xmlrpc_t init_mode=((xmlrpc_init_data_t *)&pdata->init_data)->type;
+	xmlrpc_t init_mode=((xmlrpc_init_data_t *)pdata->init_data)->type;
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
 	 *****************/
@@ -68,14 +68,17 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		}
 		else
 		{
-			ROSC_FATAL("ERROR XMLRPC Handler: No XMLRPC type given in init!!!");
+			ROSC_FATAL("ERROR XMLRPC Handler: Unknown XMLRPC type given in init!!!");
 		}
+
+
 
 		hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 		pdata->overall_len = 0;
 		pdata->security_len = XMLRPC_SECURITY_MAX_MESSAGE_SIZE;
+		pdata->out_len = SOCKET_NO_DATA;
 
 		xmlrpc_tag_state_t tag_state = XMLRPC_TAG_STATE_NONE;
 		xmlrpc_type_tag_t type_tag = XMLRPC_TYPE_TAG_NONE;
@@ -100,8 +103,21 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	 **********************/
 	switch (pdata->event)
 	{
-	case SEBS_PARSE_EVENT_LEN_SMALLER_ZERO:
-		//Should never get here... -> reset is above
+	case SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO:
+			DEBUG_PRINT_STR("EVENT LEN SMALLER_ZERO");
+			switch(*pdata->len)
+			{
+				case 0:
+					DEBUG_PRINT_STR("Connection closed!!!");
+					pdata->out_len=SOCKET_CLOSED;
+					break;
+				case -1:
+					return (SEBS_PARSE_RETURN_GO_AHEAD);
+					break;
+				default:
+					DEBUG_PRINT(INT,"LEN is",*pdata->len);
+					break;
+			}
 		break;
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
 		switch (hdata->result_handling)
@@ -172,6 +188,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
 			DEBUG_PRINT(INT,"---HTTP--->SEBS_PARSE_HTTP_EVENT_METHOD_PARSED",hdata->http.seekstring.result);
 			hdata->method = hdata->http.seekstring.result;
+
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_ACTION_PARSED:
@@ -224,6 +241,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
+			pdata->out_len=SOCKET_CLOSED;
+			pdata->len=0;
 
 			break;
 		default:

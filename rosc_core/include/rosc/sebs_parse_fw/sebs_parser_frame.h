@@ -46,7 +46,7 @@
 
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
-#define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2
+#define SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO -2
 #define SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE -3
 
 //forward declaration of struct
@@ -207,6 +207,17 @@ typedef struct sebs_parser_data_t
 	 * This targets a additional storage location
 	 */
 	void *additional_storage;
+
+	/**
+	 * output buffer
+	 */
+	void *out_buf;
+
+	/**
+	 * output buffer len
+	 */
+	int32_t out_len;
+
 } sebs_parser_data_t;
 
 
