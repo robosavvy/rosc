@@ -75,7 +75,6 @@ int main()
 
 
 
-	rosc_spin();
 
 
 
@@ -134,37 +133,40 @@ int main()
 		printf("%c",buffer[i]);
 	}
 
+	printf("\n----");
+//
+//
+//
+//	ip_address_t ip;
+//	printf("\n---END---\n");
+//	port_t p2=0;
+//	int a=abstract_start_listening_on_port(&p2);
+//
+//
+//	abstract_static_initHostname();
+//	printf("Host: %s\n",host_name);
+//	printf("Port: %i\n",p2);
+//
+//	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
+//	{
+//		int i;
+//		for(i=0;i<4;i++)
+//		{
+//			if(i)printf(".");
+//			printf("%i",ip[i]);
+//		}
+//		printf("\n");
+//	}
+//
+//
+//	socket_id_t sock=abstract_connect_socket(ip,12345);
+//
+//	abstract_send_packet(sock,"narf",4);
+//
+//	abstract_close_socket(sock);
 
 
-
-	ip_address_t ip;
-	printf("\n---END---\n");
-	port_t p2=0;
-	int a=abstract_start_listening_on_port(&p2);
+	rosc_spin();
 
 
-	abstract_static_initHostname();
-	printf("Host: %s\n",host_name);
-	printf("Port: %i\n",p2);
-
-	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
-	{
-		int i;
-		for(i=0;i<4;i++)
-		{
-			if(i)printf(".");
-			printf("%i",ip[i]);
-		}
-		printf("\n");
-	}
-
-
-	socket_id_t sock=abstract_connect_socket(ip,12345);
-
-	abstract_send_packet(sock,"narf",4);
-
-	abstract_close_socket(sock);
-
-
-	while(1);
 }

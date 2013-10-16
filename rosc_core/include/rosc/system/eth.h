@@ -96,8 +96,6 @@ typedef struct socket_t
 	sebs_parser_data_t pdata;/*!< This is state information of the parser of the interface */
 	void* data; /*!< This is the data which is reserved for the interface */
 	struct socket_t *next;/*!< If not 0 it points to the next entry of the interface list*/
-
-
 }socket_t;
 
 typedef struct listen_socket_t

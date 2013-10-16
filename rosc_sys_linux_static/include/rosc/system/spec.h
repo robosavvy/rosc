@@ -46,12 +46,13 @@
 #define __ROS_PARAMETER_MAX_LEN__ 50
 #define __INPUT_BUFFER_SIZE__ 256
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
-#define __SYSTEM_HAS_OS__
+//#define __SYSTEM_HAS_OS__
 #define __SYSTEM_NEEDS_CON_ACCEPT__
 
 #define __LISTENING_SOCKET_MAXIMUM__ 8
 #define __SOCKET_MAXIMUM__ 8
 #define __SOCKET_ID_TYPE__ int32_t
+
 
 //#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
 

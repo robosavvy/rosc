@@ -62,6 +62,6 @@ void rosc_init()
 	rosc_init_endian();
 	rosc_lists_init();
 
-	iface_list_insert(&rpc_client);
+	iface_list_insert(&rpc_server);
 	iface_listen(&rpc_server, XMLRPC_PORT);
 }

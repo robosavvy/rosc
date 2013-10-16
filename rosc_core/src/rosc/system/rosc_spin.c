@@ -42,32 +42,37 @@ void rosc_spin()
 	{
 
 			//Check for new connections
-			listen_socket_t *lsock=listen_socket_list_start;
+			listen_socket_t *listen_sock=listen_socket_list_start;
 			int i;
 
-			while(lsock)
+			while(listen_sock)
 			{
-				socket_t* sock=socket_list_start;
-				while(sock)
+				socket_t* con_sock=socket_list_start;
+				while(con_sock)
 				{
-					if(!sock->is_active && ( sock->reserved == 0 ||  sock->reserved == lsock->interface))
+					if(!con_sock->is_active && ( con_sock->reserved == 0 ||  con_sock->reserved == listen_sock->interface))
 					{
 						break;
 					}
-					sock=sock->next;
+					con_sock=con_sock->next;
 				}
 
-				if(sock)
+				if(con_sock)
 				{
-					socket_id_t asock = abstract_socket_accept(lsock->id);
-					if(asock >= 0)
+					socket_id_t con_sock_id = abstract_socket_accept(listen_sock->id);
+					if(con_sock_id >= 0)
 					{
-						sock->socket_id=asock;
-						sock->is_active=true;
+						con_sock->socket_id=con_sock_id;
+						con_sock->is_active=true;
+						con_sock->iface=listen_sock->interface;
+						con_sock->pdata.handler_init=true;
+						con_sock->pdata.handler_function=listen_sock->interface->handler_function;
+
+
 						DEBUG_PRINT_STR("New connection ... ");
 					}
 				}
-				lsock=lsock->next;
+				listen_sock=listen_sock->next;
 			}
 
 
@@ -76,23 +81,22 @@ void rosc_spin()
 			int size=3;
 			int s;
 
-			socket_t* sock=socket_list_start;
-			while(sock)
+			socket_t* con_sock=socket_list_start;
+			while(con_sock)
 			{
-				if(sock->is_active)
+				if(con_sock->is_active)
 				{
 					bool had_data=false;
 					do
 					{
-						s=recv_packet(sock->socket_id,buffer,size);
+						s=recv_packet(con_sock->socket_id,buffer,size);
 
 						if(s>0)
 						{
 							had_data=true;
 							printf("%.*s", s, buffer);
 
-
-							sebs_parser_frame(buffer,s, &sock->pdata);
+							sebs_parser_frame(buffer,s, &con_sock->pdata);
 
 						}
 					}
@@ -101,7 +105,7 @@ void rosc_spin()
 						printf("\n");
 				}
 
-				sock=sock->next;
+				con_sock=con_sock->next;
 			}
 
 
