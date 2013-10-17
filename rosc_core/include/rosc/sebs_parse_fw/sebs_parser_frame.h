@@ -109,6 +109,14 @@ typedef struct sebs_parser_data_t
 	 */
 	bool function_init;
 
+	/**
+	 * This variable is set when the parser function is a send buffer filling function
+	 * that will result in the parsing function being executed directly after the handler
+	 * independently on what the length variable is set. Also the handler function is
+	 * now only called when a event is set.
+	 */
+	bool sending;
+
 
 	/**
 	 * If this is finished and a subfunction returns with true, it will call the handler/function which called the current function,

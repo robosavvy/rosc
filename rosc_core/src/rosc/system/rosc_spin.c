@@ -103,6 +103,18 @@ void rosc_spin()
 						{
 							sebs_parser_frame(buffer,s, &con_sock->pdata);
 
+							while(con_sock->pdata.out_len>0)
+							{
+								switch(abstract_send_packet(con_sock->socket_id,con_sock->pdata.out_buf,con_sock->pdata.out_len))
+								{
+								case SEND_RESULT_OK:
+									sebs_parser_frame(0,SOCKET_SIG_DATA_SENT, &con_sock->pdata);
+
+								}
+							}
+
+
+
 							switch(con_sock->pdata.out_len)
 							{
 							case SOCKET_SIG_CLOSE:
@@ -114,10 +126,7 @@ void rosc_spin()
 								break;
 
 							default:
-								if(con_sock->pdata.out_len>0)
-								{
-									//send ...
-								}
+								//Do nothing
 								break;
 							}
 						}

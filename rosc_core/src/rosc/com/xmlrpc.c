@@ -36,8 +36,8 @@
 #include <rosc/system/status.h>
 #include <rosc/com/msg_gen.h>
 
-
-
+#define RESPOND()\
+hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 
 sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
@@ -61,11 +61,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
 			init_state = SEBS_PARSE_HTTP_REQUEST_INIT;
+			pdata->sending=false;
 		}
 		else if (init_mode == XMLRPC_TYPE_CLIENT)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 			init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
+			pdata->sending=true;
 		}
 		else
 		{
@@ -102,21 +104,47 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	/* ********************
 	 * Handle Frame Events*
 	 **********************/
+
+	if (hdata->xmlrpc_state == XMLRPC_STATE_SEND)
+		{
+			//If there is any data coming in while sending, we do not care about it,
+			//they have to shut up...
+
+			switch(*pdata->len)
+			{
+			case SOCKET_SIG_NO_DATA:
+				break;
+
+			case SOCKET_SIG_DATA_SENT:
+				break;
+
+			case SOCKET_SIG_CLOSE:
+
+				break;
+			}
+
+
+		}
+		else
+		{
+			ROSC_FATAL("xmlrpc_state value unexpected!");
+		}
+
 	switch (pdata->event)
 	{
 	case SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO:
 			DEBUG_PRINT_STR("EVENT LEN SMALLER_ZERO");
 			switch(*pdata->len)
 			{
-				case 0:
+				case SOCKET_SIG_CLOSE:
 					DEBUG_PRINT_STR("Connection closed!!!");
 					pdata->out_len=SOCKET_SIG_CLOSE;
 					break;
-				case -1:
+				case SOCKET_SIG_NO_DATA:
 					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
+
 				default:
-					DEBUG_PRINT(INT,"LEN is",*pdata->len);
 					break;
 			}
 		break;
@@ -242,10 +270,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-			DEBUG_PRINT(INT,"socket_mem_size",rosc_static_socket_additional_data_size);
-			pdata->out_len=SOCKET_SIG_CLOSE;
-			*pdata->len=0;
-			break;
+
 		default:
 			break;
 		}
@@ -578,14 +603,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 		}
 	}
-	else if (hdata->xmlrpc_state == XMLRPC_STATE_RESPOND)
-	{
 
-	}
-	else
-	{
-		ROSC_FATAL("xmlrpc_state value unexpected!");
-	}
+
 
 
 

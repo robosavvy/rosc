@@ -57,7 +57,7 @@ typedef enum
 {
 	XMLRPC_STATE_HTTP,
 	XMLRPC_STATE_XML,
-	XMLRPC_STATE_RESPOND,
+	XMLRPC_STATE_SEND,
 }xmlrpc_state_t;
 
 /**

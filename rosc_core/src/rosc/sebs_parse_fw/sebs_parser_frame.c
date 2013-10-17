@@ -45,22 +45,24 @@ void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 	 * Network functions return len=-1 when connection was terminated for example.
 	 * in that case the handler function is called.
 	 */
-	if (len <= 0)
-	{
-		data->event = SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO;
-		data->call_len=0;
-	}
-	else
-	{
-		data->call_len=len;
-		if(data->security_len != 0)
+
+	if(!data->sending)
+		if (len <= 0)
 		{
-			if((data->overall_len+data->call_len) > data->security_len)
+			data->event = SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO;
+			data->call_len=0;
+		}
+		else
+		{
+			data->call_len=len;
+			if(data->security_len != 0)
 			{
-				data->event=SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE;
+				if((data->overall_len+data->call_len) > data->security_len)
+				{
+					data->event=SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE;
+				}
 			}
 		}
-	}
 
 	/*
 	 * Handling the parser input
@@ -134,6 +136,21 @@ void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 			data->current_parser.parser_function = store.parser_function;
 			data->current_parser.parser_data = store.parser_data;
 		}
+
+	//If in send mode, leave
+	if(data->sending)
+	{
+		//if there is no event
+		if(data->event!=SEBS_PARSE_EVENT_NONE)
+		{
+			continue;
+		}
+		else
+		{
+			return;
+		}
+	}
+
 
 	} while (len > 0 || finish_call || data->event!=SEBS_PARSE_EVENT_NONE);
 		data->overall_len+=data->call_len;
