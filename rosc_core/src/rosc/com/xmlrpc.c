@@ -79,7 +79,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->result_handling = XMLRPC_RESULT_NONE;
 		pdata->overall_len = 0;
 		pdata->security_len = XMLRPC_SECURITY_MAX_MESSAGE_SIZE;
-		pdata->out_len = SOCKET_NO_DATA;
+		pdata->out_len = SOCKET_SIG_NO_DATA;
 
 		xmlrpc_tag_state_t tag_state = XMLRPC_TAG_STATE_NONE;
 		xmlrpc_type_tag_t type_tag = XMLRPC_TYPE_TAG_NONE;
@@ -110,7 +110,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 				case 0:
 					DEBUG_PRINT_STR("Connection closed!!!");
-					pdata->out_len=SOCKET_CLOSED;
+					pdata->out_len=SOCKET_SIG_CLOSE;
 					break;
 				case -1:
 					return (SEBS_PARSE_RETURN_GO_AHEAD);
@@ -242,7 +242,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-			pdata->out_len=SOCKET_CLOSED;
+			DEBUG_PRINT(INT,"socket_mem_size",rosc_static_socket_additional_data_size);
+			pdata->out_len=SOCKET_SIG_CLOSE;
 			*pdata->len=0;
 			break;
 		default:

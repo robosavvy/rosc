@@ -198,8 +198,9 @@ extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffe
 
 enum
 {
-	SOCKET_NO_DATA = -1,
-	SOCKET_CLOSED = 0,
+	SOCKET_SIG_DATA_SENT = -2,
+	SOCKET_SIG_NO_DATA = -1,
+	SOCKET_SIG_CLOSE = 0,
 };
 
 extern int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
@@ -217,6 +218,8 @@ extern void abstract_ros_spin_routine();
  * Accept sockets for polling
  */
 extern socket_id_t abstract_socket_accept(listen_socket_id_t socket_id);
+
+extern const size_t rosc_static_socket_additional_data_size;
 
 
 #endif /* ETH_H_ */

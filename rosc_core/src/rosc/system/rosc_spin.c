@@ -99,17 +99,17 @@ void rosc_spin()
 
 
 						}
-						if(s!=SOCKET_NO_DATA)
+						if(s!=SOCKET_SIG_NO_DATA)
 						{
 							sebs_parser_frame(buffer,s, &con_sock->pdata);
 
 							switch(con_sock->pdata.out_len)
 							{
-							case SOCKET_CLOSED:
+							case SOCKET_SIG_CLOSE:
 								abstract_close_socket(con_sock->socket_id);
 								con_sock->is_active=0;
 								break;
-							case SOCKET_NO_DATA:
+							case SOCKET_SIG_NO_DATA:
 								//Do nothing
 								break;
 

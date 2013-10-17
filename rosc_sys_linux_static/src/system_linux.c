@@ -184,10 +184,10 @@ int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 		switch(n)
 		{
 		case -1:
-			return(SOCKET_NO_DATA);
+			return(SOCKET_SIG_NO_DATA);
 			break;
 		case 0:
-			return(SOCKET_CLOSED);
+			return(SOCKET_SIG_CLOSE);
 			break;
 		}
 	return(n);
