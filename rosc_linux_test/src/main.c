@@ -74,20 +74,6 @@ int main()
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	///TESTING STUFF
 
 	char *narf="narf";
@@ -120,16 +106,16 @@ int main()
 
 
 	int i;
-	while(msggen(buffer, &size, &msg_def_xmlrpc_response))
+	while(msg_gen(buffer, &size, &msg_def_xmlrpc_response))
 	{
 
-		for(i=0;i<100-size;i++)
+		for(i=0;i<size;i++)
 		{
 			printf("%c",buffer[i]);
 		}
 		size=100;
 	}
-	for(i=0;i<100-size;i++)
+	for(i=0;i<size;i++)
 	{
 		printf("%c",buffer[i]);
 	}

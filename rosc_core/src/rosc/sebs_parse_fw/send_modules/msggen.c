@@ -10,15 +10,16 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		pdata->function_init=false;
 	}
 
-	switch (fdata->) {
-		case value:
+	switch (fdata->type) {
+		case MSGGEN_MESSAGE_TYPE_ERROR:
 
 			break;
 		default:
 			break;
 	}
 
+	pdata->out_len=fdata->buffer_size;
+	msg_gen(pdata->additional_storage,&pdata->out_len,&fdata->cmds);
 
-
-//	msg_gen(pdata->additional_storage,rosc_static_socket_additional_data_size)
+	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

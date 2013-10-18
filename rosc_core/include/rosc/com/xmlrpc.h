@@ -45,6 +45,8 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/send_modules/msggen.h>
+
 
 typedef enum
 {
@@ -202,10 +204,9 @@ typedef struct
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
+		sebs_msggen_t gen;
 	};
 		sebs_parse_url_data_t url;
-
-
 }xmlrpc_data_t;
 
 

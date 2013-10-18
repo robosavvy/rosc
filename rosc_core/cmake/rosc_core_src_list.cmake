@@ -13,6 +13,7 @@ src/rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_skip.c
+src/rosc/sebs_parse_fw/send_modules/msggen.c
 src/rosc/string_res/msg_strings.c
 src/rosc/com/ros_handler.c
 src/rosc/com/msg_gen_common.c
