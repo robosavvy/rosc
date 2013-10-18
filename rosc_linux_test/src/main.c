@@ -80,7 +80,7 @@ int main()
 	uint16_t port=99;
 
 
-	XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port)
+	//XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port);
 
 	char buffer[1000];
 
@@ -97,16 +97,24 @@ int main()
 
 	int size=100;
 
-	msg_def_xmlrpc_response.submode =MSG_GEN_MODE_TYPE;
-	msg_def_xmlrpc_response.def_state = 0;
-	msg_def_xmlrpc_response.type = msg_def_xmlrpc_response.header;
-	msg_def_xmlrpc_response.data = msg_def_xmlrpc_response.header_data;
-	msg_def_xmlrpc_response.out.curPos=0;
-	msg_def_xmlrpc_response.size.mode=MSG_GEN_SIZE_MODE_NONE;
+	msg_gen_command_t msg_def_xmlrpc_error;
 
+	msg_def_xmlrpc_error.submode =MSG_GEN_MODE_TYPE;
+	msg_def_xmlrpc_error.def_state = 0;
+	msg_def_xmlrpc_error.header=xmlrpc_hd_response;
+	msg_def_xmlrpc_error.payload=xmlrpc_msg_error;
+	msg_def_xmlrpc_error.type = msg_def_xmlrpc_error.header;
+	msg_def_xmlrpc_error.data = msg_def_xmlrpc_error.header_data;
+	msg_def_xmlrpc_error.size.payload_size=0;
+	msg_def_xmlrpc_error.size.payload_size_available=false;
+	msg_def_xmlrpc_error.out.curPos=0;
+	msg_def_xmlrpc_error.size.mode=MSG_GEN_SIZE_MODE_NONE;
+
+
+	//
 
 	int i;
-	while(msg_gen(buffer, &size, &msg_def_xmlrpc_response))
+	while(msg_gen(buffer, &size, &msg_def_xmlrpc_error))
 	{
 
 		for(i=0;i<size;i++)
@@ -121,6 +129,9 @@ int main()
 	}
 
 	printf("\n----");
+
+
+
 //
 //
 //

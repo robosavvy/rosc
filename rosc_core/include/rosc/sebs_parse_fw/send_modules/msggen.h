@@ -23,20 +23,28 @@
 
 typedef enum
 {
-	MSGGEN_MESSAGE_TYPE_REGISTER_PUBLISHER_TOPIC,
-	MSGGEN_MESSAGE_TYPE_REQUEST_TOPIC,
-	MSGGEN_MESSAGE_TYPE_ERROR,
+	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC,
+	MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC,
+	MSGGEN_TYPE_XMLRPC_ERROR,
 }msggen_message_type_t;
 
 
 typedef struct
 {
+	bool first_run;
 	uint8_t *buffer;
 	size_t buffer_size;
 	msggen_message_type_t type;
 	void **data_ptr;
 	msg_gen_command_t cmds;
 }sebs_msggen_t;
+
+
+typedef enum
+{
+	SEBS_MSGGEN_EVENT_NONE=SEBS_PARSE_EVENT_NONE,
+	SEBS_MSGGEN_EVENT_SOCKET_SIGNAL,
+}sebs_msggen_event_t;
 
 
 sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata);

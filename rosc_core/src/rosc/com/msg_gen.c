@@ -47,8 +47,6 @@
 
 bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 {
-
-
 	uint32_t buffer_init_size=*buffer_size;
 	while (1)
 	{

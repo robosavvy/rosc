@@ -198,7 +198,7 @@ typedef struct
 
 	/**
 	 * This union contains data from the main
-	 * xmlrpc submodes. Http and xml parser.
+	 * xmlrpc submodes. Http and xml parser and message generator.
 	 */
 	union
 	{
