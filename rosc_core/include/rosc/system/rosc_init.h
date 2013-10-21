@@ -76,8 +76,7 @@
 		}rosc_socket_memory_size_def_t;\
 		\
 		const size_t rosc_static_socket_mem_size=sizeof(rosc_socket_memory_size_def_t);\
-		rosc_socket_memory_size_def_t __rosc_static_socket_mem[__SOCKET_MAXIMUM__];\
-		void *rosc_static_socket_mem=(void *)__rosc_static_socket_mem;\
+		rosc_socket_memory_size_def_t rosc_static_socket_mem[__SOCKET_MAXIMUM__];\
 		const size_t rosc_static_socket_mem_hdata_offset=offsetof(rosc_socket_memory_size_def_t,handler);\
 		const size_t rosc_static_socket_mem_message_offset=offsetof(rosc_socket_memory_size_def_t,message_data);\
 		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);

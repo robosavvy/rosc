@@ -105,30 +105,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	 * Handle Frame Events*
 	 **********************/
 
-	if (hdata->xmlrpc_state == XMLRPC_STATE_SEND)
-		{
-			//If there is any data coming in while sending, we do not care about it,
-			//they have to shut up...
 
-			switch(*pdata->len)
-			{
-			case SOCKET_SIG_NO_DATA:
-				break;
-
-			case SOCKET_SIG_DATA_SENT:
-				break;
-
-			case SOCKET_SIG_CLOSE:
-
-				break;
-			}
-
-
-		}
-		else
-		{
-			ROSC_FATAL("xmlrpc_state value unexpected!");
-		}
 
 	switch (pdata->event)
 	{
@@ -270,6 +247,18 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
+//			SEBS_PARSE_MSGGEN_INIT(pdata,hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size,
+//					MSGGEN_TYPE_XMLRPC_ERROR,0);
+
+
+			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
+					pdata->next_parser.parser_data=(void *)(&hdata->gen);\
+					hdata->gen.buffer_size=rosc_static_socket_additional_data_size;\
+					hdata->gen.buffer=pdata->additional_storage;\
+					hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;\
+					hdata->gen.data_ptr=0;\
+					return (SEBS_PARSE_RETURN_INIT);
+
 
 		default:
 			break;

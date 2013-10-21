@@ -22,17 +22,30 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 
 	if(*pdata->len==SOCKET_SIG_DATA_SENT || fdata->first_run)
 	{
-
-		//TODO check range for reset...
+		fdata->first_run=false;
 		XMLRPC_REQ_RESET();
+		XMLRPC_RESP_RESET();
+
+
+//		extern msg_gen_type_t rosrpc_hd[];
+//		extern msg_gen_type_t rosrpc_msg_topic_init[];
+//		extern msg_gen_type_t xmlrpc_hd_request[];
+//		extern msg_gen_type_t xmlrpc_hd_response[];
+//		extern msg_gen_type_t xmlrpc_msg_request[];
+//		extern msg_gen_type_t xmlrpc_msg_response[];
+//		extern msg_gen_type_t xmlrpc_msg_error[];
 
 		switch (fdata->type) {
 			case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC:
+				fdata->cmds.header=xmlrpc_hd_request;
+				fdata->cmds.payload=xmlrpc_msg_request;
+				break;
 
-				break;
 			case MSGGEN_TYPE_XMLRPC_ERROR:
-				//nothing
+				fdata->cmds.header=xmlrpc_hd_response;
+				fdata->cmds.payload=xmlrpc_msg_error;
 				break;
+
 			case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
 
 				break;

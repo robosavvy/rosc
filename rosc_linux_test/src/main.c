@@ -50,8 +50,15 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple1(sim1);
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple2(sim2);
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
-ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
-
+//ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
+}message_data;\
+		}rosc_socket_memory_size_def_t;\
+		\
+		const size_t rosc_static_socket_mem_size=sizeof(rosc_socket_memory_size_def_t);\
+		rosc_socket_memory_size_def_t rosc_static_socket_mem[8];\
+		const size_t rosc_static_socket_mem_hdata_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->handler);\
+		const size_t rosc_static_socket_mem_message_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);\
+		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 	printf("simple1 callback");
@@ -69,7 +76,6 @@ HOST_NAME("Host");
 
 int main()
 {
-
 	rosc_init();
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));

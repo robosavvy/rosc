@@ -37,7 +37,7 @@
 
 
 	//external memory (defined by STATIC_SYSTEM_MESSAGE_TYPE_LIST in rosc_init.h)
-	extern void* rosc_static_socket_mem;
+	extern void* rosc_static_socket_mem[];
 	extern const size_t rosc_static_socket_mem_size;
 	extern const size_t rosc_static_socket_mem_message_offset;
 	extern const size_t rosc_static_socket_mem_hdata_offset;
@@ -74,9 +74,9 @@ void rosc_lists_init()
 		__socket_struct_mem_reservation[i].next=&(__socket_struct_mem_reservation[i+1]);
 		__socket_struct_mem_reservation[i].iface=0;
 		__socket_struct_mem_reservation[i].is_active=false;
-		__socket_struct_mem_reservation[i].data=(&rosc_static_socket_mem)+rosc_static_socket_mem_size*i; //TODO can we remove data ?!?!
-		__socket_struct_mem_reservation[i].pdata.handler_data=__socket_struct_mem_reservation[i].data+rosc_static_socket_mem_hdata_offset;
-		__socket_struct_mem_reservation[i].pdata.additional_storage=__socket_struct_mem_reservation[i].data+rosc_static_socket_mem_message_offset;
+		__socket_struct_mem_reservation[i].data=&rosc_static_socket_mem[i]; //TODO can we remove data ?!?!
+		__socket_struct_mem_reservation[i].pdata.handler_data=((char*)&rosc_static_socket_mem[i])+rosc_static_socket_mem_hdata_offset;
+		__socket_struct_mem_reservation[i].pdata.additional_storage=((char*)&rosc_static_socket_mem[i])+rosc_static_socket_mem_message_offset;
 	}
 	__socket_struct_mem_reservation[i-1].next=0; //Set last items next address to zero
 
