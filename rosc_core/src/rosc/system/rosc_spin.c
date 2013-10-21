@@ -105,12 +105,16 @@ void rosc_spin()
 
 							while(con_sock->pdata.out_len>0)
 							{
+								unsigned sig;
 								switch(abstract_send_packet(con_sock->socket_id,con_sock->pdata.out_buf,con_sock->pdata.out_len))
 								{
 								case SEND_RESULT_OK:
-									sebs_parser_frame(0,SOCKET_SIG_DATA_SENT, &con_sock->pdata);
+									sig=SOCKET_SIG_DATA_SENT;
+//									con_sock->pdata.out_len=0;
+									break;
 
 								}
+								sebs_parser_frame(0,sig, &con_sock->pdata);
 							}
 
 

@@ -11,6 +11,25 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		fdata->first_run=true;
 		fdata->cmds.submode =MSG_GEN_MODE_TYPE;
 		fdata->cmds.def_state = 0;
+
+		switch (fdata->type) {
+			case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC:
+				fdata->cmds.header=xmlrpc_hd_request;
+				fdata->cmds.payload=xmlrpc_msg_request;
+				break;
+
+			case MSGGEN_TYPE_XMLRPC_ERROR:
+				fdata->cmds.header=xmlrpc_hd_response;
+				fdata->cmds.payload=xmlrpc_msg_error;
+				break;
+
+			case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
+
+				break;
+			default:
+				break;
+		}
+
 		fdata->cmds.type = fdata->cmds.header;
 		fdata->cmds.data = fdata->cmds.header_data;
 		fdata->cmds.size.payload_size=0;
@@ -35,27 +54,13 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 //		extern msg_gen_type_t xmlrpc_msg_response[];
 //		extern msg_gen_type_t xmlrpc_msg_error[];
 
-		switch (fdata->type) {
-			case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC:
-				fdata->cmds.header=xmlrpc_hd_request;
-				fdata->cmds.payload=xmlrpc_msg_request;
-				break;
 
-			case MSGGEN_TYPE_XMLRPC_ERROR:
-				fdata->cmds.header=xmlrpc_hd_response;
-				fdata->cmds.payload=xmlrpc_msg_error;
-				break;
-
-			case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
-
-				break;
-			default:
-				break;
-		}
 
 		pdata->out_len=fdata->buffer_size;
-		if(!msg_gen(fdata->buffer,&pdata->out_len,&fdata->cmds))
+		pdata->out_buf=fdata->buffer;
+		if(!msg_gen((uint8_t*)pdata->out_buf,&pdata->out_len,&fdata->cmds))
 		{
+
 			pdata->sending=false;
 			return (SEBS_PARSE_RETURN_FINISHED);
 		}
