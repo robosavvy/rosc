@@ -37,6 +37,7 @@ typedef struct
 	msggen_message_type_t type;
 	void **data_ptr;
 	msg_gen_command_t cmds;
+	bool finished;
 }sebs_msggen_t;
 
 

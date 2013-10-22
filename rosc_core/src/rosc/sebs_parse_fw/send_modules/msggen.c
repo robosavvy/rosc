@@ -11,6 +11,7 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		fdata->first_run=true;
 		fdata->cmds.submode =MSG_GEN_MODE_TYPE;
 		fdata->cmds.def_state = 0;
+		fdata->finished=false;
 
 		switch (fdata->type) {
 			case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC:
@@ -41,26 +42,22 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 
 	if(*pdata->len==SOCKET_SIG_DATA_SENT || fdata->first_run)
 	{
-		fdata->first_run=false;
-		XMLRPC_REQ_RESET();
-		XMLRPC_RESP_RESET();
-
-
-//		extern msg_gen_type_t rosrpc_hd[];
-//		extern msg_gen_type_t rosrpc_msg_topic_init[];
-//		extern msg_gen_type_t xmlrpc_hd_request[];
-//		extern msg_gen_type_t xmlrpc_hd_response[];
-//		extern msg_gen_type_t xmlrpc_msg_request[];
-//		extern msg_gen_type_t xmlrpc_msg_response[];
-//		extern msg_gen_type_t xmlrpc_msg_error[];
-
-
-
-		pdata->out_len=fdata->buffer_size;
-		pdata->out_buf=fdata->buffer;
-		if(!msg_gen((uint8_t*)pdata->out_buf,&pdata->out_len,&fdata->cmds))
+		if(!fdata->finished)
 		{
+			fdata->first_run=false;
+			XMLRPC_REQ_RESET();
+			XMLRPC_RESP_RESET();
 
+			pdata->out_len=fdata->buffer_size;
+			pdata->out_buf=fdata->buffer;
+			if(!msg_gen((uint8_t*)pdata->out_buf,&pdata->out_len,&fdata->cmds))
+			{
+				fdata->finished=true;
+			}
+		}
+		else
+		{
+			pdata->out_len=SOCKET_SIG_NO_DATA;
 			pdata->sending=false;
 			return (SEBS_PARSE_RETURN_FINISHED);
 		}
