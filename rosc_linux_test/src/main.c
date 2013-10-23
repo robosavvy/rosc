@@ -76,6 +76,25 @@ HOST_NAME("Host");
 
 int main()
 {
+
+	printf("Socket Memory Statistics\n");
+	printf("########################\n");
+
+
+	printf("Size of the ROS data struct in system part: %i bytes\n",(int) sizeof(ros_handler_data_t));
+	printf("Size of the XMLRPC data struct in system part: %i bytes\n",(int) sizeof(xmlrpc_data_t));
+	printf("------------------------------------------\n");
+	printf("Overall size of the system part:  %i bytes\n",(int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("Size of the user defined part:    %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t) - (int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("------------------------------------------\n");
+	printf("Overall size of a single socket:  %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t));
+	printf("\n");
+	printf("Overall size selected %i sockets: %i bytes\n",(int) __SOCKET_MAXIMUM__,(int) sizeof(rosc_static_socket_mem));
+
+	printf("########################\n");
+	printf("\n");
+
+
 	rosc_init();
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
