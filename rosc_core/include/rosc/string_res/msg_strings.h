@@ -70,7 +70,7 @@ extern const char *http_header_stdtext[];
 /**
  * Length of the string array xmlrpc_stdtext
  */
-#define XMLRPC_STDTEXT_LEN 	7
+#define XMLRPC_STDTEXT_LEN 	9
 
 /**
  * Macro for inserting standard XMLRPC text pieces string numbers into any enum
@@ -81,6 +81,8 @@ extern const char *http_header_stdtext[];
 	 ENUM ## _STDTXT_ERROR_CODE, \
 	 ENUM ## _STDTXT_ROS, \
 	 ENUM ## _STDTXT_TCPROS, \
+	 ENUM ## _STDTXT_FAULTCODE, \
+	 ENUM ## _STDTXT_FAULTSTRING, \
 	 ENUM ## _STDTXT_HTTP_URL_HEAD, \
 	 ENUM ## _STDTXT_ROSRPC_URL_HEAD
 
@@ -128,7 +130,7 @@ extern const char *xmlrpc_http_methods[];
 /**
  * Length of the string array xmlrpc_tag_strings
  */
-#define XMLRPC_TAG_STRINGS_LEN 	17
+#define XMLRPC_TAG_STRINGS_LEN 	18
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
@@ -145,6 +147,7 @@ extern const char *xmlrpc_http_methods[];
 	 ENUM ## _TAG_METHODCALL, \
 	 ENUM ## _TAG_METHODNAME, \
 	 ENUM ## _TAG_METHODRESPONSE, \
+	 ENUM ## _TAG_NAME, \
 	 ENUM ## _TAG_PARAM, \
 	 ENUM ## _TAG_PARAMS, \
 	 ENUM ## _TAG_STRING, \

@@ -46,7 +46,7 @@
 
 #define SEBS_PARSE_EVENT_NONE 0
 #define SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END -1
-#define SEBS_PARSE_EVENT_LEN_SMALLER_ZERO -2
+#define SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO -2
 #define SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE -3
 
 //forward declaration of struct
@@ -108,6 +108,14 @@ typedef struct sebs_parser_data_t
 	 * If this is true the function initializer shall be called in the current function
 	 */
 	bool function_init;
+
+	/**
+	 * This variable is set when the parser function is a send buffer filling function
+	 * that will result in the parsing function being executed directly after the handler
+	 * independently on what the length variable is set. Also the handler function is
+	 * now only called when a event is set.
+	 */
+	bool sending;
 
 
 	/**
@@ -209,9 +217,14 @@ typedef struct sebs_parser_data_t
 	void *additional_storage;
 
 	/**
-	 * This points to the communication port of the current parser
+	 * output buffer
 	 */
-	void *communication_port;
+	void *out_buf;
+
+	/**
+	 * output buffer len
+	 */
+	int32_t out_len;
 
 } sebs_parser_data_t;
 

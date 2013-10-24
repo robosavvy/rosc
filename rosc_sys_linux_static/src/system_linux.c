@@ -51,7 +51,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
-socket_id_t abstract_start_listening_on_port(port_t* port)
+listen_socket_id_t abstract_start_listening_on_port(port_t* port)
 {
 	//Do not bind to a specific port, or bind to port 0, e.g. sock.bind(('', 0)).
 	//The OS will then pick an available port for you. You can get the port
@@ -93,20 +93,20 @@ bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 
 	if ( (he = gethostbyname( hostname ) ) == NULL)
 	{
-		return true;
+		return(true);
 	}
 	addr_list = (struct in_addr **) he->h_addr_list;
 
 
 	//Return only the first one;
-	strncpy(ip , addr_list[0],4);
-	return false;
+	strncpy(ip , (char *)addr_list[0],4);
+	return(false);
 }
 
-port_status_t abstract_stop_listening_on_port(socket_id_t socket_id)
+bool abstract_stop_listening_on_port(socket_id_t socket_id)
 {
 	close(socket_id);
-	return (PORT_STATUS_CLOSED);
+	return (1);
 }
 
 socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
@@ -147,11 +147,11 @@ send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint
 {
 	if(write(socket_id,buffer,size) == size)
 	{
-		return SEND_RESULT_OK;
+		return(SEND_RESULT_OK);
 	}
 	else
 	{
-		return SEND_RESULT_CONNECTION_ERROR;
+		return(SEND_RESULT_CONNECTION_ERROR);
 	}
 }
 
@@ -160,8 +160,32 @@ void abstract_close_socket(socket_id_t socket_id)
 	close(socket_id);
 }
 
-
-void abstract_ros_spin_routine()
+socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
 {
+	struct sockaddr cli_addr;
+	int clilen = sizeof(cli_addr);
+    int newsockfd = accept(socket_id,
+                (struct sockaddr *) &cli_addr,
+                &clilen);
 
+    if(newsockfd<0)
+    	return(-1);
+    else
+    	return (newsockfd);
+}
+
+int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
+{
+	int n = read(socket_id,buffer,size);
+	if(n<=0)
+		switch(n)
+		{
+		case -1:
+			return(SOCKET_SIG_NO_DATA);
+			break;
+		case 0:
+			return(SOCKET_SIG_CLOSE);
+			break;
+		}
+	return(n);
 }

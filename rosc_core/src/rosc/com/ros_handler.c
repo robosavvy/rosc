@@ -52,6 +52,7 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		hdata->hstate=ROS_HANDLER_STATE_NONE;
 		hdata->iface_ok=false;
 		hdata->md5sum_ok=false;
+		pdata->sending=false;
 		SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
 	}
 

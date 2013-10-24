@@ -57,6 +57,7 @@
 			}handler;\
 			union\
 			{
+
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 	 * defines the end of the list which must contain all
@@ -73,13 +74,23 @@
 	 */
 	#define ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END\
 			}message_data;\
-		}rosc_port_memory_size_def_t;\
-		const size_t rosc_static_port_mem_size=sizeof(rosc_port_memory_size_def_t);\
-		rosc_port_memory_size_def_t __rosc_static_port_mem[PORTS_STATIC_MAX_NUMBER];\
-		void *rosc_static_port_mem=(void *)__rosc_static_port_mem;\
-		const size_t rosc_static_port_mem_hdata_offset=offsetof(rosc_port_memory_size_def_t,handler);\
-		const size_t rosc_static_port_mem_message_offset=offsetof(rosc_port_memory_size_def_t,message_data);
+		}rosc_socket_memory_size_def_t;\
+		\
+		const size_t rosc_static_socket_mem_size=sizeof(rosc_socket_memory_size_def_t);\
+		rosc_socket_memory_size_def_t rosc_static_socket_mem[__SOCKET_MAXIMUM__];\
+		const size_t rosc_static_socket_mem_hdata_offset=offsetof(rosc_socket_memory_size_def_t,handler);\
+		const size_t rosc_static_socket_mem_message_offset=offsetof(rosc_socket_memory_size_def_t,message_data);\
+		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);
 #endif
+
+/**
+ * The output buffer of all XMLRPC and ROSRPC services is in total as big as the biggest message size
+ * if more performance is required, it might be an option to increase the buffer size (if there is unused memory left)
+ * Additionally must be mentioned, that the memory size can even if it's set to 100, can still be a bit larger because of
+ * padding bytes of the created structs. Those bytes will be used as output buffer as well.
+ */
+#define ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(SIZE)\
+	char rosc_size_list_min_output_buffer[SIZE];
 
 
 #include <rosc/com/ros_handler.h>

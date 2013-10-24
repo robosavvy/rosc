@@ -36,13 +36,15 @@ static void *payload_storage[5];
 
 
 
-static msg_gen_type_t rosrpc_common_message_header[]=
+
+
+msg_gen_type_t rosrpc_hd[]=
 {
 	MSG_TYPE_PAYLOAD_SIZE_BINARY,
 	MSG_TYPE_HEADER_END,
 };
 
-static msg_gen_type_t rosrpc_topic_init_payload[]=
+msg_gen_type_t rosrpc_topic_init[]=
 {
 	  MSG_TYPE_ROS_FIELD_MESSAGE_DEFINITION,
 	  MSG_TYPE_STRING, //MESSAGE DEFINITION
@@ -68,7 +70,7 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 };
 
 
-	static msg_gen_type_t xmlrpc_request_header[]=
+	msg_gen_type_t xmlrpc_hd_request[]=
 	{
 		MSG_TYPE_VAL_METHOD_POST,
 		MSG_TYPE_DESCRIPTOR_END,
@@ -91,7 +93,7 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
 	};
 
-	static msg_gen_type_t xmlrpc_response_header[]=
+	msg_gen_type_t xmlrpc_hd_response[]=
 	{
 		MSG_TYPE_VAL_HTTP1_0, MSG_TYPE_SPACE, MSG_TYPE_VAL_200_OK,
 		MSG_TYPE_DESCRIPTOR_END,
@@ -115,8 +117,7 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 	};
 
 
-
-	static msg_gen_type_t xmlrpc_request[]=
+	msg_gen_type_t xmlrpc_msg_request[]=
 	{
 			MSG_TYPE_OPEN_TAG_METHODCALL,
 
@@ -208,7 +209,7 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 
 
 
-	static msg_gen_type_t xmlrpc_response[]=
+	msg_gen_type_t xmlrpc_msg_response[]=
 	{
 			MSG_TYPE_OPEN_TAG_METHODRESPONSE,
 
@@ -286,12 +287,44 @@ static msg_gen_type_t rosrpc_topic_init_payload[]=
 
 
 
-		msg_gen_command_t msg_def_xmlrpc_request={xmlrpc_request_header,
-										  xmlrpc_request,
-										  header_storage,
-										  payload_storage};
 
-		msg_gen_command_t msg_def_xmlrpc_response={xmlrpc_response_header,
-										  xmlrpc_response,
-										  header_storage,
-										  payload_storage};
+	msg_gen_type_t xmlrpc_msg_error[]=
+	{
+		MSG_TYPE_OPEN_TAG_METHODRESPONSE,
+
+		MSG_TYPE_OPEN_TAG_FAULT,
+		MSG_TYPE_OPEN_TAG_VALUE,
+		MSG_TYPE_OPEN_TAG_STRUCT,
+		MSG_TYPE_OPEN_TAG_MEMBER,
+		MSG_TYPE_OPEN_TAG_NAME,
+			MSG_TYPE_STDTXT_FAULTCODE,
+		MSG_TYPE_CLOSE_TAG_NAME,
+		MSG_TYPE_OPEN_TAG_VALUE,
+		MSG_TYPE_OPEN_TAG_INT,
+		//MSG_TYPE_INT8_STRING,
+		MSG_TYPE_CLOSE_TAG_INT,
+		MSG_TYPE_CLOSE_TAG_VALUE,
+		MSG_TYPE_CLOSE_TAG_MEMBER,
+
+		MSG_TYPE_OPEN_TAG_MEMBER,
+			MSG_TYPE_OPEN_TAG_NAME,
+				MSG_TYPE_STDTXT_FAULTSTRING,
+			MSG_TYPE_CLOSE_TAG_NAME,
+		MSG_TYPE_OPEN_TAG_VALUE,
+			MSG_TYPE_OPEN_TAG_STRING,
+				//MSG_TYPE_STRING,
+			MSG_TYPE_OPEN_TAG_STRING,
+			MSG_TYPE_CLOSE_TAG_VALUE,
+			MSG_TYPE_CLOSE_TAG_MEMBER,
+			MSG_TYPE_CLOSE_TAG_STRUCT,
+		MSG_TYPE_CLOSE_TAG_VALUE,
+		MSG_TYPE_CLOSE_TAG_FAULT,
+		MSG_TYPE_CLOSE_TAG_METHODRESPONSE,
+
+		MSG_TYPE_MESSAGE_END
+	};
+
+
+
+
+

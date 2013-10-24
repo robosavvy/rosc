@@ -37,6 +37,10 @@
 #include <rosc/com/msg_gen_common.h>
 #include <rosc/system/endian.h>
 #include <rosc/debug/debug_out.h>
+#include <rosc/system/types.h>
+#include <rosc/system/setup.h>
+#include <rosc/system/status.h>
+#include <rosc/system/eth.h>
 
 typedef enum
 {
@@ -51,11 +55,7 @@ typedef struct
 
 }msg_gen_handler_init_t;
 
-
-
-
-void msggen_send(uint8_t * const buffer, uint32_t buffer_size, const msg_gen_command_t *def);
-
+bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def);
 
 
 #endif /* MSG_GEN_H_ */

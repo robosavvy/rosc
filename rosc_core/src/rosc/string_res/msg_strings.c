@@ -60,6 +60,8 @@ const char *xmlrpc_stdtext[] =
 	"Error code",
 	"ROS",
 	"TCPROS",
+	"faultCode",
+	"faultString",
 	"http://",
 	"rosrpc://"
 };
@@ -88,6 +90,7 @@ const char *xmlrpc_tag_strings[] =
 	"methodCall",
 	"methodName",
 	"methodResponse",
+	"name",
 	"param",
 	"params",
 	"string",

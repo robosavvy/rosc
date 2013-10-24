@@ -45,6 +45,8 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
+#include <rosc/sebs_parse_fw/send_modules/msggen.h>
+
 
 typedef enum
 {
@@ -52,15 +54,12 @@ typedef enum
 	XMLRPC_TYPE_SERVER,
 }xmlrpc_t;
 
-typedef struct
-{
-	xmlrpc_t type;
-}xmlrpc_init_data_t;
 
 typedef enum
 {
 	XMLRPC_STATE_HTTP,
 	XMLRPC_STATE_XML,
+	XMLRPC_STATE_SEND,
 }xmlrpc_state_t;
 
 /**
@@ -125,7 +124,7 @@ typedef enum
 {
 	XMLRPC_METHODNAME_UNKNOWN=SEBS_PARSE_SEEKSTRING_NOT_FOUND ,
     XMLRPC_SLAVE_METHODNAMES(XMLRPC),
-}xmlrpc_ros_methodnames;
+}xmlrpc_ros_methodname_t;
 
 typedef enum
 {
@@ -154,6 +153,12 @@ typedef enum
 	XMLRPC_ARRAY_STATE_VALUE,
 }xmlrpc_array_state_t;
 
+typedef struct
+{
+	xmlrpc_t type;
+	xmlrpc_ros_methodname_t methodname;
+	char *ptr;
+}xmlrpc_init_data_t;
 
 
 typedef struct
@@ -179,7 +184,7 @@ typedef struct
 	uint32_t array_level;
 	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING];
 	xmlrpc_array_state_t array_state;
-	xmlrpc_ros_methodnames rpc_methodname;
+	xmlrpc_ros_methodname_t rpc_methodname;
 
 
 #ifndef ROSC_NO_CALLERID_EXTRACTION
@@ -193,16 +198,15 @@ typedef struct
 
 	/**
 	 * This union contains data from the main
-	 * xmlrpc submodes. Http and xml parser.
+	 * xmlrpc submodes. Http and xml parser and message generator.
 	 */
 	union
 	{
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
+		sebs_msggen_t gen;
 	};
 		sebs_parse_url_data_t url;
-
-
 }xmlrpc_data_t;
 
 

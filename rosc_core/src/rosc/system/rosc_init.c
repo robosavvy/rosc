@@ -33,11 +33,35 @@
 #include <rosc/system/eth.h>
 #include <rosc/system/setup.h>
 #include <rosc/system/endian.h>
+#include <rosc/com/xmlrpc.h>
+#include <rosc/com/ros_handler.h>
+
+
+
+//TODO init structs
+
+static iface_t rpc_client=
+{
+	&xmlrpc,
+};
+
+static xmlrpc_init_data_t rpc_server_init={XMLRPC_TYPE_SERVER};
+static iface_t rpc_server=
+{
+	&xmlrpc,
+	&rpc_server_init,
+	IFACE_STATE_RPC_INTERFACE
+};
+
+
+
 
 void rosc_init()
 {
 	//Initialize the byte order arrays
 	rosc_init_endian();
-	rosc_sockets_init();
-	rosc_init_interface_list();
+	rosc_lists_init();
+
+	iface_list_insert(&rpc_server);
+	iface_listen(&rpc_server, XMLRPC_PORT);
 }

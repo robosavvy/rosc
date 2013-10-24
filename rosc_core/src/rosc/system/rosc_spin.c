@@ -29,20 +29,125 @@
  *  rosc_spin.c created by Christian Holl
  */
 
-
 #include <rosc/system/setup.h>
-
+#include <rosc/system/eth.h>
 #include <rosc/system/rosc_spin.h>
 
 void rosc_spin()
 {
+	int i;
 
-	//Go through publisher subscriber list
 
-	//Send out, pending requests
+	while(1)
+	{
+		//Check for interface tasks
 
-	//Receive network packages
 
-	//Process incoming xmlrpc requests/responses
 
+		//Check for new connections on the listen ports
+			listen_socket_t *listen_sock=listen_socket_list_start;
+			int i;
+
+			while(listen_sock)
+			{
+				socket_t* con_sock=socket_list_start;
+				while(con_sock)
+				{
+					if(!con_sock->is_active && ( con_sock->reserved == 0 ||  con_sock->reserved == listen_sock->interface))
+					{
+						break;
+					}
+					con_sock=con_sock->next;
+				}
+
+				if(con_sock)
+				{
+					socket_id_t con_sock_id = abstract_socket_accept(listen_sock->id);
+					if(con_sock_id >= 0)
+					{
+						con_sock->socket_id=con_sock_id;
+						con_sock->is_active=true;
+						con_sock->iface=listen_sock->interface;
+						con_sock->pdata.handler_init=true;
+						con_sock->pdata.handler_function=listen_sock->interface->handler_function;
+						con_sock->pdata.init_data=listen_sock->interface->init_data;
+
+
+						DEBUG_PRINT_STR("New connection ... ");
+					}
+				}
+				listen_sock=listen_sock->next;
+			}
+
+
+
+			char buffer[3];
+			int size=3;
+			int s;
+
+			socket_t* con_sock=socket_list_start;
+			while(con_sock)
+			{
+				if(con_sock->is_active)
+				{
+					bool had_data=false;
+					do
+					{
+						s=recv_packet(con_sock->socket_id,buffer,size);
+
+						if(s>0)
+						{
+							had_data=true;
+							printf("%.*s", s, buffer);
+
+
+						}
+						if(s!=SOCKET_SIG_NO_DATA)
+						{
+							sebs_parser_frame(buffer,s, &con_sock->pdata);
+
+							while(con_sock->pdata.out_len>0)
+							{
+								unsigned sig;
+								switch(abstract_send_packet(con_sock->socket_id,con_sock->pdata.out_buf,con_sock->pdata.out_len))
+								{
+								case SEND_RESULT_OK:
+									sig=SOCKET_SIG_DATA_SENT;
+//									con_sock->pdata.out_len=0;
+									break;
+
+								}
+								sebs_parser_frame(0,sig, &con_sock->pdata);
+							}
+
+
+
+							switch(con_sock->pdata.out_len)
+							{
+							case SOCKET_SIG_CLOSE:
+								abstract_close_socket(con_sock->socket_id);
+								con_sock->is_active=0;
+								break;
+							case SOCKET_SIG_NO_DATA:
+								//Do nothing
+								break;
+
+							default:
+								//Do nothing
+								break;
+							}
+						}
+					}
+					while(s>0);
+					if(had_data)
+						printf("\n");
+				}
+
+				con_sock=con_sock->next;
+			}
+
+
+	}
 }
+
+

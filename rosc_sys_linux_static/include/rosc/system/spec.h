@@ -46,9 +46,14 @@
 #define __ROS_PARAMETER_MAX_LEN__ 50
 #define __INPUT_BUFFER_SIZE__ 256
 #define __SYSTEM_MEM_ALLOC_LITTLE_ENDIAN__
-#define __SYSTEM_HAS_OS__
+//#define __SYSTEM_HAS_OS__
 #define __SYSTEM_NEEDS_CON_ACCEPT__
-#define PORTS_STATIC_MAX_NUMBER 8  //TODO change this to dynamic, just for testing in the beginning
+
+#define __LISTENING_SOCKET_MAXIMUM__ 8
+#define __SOCKET_MAXIMUM__ 8
+#define __SOCKET_ID_TYPE__ int32_t
+
+
 //#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
 
 

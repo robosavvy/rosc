@@ -36,7 +36,7 @@
 
 #include <rosc/com/ros_handler.h>
 
-#include <rosc/com/msg_gen_common.h>
+#include <rosc/com/msg_gen.h>
 #include <rosc/system/eth.h>
 
 
@@ -49,8 +49,16 @@ ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple1(sim1);
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple2(sim2);
-ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
-
+	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
+//ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
+}message_data;\
+		}rosc_socket_memory_size_def_t;\
+		\
+		const size_t rosc_static_socket_mem_size=sizeof(rosc_socket_memory_size_def_t);\
+		rosc_socket_memory_size_def_t rosc_static_socket_mem[8];\
+		const size_t rosc_static_socket_mem_hdata_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->handler);\
+		const size_t rosc_static_socket_mem_message_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);\
+		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 	printf("simple1 callback");
@@ -69,15 +77,35 @@ HOST_NAME("Host");
 int main()
 {
 
+	printf("Socket Memory Statistics\n");
+	printf("#############################################################\n");
+
+
+	printf("Size of the ROS data struct in system part: %i bytes\n",(int) sizeof(ros_handler_data_t));
+	printf("Size of the XMLRPC data struct in system part: %i bytes\n",(int) sizeof(xmlrpc_data_t));
+	printf("------------------------------------------\n");
+	printf("Overall size of the system part:  %i bytes\n",(int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("Size of the user defined part:    %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t) - (int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("------------------------------------------\n");
+	printf("Overall size of a single socket:  %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t));
+	printf("\n");
+	printf("Overall size selected %i sockets: %i bytes\n",(int) __SOCKET_MAXIMUM__,(int) sizeof(rosc_static_socket_mem));
+
+	printf("#############################################################\n");
+	printf("\n");
+
+
 	rosc_init();
-	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
-	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
+	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
+	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
+
+	///TESTING STUFF
 
 	char *narf="narf";
 	uint16_t port=99;
 
 
-	XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port)
+	//XMLRPC_MSG_RESPONSE_REQUESTTOPIC(&port);
 
 	char buffer[1000];
 
@@ -94,60 +122,74 @@ int main()
 
 	int size=100;
 
-	msg_def_xmlrpc_response.submode =MSG_GEN_MODE_TYPE;
-	msg_def_xmlrpc_response.def_state = 0;
-	msg_def_xmlrpc_response.type = msg_def_xmlrpc_response.header;
-	msg_def_xmlrpc_response.data = msg_def_xmlrpc_response.header_data;
-	msg_def_xmlrpc_response.out.curPos=0;
-	msg_def_xmlrpc_response.size.mode=MSG_GEN_SIZE_MODE_NONE;
+	msg_gen_command_t msg_def_xmlrpc_error;
 
+	msg_def_xmlrpc_error.submode =MSG_GEN_MODE_TYPE;
+	msg_def_xmlrpc_error.def_state = 0;
+	msg_def_xmlrpc_error.header=xmlrpc_hd_response;
+	msg_def_xmlrpc_error.payload=xmlrpc_msg_error;
+	msg_def_xmlrpc_error.type = msg_def_xmlrpc_error.header;
+	msg_def_xmlrpc_error.data = msg_def_xmlrpc_error.header_data;
+	msg_def_xmlrpc_error.size.payload_size=0;
+	msg_def_xmlrpc_error.size.payload_size_available=false;
+	msg_def_xmlrpc_error.out.curPos=0;
+	msg_def_xmlrpc_error.size.mode=MSG_GEN_SIZE_MODE_NONE;
+
+
+	//
 
 	int i;
-	while(send_rpc(buffer, &size, &msg_def_xmlrpc_response))
+	while(msg_gen(buffer, &size, &msg_def_xmlrpc_error))
 	{
 
-		for(i=0;i<100-size;i++)
+		for(i=0;i<size;i++)
 		{
 			printf("%c",buffer[i]);
 		}
 		size=100;
 	}
-	for(i=0;i<100-size;i++)
+	for(i=0;i<size;i++)
 	{
 		printf("%c",buffer[i]);
 	}
 
+	printf("\n----");
 
 
 
-	ip_address_t ip;
-	printf("\n---END---\n");
-	port_t p2=0;
-	int a=abstract_start_listening_on_port(&p2);
+//
+//
+//
+//	ip_address_t ip;
+//	printf("\n---END---\n");
+//	port_t p2=0;
+//	int a=abstract_start_listening_on_port(&p2);
+//
+//
+//	abstract_static_initHostname();
+//	printf("Host: %s\n",host_name);
+//	printf("Port: %i\n",p2);
+//
+//	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
+//	{
+//		int i;
+//		for(i=0;i<4;i++)
+//		{
+//			if(i)printf(".");
+//			printf("%i",ip[i]);
+//		}
+//		printf("\n");
+//	}
+//
+//
+//	socket_id_t sock=abstract_connect_socket(ip,12345);
+//
+//	abstract_send_packet(sock,"narf",4);
+//
+//	abstract_close_socket(sock);
 
 
-	abstract_static_initHostname();
-	printf("Host: %s\n",host_name);
-	printf("Port: %i\n",p2);
-
-	printf("got ip: %i\n", abstract_resolveIP("ThinkTank.local",ip));
-	{
-		int i;
-		for(i=0;i<4;i++)
-		{
-			if(i)printf(".");
-			printf("%i",ip[i]);
-		}
-		printf("\n");
-	}
+	rosc_spin();
 
 
-	socket_id_t sock=abstract_connect_socket(ip,12345);
-
-	abstract_send_packet(sock,"narf",4);
-
-	abstract_close_socket(sock);
-
-
-	while(1);
 }
