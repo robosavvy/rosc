@@ -78,7 +78,7 @@ int main()
 {
 
 	printf("Socket Memory Statistics\n");
-	printf("########################\n");
+	printf("#############################################################\n");
 
 
 	printf("Size of the ROS data struct in system part: %i bytes\n",(int) sizeof(ros_handler_data_t));
@@ -91,7 +91,7 @@ int main()
 	printf("\n");
 	printf("Overall size selected %i sockets: %i bytes\n",(int) __SOCKET_MAXIMUM__,(int) sizeof(rosc_static_socket_mem));
 
-	printf("########################\n");
+	printf("#############################################################\n");
 	printf("\n");
 
 

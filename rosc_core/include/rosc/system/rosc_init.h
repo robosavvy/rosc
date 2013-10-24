@@ -57,6 +57,7 @@
 			}handler;\
 			union\
 			{
+
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 	 * defines the end of the list which must contain all

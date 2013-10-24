@@ -160,7 +160,6 @@ void abstract_close_socket(socket_id_t socket_id)
 	close(socket_id);
 }
 
-
 socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
 {
 	struct sockaddr cli_addr;
@@ -174,8 +173,6 @@ socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
     else
     	return (newsockfd);
 }
-
-
 
 int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 {

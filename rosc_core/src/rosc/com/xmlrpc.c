@@ -41,8 +41,6 @@ hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 
 sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
-
-
 	xmlrpc_data_t *hdata=pdata->handler_data;
 	xmlrpc_t init_mode=((xmlrpc_init_data_t *)pdata->init_data)->type;
 	/* ***************
@@ -104,9 +102,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	/* ********************
 	 * Handle Frame Events*
 	 **********************/
-
-
-
 	switch (pdata->event)
 	{
 	case SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO:
@@ -125,6 +120,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					break;
 			}
 		break;
+
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
 		switch (hdata->result_handling)
 		{
@@ -539,6 +535,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						case XMLRPC_METHODNAME_GETPID:
 						case XMLRPC_METHODNAME_GETPUBLICATIONS:
 						case XMLRPC_METHODNAME_GETSUBSCRIPTIONS:
+
 						break;
 
 						/*
@@ -592,12 +589,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 		}
 	}
-
-
-
-
-
-
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
 }

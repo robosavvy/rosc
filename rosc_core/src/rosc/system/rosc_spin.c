@@ -40,8 +40,11 @@ void rosc_spin()
 
 	while(1)
 	{
+		//Check for interface tasks
 
-			//Check for new connections
+
+
+		//Check for new connections on the listen ports
 			listen_socket_t *listen_sock=listen_socket_list_start;
 			int i;
 

@@ -162,7 +162,6 @@ bool iface_list_insert(iface_t *interface)
 	}
 }
 
-
 void unregister_interface(iface_t *interface)
 {
 	iface_t* cur=interface_list_start;

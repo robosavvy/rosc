@@ -85,9 +85,25 @@ typedef enum
 	LISTEN_SOCKET_STATE_ACTIVE,
 }listen_socket_state_t;
 
+typedef enum
+{
+	SOCKET_STATE_INACTIVE,
+	SOCKET_STATE_NOT_CONNECTED,
+	SOCKET_STATE_WAITNG_FOR_CONNECTION,
+	SOCKET_STATE_CONNECT,
+}socket_state_t;
+
+typedef struct socket_connect_info_t
+{
+	port_t remote_port;
+	uint32_t size;
+	uint8_t *connection_string[__HOSTNAME_MAX_LEN__ + 5];
+}socket_connect_info_t;
+
 typedef struct socket_t
 {
 	bool is_active;	/*!< If the this socket is used, this value is set to true*/
+
 	socket_id_t socket_id;/*!< This stores the socket id of the connection on the target system*/
 	struct iface_t *reserved;/*!< If this is not 0 the socket is reserved for a special interface*/
 
@@ -96,6 +112,7 @@ typedef struct socket_t
 	sebs_parser_data_t pdata;/*!< This is state information of the parser of the interface */
 	void* data; /*!< This is the data which is reserved for the interface */
 	struct socket_t *next;/*!< If not 0 it points to the next entry of the interface list*/
+
 }socket_t;
 
 typedef struct listen_socket_t
@@ -198,6 +215,8 @@ extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffe
 
 enum
 {
+	SOCKET_SIG_NO_CONNECTION = -4,
+	SOCKET_SIG_CONNECTED = -3,
 	SOCKET_SIG_DATA_SENT = -2,
 	SOCKET_SIG_NO_DATA = -1,
 	SOCKET_SIG_CLOSE = 0,
