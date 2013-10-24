@@ -29,47 +29,17 @@
  *  rosc.h created by Christian Holl
  */
 
-#ifndef ROSC_SPIN_H_
-#define ROSC_SPIN_H_
+#ifndef ROSC_H_
+#define ROSC_H_
 
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/spec.h>
 #include <rosc/system/types.h>
 #include <rosc/system/mem.h>
 #include <rosc/com/ros_msg_common.h>
-
-
-
-#ifndef offsetof
-	#error offsetof macro not found! Include stddef.h, or define it yourself inside spec.h
-#endif
-
-
-#ifndef __HOSTNAME_MAX_LEN__
-	#warning __HOSTNAME_MAX_LEN__ undefined! Automatically set to 50.
-	#define __HOSTNAME_MAX_LEN__ 50
-#endif
-
-#ifndef __NODENAME_MAX_LEN__
-	#warning __NODENAME_MAX_LEN__ undefined! Automatically set to 50.
-	#define __NODENAME_MAX_LEN__ 50
-#endif
-
-#ifndef __ROS_PARAMETER_MAX_LEN__
-	#warning __ROS_PARAMETER_MAX_LEN__ undefined! Automatically set to 50.
-	#define __ROS_PARAMETER_MAX_LEN__ 50
-#endif
-
-
-#ifdef __SYSTEM_HAS_MALLOC__
-#error ROSC MALLOC IS NOT IMPLEMENTED YET THIS WILL ___NOT___ WORK ____ATM____!
-#endif
-
-
-#include <rosc/system/setup.h>
 #include <rosc/system/rosc_spin.h>
 #include <rosc/system/rosc_init.h>
 
 
 
-#endif /* ROSC_SPIN_H_ */
+#endif /* ROSC_H_ */

@@ -29,7 +29,7 @@
  *  eth.c created by Christian Holl
  */
 #include <rosc/system/eth.h>
-#include <rosc/system/status.h>
+
 
 	//Memory for the port structs itself
 	static socket_t __socket_struct_mem_reservation[__SOCKET_MAXIMUM__];

@@ -32,19 +32,9 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-#include<inttypes.h>
-#include<stdint.h>
-#include<stdio.h>
-#include<rosc/system/spec.h>
 
-#ifndef bool
-	#define false 0
-	#define true 1
-	#define bool unsigned char
-#endif
+#include <rosc/system/spec.h>
 
-
-typedef float  float32_t;
-typedef double float64_t;
+// TODO remove this file ... insert spec.h instead ...
 
 #endif /* TYPES_H_ */

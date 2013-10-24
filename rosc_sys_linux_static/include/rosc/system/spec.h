@@ -33,9 +33,21 @@
 #ifndef _SYSTEM_SPEC_H_
 #define _SYSTEM_SPEC_H_
 
-
-
+#include<inttypes.h>
+#include<stdbool.h>
+#include<stdint.h>
+#include<stdio.h>
 #include <stddef.h>
+
+#ifndef bool
+	#define false 0
+	#define true 1
+	#define bool unsigned char
+#endif
+
+
+typedef float  float32_t;
+typedef double float64_t;
 //Get offsetof function, if it's not defined here ... define it on your own...
 //Example #define offsetof(TYPE, MEMBER) ( (size_t) &( ( (TYPE *) 0 )->MEMBER ) )
 
