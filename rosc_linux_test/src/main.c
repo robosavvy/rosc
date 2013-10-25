@@ -50,15 +50,7 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple1(sim1);
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple2(sim2);
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
-//ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
-}message_data;\
-		}rosc_socket_memory_size_def_t;\
-		\
-		const size_t rosc_static_socket_mem_size=sizeof(rosc_socket_memory_size_def_t);\
-		rosc_socket_memory_size_def_t rosc_static_socket_mem[8];\
-		const size_t rosc_static_socket_mem_hdata_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->handler);\
-		const size_t rosc_static_socket_mem_message_offset=((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);\
-		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-((size_t) &((rosc_socket_memory_size_def_t *)0)->message_data);
+ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 	printf("simple1 callback");
@@ -70,6 +62,10 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic2)
 
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
+
+ROSC_STATIC_LOOKUP_TABLE_HEAD()
+	ROSC_STATIC_LOOKUP_ENTRY(Computer0,IP(192,168,0,2))
+ROSC_STATIC_LOOKUP_TABLE_END
 
 NODE_NAME("master");
 HOST_NAME("Host");
@@ -93,6 +89,20 @@ int main()
 
 	printf("#############################################################\n");
 	printf("\n");
+
+
+
+	printf("Lookup Table Memory \n");
+	printf("#############################################################\n");
+	printf("Maximum Hostname Size: %i bytes\n", __HOSTNAME_MAX_LEN__);
+	printf("Lookup Entry Size: %i bytes\n", sizeof(lookup_table_entry_t));
+	printf("------------------------------------------\n");
+	printf("Lookup Table Size: (%i entries) %i bytes\n", lookup_table_size ,lookup_table_size * sizeof(lookup_table_entry_t));
+
+	printf("#############################################################\n");
+	printf("\n");
+
+
 
 
 	rosc_init();

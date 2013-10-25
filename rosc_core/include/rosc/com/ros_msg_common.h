@@ -32,7 +32,7 @@
 #ifndef ROS_MSG_COMMON_H_
 #define ROS_MSG_COMMON_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 /**
  * These are the values to specify a message buildup

@@ -33,7 +33,7 @@
 #define SEBS_PARSE_ROS_H_
 
 #include <endian.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_skip.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h>

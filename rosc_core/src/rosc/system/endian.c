@@ -32,7 +32,7 @@
 #include <rosc/system/endian.h>
 #include <rosc/system/status.h>
 #include <rosc/debug/debug_out.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 static endian_t local_byte_order_correction_to_system;
 static endian_t local_byte_order_correction_to_network;

@@ -31,7 +31,7 @@
 
 #include <rosc/system/eth.h>
 #include <rosc/system/spec.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>

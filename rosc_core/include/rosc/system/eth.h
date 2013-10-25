@@ -32,10 +32,11 @@
 #ifndef ETH_H_
 #define ETH_H_
 
-#include <rosc/system/types.h>
 #include <rosc/system/setup.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/com/ros_msg_common.h>
+#include <rosc/system/status.h>
+#include <rosc/debug/debug_out.h>
 
 typedef uint8_t ip_address_t[4];
 typedef uint8_t* ip_address_ptr;
@@ -97,8 +98,30 @@ typedef struct socket_connect_info_t
 {
 	port_t remote_port;
 	uint32_t size;
-	uint8_t *connection_string[__HOSTNAME_MAX_LEN__ + 5];
+	char uri[__MAX_URI_LENGTH__];
 }socket_connect_info_t;
+
+
+
+typedef struct lookup_table_entry_t
+{
+	char hostname[__HOSTNAME_MAX_LEN__];
+	ip_address_t ip;
+}lookup_table_entry_t;
+
+#define ROSC_STATIC_LOOKUP_TABLE_HEAD(MIN_SIZE)\
+lookup_table_entry_t __rosc_static_lookup_table[MIN_SIZE]=\
+{\
+
+#define ROSC_STATIC_LOOKUP_TABLE_END \
+};\
+lookup_table_entry_t* rosc_static_lookup_table=&(__rosc_static_lookup_table);\
+size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
+
+#define ROSC_STATIC_LOOKUP_ENTRY(HOSTNAME, IP)\
+{#HOSTNAME, IP},
+
+
 
 typedef struct socket_t
 {

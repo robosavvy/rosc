@@ -32,7 +32,7 @@
 #ifndef ROSINIT_H_
 #define ROSINIT_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/system/eth.h>
 #include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>

@@ -32,7 +32,7 @@
 #ifndef SEBS_PARSE_COPY2BUFFER_H_
 #define SEBS_PARSE_COPY2BUFFER_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 #define SEBS_PARSE_COPY2BUFFER_INIT(PARSER_DATA,DATA_STORAGE, BUFFER, MAX_LEN, END_CHARS, BYTE_ORDER_CORRECT,IS_STRING,REPEAT_BYTEORDER)\

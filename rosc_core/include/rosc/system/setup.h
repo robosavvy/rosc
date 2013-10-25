@@ -33,9 +33,7 @@
 #ifndef _SETUP_H_
 #define _SETUP_H_
 
-#include <rosc/rosc.h>
-#include <stdbool.h>
-#include <rosc/system/types.h>
+//#include <rosc/rosc.h>
 #include <rosc/system/spec.h>
 
 #define HOST_NAME(INITIAL_NAME)\
@@ -58,6 +56,8 @@
 		#define __HOSTNAME_MAX_LEN__ 50
 		#warning __HOSTNAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
+
+    #define __MAX_URI_LENGTH__ 9 /*rosrpc://*/ + __HOSTNAME_MAX_LEN__ + 6 /*:PORTNUMBER*/
 
 	#ifndef __NODENAME_MAX_LEN__
 		#define __NODENAME_MAX_LEN__ 50
@@ -98,7 +98,7 @@
 #endif
 
 
-#define IP_ADDR(IP3,IP2,IP1,IP0)\
+#define IP(IP3,IP2,IP1,IP0)\
 		{IP3,IP2,IP1,IP0}
 
 

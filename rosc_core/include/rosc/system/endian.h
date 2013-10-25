@@ -32,7 +32,7 @@
 #ifndef ENDIAN_H_
 #define ENDIAN_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 
 

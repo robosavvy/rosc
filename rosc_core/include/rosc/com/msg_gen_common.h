@@ -34,7 +34,7 @@
 
 
 #include <rosc/string_res/msg_strings.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 #define FLOATTYPES(ENUM,TYPE)\
 	__##ENUM##_FLOAT_##TYPE##_SEP,\
