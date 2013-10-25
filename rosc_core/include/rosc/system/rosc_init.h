@@ -58,7 +58,7 @@
 			union\
 			{\
 				socket_connect_info_t	connect_info;\
-				char connect_string_reservation[offsetof(socket_connect_info_t,connect_string) + __MAX_URI_LENGTH__];
+				char connect_string_reservation[offsetof(socket_connect_info_t,url) + __URI_BUFFER_LENGTH__];
 
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
@@ -82,7 +82,8 @@
 		rosc_socket_memory_size_def_t rosc_static_socket_mem[__SOCKET_MAXIMUM__];\
 		const size_t rosc_static_socket_mem_hdata_offset=offsetof(rosc_socket_memory_size_def_t,handler);\
 		const size_t rosc_static_socket_mem_message_offset=offsetof(rosc_socket_memory_size_def_t,message_data);\
-		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);
+		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);\
+		const size_t rosc_static_url_max_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data)-offsetof(socket_connect_info_t,url);
 #endif
 
 /**

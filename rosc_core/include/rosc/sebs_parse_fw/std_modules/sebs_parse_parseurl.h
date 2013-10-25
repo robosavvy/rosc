@@ -32,8 +32,7 @@
 #ifndef SEBS_PARSE_PARSEURL_H_
 #define SEBS_PARSE_PARSEURL_H_
 
-#include <rosc/system/spec.h>
-#include <rosc/system/spec.h>
+#include <rosc/system/setup.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
@@ -103,7 +102,7 @@ typedef struct
 
 
 	//Hostname
-	char hostname_buf[__HOSTNAME_MAX_LEN__+20]; //!< The text form of the hostname/IP
+	char hostname_buf[__HOSTNAME_BUFFER_LEN__+20]; //!< The text form of the hostname/IP
 	uint16_t cur_pos; //!< curLen The current size of the copied chars
 
 	//IP Address

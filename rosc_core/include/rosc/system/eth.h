@@ -98,9 +98,10 @@ typedef enum
 
 typedef enum
 {
-	CONNECT_STATE_URL,	/*!< currently there is only a url which needs to be parsed*/
-	CONNECT_STATE_RESOLVE, /*!< the hostname is available */
-	CONNECT_STATE_IP, /*!< IP and port are ready */
+	CONNECT_DATA_STATE_URL,	/*!< currently there is only a url which needs to be parsed*/
+	CONNECT_DATA_STATE_RESOLVE, /*!< the hostname is available */
+	CONNECT_DATA_STATE_IP, /*!< IP and port are ready */
+	CONNECT_DATA_STATE_URL_MALFORMED, /*!< URL malformed*/
 }connect_data_state_t;
 
 typedef struct socket_connect_info_t
@@ -110,12 +111,12 @@ typedef struct socket_connect_info_t
 	port_t remote_port;			/*!< The port of the remote system*/
 	uint32_t hostname_size;		/*!< The length of the hostname*/
 	char *hostname;				/*!< points to the start of the hostname in connect_string*/
-	char connect_string[];		/*!< storage for urls */
+	char url[];		/*!< storage for urls */
 }socket_connect_info_t;
 
 typedef struct lookup_table_entry_t
 {
-	char hostname[__HOSTNAME_MAX_LEN__];
+	char hostname[__HOSTNAME_BUFFER_LEN__];
 	ip_address_t ip;
 }lookup_table_entry_t;
 

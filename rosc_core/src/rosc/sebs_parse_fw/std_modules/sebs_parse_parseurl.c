@@ -265,7 +265,7 @@ sebs_parse_return_t sebs_parse_url(sebs_parser_data_t *pdata)
 
 					if(grabChar)
 					{
-						if(fdata->cur_pos<(__HOSTNAME_MAX_LEN__+20))
+						if(fdata->cur_pos<(__HOSTNAME_BUFFER_LEN__+20))
 						{
 							fdata->hostname_buf[fdata->cur_pos]=**pdata->buf;
 							fdata->cur_pos++;
