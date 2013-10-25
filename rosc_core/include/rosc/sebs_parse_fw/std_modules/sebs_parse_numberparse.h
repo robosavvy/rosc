@@ -32,7 +32,7 @@
 #ifndef SEBS_PARSE_NUMBERPARSE_H_
 #define SEBS_PARSE_NUMBERPARSE_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 #define SEBS_PARSE_NUMBERPARSE_INIT(PARSER_DATA, DATA_STORAGE,FIGURE_MAX, NEGATIVE_ALLOWED, BASE)\

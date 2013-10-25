@@ -42,7 +42,8 @@
 	extern const size_t rosc_static_socket_mem_message_offset;
 	extern const size_t rosc_static_socket_mem_hdata_offset;
 
-
+	extern lookup_table_entry_t* rosc_static_lookup_table;
+	extern size_t lookup_table_size;
 
 
 	//pointers first elements of sockets, listensockets, interfaces lists

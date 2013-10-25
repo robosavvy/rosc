@@ -34,7 +34,7 @@
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/endian.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 {

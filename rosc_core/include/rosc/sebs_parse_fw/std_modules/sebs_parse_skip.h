@@ -32,7 +32,7 @@
 #ifndef SEBS_PARSE_SKIP_H_
 #define SEBS_PARSE_SKIP_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/debug/debug_out.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 

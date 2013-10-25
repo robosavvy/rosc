@@ -113,11 +113,13 @@ typedef struct lookup_table_entry_t
 lookup_table_entry_t __rosc_static_lookup_table[MIN_SIZE]=\
 {\
 
-#define ROSC_STATIC_LOOKUP_TABLE_END()\
+#define ROSC_STATIC_LOOKUP_TABLE_END \
 };\
-lookup_table_entry_t* rosc_static_lookup_table=&(__rosc_static_lookup_table)
+lookup_table_entry_t* rosc_static_lookup_table=&(__rosc_static_lookup_table);\
+size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
 
-
+#define ROSC_STATIC_LOOKUP_ENTRY(HOSTNAME, IP)\
+{#HOSTNAME, IP},
 
 
 

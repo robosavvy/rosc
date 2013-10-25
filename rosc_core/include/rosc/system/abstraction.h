@@ -32,7 +32,7 @@
 #ifndef ABSTRACTION_H_
 #define ABSTRACTION_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 #ifdef HW_IFACE_REQUIRED_I2C
 	extern void abstract_init_i2c(void *interface);

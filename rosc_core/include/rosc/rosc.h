@@ -34,7 +34,7 @@
 
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/spec.h>
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/system/mem.h>
 #include <rosc/com/ros_msg_common.h>
 #include <rosc/system/rosc_spin.h>

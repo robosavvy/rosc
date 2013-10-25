@@ -32,7 +32,7 @@
 #ifndef SEBS_PARSE_HTTP_H_
 #define SEBS_PARSE_HTTP_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 #include <rosc/string_res/msg_strings.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>

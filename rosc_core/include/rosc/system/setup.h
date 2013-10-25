@@ -98,7 +98,7 @@
 #endif
 
 
-#define IP_ADDR(IP3,IP2,IP1,IP0)\
+#define IP(IP3,IP2,IP1,IP0)\
 		{IP3,IP2,IP1,IP0}
 
 

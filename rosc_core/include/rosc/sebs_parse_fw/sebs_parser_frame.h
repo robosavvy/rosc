@@ -37,7 +37,7 @@
 #ifndef SEBS_PARSER_FRAME_H_
 #define SEBS_PARSER_FRAME_H_
 
-#include <rosc/system/types.h>
+#include <rosc/system/spec.h>
 
 
 
