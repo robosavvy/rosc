@@ -31,7 +31,7 @@ typedef enum
 
 typedef struct
 {
-	bool first_run;
+	bool first_run;  //TODO improve mem, can this be replaced by init ?...
 	uint8_t *buffer;
 	size_t buffer_size;
 	msggen_message_type_t type;

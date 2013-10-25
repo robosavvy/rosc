@@ -81,6 +81,7 @@ int main()
 	printf("Size of the XMLRPC data struct in system part: %i bytes\n",(int) sizeof(xmlrpc_data_t));
 	printf("------------------------------------------\n");
 	printf("Overall size of the system part:  %i bytes\n",(int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("Size of the connect data (user part): %i bytes\n",(int) offsetof(socket_connect_info_t,connect_string) + __MAX_URI_LENGTH__);
 	printf("Size of the user defined part:    %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t) - (int) offsetof(rosc_socket_memory_size_def_t,message_data));
 	printf("------------------------------------------\n");
 	printf("Overall size of a single socket:  %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t));
@@ -90,19 +91,14 @@ int main()
 	printf("#############################################################\n");
 	printf("\n");
 
-
-
 	printf("Lookup Table Memory \n");
 	printf("#############################################################\n");
-	printf("Maximum Hostname Size: %i bytes\n", __HOSTNAME_MAX_LEN__);
-	printf("Lookup Entry Size: %i bytes\n", sizeof(lookup_table_entry_t));
+	printf("Maximum Hostname Size: %i bytes\n",(int) __HOSTNAME_MAX_LEN__);
+	printf("Lookup Entry Size: %i bytes\n",(int) sizeof(lookup_table_entry_t));
 	printf("------------------------------------------\n");
-	printf("Lookup Table Size: (%i entries) %i bytes\n", lookup_table_size ,lookup_table_size * sizeof(lookup_table_entry_t));
-
+	printf("Lookup Table Size: (%i entries) %i bytes\n", (int)lookup_table_size , (int)lookup_table_size * (int)sizeof(lookup_table_entry_t));
 	printf("#############################################################\n");
 	printf("\n");
-
-
 
 
 	rosc_init();

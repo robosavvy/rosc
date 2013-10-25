@@ -88,20 +88,30 @@ typedef enum
 
 typedef enum
 {
-	SOCKET_STATE_INACTIVE,
-	SOCKET_STATE_NOT_CONNECTED,
-	SOCKET_STATE_WAITNG_FOR_CONNECTION,
-	SOCKET_STATE_CONNECT,
+	SOCKET_STATE_INACTIVE, 				/*!< socket can be obtained for usage*/
+	SOCKET_STATE_SETUP,					/*!< socket is reserved already and being setup (means it's not called by ros_spin)*/
+	SOCKET_STATE_NOT_CONNECTED,			/*!< socket is not connected */
+	SOCKET_STATE_WAITNG_FOR_CONNECTION,	/*!< socket is currently waiting for a connection*/
+	SOCKET_STATE_CONNECT,				/*!< socket is connected and able to receive or send data*/
 }socket_state_t;
+
+
+typedef enum
+{
+	CONNECT_STATE_URL,	/*!< currently there is only a url which needs to be parsed*/
+	CONNECT_STATE_RESOLVE, /*!< the hostname is available */
+	CONNECT_STATE_IP, /*!< IP and port are ready */
+}connect_data_state_t;
 
 typedef struct socket_connect_info_t
 {
-	port_t remote_port;
-	uint32_t size;
-	char uri[__MAX_URI_LENGTH__];
+	connect_data_state_t data_state;	/*!< contains the state of the data*/
+	ip_address_t remote_ip;		/*!< The ip of the remote system*/
+	port_t remote_port;			/*!< The port of the remote system*/
+	uint32_t hostname_size;		/*!< The length of the hostname*/
+	char *hostname;				/*!< points to the start of the hostname in connect_string*/
+	char connect_string[];		/*!< storage for urls */
 }socket_connect_info_t;
-
-
 
 typedef struct lookup_table_entry_t
 {
@@ -115,7 +125,7 @@ lookup_table_entry_t __rosc_static_lookup_table[MIN_SIZE]=\
 
 #define ROSC_STATIC_LOOKUP_TABLE_END \
 };\
-lookup_table_entry_t* rosc_static_lookup_table=&(__rosc_static_lookup_table);\
+lookup_table_entry_t* rosc_static_lookup_table=(__rosc_static_lookup_table);\
 size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
 
 #define ROSC_STATIC_LOOKUP_ENTRY(HOSTNAME, IP)\

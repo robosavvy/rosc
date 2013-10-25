@@ -56,7 +56,9 @@
 						ros_handler_data_t ros;\
 			}handler;\
 			union\
-			{
+			{\
+				socket_connect_info_t	connect_info;\
+				char connect_string_reservation[offsetof(socket_connect_info_t,connect_string) + __MAX_URI_LENGTH__];
 
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
