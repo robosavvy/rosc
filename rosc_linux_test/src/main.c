@@ -29,6 +29,16 @@
  *  main.c created by Christian Holl
  */
 
+/* ******************/
+/*     TESTING      */
+/* ******************/
+#include<rosc/sebs_parse_fw/send_modules/socket_connect.h>
+#include<stdio.h>
+#include<string.h>
+
+/* ******************/
+
+
 #include <rosc/rosc.h>
 
 #include <rosc/msg/rosc_linux_test/simple1.h>
@@ -65,6 +75,7 @@ ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
 	ROSC_STATIC_LOOKUP_ENTRY(Computer0,IP(192,168,0,2))
+	ROSC_STATIC_LOOKUP_ENTRY(Computer1,IP(192,168,0,3))
 ROSC_STATIC_LOOKUP_TABLE_END
 
 NODE_NAME("master");
@@ -161,7 +172,29 @@ int main()
 
 	printf("\n----");
 
+	sebs_parser_data_t pdata;
 
+	pdata.handler_init=false;
+	pdata.event=SEBS_PARSE_XML_EVENT_NONE;
+	pdata.function_init=true;
+	socket_connect_data_t data;
+	union
+	{
+	 socket_connect_info_t cdata;
+	 char narf[256];
+	}a;
+
+
+	strcpy(a.cdata.url,"http://192.168.0.1:12344");
+
+	data.connect_data=&a.cdata;
+	data.state=SOCKET_CONNECT_STATE_URL_SCHEME;
+
+	pdata.sending=true;
+	pdata.current_parser.parser_function=&socket_connect;
+	pdata.current_parser.parser_data=&data;
+
+	sebs_parser_frame(0,0,&pdata);
 
 //
 //

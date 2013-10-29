@@ -88,11 +88,11 @@ typedef enum
 
 typedef enum
 {
-	SOCKET_STATE_INACTIVE, 				/*!< socket can be obtained for usage*/
-	SOCKET_STATE_SETUP,					/*!< socket is reserved already and being setup (means it's not called by ros_spin)*/
+	SOCKET_STATE_INACTIVE, 				/*!< socket can be obtained for usage */
+	SOCKET_STATE_SETUP,					/*!< socket is reserved already and being setup (means it's not called by ros_spin) */
 	SOCKET_STATE_NOT_CONNECTED,			/*!< socket is not connected */
-	SOCKET_STATE_WAITNG_FOR_CONNECTION,	/*!< socket is currently waiting for a connection*/
-	SOCKET_STATE_CONNECT,				/*!< socket is connected and able to receive or send data*/
+	SOCKET_STATE_WAITNG_FOR_CONNECTION,	/*!< socket is currently waiting for a connection */
+	SOCKET_STATE_CONNECT,				/*!< socket is connected and able to receive or send data */
 }socket_state_t;
 
 
@@ -100,17 +100,19 @@ typedef enum
 {
 	CONNECT_DATA_STATE_URL,	/*!< currently there is only a url which needs to be parsed*/
 	CONNECT_DATA_STATE_RESOLVE, /*!< the hostname is available */
-	CONNECT_DATA_STATE_IP, /*!< IP and port are ready */
+	CONNECT_DATA_STATE_IPV4, /*!< IPv4 and port are ready */
+	//TODO support IPv6 CONNECT_DATA_STATE_IPV6, /*!< IPv6 and port ready*/
 	CONNECT_DATA_STATE_URL_MALFORMED, /*!< URL malformed*/
 }connect_data_state_t;
 
+
 typedef struct socket_connect_info_t
 {
-	connect_data_state_t data_state;	/*!< contains the state of the data*/
-	ip_address_t remote_ip;		/*!< The ip of the remote system*/
-	port_t remote_port;			/*!< The port of the remote system*/
-	uint32_t hostname_size;		/*!< The length of the hostname*/
-	char *hostname;				/*!< points to the start of the hostname in connect_string*/
+	connect_data_state_t data_state; /*!< contains the state of the data*/
+	ip_address_t remote_ip;	/*!< The ip of the remote system*/
+	port_t remote_port;		/*!< The port of the remote system*/
+	uint32_t hostname_size;	/*!< The length of the hostname*/
+	char *hostname;	/*!< points to the start of the hostname in connect_string*/
 	char url[];		/*!< storage for urls */
 }socket_connect_info_t;
 
