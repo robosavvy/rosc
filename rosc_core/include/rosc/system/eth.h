@@ -102,7 +102,7 @@ typedef enum
 	CONNECT_DATA_STATE_RESOLVE, /*!< the hostname is available */
 	CONNECT_DATA_STATE_IPV4, /*!< IPv4 and port are ready */
 	//TODO support IPv6 CONNECT_DATA_STATE_IPV6, /*!< IPv6 and port ready*/
-	CONNECT_DATA_STATE_URL_MALFORMED, /*!< URL malformed*/
+	CONNECT_DATA_STATE_ERROR,
 }connect_data_state_t;
 
 
@@ -251,6 +251,8 @@ extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffe
 
 enum
 {
+	SOCKET_SIG_TIMEOUT = -6,
+	SOCKET_SIG_CONNECT = -5,
 	SOCKET_SIG_NO_CONNECTION = -4,
 	SOCKET_SIG_CONNECTED = -3,
 	SOCKET_SIG_DATA_SENT = -2,

@@ -7,6 +7,7 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 
 	if (pdata->function_init)
 	{
+
 		pdata->function_init = false;
 		switch (fdata->state)
 		{
@@ -77,11 +78,12 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 
 		case SOCKET_CONNECT_STATE_URL_IPV4_HOSTNAME:
 		{
+			fdata->connect_data->data_state=CONNECT_DATA_STATE_IPV4;
 			uint8_t digit=0, dot, *ip = fdata->connect_data->remote_ip;
 			while (1)
 				if ((*url >= '0' && *url <= '9') || *url == '.')
 				{
-					fdata->connect_data->hostname_size++;
+
 					if (*url == '.')
 					{
 						dot++;
@@ -113,6 +115,7 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 
 					}
 					url++;
+					fdata->connect_data->hostname_size++;
 				}
 				else
 				{
@@ -174,13 +177,17 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 		case SOCKET_CONNECT_STATE_URI_HOSTNAME:
 			while (1)
 			{
+				fdata->connect_data->data_state=CONNECT_DATA_STATE_RESOLVE;
 				if (((*url < 48) || (*url > '9' && *url < 'A')
 						|| (*url > 'Z' && *url < 'a') || (*url > 'z'))
-						&& *url != '_' && *url != '-')
+						&& *url != '_'
+						&& *url != '-'
+						&& *url != '.')
 				{
 					if (*url == ':')
 					{
 						fdata->state = SOCKET_CONNECT_STATE_URL_PORT;
+
 						url++;
 						break;
 					}
@@ -202,17 +209,28 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 
 	if(fdata->state == SOCKET_CONNECT_STATE_CONNECT)
 	{
+
+
 		DEBUG_PRINT_STR("Connecting to:");
 		DEBUG_PRINT(INT,"Port",fdata->connect_data->remote_port);
 		DEBUG_PRINT(INT,"IP",fdata->connect_data->remote_ip[0]);
 		DEBUG_PRINT(INT,"IP",fdata->connect_data->remote_ip[1]);
 		DEBUG_PRINT(INT,"IP",fdata->connect_data->remote_ip[2]);
 		DEBUG_PRINT(INT,"IP",fdata->connect_data->remote_ip[3]);
+
+
+		pdata->out_len=SOCKET_SIG_CONNECT;
+
+
 		printf("Hostname %.*s\n", fdata->connect_data->hostname_size, fdata->connect_data->hostname);
+		return (SEBS_PARSE_RETURN_GO_AHEAD);
 	}
 	else
 	{
-		DEBUG_PRINT_STR("ERROR");
+		DEBUG_PRINT_STR("ERROR in connection details!");
+		fdata->state=CONNECT_DATA_STATE_ERROR;
+		pdata->sending=false;
+
 	}
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);
