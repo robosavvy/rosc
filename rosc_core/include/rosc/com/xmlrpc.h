@@ -48,6 +48,7 @@
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
 
 
+
 typedef enum
 {
 	XMLRPC_TYPE_CLIENT,
@@ -153,17 +154,21 @@ typedef enum
 	XMLRPC_ARRAY_STATE_VALUE,
 }xmlrpc_array_state_t;
 
+
+//TODO possible Improvement - should be able to be removed,
+//Instead of the type only the iface variable will define if it is a server or a client
+//on a client it points to a iface struct
+//on a server it is zero.
+//Not sure if this will work out in the end so I am leaving that for now as it is.
 typedef struct
 {
 	xmlrpc_t type;
-	xmlrpc_ros_methodname_t methodname;
-	char *ptr;
+	iface_t *iface;
 }xmlrpc_init_data_t;
 
 
 typedef struct
 {
-	uint16_t port_number;
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
@@ -176,8 +181,6 @@ typedef struct
 
 	//XML variables
 	uint32_t xml_length;	//!< storage for the xml length from the header
-	uint32_t xml_message_start;	//!< marks where the xml message starts
-
 	xmlrpc_tag_state_t tag_state;
 	xmlrpc_type_tag_t type_tag;
 	uint8_t param_no; //!< number of the param tag

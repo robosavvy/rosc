@@ -44,6 +44,7 @@ static iface_t rpc_client=
 {
 	&xmlrpc,
 };
+const iface_t const *iface_rpc_client=&rpc_client;
 
 static xmlrpc_init_data_t rpc_server_init={XMLRPC_TYPE_SERVER};
 static iface_t rpc_server=

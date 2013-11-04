@@ -32,6 +32,10 @@
 #include <rosc/system/setup.h>
 #include <rosc/system/eth.h>
 #include <rosc/system/rosc_spin.h>
+#include <rosc/system/rosc_init.h>
+#include <rosc/com/xmlrpc.h>
+#include <rosc/com/ros_handler.h>
+
 
 void rosc_spin()
 {
@@ -41,8 +45,54 @@ void rosc_spin()
 	while(1)
 	{
 		//Check for interface tasks
+		iface_t *iface=interface_list_start;
+		socket_t* con_sock=socket_list_start;
 
+		while(iface)
+		{
+			//Check for available interface
+			while(con_sock)
+			{
+				if(con_sock->state==SOCKET_STATE_INACTIVE
+				   && ( con_sock->reserved == 0 ||
+						con_sock->reserved == iface_rpc_client))
+				{
+					break;
+				}
+				con_sock=con_sock->next;
+			}
 
+			if(con_sock)
+			{
+
+				switch(iface->state)
+				{
+				case IFACE_STATE_DO_REGISTER:
+				case IFACE_STATE_DO_UNREGISTER:
+					if(iface->handler_function==&ros_handler)
+					{
+						xmlrpc_init_data_t* init=iface->init_data;
+						init->iface=(iface_t*)iface;
+						init->type=XMLRPC_TYPE_CLIENT;
+
+						con_sock->state=SOCKET_STATE_NOT_CONNECTED;
+						con_sock->pdata.init_data=iface->init_data;
+						con_sock->pdata.handler_init=true;
+						con_sock->pdata.handler_function=&xmlrpc;
+
+						//Init here, because the memory can change later ...
+						//TODO probably unnecessary call when later the init of the rpc points only to current iface
+						sebs_parser_frame(0,0,&con_sock->pdata);
+					}
+					break;
+
+					break;
+				default:
+					break;
+				}
+			}
+			iface=iface->next;
+		}
 
 		//Check for new connections on the listen ports
 			listen_socket_t *listen_sock=listen_socket_list_start;
@@ -53,7 +103,10 @@ void rosc_spin()
 				socket_t* con_sock=socket_list_start;
 				while(con_sock)
 				{
-					if(!con_sock->is_active && ( con_sock->reserved == 0 ||  con_sock->reserved == listen_sock->interface))
+					if(con_sock->state==SOCKET_STATE_INACTIVE
+					   && ( con_sock->reserved == 0 ||
+							con_sock->reserved ==
+							listen_sock->interface))
 					{
 						break;
 					}
@@ -66,7 +119,7 @@ void rosc_spin()
 					if(con_sock_id >= 0)
 					{
 						con_sock->socket_id=con_sock_id;
-						con_sock->is_active=true;
+						con_sock->state=SOCKET_STATE_CONNECTED;
 						con_sock->iface=listen_sock->interface;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=listen_sock->interface->handler_function;
@@ -81,28 +134,27 @@ void rosc_spin()
 
 
 
+
+			//Receive incoming data
 			char buffer[3];
 			int size=3;
 			int s;
 
-			socket_t* con_sock=socket_list_start;
+
 			while(con_sock)
 			{
-				if(con_sock->is_active)
+				if(con_sock->state!=SOCKET_STATE_INACTIVE)
 				{
 					bool had_data=false;
 					do
 					{
-						s=recv_packet(con_sock->socket_id,buffer,size);
-
-						if(s>0)
-						{
-							had_data=true;
-							printf("%.*s", s, buffer);
+						if(con_sock->state==SOCKET_STATE_CONNECTED)
+							s=recv_packet(con_sock->socket_id,buffer,size);
+						else
+							s=SOCKET_SIG_NO_DATA;
 
 
-						}
-						if(s!=SOCKET_SIG_NO_DATA)
+						//if(s!=SOCKET_SIG_NO_DATA)
 						{
 							sebs_parser_frame(buffer,s, &con_sock->pdata);
 
@@ -124,9 +176,21 @@ void rosc_spin()
 
 							switch(con_sock->pdata.out_len)
 							{
+							case SOCKET_SIG_CONNECT:
+								{
+									socket_connect_info_t *connect_to=con_sock->pdata.additional_storage;
+									switch(connect_to->data_state)
+									{
+									case CONNECT_DATA_STATE_IPV4:
+										abstract_connect_socket(connect_to->remote_ip,connect_to->remote_port);
+										break;
+									}
+								}
+								break;
+
 							case SOCKET_SIG_CLOSE:
 								abstract_close_socket(con_sock->socket_id);
-								con_sock->is_active=0;
+								con_sock->state=0;
 								break;
 							case SOCKET_SIG_NO_DATA:
 								//Do nothing

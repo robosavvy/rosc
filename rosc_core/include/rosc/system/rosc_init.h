@@ -40,6 +40,10 @@
 #include <rosc/com/xmlrpc.h>
 #include <rosc/system/mem.h>
 
+
+
+extern const iface_t const *iface_rpc_client;
+
 #ifndef  __SYSTEM_HAS_MALLOC__
 
 	/**

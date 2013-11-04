@@ -74,7 +74,7 @@ void rosc_lists_init()
 	{
 		__socket_struct_mem_reservation[i].next=&(__socket_struct_mem_reservation[i+1]);
 		__socket_struct_mem_reservation[i].iface=0;
-		__socket_struct_mem_reservation[i].is_active=false;
+		__socket_struct_mem_reservation[i].state=false;
 		__socket_struct_mem_reservation[i].data=&rosc_static_socket_mem[i]; //TODO can we remove data ?!?!
 		__socket_struct_mem_reservation[i].pdata.handler_data=((char*)&rosc_static_socket_mem[i])+rosc_static_socket_mem_hdata_offset;
 		__socket_struct_mem_reservation[i].pdata.additional_storage=((char*)&rosc_static_socket_mem[i])+rosc_static_socket_mem_message_offset;

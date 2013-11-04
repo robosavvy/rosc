@@ -116,6 +116,11 @@ int main()
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
+
+	//TODO register function
+	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1))->state=IFACE_STATE_DO_REGISTER;
+
+
 	///TESTING STUFF
 
 	char *narf="narf";
@@ -185,7 +190,7 @@ int main()
 	}a;
 
 
-	strcpy(a.cdata.url,"http://192.168.0.1:12344");
+	strcpy(a.cdata.url,"http://localhost:12344");
 
 	data.connect_data=&a.cdata;
 	data.state=SOCKET_CONNECT_STATE_URL_SCHEME;
@@ -195,6 +200,10 @@ int main()
 	pdata.current_parser.parser_data=&data;
 
 	sebs_parser_frame(0,0,&pdata);
+
+	printf("state  %i\n",a.cdata.data_state);
+
+
 
 //
 //

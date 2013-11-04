@@ -91,8 +91,8 @@ typedef enum
 	SOCKET_STATE_INACTIVE, 				/*!< socket can be obtained for usage */
 	SOCKET_STATE_SETUP,					/*!< socket is reserved already and being setup (means it's not called by ros_spin) */
 	SOCKET_STATE_NOT_CONNECTED,			/*!< socket is not connected */
-	SOCKET_STATE_WAITNG_FOR_CONNECTION,	/*!< socket is currently waiting for a connection */
-	SOCKET_STATE_CONNECT,				/*!< socket is connected and able to receive or send data */
+	SOCKET_STATE_WAITING_FOR_CONNECTION,	/*!< socket is currently waiting for a connection */
+	SOCKET_STATE_CONNECTED,				/*!< socket is connected and able to receive or send data */
 }socket_state_t;
 
 
@@ -138,7 +138,7 @@ size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_
 
 typedef struct socket_t
 {
-	bool is_active;	/*!< If the this socket is used, this value is set to true*/
+	socket_state_t state;	/*!< If the this socket is used, this value is set to true*/
 
 	socket_id_t socket_id;/*!< This stores the socket id of the connection on the target system*/
 	struct iface_t *reserved;/*!< If this is not 0 the socket is reserved for a special interface*/
