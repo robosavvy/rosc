@@ -42,7 +42,7 @@ hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
 	xmlrpc_data_t *hdata=pdata->handler_data;
-	xmlrpc_t init_mode=((xmlrpc_init_data_t *)pdata->init_data)->type;
+	xmlrpc_init_data_t *idata=(xmlrpc_init_data_t *)pdata->init_data;
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
 	 *****************/
@@ -52,27 +52,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
-		uint8_t init_state;
 
-
-		if (init_mode == XMLRPC_TYPE_SERVER)
-		{
-			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
-			init_state = SEBS_PARSE_HTTP_REQUEST_INIT;
-			pdata->sending=false;
-		}
-		else if (init_mode == XMLRPC_TYPE_CLIENT)
-		{
-			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
-			init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
-			pdata->sending=true;
-		}
-		else
-		{
-			ROSC_FATAL("ERROR XMLRPC Handler: Unknown XMLRPC type given in init!!!");
-		}
-
-
+		pdata->sending=false;
 
 		hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
@@ -91,12 +72,36 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->array_level=0;
 		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
 
+		if (idata->type == XMLRPC_TYPE_SERVER)
+		{
+			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
+			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
+					SEBS_PARSE_HTTP_REQUEST_INIT,
+					xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
+					xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
+					xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
+		}
+		else if (idata->type == XMLRPC_TYPE_CLIENT)
+		{
+			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 
-		SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
-				init_state,
-				xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
-				xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
-				xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
+			idata->iface->state=IFACE_STATE_WAIT_REGISTERED;
+			ros_iface_init_t * ros_idata=(idata->iface->init_data);
+			ros_idata->iface_name;
+			//init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
+			pdata->sending=true;
+
+			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
+
+		}
+		else
+		{
+			ROSC_FATAL("ERROR XMLRPC Handler: Unknown XMLRPC type given in init!!!");
+		}
+
+
+
+
 	}
 
 	/* ********************
@@ -316,13 +321,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			switch (hdata->xml.tags[hdata->xml.depth])
 			{
 			case XMLRPC_TAG_METHODCALL:
-				if (init_mode == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
+				if (idata->type == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
 			case XMLRPC_TAG_METHODRESPONSE:
-				if (init_mode == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
+				if (idata->type == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
@@ -488,7 +493,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
 			}
 
-			if (init_mode == XMLRPC_TYPE_SERVER)
+			if (idata->type == XMLRPC_TYPE_SERVER)
 			{
 				//The first field is always the caller_id in every known methodcall
 				//so lets extract as many chars as possible
@@ -578,7 +583,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					}
 				}
 			}
-			else if (init_mode == XMLRPC_TYPE_CLIENT)
+			else if (idata->type == XMLRPC_TYPE_CLIENT)
 			{
 
 			}

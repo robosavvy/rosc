@@ -82,7 +82,7 @@ void rosc_spin()
 
 						//Init here, because the memory can change later ...
 						//TODO probably unnecessary call when later the init of the rpc points only to current iface
-						sebs_parser_frame(0,0,&con_sock->pdata);
+						sebs_parser_frame(0,SOCKET_SIG_NO_DATA,&con_sock->pdata);
 					}
 					break;
 

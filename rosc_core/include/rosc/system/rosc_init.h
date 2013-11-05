@@ -63,6 +63,7 @@ extern const iface_t const *iface_rpc_client;
 			{\
 				socket_connect_info_t	connect_info;\
 				char connect_string_reservation[offsetof(socket_connect_info_t,url) + __URI_BUFFER_LENGTH__];
+				char topic_name_string_reservation[];
 
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
