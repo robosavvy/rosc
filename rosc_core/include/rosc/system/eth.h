@@ -51,6 +51,9 @@ extern char host_name[];
 extern char node_name[];
 
 
+
+
+
 /**
  * This enum contains the different interface states
  */
@@ -117,6 +120,9 @@ typedef struct socket_connect_info_t
 	char url[];		/*!< storage for urls */
 }socket_connect_info_t;
 
+
+
+
 typedef struct lookup_table_entry_t
 {
 	char hostname[__HOSTNAME_BUFFER_LEN__];
@@ -173,6 +179,32 @@ typedef enum
 	SEND_RESULT_CONNECTION_ERROR,
 	SEND_RESULT_CONNECTION_TIMEOUT,
 }send_result_t;
+
+
+#define MASTER_URI_STATIC(URI)\
+	socket_connect_info_t master_data_memres={CONNECT_DATA_STATE_URL,{},0,0,0,URI};\
+	socket_connect_info_t *master_data=&master_data_memres;\
+	const size_t master_url_static_mem_size=0
+
+#define MASTER_URI_STATIC_MEMRES(URI,MEMSIZE)\
+		struct\
+		{\
+			socket_connect_info_t master_data;\
+			char __memres[MEMSIZE];\
+		}master_data_memres={{CONNECT_DATA_STATE_URL},{URI}};\
+		socket_connect_info_t* master_data=&master_data_memres.master_data;\
+		const size_t master_url_static_mem_size=MEMSIZE
+
+	extern const size_t master_url_static_mem_size;
+	extern socket_connect_info_t* master_data;
+
+
+
+
+
+
+
+
 
 void rosc_lists_init();
 
@@ -250,16 +282,23 @@ socket_id_t abstract_connect_socket(ip_address_t ip, port_t port);
  */
 extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
 
-enum
+/**
+ * These signals are used to receive information about socket information or to control the socket,
+ * or both.
+ *
+ * They are used instead of an input or output size.
+ */
+typedef enum
 {
-	SOCKET_SIG_TIMEOUT = -6,
-	SOCKET_SIG_CONNECT = -5,
-	SOCKET_SIG_NO_CONNECTION = -4,
-	SOCKET_SIG_CONNECTED = -3,
-	SOCKET_SIG_DATA_SENT = -2,
-	SOCKET_SIG_NO_DATA = -1,
-	SOCKET_SIG_CLOSE = 0,
-};
+	SOCKET_SIG_RELEASE = -7, /*! (Out) Close socket, release memory<*/
+	SOCKET_SIG_TIMEOUT = -6,/*! (In) Timeout occurred <*/
+	SOCKET_SIG_CONNECT = -5, /*! (Out) Connect socket to connection stored inside additional memory<*/
+	SOCKET_SIG_NO_CONNECTION = -4, /*! (In) Socket not connected <*/
+	SOCKET_SIG_CONNECTED = -3,     /*!(In) Socket connection established <*/
+	SOCKET_SIG_DATA_SENT = -2, /*! (In) Data was sent to remote host <*/
+	SOCKET_SIG_NO_DATA = -1, /*! (In/Out) No data on connection <*/
+	SOCKET_SIG_CLOSE = 0, /*! (In/Out) Close Socket / Socket closed <*/
+}socket_sig_t;
 
 extern int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
 
