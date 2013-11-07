@@ -92,7 +92,7 @@ void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 			data->event=SEBS_PARSE_EVENT_NONE;
 
 		//Reset finish call in parser struct
-		finish_call=data->finish_call=false;
+		finish_call=data->finish_init_call=false;
 
 		switch(result)
 		{
@@ -102,13 +102,14 @@ void sebs_parser_frame(uint8_t *buf, int32_t len, sebs_parser_data_t* data)
 				data->event=SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END;
 				data->return_to_handler = false;
 			}
-			finish_call=data->finish_call=true;
+			finish_call=data->finish_init_call=true;
 			switch_functions=true;
 		break;
 
 		case SEBS_PARSE_RETURN_INIT:
 			data->function_init=true;
 			switch_functions=true;
+			finish_call=data->finish_init_call=true;
 			if(handler)
 				data->return_to_handler=true;
 		break;

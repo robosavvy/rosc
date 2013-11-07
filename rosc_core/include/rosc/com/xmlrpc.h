@@ -38,6 +38,7 @@
 
 
 #include <rosc/system/eth.h>
+#include <rosc/sebs_parse_fw/send_modules/socket_connect.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
@@ -208,6 +209,7 @@ typedef struct
 	 */
 	union
 	{
+		socket_connect_data_t connect;
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
 		sebs_msggen_t gen;

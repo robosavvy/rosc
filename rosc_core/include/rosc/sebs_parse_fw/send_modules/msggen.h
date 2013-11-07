@@ -12,7 +12,7 @@
 
 
 
-#define SEBS_PARSE_MSGGEN_INIT(PARSER_DATA, DATA_STORAGE, BUFFER, MAX_LEN, TYPE, DATA)\
+#define SEBS_PARSE_SOCKET_CONNECT(PARSER_DATA, DATA_STORAGE, BUFFER, MAX_LEN, TYPE, DATA)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.buffer_size=MAX_LEN;\

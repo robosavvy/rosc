@@ -8,6 +8,13 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 
 
+#define SOCKET_CONNECT_INIT(PARSER_DATA, DATA_STORAGE, CONNECT_DATA)\
+		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &socket_connect;\
+		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
+		DATA_STORAGE.connect_data=CONNECT_DATA;\
+		return (SEBS_PARSE_RETURN_INIT)
+
+
 typedef enum
 {
 	SOCKET_CONNECT_STATE_URL_SCHEME,

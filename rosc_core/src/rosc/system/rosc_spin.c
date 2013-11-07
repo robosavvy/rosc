@@ -82,7 +82,7 @@ void rosc_spin()
 
 						//Init here, because the memory can change later ...
 						//TODO probably unnecessary call when later the init of the rpc points only to current iface
-						sebs_parser_frame(0,SOCKET_SIG_NO_DATA,&con_sock->pdata);
+						sebs_parser_frame(0,SOCKET_SIG_NO_CONNECTION,&con_sock->pdata);
 					}
 					break;
 
@@ -92,6 +92,40 @@ void rosc_spin()
 				}
 			}
 			iface=iface->next;
+		}
+
+
+		//Connect Interfaces
+		con_sock=socket_list_start;
+		while(con_sock)
+		{
+			if(/*con_sock->state==SOCKET_STATE_WAITING_FOR_CONNECTION &&*/
+					 con_sock->pdata.out_len==SOCKET_SIG_CONNECT)
+			{
+				con_sock->pdata.out_len=SOCKET_SIG_NO_DATA;
+				socket_connect_info_t* connect_data=con_sock->pdata.additional_storage;
+				if(connect_data->data_state==CONNECT_DATA_STATE_RESOLVE)
+				{
+					connect_data->hostname[connect_data->hostname_size]=0;
+					if(!abstract_resolveIP(connect_data->hostname, connect_data->remote_ip))
+						connect_data->data_state=CONNECT_DATA_STATE_IPV4;
+				}
+
+
+				if(connect_data->data_state==CONNECT_DATA_STATE_IPV4)
+				{
+					con_sock->socket_id=abstract_connect_socket(connect_data->remote_ip,connect_data->remote_port);
+
+					if(con_sock->socket_id>0)
+						sebs_parser_frame(0,SOCKET_SIG_CONNECTED,&con_sock->pdata);
+					else
+						sebs_parser_frame(0,SOCKET_SIG_COULD_NOT_CONNECT,&con_sock->pdata);
+				}
+				else
+				{
+					sebs_parser_frame(0,SOCKET_SIG_COULD_NOT_RESOLVE_HOST,&con_sock->pdata);
+				}
+			}
 		}
 
 		//Check for new connections on the listen ports
@@ -148,10 +182,23 @@ void rosc_spin()
 					bool had_data=false;
 					do
 					{
-						if(con_sock->state==SOCKET_STATE_CONNECTED)
+						switch(con_sock->state)
+						{
+						case SOCKET_STATE_CONNECTED:
 							s=recv_packet(con_sock->socket_id,buffer,size);
-						else
-							s=SOCKET_SIG_NO_DATA;
+							break;
+						case SOCKET_STATE_NOT_CONNECTED:
+
+							break;
+
+						case SOCKET_STATE_WAITING_FOR_CONNECTION:
+
+							break;
+
+						default:
+
+							break;
+						}
 
 
 						//if(s!=SOCKET_SIG_NO_DATA)

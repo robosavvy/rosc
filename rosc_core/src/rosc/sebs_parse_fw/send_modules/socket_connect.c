@@ -9,7 +9,7 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 	{
 
 		pdata->function_init = false;
-		switch (fdata->state)
+		switch (fdata->connect_data->data_state)
 		{
 		case CONNECT_DATA_STATE_URL:
 		{

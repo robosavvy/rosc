@@ -88,10 +88,16 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			idata->iface->state=IFACE_STATE_WAIT_REGISTERED;
 			ros_iface_init_t * ros_idata=(idata->iface->init_data);
 			ros_idata->iface_name;
-			//init_state = SEBS_PARSE_HTTP_RESPONSE_INIT;
-			pdata->sending=true;
 
 			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
+			socket_connect_info_t *connectdata=pdata->additional_storage;
+
+			strcpy(connectdata->url,master_uri); //TODO ... check if we replace this by our own implementation
+			connectdata->data_state=CONNECT_DATA_STATE_URL;
+
+			SOCKET_CONNECT_INIT(pdata,hdata->connect,connectdata);
+
+
 
 		}
 		else
@@ -121,6 +127,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
 
+
 				default:
 					break;
 			}
@@ -141,6 +148,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			}
 			else
 			{
+				DEBUG_PRINT_STR("ERROR CONTENT LENGTH");
 				//TODO ERROR
 			}
 			break;

@@ -30,7 +30,6 @@
  */
 #include <rosc/system/eth.h>
 
-
 	//Memory for the port structs itself
 	static socket_t __socket_struct_mem_reservation[__SOCKET_MAXIMUM__];
 	static listen_socket_t __listen_socket_struct_mem_reservation[__LISTENING_SOCKET_MAXIMUM__];
@@ -41,6 +40,7 @@
 	extern const size_t rosc_static_socket_mem_size;
 	extern const size_t rosc_static_socket_mem_message_offset;
 	extern const size_t rosc_static_socket_mem_hdata_offset;
+
 
 	extern lookup_table_entry_t* rosc_static_lookup_table;
 	extern size_t lookup_table_size;

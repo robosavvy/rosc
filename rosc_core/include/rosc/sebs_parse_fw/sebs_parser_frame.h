@@ -129,7 +129,7 @@ typedef struct sebs_parser_data_t
 	 * This is set to one if the buffer is currently empty, but the current function is called because of a returning function
 	 * can be used to enter a loop even if the buffer is already finished.
 	 */
-	bool finish_call;
+	bool finish_init_call;
 
 
 	/**

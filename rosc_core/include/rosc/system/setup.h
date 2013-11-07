@@ -43,6 +43,8 @@
 	char node_name[__NODENAME_MAX_LEN__]=INITIAL_NAME;
 
 
+
+
 #define MASTER_HOST_NAME(INITIAL_NAME)\
 	hostname_t master_hostname=INITIAL_NAME;
 

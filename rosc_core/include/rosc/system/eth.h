@@ -242,7 +242,7 @@ extern void abstract_static_initHostname();
  * @param ip[o] The storage for the ip address
  * return false if successfull
  */
-extern bool abstract_resolveIP(const char* hostname, uint8_t* ip);
+extern bool abstract_resolveIP(const char* hostname, ip_address_ptr ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.
@@ -287,6 +287,8 @@ extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffe
  */
 typedef enum
 {
+	SOCKET_SIG_COULD_NOT_CONNECT=-9, /*!< (In) Could not connect to ip*/
+	SOCKET_SIG_COULD_NOT_RESOLVE_HOST =-8, /*!< (In) Could not resolve hostname*/
 	SOCKET_SIG_RELEASE = -7, /*! (Out) Close socket, release memory<*/
 	SOCKET_SIG_TIMEOUT = -6,/*! (In) Timeout occurred <*/
 	SOCKET_SIG_CONNECT = -5, /*! (Out) Connect socket to connection stored inside additional memory<*/
