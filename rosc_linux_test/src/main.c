@@ -79,15 +79,14 @@ ROSC_STATIC_LOOKUP_TABLE_HEAD()
 ROSC_STATIC_LOOKUP_TABLE_END
 
 
-MASTER_URI_STATIC("http://192.168.0.1:1234");
+MASTER_URI_STATIC("http://ROS_Master:1234");
 
-
-
-NODE_NAME("master");
+NODE_NAME("Node");
 HOST_NAME("Host");
 
 int main()
 {
+
 
 	printf("Socket Memory Statistics\n");
 	printf("#############################################################\n");
@@ -126,7 +125,7 @@ int main()
 	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1))->state=IFACE_STATE_DO_REGISTER;
 
 
-	///TESTING STUFF
+	//TESTING STUFF
 
 	char *narf="narf";
 	uint16_t port=99;

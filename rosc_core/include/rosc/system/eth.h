@@ -182,21 +182,18 @@ typedef enum
 
 
 #define MASTER_URI_STATIC(URI)\
-	socket_connect_info_t master_data_memres={CONNECT_DATA_STATE_URL,{},0,0,0,URI};\
-	socket_connect_info_t *master_data=&master_data_memres;\
-	const size_t master_url_static_mem_size=0
+		size_t master_uri_size=sizeof(URI)-1;\
+		char * const master_uri=URI
 
 #define MASTER_URI_STATIC_MEMRES(URI,MEMSIZE)\
-		struct\
-		{\
-			socket_connect_info_t master_data;\
-			char __memres[MEMSIZE];\
-		}master_data_memres={{CONNECT_DATA_STATE_URL},{URI}};\
-		socket_connect_info_t* master_data=&master_data_memres.master_data;\
-		const size_t master_url_static_mem_size=MEMSIZE
+		size_t master_uri_size=MEMSIZE;\
+		char __master_uri__mem[MEMSIZE+1]=URI;\
+		char * const master_uri=&__master_uri__mem
 
-	extern const size_t master_url_static_mem_size;
-	extern socket_connect_info_t* master_data;
+/**
+ * Pointer to zero terminated master URI
+ */
+extern char * const master_uri;
 
 
 
