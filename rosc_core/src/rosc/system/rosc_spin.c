@@ -126,6 +126,7 @@ void rosc_spin()
 					sebs_parser_frame(0,SOCKET_SIG_COULD_NOT_RESOLVE_HOST,&con_sock->pdata);
 				}
 			}
+			con_sock=con_sock->next;
 		}
 
 		//Check for new connections on the listen ports
@@ -174,7 +175,7 @@ void rosc_spin()
 			int size=3;
 			int s;
 
-
+			con_sock=socket_list_start;
 			while(con_sock)
 			{
 				if(con_sock->state!=SOCKET_STATE_INACTIVE)
@@ -188,15 +189,13 @@ void rosc_spin()
 							s=recv_packet(con_sock->socket_id,buffer,size);
 							break;
 						case SOCKET_STATE_NOT_CONNECTED:
-
+							s=SOCKET_SIG_NO_CONNECTION;
 							break;
 
 						case SOCKET_STATE_WAITING_FOR_CONNECTION:
-
 							break;
 
 						default:
-
 							break;
 						}
 

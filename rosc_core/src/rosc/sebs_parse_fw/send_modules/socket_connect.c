@@ -233,5 +233,5 @@ sebs_parse_return_t socket_connect(sebs_parser_data_t* pdata)
 
 	}
 
-	return (SEBS_PARSE_RETURN_GO_AHEAD);
+	return (SEBS_PARSE_RETURN_FINISHED);
 }

@@ -34,7 +34,7 @@
 
 #include <rosc/com/xmlrpc.h>
 #include <rosc/system/status.h>
-#include <rosc/com/msg_gen.h>
+#include <rosc/sebs_parse_fw/send_modules/msggen.h>
 
 #define RESPOND()\
 hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
@@ -121,12 +121,23 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 				case SOCKET_SIG_CLOSE:
 					DEBUG_PRINT_STR("Connection closed!!!");
-					pdata->out_len=SOCKET_SIG_CLOSE;
+					pdata->out_len=SOCKET_SIG_RELEASE;
 					break;
 				case SOCKET_SIG_NO_DATA:
 					return (SEBS_PARSE_RETURN_GO_AHEAD);
 					break;
 
+				case SOCKET_SIG_CONNECTED:
+					DEBUG_PRINT_STR("CONNECTED");
+					pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
+							pdata->next_parser.parser_data=(void *)(&hdata->gen);\
+							hdata->gen.buffer_size=rosc_static_socket_additional_data_size;\
+							hdata->gen.buffer=pdata->additional_storage;\
+							hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;\
+							hdata->gen.data_ptr=0;\
+							return (SEBS_PARSE_RETURN_INIT);
+
+					break;
 
 				default:
 					break;
@@ -256,8 +267,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-//			SEBS_PARSE_MSGGEN_INIT(pdata,hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size,
-//					MSGGEN_TYPE_XMLRPC_ERROR,0);
+
 
 
 			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
