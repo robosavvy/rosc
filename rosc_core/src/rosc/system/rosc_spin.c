@@ -117,7 +117,10 @@ void rosc_spin()
 					con_sock->socket_id=abstract_connect_socket(connect_data->remote_ip,connect_data->remote_port);
 
 					if(con_sock->socket_id>0)
+					{
+						con_sock->state=SOCKET_STATE_CONNECTED;
 						sebs_parser_frame(0,SOCKET_SIG_CONNECTED,&con_sock->pdata);
+					}
 					else
 						sebs_parser_frame(0,SOCKET_SIG_COULD_NOT_CONNECT,&con_sock->pdata);
 				}
@@ -235,9 +238,17 @@ void rosc_spin()
 								break;
 
 							case SOCKET_SIG_CLOSE:
+								DEBUG_PRINT_STR("Closing socket!");
 								abstract_close_socket(con_sock->socket_id);
-								con_sock->state=0;
+								con_sock->state=SOCKET_STATE_NOT_CONNECTED;
 								break;
+
+							case SOCKET_SIG_RELEASE:
+								DEBUG_PRINT_STR("Release socket memory!");
+								abstract_close_socket(con_sock->socket_id);
+								con_sock->state=SOCKET_STATE_NOT_CONNECTED;
+								break;
+
 							case SOCKET_SIG_NO_DATA:
 								//Do nothing
 								break;

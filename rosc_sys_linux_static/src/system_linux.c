@@ -128,6 +128,7 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
     if (sockfd < 0)
         return (-1);
 
+
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
         bcopy((char *)server->h_addr,
@@ -139,11 +140,13 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         if (sockfd < 0)
             return (-1);
 
+
         if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         {
         	close(sockfd);
         	return (-1);
         }
+        fcntl(sockfd, F_SETFL, O_NONBLOCK);
         return (sockfd);
 }
 
