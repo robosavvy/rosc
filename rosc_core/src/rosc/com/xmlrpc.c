@@ -41,19 +41,19 @@ hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 
 sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
-	xmlrpc_data_t *hdata=pdata->handler_data;
-	xmlrpc_init_data_t *idata=(xmlrpc_init_data_t *)pdata->init_data;
+	xmlrpc_data_t *hdata = pdata->handler_data;
+	xmlrpc_init_data_t *idata = (xmlrpc_init_data_t *) pdata->init_data;
+
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
 	 *****************/
-	if(pdata->handler_init)
+	if (pdata->handler_init)
 	{
-		pdata->handler_init=false;
+		pdata->handler_init = false;
 
 		DEBUG_PRINT_STR("XMLRPC --- INIT");
 
-
-		pdata->sending=false;
+		pdata->sending = false;
 
 		hdata->rpc_methodname = XMLRPC_METHODNAME_UNKNOWN;
 		hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
@@ -69,17 +69,17 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->param_no = 0;
 		hdata->method = XMLRPC_METHOD_UNKNOWN;
 		hdata->array_state = XMLRPC_ARRAY_STATE_NONE;
-		hdata->array_level=0;
+		hdata->array_level = 0;
 		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
 
 		if (idata->type == XMLRPC_TYPE_SERVER)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
 			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
-					SEBS_PARSE_HTTP_REQUEST_INIT,
-					xmlrpc_http_descriptors, XMLRPC_HTTP_DESCRIPTORS_LEN,
-					xmlrpc_http_actions, XMLRPC_HTTP_ACTIONS_LEN,
-					xmlrpc_http_methods, XMLRPC_HTTP_METHODS_LEN);
+					SEBS_PARSE_HTTP_REQUEST_INIT, xmlrpc_http_descriptors,
+					XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
+					XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
+					XMLRPC_HTTP_METHODS_LEN);
 		}
 		else if (idata->type == XMLRPC_TYPE_CLIENT)
 		{
@@ -96,19 +96,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			connectdata->data_state=CONNECT_DATA_STATE_URL;
 
 			SOCKET_CONNECT_INIT(pdata,hdata->connect,connectdata);
-
-
-
 		}
 		else
 		{
 			ROSC_FATAL("ERROR XMLRPC Handler: Unknown XMLRPC type given in init!!!");
 		}
-
-
-
-
 	}
+
 
 	/* ********************
 	 * Handle Frame Events*
@@ -116,32 +110,69 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	switch (pdata->event)
 	{
 	case SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO:
-			DEBUG_PRINT_STR("EVENT LEN SMALLER_ZERO");
-			switch(*pdata->len)
-			{
-				case SOCKET_SIG_CLOSE:
-					DEBUG_PRINT_STR("Connection closed!!!");
-					pdata->out_len=SOCKET_SIG_RELEASE;
-					break;
-				case SOCKET_SIG_NO_DATA:
-					return (SEBS_PARSE_RETURN_GO_AHEAD);
-					break;
+		switch (*pdata->len)
+		{
 
-				case SOCKET_SIG_CONNECTED:
-					DEBUG_PRINT_STR("CONNECTED");
-					pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
-							pdata->next_parser.parser_data=(void *)(&hdata->gen);\
-							hdata->gen.buffer_size=rosc_static_socket_additional_data_size;\
-							hdata->gen.buffer=pdata->additional_storage;\
-							hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;\
-							hdata->gen.data_ptr=0;\
-							return (SEBS_PARSE_RETURN_INIT);
+		case SOCKET_SIG_CLOSE:
+			DEBUG_PRINT_STR("XMLRPC Connection close");
+				pdata->out_len = SOCKET_SIG_RELEASE;
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
 
-					break;
+		case SOCKET_SIG_TIMEOUT:
+			DEBUG_PRINT_STR("XMLRPC Timeout");
+			break;
 
-				default:
-					break;
-			}
+		case SOCKET_SIG_NO_CONNECTION:
+			DEBUG_PRINT_STR("XMLRPC No Connection");
+			break;
+
+        /* ***********/
+		/*Only Client*/
+		/* ***********/
+
+		case SOCKET_SIG_COULD_NOT_CONNECT:
+			DEBUG_PRINT_STR("XMLRPC could not connect");
+			while(1);
+			break;
+
+		case SOCKET_SIG_COULD_NOT_RESOLVE_HOST:
+			DEBUG_PRINT_STR("XMLRPC Resolve Host");
+			break;
+
+		case SOCKET_SIG_CONNECTED:
+			DEBUG_PRINT_STR("CONNECTED");
+			hdata->xmlrpc_state = XMLRPC_STATE_SENDING;
+			hdata->result_handling =XMLRPC_RESULT_REQUEST_SENT;
+			pdata->next_parser.parser_function =
+					(sebs_parse_function_t) &sebs_msggen;\
+			pdata->next_parser.parser_data = (void *) (&hdata->gen);\
+			hdata->gen.buffer_size = rosc_static_socket_additional_data_size;\
+			hdata->gen.buffer = pdata->additional_storage;\
+			hdata->gen.type = MSGGEN_TYPE_XMLRPC_ERROR;\
+			hdata->gen.data_ptr = 0;\
+			return (SEBS_PARSE_RETURN_INIT);
+			break;
+
+
+
+		/* SIGNALS which should not occur here: */
+
+		case SOCKET_SIG_DATA_SENT: /*should be caught by sending function*/
+			DEBUG_PRINT_STR("XMLRPC ignoring unexpected signal  Data Sent");
+			return (SEBS_PARSE_RETURN_GO_AHEAD);
+			break;
+		case SOCKET_SIG_RELEASE: /*outgoing*/
+			DEBUG_PRINT_STR("XMLRPC ignoring unexpected signal  Release");
+			return (SEBS_PARSE_RETURN_GO_AHEAD);
+			break;
+		case SOCKET_SIG_CONNECT: /*outgoing*/
+			DEBUG_PRINT_STR("XMLRPC ignoring unexpected signal  Connect");
+			return (SEBS_PARSE_RETURN_GO_AHEAD);
+			break;
+
+		default:
+			break;
+		}
 		break;
 
 	case SEBS_PARSE_EVENT_HANDLER_CALL_FUNCTION_END:
@@ -179,6 +210,14 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT(INT,"RESULT",hdata->url.result);
 			break;
 
+		case XMLRPC_RESULT_REQUEST_SENT:
+			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
+					SEBS_PARSE_HTTP_RESPONSE_INIT, xmlrpc_http_descriptors,
+					XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
+					XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
+					XMLRPC_HTTP_METHODS_LEN);
+			break;
+
 		default:
 			break;
 		}
@@ -196,6 +235,21 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		break;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/* *******************
 	 * Handle HTTP Events*
 	 *********************/
@@ -205,7 +259,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				(sebs_parse_http_event_t) pdata->event;
 		switch (http_event)
 		{
-
 
 		case SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE");
@@ -228,14 +281,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 			case XMLRPC_DESCRIPTOR_CONTENT_LENGTH:
 				hdata->result_handling = XMLRPC_RESULT_CONTENT_LENGTH;
-				SEBS_PARSE_NUMBERPARSE_INIT(pdata,
-						hdata->http.numberparse, 3, false,10)
-				;
-				break;
+				SEBS_PARSE_NUMBERPARSE_INIT(pdata, hdata->http.numberparse, 3,
+						false, 10)
+;				break;
 			}
 			break;
 
-		case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
+			case SEBS_PARSE_HTTP_EVENT_RESPONSE_CODE:
 			if (hdata->http.numberparse.result
 					== SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR)
 			{
@@ -247,7 +299,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			}
 			break;
 
-		case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
+			case SEBS_PARSE_HTTP_EVENT_HEADER_END: // GO TO XML
 			DEBUG_PRINT_STR("HEADER END!");
 			hdata->xmlrpc_state = XMLRPC_STATE_XML;
 			SEBS_PARSE_XML_INIT(pdata, hdata->xml, xmlrpc_tag_strings,
@@ -257,29 +309,25 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 			break;
 
-
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
-		case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
+			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
 
+			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;
+			pdata->next_parser.parser_data=(void *)(&hdata->gen);
+			hdata->gen.buffer_size=rosc_static_socket_additional_data_size;
+			hdata->gen.buffer=pdata->additional_storage;
+			hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;
+			hdata->gen.data_ptr=0;
+			return (SEBS_PARSE_RETURN_INIT);
 
-
-			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
-					pdata->next_parser.parser_data=(void *)(&hdata->gen);\
-					hdata->gen.buffer_size=rosc_static_socket_additional_data_size;\
-					hdata->gen.buffer=pdata->additional_storage;\
-					hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;\
-					hdata->gen.data_ptr=0;\
-					return (SEBS_PARSE_RETURN_INIT);
-
-
-		default:
+			default:
 			break;
 		}
 	}
@@ -291,19 +339,19 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	else if (hdata->xmlrpc_state == XMLRPC_STATE_XML)
 	{
 		sebs_parse_xml_event_t xml_event =
-				(sebs_parse_xml_event_t) pdata->event;
+		(sebs_parse_xml_event_t) pdata->event;
 		switch (xml_event)
 		{
 
-		/*
-		 * Unused events
-		 */
-		case SEBS_PARSE_XML_EVENT_NONE:
+			/*
+			 * Unused events
+			 */
+			case SEBS_PARSE_XML_EVENT_NONE:
 			break;
-		case SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
+			case SEBS_PARSE_XML_EVENT_HANDLER_CALLED_SUBMODE_FINISHED:
 			break;
-		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE:
-		case SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES:
+			case SEBS_PARSE_XML_EVENT_ATTRIBUTE_APOSTROPHE:
+			case SEBS_PARSE_XML_EVENT_ATTRIBUTE_QUOTES:
 			//Attribute? I don't give a F*ck about the xml version...
 			break;
 
@@ -311,15 +359,15 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			 * Extract Data from a CDATA Tag
 			 * TODO check out if this is necessary somewhere.
 			 */
-		case SEBS_PARSE_XML_EVENT_CDATA:
+			case SEBS_PARSE_XML_EVENT_CDATA:
 			//Is this used anywhere? Some JSON somewhere I remember... but where?
 			break;
 
 			/*
 			 * XML Parser Errors
 			 */
-		case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
-		case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
+			case SEBS_PARSE_XML_EVENT_ERROR_DEPTH:
+			case SEBS_PARSE_XML_EVENT_ERROR_MALFORMED:
 			//TODO error
 			break;
 
@@ -334,34 +382,34 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			 * That makes it also necessary to check in which array level
 			 * and there in which array value we are.
 			 */
-		case SEBS_PARSE_XML_EVENT_INSIDE_TAG:
+			case SEBS_PARSE_XML_EVENT_INSIDE_TAG:
 			//create tag position information
 			switch (hdata->xml.tags[hdata->xml.depth])
 			{
-			case XMLRPC_TAG_METHODCALL:
+				case XMLRPC_TAG_METHODCALL:
 				if (idata->type == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
-			case XMLRPC_TAG_METHODRESPONSE:
+				case XMLRPC_TAG_METHODRESPONSE:
 				if (idata->type == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
-			case XMLRPC_TAG_PARAMS:
+				case XMLRPC_TAG_PARAMS:
 				if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
 						&& hdata->xml.depth == 2)
-					hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
+				hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
 				break;
-			case XMLRPC_TAG_PARAM:
+				case XMLRPC_TAG_PARAM:
 				if (hdata->tag_state == XMLRPC_TAG_STATE_PARAMS
 						&& hdata->xml.depth == 3)
-					hdata->tag_state = XMLRPC_TAG_STATE_PARAM;
+				hdata->tag_state = XMLRPC_TAG_STATE_PARAM;
 				hdata->param_no++;
 				break;
-			case XMLRPC_TAG_VALUE:
+				case XMLRPC_TAG_VALUE:
 				if (hdata->tag_state == XMLRPC_TAG_STATE_PARAM
 						&& hdata->xml.depth == 4)
 				{
@@ -373,57 +421,55 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				}
 				break;
 
-			case XMLRPC_TAG_ARRAY:
+				case XMLRPC_TAG_ARRAY:
 				if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE)
 				{
 					if (hdata->array_state == XMLRPC_ARRAY_STATE_VALUE)
 					{
 						hdata->array_level++;
 						if (hdata->array_level < XMLRPC_MAX_ARRAY_NESTING)
-							hdata->array_value_number[hdata->array_level] = 0;
+						hdata->array_value_number[hdata->array_level] = 0;
 					}
 					hdata->array_state = XMLRPC_ARRAY_STATE_ARRAY;
 				}
 				break;
-			case XMLRPC_TAG_DATA:
+				case XMLRPC_TAG_DATA:
 				if (hdata->array_state == XMLRPC_ARRAY_STATE_ARRAY)
 				{
 					hdata->array_state = XMLRPC_ARRAY_STATE_DATA;
 				}
 				break;
 
-
-			case XMLRPC_TAG_STRING:
+				case XMLRPC_TAG_STRING:
 				hdata->type_tag=XMLRPC_TYPE_TAG_STRING;
 				break;
-			case XMLRPC_TAG_I4:
-			case XMLRPC_TAG_INT:
+				case XMLRPC_TAG_I4:
+				case XMLRPC_TAG_INT:
 				hdata->type_tag=XMLRPC_TYPE_TAG_INT;
 				break;
-			case XMLRPC_TAG_BOOLEAN:
+				case XMLRPC_TAG_BOOLEAN:
 				hdata->type_tag=XMLRPC_TYPE_TAG_BOOLEAN;
 				break;
-			case XMLRPC_TAG_DOUBLE:
+				case XMLRPC_TAG_DOUBLE:
 				hdata->type_tag=XMLRPC_TYPE_TAG_DOUBLE;
 				break;
 
-
-			default:
+				default:
 				break;
 			}
 
 			break;
 
-		/*
-		 * In here we check for close tags, that's for going back in the state (from above) for
-		 * other values or arrays.
-		 */
-		case SEBS_PARSE_XML_EVENT_TAG:
+			/*
+			 * In here we check for close tags, that's for going back in the state (from above) for
+			 * other values or arrays.
+			 */
+			case SEBS_PARSE_XML_EVENT_TAG:
 			if (hdata->xml.tag_type == SEBS_PARSE_XML_TAG_TYPE_CLOSE)
 			{
 				switch (hdata->xml.tags[hdata->xml.depth])
 				{
-				case XMLRPC_TAG_VALUE:
+					case XMLRPC_TAG_VALUE:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
 							&& hdata->xml.depth == 4)
 					{
@@ -433,18 +479,18 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					{
 						hdata->array_state = XMLRPC_ARRAY_STATE_DATA;
 						if (hdata->array_level < XMLRPC_MAX_ARRAY_NESTING)
-							hdata->array_value_number[hdata->array_level]++;
+						hdata->array_value_number[hdata->array_level]++;
 					}
 					break;
 
-				case XMLRPC_TAG_DATA:
+					case XMLRPC_TAG_DATA:
 					if (hdata->array_state == XMLRPC_ARRAY_STATE_DATA)
 					{
 						hdata->array_state = XMLRPC_ARRAY_STATE_ARRAY;
 					}
 					break;
 
-				case XMLRPC_TAG_ARRAY:
+					case XMLRPC_TAG_ARRAY:
 					if (hdata->array_state == XMLRPC_ARRAY_STATE_ARRAY)
 					{
 						if (hdata->array_level == 0)
@@ -458,34 +504,34 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						}
 					}
 
-				case XMLRPC_TAG_PARAM:
+					case XMLRPC_TAG_PARAM:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_PARAM
 							&& hdata->xml.depth == 3)
-						hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
+					hdata->tag_state = XMLRPC_TAG_STATE_PARAMS;
 					break;
 
-				case XMLRPC_TAG_PARAMS:
+					case XMLRPC_TAG_PARAMS:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_PARAMS
 							&& hdata->xml.depth == 2)
-						hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
+					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 					break;
 
-				case XMLRPC_TAG_METHODCALL:
-				case XMLRPC_TAG_METHODRESPONSE:
+					case XMLRPC_TAG_METHODCALL:
+					case XMLRPC_TAG_METHODRESPONSE:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
 							&& hdata->xml.depth == 1)
-						hdata->tag_state = XMLRPC_TAG_STATE_NONE;
+					hdata->tag_state = XMLRPC_TAG_STATE_NONE;
 					break;
 
-				case XMLRPC_TAG_STRING:
-				case XMLRPC_TAG_I4:
-				case XMLRPC_TAG_INT:
-				case XMLRPC_TAG_BOOLEAN:
-				case XMLRPC_TAG_DOUBLE:
+					case XMLRPC_TAG_STRING:
+					case XMLRPC_TAG_I4:
+					case XMLRPC_TAG_INT:
+					case XMLRPC_TAG_BOOLEAN:
+					case XMLRPC_TAG_DOUBLE:
 					hdata->type_tag=XMLRPC_TYPE_TAG_NONE;
 					break;
 
-				default:
+					default:
 					break;
 				}
 			}
@@ -496,119 +542,119 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			 * And here we start extraction methods for the information we are
 			 * really interested in:
 			 */
-		case SEBS_PARSE_XML_EVENT_CONTENT_START:
-		{
-			/*
-			 * Methodname, for knowing what the supplied values stand for,
-			 * the methodname is required first!
-			 */
-			if (hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_METHODNAME
-					&& hdata->tag_state == XMLRPC_TAG_STATE_METHODRC)
+			case SEBS_PARSE_XML_EVENT_CONTENT_START:
 			{
-				hdata->result_handling = XMLRPC_RESULT_METHOD_NAME;
-				SEBS_PARSE_SEEKSTRING_INIT(pdata,
-						hdata->xml.seekstring, xmlrpc_slave_methodnames,
-						XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
-			}
-
-			if (idata->type == XMLRPC_TYPE_SERVER)
-			{
-				//The first field is always the caller_id in every known methodcall
-				//so lets extract as many chars as possible
-				//The caller
-#ifndef ROSC_NO_CALLERID_EXTRACTION
 				/*
-				 * I haven't seen a use for the caller-id so far, that's
-				 * why you can disable it here. If it must be used somewhere
-				 * just feel free to tell...
-				 * ROSc will use it for error reporting so far...
+				 * Methodname, for knowing what the supplied values stand for,
+				 * the methodname is required first!
 				 */
-				if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
-						&& hdata->param_no == 1
-						&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
+				if (hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_METHODNAME
+						&& hdata->tag_state == XMLRPC_TAG_STATE_METHODRC)
 				{
-					if (hdata->type_tag == XMLRPC_TYPE_TAG_NONE
-							|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
+					hdata->result_handling = XMLRPC_RESULT_METHOD_NAME;
+					SEBS_PARSE_SEEKSTRING_INIT(pdata,
+							hdata->xml.seekstring, xmlrpc_slave_methodnames,
+							XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
+				}
+
+				if (idata->type == XMLRPC_TYPE_SERVER)
+				{
+					//The first field is always the caller_id in every known methodcall
+					//so lets extract as many chars as possible
+					//The caller
+#ifndef ROSC_NO_CALLERID_EXTRACTION
+					/*
+					 * I haven't seen a use for the caller-id so far, that's
+					 * why you can disable it here. If it must be used somewhere
+					 * just feel free to tell...
+					 * ROSc will use it for error reporting so far...
+					 */
+					if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+							&& hdata->param_no == 1
+							&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
 					{
-						hdata->result_handling = XMLRPC_RESULT_CALLERID;
-						SEBS_PARSE_COPY2BUFFER_INIT(pdata,
-								hdata->copy2buffer, hdata->caller_id,
-								__NODENAME_MAX_LEN__, "<",0,1,0);
+						if (hdata->type_tag == XMLRPC_TYPE_TAG_NONE
+								|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
+						{
+							hdata->result_handling = XMLRPC_RESULT_CALLERID;
+							SEBS_PARSE_COPY2BUFFER_INIT(pdata,
+									hdata->copy2buffer, hdata->caller_id,
+									__NODENAME_MAX_LEN__, "<",0,1,0);
+						}
+						else
+						{
+							//TODO ERROR: WRONG PARAMETER TYPE GIVEN!
+						}
 					}
+#endif
 					else
 					{
-						//TODO ERROR: WRONG PARAMETER TYPE GIVEN!
-					}
-				}
-#endif
-				else
-				{
-					switch (hdata->rpc_methodname)
-					{
-						case XMLRPC_METHODNAME_UNKNOWN:
-						DEBUG_PRINT_STR("UNKNOWN METHODNAME!");
-						//TODO
-						break;
-						/*
-						 * Those methods have only one parameter (caller_id)
-						 */
-						case XMLRPC_METHODNAME_GETBUSINFO:
-						case XMLRPC_METHODNAME_GETBUSSTATS:
-						case XMLRPC_METHODNAME_GETMASTERURI:
-						case XMLRPC_METHODNAME_GETPID:
-						case XMLRPC_METHODNAME_GETPUBLICATIONS:
-						case XMLRPC_METHODNAME_GETSUBSCRIPTIONS:
-
-						break;
-
-						/*
-						 * Those methods have multiple parameters
-						 */
-						case XMLRPC_METHODNAME_PARAMUPDATE:
-						break;
-						case XMLRPC_METHODNAME_PUBLISHERUPDATE:
-						//Second parameter is topicname
-						if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
-								&& hdata->param_no == 2
-								&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
+						switch (hdata->rpc_methodname)
 						{
-							if(hdata->type_tag == XMLRPC_TYPE_TAG_NONE
-									|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
-							{
-								DEBUG_PRINT_STR("TOPIC");
-							}
-							else
-							{
-								//TODO ERROR: WRONG PARAMETER TYPE GIVEN!
-							}
-						}
+							case XMLRPC_METHODNAME_UNKNOWN:
+							DEBUG_PRINT_STR("UNKNOWN METHODNAME!");
+							//TODO
+							break;
+							/*
+							 * Those methods have only one parameter (caller_id)
+							 */
+							case XMLRPC_METHODNAME_GETBUSINFO:
+							case XMLRPC_METHODNAME_GETBUSSTATS:
+							case XMLRPC_METHODNAME_GETMASTERURI:
+							case XMLRPC_METHODNAME_GETPID:
+							case XMLRPC_METHODNAME_GETPUBLICATIONS:
+							case XMLRPC_METHODNAME_GETSUBSCRIPTIONS:
 
-						if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
-								&& hdata->param_no == 3
-								&& hdata->array_state == XMLRPC_ARRAY_STATE_VALUE
-								&& hdata->array_level == 0
+							break;
+
+							/*
+							 * Those methods have multiple parameters
+							 */
+							case XMLRPC_METHODNAME_PARAMUPDATE:
+							break;
+							case XMLRPC_METHODNAME_PUBLISHERUPDATE:
+							//Second parameter is topicname
+							if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+									&& hdata->param_no == 2
+									&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
+							{
+								if(hdata->type_tag == XMLRPC_TYPE_TAG_NONE
+										|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
+								{
+									DEBUG_PRINT_STR("TOPIC");
+								}
+								else
+								{
+									//TODO ERROR: WRONG PARAMETER TYPE GIVEN!
+								}
+							}
+
+							if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+									&& hdata->param_no == 3
+									&& hdata->array_state == XMLRPC_ARRAY_STATE_VALUE
+									&& hdata->array_level == 0
 							)
-						{
-							DEBUG_PRINT_STR("A PUBLISHER");
-							hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
-							SEBS_PARSE_URL_INIT(pdata,hdata->url,0,xmlrpc_url_scheme_string,XMLRPC_URL_SCHEME_STRING_LEN);
+							{
+								DEBUG_PRINT_STR("A PUBLISHER");
+								hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
+								SEBS_PARSE_URL_INIT(pdata,hdata->url,0,xmlrpc_url_scheme_string,XMLRPC_URL_SCHEME_STRING_LEN);
+							}
+							break;
+							case XMLRPC_METHODNAME_REQUESTTOPIC:
+							break;
+							case XMLRPC_METHODNAME_SHUTDOWN:
+							break;
 						}
-						break;
-						case XMLRPC_METHODNAME_REQUESTTOPIC:
-						break;
-						case XMLRPC_METHODNAME_SHUTDOWN:
-						break;
 					}
 				}
-			}
-			else if (idata->type == XMLRPC_TYPE_CLIENT)
-			{
+				else if (idata->type == XMLRPC_TYPE_CLIENT)
+				{
 
+				}
+				break;
 			}
-			break;
-		}
 
-		default:
+			default:
 			break;
 		}
 	}

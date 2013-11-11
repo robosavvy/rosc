@@ -40,6 +40,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 		fdata->content_length=SEBS_PARSE_UNKNOWN;
 		fdata->descriptor=SEBS_PARSE_UNKNOWN;
 		fdata->substate=SEBS_PARSE_HTTP_SUBSTATE_STATE_NONE;
+
 	}
 	while (*pdata->len > 0 && pdata->event == SEBS_PARSE_EVENT_NONE)
 	{
