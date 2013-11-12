@@ -246,7 +246,7 @@ void rosc_spin()
 							case SOCKET_SIG_RELEASE:
 								DEBUG_PRINT_STR("Release socket memory!");
 								abstract_close_socket(con_sock->socket_id);
-								con_sock->state=SOCKET_STATE_NOT_CONNECTED;
+								con_sock->state=SOCKET_STATE_INACTIVE;
 								break;
 
 							case SOCKET_SIG_NO_DATA:
