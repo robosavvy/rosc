@@ -35,6 +35,7 @@
 #include <rosc/com/xmlrpc.h>
 #include <rosc/system/status.h>
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
+#include <rosc/com/ros_handler.h>
 
 #define RESPOND()\
 hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
@@ -85,7 +86,31 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 
-			idata->iface->state=IFACE_STATE_WAIT_REGISTERED;
+
+			switch(idata->iface->state)
+			{
+			case IFACE_STATE_DO_REGISTER:
+					hdata->client_type=XMLRPC_CLIENT_TYPE_REGISTER;
+					idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
+				break;
+			case IFACE_STATE_DO_UNREGISTER:
+					hdata->client_type=XMLRPC_CLIENT_TYPE_REGISTER;
+					idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
+				break;
+
+			case IFACE_STATE_REGISTERED:
+					hdata->client_type=XMLRPC_CLIENT_TYPE_REQUEST_TOPIC;
+				break;
+
+				default:
+					/* No suitable state ? - release this ...*/
+					ROSC_WARNING("ERROR - interface does not have any state, which is meant for a RPC Client!");
+					pdata->out_len=SOCKET_SIG_RELEASE;
+					return (SEBS_PARSE_RETURN_GO_AHEAD);
+					break;
+			}
+			idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
+
 			ros_iface_init_t * ros_idata=(idata->iface->init_data);
 			ros_idata->iface_name;
 
@@ -143,13 +168,32 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT_STR("CONNECTED");
 			hdata->xmlrpc_state = XMLRPC_STATE_SENDING;
 			hdata->result_handling =XMLRPC_RESULT_REQUEST_SENT;
+
+
+
+			switch(hdata->client_type)
+			{
+			case XMLRPC_CLIENT_TYPE_REGISTER:
+			case XMLRPC_CLIENT_TYPE_UNREGISTER:
+				hdata->genPayloadData[0]=((ros_iface_init_t*)idata->iface->init_data)->iface_name; //Topic/Service
+				hdata->genPayloadData[1]=((ros_iface_init_t*)idata->iface->init_data)->type_name; //Message/ServiceType
+
+				break;
+			case XMLRPC_CLIENT_TYPE_REQUEST_TOPIC:
+					//TODO
+				break;
+			}
+
+
+
+			//MESSAGEGEN
 			pdata->next_parser.parser_function =
 					(sebs_parse_function_t) &sebs_msggen;\
 			pdata->next_parser.parser_data = (void *) (&hdata->gen);\
 			hdata->gen.buffer_size = rosc_static_socket_additional_data_size;\
 			hdata->gen.buffer = pdata->additional_storage;\
-			hdata->gen.type = MSGGEN_TYPE_XMLRPC_ERROR;\
-			hdata->gen.data_ptr = 0;\
+			hdata->gen.type = MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER;\
+			hdata->gen.payload_data_ptr = hdata->genPayloadData;
 			return (SEBS_PARSE_RETURN_INIT);
 			break;
 
@@ -318,13 +362,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-
+// ///////////////////////////
 			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;
 			pdata->next_parser.parser_data=(void *)(&hdata->gen);
 			hdata->gen.buffer_size=rosc_static_socket_additional_data_size;
 			hdata->gen.buffer=pdata->additional_storage;
 			hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;
-			hdata->gen.data_ptr=0;
 			return (SEBS_PARSE_RETURN_INIT);
 
 			default:

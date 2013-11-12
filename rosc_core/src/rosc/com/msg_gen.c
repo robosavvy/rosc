@@ -156,6 +156,10 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 					{
 						bytesize = 4;
 					}
+					else if(*def->type == MSG_TYPE_NODEAPI_PORT)
+					{
+						bytesize = 2;
+					}
 
 					switch(bytesize)
 					//transfer the value to our 64 bit variable
@@ -316,6 +320,13 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 							STRING_SIZE(node_name);
 						}
 						NEXT_BUILDUP;
+						break;
+
+					case MSG_TYPE_NODEAPI_PORT:
+						{
+							NUMBER_TO_BUFFER(&xmlrpc_port,
+							MSG_TYPE_UINT16_STRING, 2);
+						}
 						break;
 
 					case MSG_TYPE_PAYLOAD_SIZE_STRING:

@@ -21,9 +21,14 @@
 		DATA_STORAGE.data_ptr=DATA;\
 		return (SEBS_PARSE_RETURN_INIT)
 
+
+
+
+
 typedef enum
 {
-	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC,
+	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER,
+	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER,
 	MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC,
 	MSGGEN_TYPE_XMLRPC_ERROR,
 }msggen_message_type_t;
@@ -35,7 +40,8 @@ typedef struct
 	uint8_t *buffer;
 	size_t buffer_size;
 	msggen_message_type_t type;
-	void **data_ptr;
+	void **header_data_ptr;
+	void **payload_data_ptr;
 	msg_gen_command_t cmds;
 	bool finished;
 }sebs_msggen_t;

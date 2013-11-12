@@ -71,12 +71,12 @@ void rosc_spin()
 				case IFACE_STATE_DO_UNREGISTER:
 					if(iface->handler_function==&ros_handler)
 					{
-						xmlrpc_init_data_t* init=iface->init_data;
-						init->iface=(iface_t*)iface;
-						init->type=XMLRPC_TYPE_CLIENT;
+						xmlrpc_init_data_t init;
+						init.iface=(iface_t*)iface;
+						init.type=XMLRPC_TYPE_CLIENT;
 
 						con_sock->state=SOCKET_STATE_NOT_CONNECTED;
-						con_sock->pdata.init_data=iface->init_data;
+						con_sock->pdata.init_data=&init;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=&xmlrpc;
 

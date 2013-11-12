@@ -37,7 +37,7 @@
 #include <rosc/com/ros_handler.h>
 
 
-
+port_t xmlrpc_port=XMLRPC_PORT;
 //TODO init structs
 
 static iface_t rpc_client=
@@ -64,5 +64,5 @@ void rosc_init()
 	rosc_lists_init();
 
 	iface_list_insert(&rpc_server);
-	iface_listen(&rpc_server, XMLRPC_PORT);
+	iface_listen(&rpc_server, xmlrpc_port);
 }

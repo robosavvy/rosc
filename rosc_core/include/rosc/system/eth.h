@@ -49,7 +49,7 @@ typedef uint16_t port_t;
 
 extern char host_name[];
 extern char node_name[];
-
+extern port_t xmlrpc_port;
 
 
 
@@ -59,13 +59,12 @@ extern char node_name[];
  */
 typedef enum
 {
-	IFACE_STATE_RPC_INTERFACE,
-	IFACE_STATE_UNREGISTERED, //!< IFACE_STATE_UNREGISTERED
-	IFACE_STATE_DO_REGISTER,  //!< IFACE_STATE_DO_REGISTER
-	IFACE_STATE_WAIT_REGISTERED,
-	IFACE_STATE_REGISTERED,   //!< IFACE_STATE_REGISTERED
-	IFACE_STATE_DO_UNREGISTER,//!< IFACE_STATE_DO_UNREGISTER
-	IFACE_STATE_WAIT_UNREGISTERED, //!< IFACE_STATE_WAIT_UNREGISTERED
+	IFACE_STATE_RPC_INTERFACE, //!< interface is a rpc interface, no handling required
+	IFACE_STATE_UNREGISTERED, //!< interface is not registered
+	IFACE_STATE_DO_REGISTER,  //!< interface is should be registered
+	IFACE_STATE_STATE_OPERATION_PENDING, //!< interface registering operation in progress
+	IFACE_STATE_REGISTERED,   //!< interface is registered
+	IFACE_STATE_DO_UNREGISTER,//!< interface should be unregistered
 }iface_state_t;
 
 /**

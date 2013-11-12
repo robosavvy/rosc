@@ -57,6 +57,7 @@ typedef enum
 }xmlrpc_t;
 
 
+
 typedef enum
 {
 	XMLRPC_STATE_SENDING,
@@ -65,7 +66,6 @@ typedef enum
 	XMLRPC_STATE_HTTP,
 	XMLRPC_STATE_XML,
 	XMLRPC_STATE_SEND_RESPONSE,
-
 }xmlrpc_state_t;
 
 /**
@@ -173,8 +173,21 @@ typedef struct
 }xmlrpc_init_data_t;
 
 
+typedef enum
+{
+	XMLRPC_CLIENT_TYPE_NO_CLIENT,
+	XMLRPC_CLIENT_TYPE_REGISTER,
+	XMLRPC_CLIENT_TYPE_UNREGISTER,
+	XMLRPC_CLIENT_TYPE_REQUEST_TOPIC,
+}xmlrpc_client_type_t;
+
+
 typedef struct
 {
+
+	xmlrpc_t xmlrpc_type; //!< type (server or client)
+	xmlrpc_client_type_t client_type;
+
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
@@ -216,7 +229,10 @@ typedef struct
 		sebs_parse_xml_data_t xml;
 		sebs_msggen_t gen;
 	};
+		void * genPayloadData[5];
 		sebs_parse_url_data_t url;
+
+
 }xmlrpc_data_t;
 
 
