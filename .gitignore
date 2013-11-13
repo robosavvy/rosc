@@ -50,4 +50,4 @@
 /Makefile
 /.project
 /test_results
-*/doc/*
+*/doc/gen
