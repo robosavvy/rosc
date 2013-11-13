@@ -38,7 +38,7 @@ PROJECT_NUMBER =
 # for a project that appears at the top of each page and should give viewer
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF = "A portable ROS node implementation in pure C"
+PROJECT_BRIEF = "A portable, dependency-free ROS client library in pure C"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not
@@ -883,7 +883,7 @@ HTML_HEADER =
 # each generated HTML page. If it is left blank doxygen will generate a
 # standard footer.
 
-HTML_FOOTER = 
+HTML_FOOTER = doc/style/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading
 # style sheet that is used by each HTML page. It can be used to
@@ -901,7 +901,7 @@ HTML_STYLESHEET =
 # files. In the HTML_STYLESHEET file, use the file name only. Also note that
 # the files will be copied as-is; there are no commands or markers available.
 
-HTML_EXTRA_FILES = doc/style/bc_s.png doc/style/ftv2pnode.png doc/style/ftv2mnode.png
+HTML_EXTRA_FILES = doc/style/bc_s.png doc/style/synapticon-logo-scaled.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output.
 # Doxygen will adjust the colors in the style sheet and background images
