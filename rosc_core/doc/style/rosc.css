@@ -1,5 +1,5 @@
 .tabs, .tabs2, .tabs3 {
-	background-color: black;
+	background-color: #333333;
     background-image: none;
     width: 100%;
     z-index: 101;
@@ -11,10 +11,10 @@
 .tablist a {
 
 	background-image:none;
-	background-color: black;
-	color: yellow;
+	background-color: #333333;
+	color: #FFFFFF;
     text-decoration: none;
-
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
 }
 
 .tablist a:hover {
@@ -22,18 +22,18 @@
 	background-color: #AAAA00;
 	
 	/* Safari 4-5, Chrome 1-9 */ 
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffff00), to(#2F2727)); 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffff00), to(#333333)); 
 	/* Safari 5.1, Chrome 10+ */ 
-	background: -webkit-linear-gradient(top, #2F2727, #ffff00); 
+	background: -webkit-linear-gradient(top, #333333, #ffff00); 
 	/* Firefox 3.6+ */ 
-	background: -moz-linear-gradient(top, #2F2727, #ffff00); 
+	background: -moz-linear-gradient(top, #333333, #ffff00); 
 	/* IE 10 */ 
-	background: -ms-linear-gradient(top, #2F2727, #ffff00); 
+	background: -ms-linear-gradient(top, #333333, #ffff00); 
 	/* Opera 11.10+ */ 
-	background: -o-linear-gradient(top, #2F2727, #ffff00);
+	background: -o-linear-gradient(top, #333333, #ffff00);
 
-	color: yellow;
-    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+	color: #000000;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 1.0);
     text-decoration: none;
 }
 
@@ -43,23 +43,24 @@
 	background-color: #AAAA00;
 	
 	/* Safari 4-5, Chrome 1-9 */ 
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffff00), to(#2F2727)); 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffff00), to(#333333)); 
 	/* Safari 5.1, Chrome 10+ */ 
-	background: -webkit-linear-gradient(top, #2F2727, #ffff00); 
+	background: -webkit-linear-gradient(top, #333333, #ffff00); 
 	/* Firefox 3.6+ */ 
-	background: -moz-linear-gradient(top, #2F2727, #ffff00); 
+	background: -moz-linear-gradient(top, #333333, #ffff00); 
 	/* IE 10 */ 
-	background: -ms-linear-gradient(top, #2F2727, #ffff00); 
+	background: -ms-linear-gradient(top, #333333, #ffff00); 
 	/* Opera 11.10+ */ 
-	background: -o-linear-gradient(top, #2F2727, #ffff00);
+	background: -o-linear-gradient(top, #333333, #ffff00);
 
-	color: yellow;
-    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+	color: #000000;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 1.0);
     text-decoration: none;
 }
 
 #titlearea
 {
+	color: #FFFFFF;
 	background-color: black;
 	padding: 0px;
 	margin: 0px;
@@ -74,7 +75,7 @@
 .ui-resizable-e {
   background: repeat scroll right center transparent;
   cursor:e-resize;
-  background-color: black;
+  background-color: #333333;
   height:100%;
   right:0;
   top:0;
@@ -83,9 +84,9 @@
 
 #nav-tree .selected {
   background-image: none;
-  background-color: black;
+  background-color: #333333;
   background-repeat:repeat-x;
-  color: yellow;
+  color: #FFFFFF;
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
 }
 
@@ -100,7 +101,7 @@
 
     font-size: 11px;
     background-image: none;
-    background-color: black;
+    background-color: #333333;
     background-repeat: repeat-x;
     background-position: 0px -5px;
     height: 30px;
@@ -122,7 +123,7 @@
     background-image: none;
     background-repeat: no-repeat;
     background-position: right center;
-    color: rgb(255, 255, 0);
+    color: #FFFFFF;
     font-size: 8pt;
 
 } 
@@ -131,9 +132,9 @@
     height: 32px;
     display: block;
     outline: medium none;
-    color: rgb(255, 255, 0);
+    color: rgb(255, 255, 255);
     font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
-    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.9);
     text-decoration: none;
 }
 
@@ -145,5 +146,20 @@ a {
 
 #nav-tree .selected a {
     text-decoration: none;
-    color: rgb(255, 255, 0);
+    color: rgb(255, 255, 255);
+}
+
+#projectname {
+    font: 200% Tahoma,Arial,sans-serif;
+    margin: 0px;
+    padding: 2px 0px;
+    color:yellow;
+}
+
+div.header {
+    background-image: url("nav_h.png");
+    background-repeat: repeat-x;
+    background-color: rgb(249, 250, 252);
+    margin: 0px;
+    border-bottom: 1px solid rgb(150, 150, 0);
 }
