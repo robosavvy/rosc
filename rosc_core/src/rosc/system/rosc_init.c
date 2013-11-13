@@ -36,14 +36,17 @@
 #include <rosc/com/xmlrpc.h>
 #include <rosc/com/ros_handler.h>
 
+char hostname[__HOSTNAME_MAX_LEN__];
 
 
+port_t xmlrpc_port=XMLRPC_PORT;
 //TODO init structs
 
 static iface_t rpc_client=
 {
 	&xmlrpc,
 };
+const iface_t const *iface_rpc_client=&rpc_client;
 
 static xmlrpc_init_data_t rpc_server_init={XMLRPC_TYPE_SERVER};
 static iface_t rpc_server=
@@ -58,10 +61,15 @@ static iface_t rpc_server=
 
 void rosc_init()
 {
+
+	if(!abstract_get_hostname(hostname, __HOSTNAME_MAX_LEN__))
+	{
+
+	}
 	//Initialize the byte order arrays
 	rosc_init_endian();
 	rosc_lists_init();
 
 	iface_list_insert(&rpc_server);
-	iface_listen(&rpc_server, XMLRPC_PORT);
+	iface_listen(&rpc_server, xmlrpc_port);
 }

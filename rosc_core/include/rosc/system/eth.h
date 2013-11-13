@@ -47,8 +47,11 @@ typedef __SOCKET_ID_TYPE__ listen_socket_id_t;
 
 typedef uint16_t port_t;
 
-extern char host_name[];
+extern char hostname[];
 extern char node_name[];
+extern port_t xmlrpc_port;
+
+
 
 
 /**
@@ -56,12 +59,12 @@ extern char node_name[];
  */
 typedef enum
 {
-	IFACE_STATE_RPC_INTERFACE,
-	IFACE_STATE_UNREGISTERED, //!< IFACE_STATE_UNREGISTERED
-	IFACE_STATE_DO_REGISTER,  //!< IFACE_STATE_DO_REGISTER
-	IFACE_STATE_REGISTERED,   //!< IFACE_STATE_REGISTERED
-	IFACE_STATE_DO_UNREGISTER,//!< IFACE_STATE_DO_UNREGISTER
-	IFACE_STATE_WAIT_UNREGISTERED, //!< IFACE_STATE_WAIT_UNREGISTERED
+	IFACE_STATE_RPC_INTERFACE, //!< interface is a rpc interface, no handling required
+	IFACE_STATE_UNREGISTERED, //!< interface is not registered
+	IFACE_STATE_DO_REGISTER,  //!< interface is should be registered
+	IFACE_STATE_STATE_OPERATION_PENDING, //!< interface registering operation in progress
+	IFACE_STATE_REGISTERED,   //!< interface is registered
+	IFACE_STATE_DO_UNREGISTER,//!< interface should be unregistered
 }iface_state_t;
 
 /**
@@ -88,24 +91,40 @@ typedef enum
 
 typedef enum
 {
-	SOCKET_STATE_INACTIVE,
-	SOCKET_STATE_NOT_CONNECTED,
-	SOCKET_STATE_WAITNG_FOR_CONNECTION,
-	SOCKET_STATE_CONNECT,
+	SOCKET_STATE_INACTIVE, 				/*!< socket can be obtained for usage */
+	SOCKET_STATE_SETUP,					/*!< socket is reserved already and being setup (means it's not called by ros_spin) */
+	SOCKET_STATE_NOT_CONNECTED,			/*!< socket is not connected */
+	SOCKET_STATE_WAITING_FOR_CONNECTION,	/*!< socket is currently waiting for a connection */
+	SOCKET_STATE_CONNECTED,				/*!< socket is connected and able to receive or send data */
 }socket_state_t;
+
+
+typedef enum
+{
+	CONNECT_DATA_STATE_URL,	/*!< currently there is only a url which needs to be parsed*/
+	CONNECT_DATA_STATE_RESOLVE, /*!< the hostname is available */
+	CONNECT_DATA_STATE_IPV4, /*!< IPv4 and port are ready */
+	//TODO support IPv6 CONNECT_DATA_STATE_IPV6, /*!< IPv6 and port ready*/
+	CONNECT_DATA_STATE_ERROR,
+}connect_data_state_t;
+
 
 typedef struct socket_connect_info_t
 {
-	port_t remote_port;
-	uint32_t size;
-	char uri[__MAX_URI_LENGTH__];
+	connect_data_state_t data_state; /*!< contains the state of the data*/
+	ip_address_t remote_ip;	/*!< The ip of the remote system*/
+	port_t remote_port;		/*!< The port of the remote system*/
+	uint32_t hostname_size;	/*!< The length of the hostname*/
+	char *hostname;	/*!< points to the start of the hostname in connect_string*/
+	char url[];		/*!< storage for urls */
 }socket_connect_info_t;
+
 
 
 
 typedef struct lookup_table_entry_t
 {
-	char hostname[__HOSTNAME_MAX_LEN__];
+	char hostname[__HOSTNAME_BUFFER_LEN__];
 	ip_address_t ip;
 }lookup_table_entry_t;
 
@@ -115,7 +134,7 @@ lookup_table_entry_t __rosc_static_lookup_table[MIN_SIZE]=\
 
 #define ROSC_STATIC_LOOKUP_TABLE_END \
 };\
-lookup_table_entry_t* rosc_static_lookup_table=&(__rosc_static_lookup_table);\
+lookup_table_entry_t* rosc_static_lookup_table=(__rosc_static_lookup_table);\
 size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
 
 #define ROSC_STATIC_LOOKUP_ENTRY(HOSTNAME, IP)\
@@ -125,7 +144,7 @@ size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_
 
 typedef struct socket_t
 {
-	bool is_active;	/*!< If the this socket is used, this value is set to true*/
+	socket_state_t state;	/*!< If the this socket is used, this value is set to true*/
 
 	socket_id_t socket_id;/*!< This stores the socket id of the connection on the target system*/
 	struct iface_t *reserved;/*!< If this is not 0 the socket is reserved for a special interface*/
@@ -159,6 +178,29 @@ typedef enum
 	SEND_RESULT_CONNECTION_ERROR,
 	SEND_RESULT_CONNECTION_TIMEOUT,
 }send_result_t;
+
+
+#define MASTER_URI_STATIC(URI)\
+		size_t master_uri_size=sizeof(URI)-1;\
+		char * const master_uri=URI
+
+#define MASTER_URI_STATIC_MEMRES(URI,MEMSIZE)\
+		size_t master_uri_size=MEMSIZE;\
+		char __master_uri__mem[MEMSIZE+1]=URI;\
+		char * const master_uri=&__master_uri__mem
+
+/**
+ * Pointer to zero terminated master URI
+ */
+extern char * const master_uri;
+
+
+
+
+
+
+
+
 
 void rosc_lists_init();
 
@@ -199,7 +241,7 @@ extern void abstract_static_initHostname();
  * @param ip[o] The storage for the ip address
  * return false if successfull
  */
-extern bool abstract_resolveIP(const char* hostname, uint8_t* ip);
+extern bool abstract_resolveIP(const char* hostname, ip_address_ptr ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.
@@ -236,14 +278,25 @@ socket_id_t abstract_connect_socket(ip_address_t ip, port_t port);
  */
 extern send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size);
 
-enum
+/**
+ * These signals are used to receive information about socket information or to control the socket,
+ * or both.
+ *
+ * They are used instead of an input or output size.
+ */
+typedef enum
 {
-	SOCKET_SIG_NO_CONNECTION = -4,
-	SOCKET_SIG_CONNECTED = -3,
-	SOCKET_SIG_DATA_SENT = -2,
-	SOCKET_SIG_NO_DATA = -1,
-	SOCKET_SIG_CLOSE = 0,
-};
+	SOCKET_SIG_COULD_NOT_CONNECT=-9, /*!< (In) Could not connect to ip*/
+	SOCKET_SIG_COULD_NOT_RESOLVE_HOST =-8, /*!< (In) Could not resolve hostname*/
+	SOCKET_SIG_RELEASE = -7, /*! (Out) Close socket, release memory<*/
+	SOCKET_SIG_TIMEOUT = -6,/*! (In) Timeout occurred <*/
+	SOCKET_SIG_CONNECT = -5, /*! (Out) Connect socket to connection stored inside additional memory<*/
+	SOCKET_SIG_NO_CONNECTION = -4, /*! (In) Socket not connected <*/
+	SOCKET_SIG_CONNECTED = -3,     /*!(In) Socket connection established <*/
+	SOCKET_SIG_DATA_SENT = -2, /*! (In) Data was sent to remote host <*/
+	SOCKET_SIG_NO_DATA = -1, /*! (In/Out) No data on connection <*/
+	SOCKET_SIG_CLOSE = 0, /*! (In/Out) Close Socket / Socket closed <*/
+}socket_sig_t;
 
 extern int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
 
@@ -263,5 +316,6 @@ extern socket_id_t abstract_socket_accept(listen_socket_id_t socket_id);
 
 extern const size_t rosc_static_socket_additional_data_size;
 
+extern bool abstract_get_hostname(char * hostname, size_t maxlength);
 
 #endif /* ETH_H_ */

@@ -139,10 +139,10 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 					DEBUG_PRINT_STR("HANDLER: MESSAGE END!")
 					switch(idata->ros_type)
 					{
-						case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
-						case ROS_HANDLER_TYPE_ROSRPC_SERVER:
-
-							break;
+//						case ROS_HANDLER_TYPE_ROSRPC_CLIENT:
+//						case ROS_HANDLER_TYPE_ROSRPC_SERVER:
+//
+//							break;
 
 						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
 							break;

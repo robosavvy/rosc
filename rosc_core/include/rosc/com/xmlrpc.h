@@ -38,6 +38,7 @@
 
 
 #include <rosc/system/eth.h>
+#include <rosc/sebs_parse_fw/send_modules/socket_connect.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_http.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.h>
@@ -48,6 +49,7 @@
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
 
 
+
 typedef enum
 {
 	XMLRPC_TYPE_CLIENT,
@@ -55,11 +57,15 @@ typedef enum
 }xmlrpc_t;
 
 
+
 typedef enum
 {
+	XMLRPC_STATE_SENDING,
+	XMLRPC_STATE_CONNECT,
+	XMLRPC_STATE_SEND_REQUEST,
 	XMLRPC_STATE_HTTP,
 	XMLRPC_STATE_XML,
-	XMLRPC_STATE_SEND,
+	XMLRPC_STATE_SEND_RESPONSE,
 }xmlrpc_state_t;
 
 /**
@@ -114,6 +120,7 @@ typedef enum
 typedef enum
 {
 	XMLRPC_RESULT_NONE,
+	XMLRPC_RESULT_REQUEST_SENT,
 	XMLRPC_RESULT_CONTENT_LENGTH,
 	XMLRPC_RESULT_METHOD_NAME,
 	XMLRPC_RESULT_CALLERID,
@@ -153,17 +160,34 @@ typedef enum
 	XMLRPC_ARRAY_STATE_VALUE,
 }xmlrpc_array_state_t;
 
+
+//TODO possible Improvement - should be able to be removed,
+//Instead of the type only the iface variable will define if it is a server or a client
+//on a client it points to a iface struct
+//on a server it is zero.
+//Not sure if this will work out in the end so I am leaving that for now as it is.
 typedef struct
 {
 	xmlrpc_t type;
-	xmlrpc_ros_methodname_t methodname;
-	char *ptr;
+	iface_t *iface;
 }xmlrpc_init_data_t;
+
+
+typedef enum
+{
+	XMLRPC_CLIENT_TYPE_NO_CLIENT,
+	XMLRPC_CLIENT_TYPE_REGISTER,
+	XMLRPC_CLIENT_TYPE_UNREGISTER,
+	XMLRPC_CLIENT_TYPE_REQUEST_TOPIC,
+}xmlrpc_client_type_t;
 
 
 typedef struct
 {
-	uint16_t port_number;
+
+	xmlrpc_t xmlrpc_type; //!< type (server or client)
+	xmlrpc_client_type_t client_type;
+
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
@@ -176,8 +200,6 @@ typedef struct
 
 	//XML variables
 	uint32_t xml_length;	//!< storage for the xml length from the header
-	uint32_t xml_message_start;	//!< marks where the xml message starts
-
 	xmlrpc_tag_state_t tag_state;
 	xmlrpc_type_tag_t type_tag;
 	uint8_t param_no; //!< number of the param tag
@@ -202,11 +224,15 @@ typedef struct
 	 */
 	union
 	{
+		socket_connect_data_t connect;
 		sebs_parse_http_data_t http;
 		sebs_parse_xml_data_t xml;
 		sebs_msggen_t gen;
 	};
+		void * genPayloadData[5];
 		sebs_parse_url_data_t url;
+
+
 }xmlrpc_data_t;
 
 

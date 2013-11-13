@@ -13,11 +13,15 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		fdata->cmds.def_state = 0;
 		fdata->finished=false;
 
+		fdata->cmds.header_data=fdata->header_data_ptr;
+		fdata->cmds.payload_data=fdata->payload_data_ptr;
+
 		switch (fdata->type) {
-			case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC:
+		case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER:
 				fdata->cmds.header=xmlrpc_hd_request;
 				fdata->cmds.payload=xmlrpc_msg_request;
 				break;
+
 
 			case MSGGEN_TYPE_XMLRPC_ERROR:
 				fdata->cmds.header=xmlrpc_hd_response;
@@ -47,6 +51,19 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 			fdata->first_run=false;
 			XMLRPC_REQ_RESET();
 			XMLRPC_RESP_RESET();
+			switch(fdata->type)
+			{
+				case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER:
+					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
+					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[42]=MSG_TYPE_NONE;
+					break;
+
+				default:
+					break;
+			}
+
 
 			pdata->out_len=fdata->buffer_size;
 			pdata->out_buf=fdata->buffer;

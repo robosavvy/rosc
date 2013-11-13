@@ -12,7 +12,7 @@
 
 
 
-#define SEBS_PARSE_MSGGEN_INIT(PARSER_DATA, DATA_STORAGE, BUFFER, MAX_LEN, TYPE, DATA)\
+#define SEBS_PARSE_MSG_GEN(PARSER_DATA, DATA_STORAGE, BUFFER, MAX_LEN, TYPE, DATA)\
 		PARSER_DATA->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;\
 		PARSER_DATA->next_parser.parser_data=(void *)(&DATA_STORAGE);\
 		DATA_STORAGE.buffer_size=MAX_LEN;\
@@ -21,9 +21,14 @@
 		DATA_STORAGE.data_ptr=DATA;\
 		return (SEBS_PARSE_RETURN_INIT)
 
+
+
+
+
 typedef enum
 {
-	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER_TOPIC,
+	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER,
+	MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER,
 	MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC,
 	MSGGEN_TYPE_XMLRPC_ERROR,
 }msggen_message_type_t;
@@ -31,11 +36,12 @@ typedef enum
 
 typedef struct
 {
-	bool first_run;
+	bool first_run;  //TODO improve mem, can this be replaced by init ?...
 	uint8_t *buffer;
 	size_t buffer_size;
 	msggen_message_type_t type;
-	void **data_ptr;
+	void **header_data_ptr;
+	void **payload_data_ptr;
 	msg_gen_command_t cmds;
 	bool finished;
 }sebs_msggen_t;

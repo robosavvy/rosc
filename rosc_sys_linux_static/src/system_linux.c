@@ -80,11 +80,6 @@ listen_socket_id_t abstract_start_listening_on_port(port_t* port)
     return (listenfd);
 }
 
-void abstract_static_initHostname()
-{
-	gethostname(host_name,__HOSTNAME_MAX_LEN__);
-}
-
 bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 {
 	struct hostent *he;
@@ -99,7 +94,11 @@ bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 
 
 	//Return only the first one;
-	strncpy(ip , (char *)addr_list[0],4);
+	char * add=(char *)addr_list[0];
+
+	for(i=0;i<4;i++)
+		ip[i]=add[i];
+
 	return(false);
 }
 
@@ -124,6 +123,7 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
     if (sockfd < 0)
         return (-1);
 
+
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
         bcopy((char *)server->h_addr,
@@ -135,11 +135,13 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         if (sockfd < 0)
             return (-1);
 
+
         if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         {
         	close(sockfd);
         	return (-1);
         }
+        fcntl(sockfd, F_SETFL, O_NONBLOCK);
         return (sockfd);
 }
 
@@ -188,4 +190,9 @@ int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 			break;
 		}
 	return(n);
+}
+
+bool abstract_get_hostname(char * hostname, size_t maxlength)
+{
+	gethostname(hostname,maxlength);
 }

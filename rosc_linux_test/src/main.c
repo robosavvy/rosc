@@ -29,6 +29,16 @@
  *  main.c created by Christian Holl
  */
 
+/* ******************/
+/*     TESTING      */
+/* ******************/
+#include<rosc/sebs_parse_fw/send_modules/socket_connect.h>
+#include<stdio.h>
+#include<string.h>
+
+/* ******************/
+
+
 #include <rosc/rosc.h>
 
 #include <rosc/msg/rosc_linux_test/simple1.h>
@@ -60,19 +70,40 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic2)
 	printf("simple2 callback");
 }
 
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
+//ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
+
+char name[]="/simpleTopic1";
+ros_iface_init_t rosc_static_subscriber_init_sim1__simpleTopic1={name,\
+                            rosc_static_msg_topic_type__rosc_linux_test__simple1,\
+                            ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,\
+                            rosc_static_msg_buildup__rosc_linux_test__simple1,\
+                            rosc_static_msg_submessage_size_list__rosc_linux_test__simple1__sim1,\
+                            rosc_static_msg_array_size_list__rosc_linux_test__simple1__sim1,\
+                            rosc_static_msg_memory_offsets__rosc_linux_test__simple1__sim1,\
+                            rosc_static_msg_message_definition__rosc_linux_test__simple1,\
+                            rosc_static_msg_md5sum__rosc_linux_test__simple1,\
+                            0,\
+                            &rosc_static_callback_simpleTopic1,\
+                            };\
+
+iface_t rosc_static_subscriber_sim1__simpleTopic1={\
+           &ros_handler,\
+           &rosc_static_subscriber_init_sim1__simpleTopic1};\
+
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
 	ROSC_STATIC_LOOKUP_ENTRY(Computer0,IP(192,168,0,2))
+	ROSC_STATIC_LOOKUP_ENTRY(Computer1,IP(192,168,0,3))
 ROSC_STATIC_LOOKUP_TABLE_END
 
-NODE_NAME("master");
-HOST_NAME("Host");
+
+MASTER_URI_STATIC("http://localhost:11311");
+
+NODE_NAME("roscnode");
 
 int main()
 {
-
 	printf("Socket Memory Statistics\n");
 	printf("#############################################################\n");
 
@@ -80,36 +111,37 @@ int main()
 	printf("Size of the ROS data struct in system part: %i bytes\n",(int) sizeof(ros_handler_data_t));
 	printf("Size of the XMLRPC data struct in system part: %i bytes\n",(int) sizeof(xmlrpc_data_t));
 	printf("------------------------------------------\n");
-	printf("Overall size of the system part:  %i bytes\n",(int) offsetof(rosc_socket_memory_size_def_t,message_data));
-	printf("Size of the user defined part:    %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t) - (int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("Overall size of the system part: %i bytes\n",(int) offsetof(rosc_socket_memory_size_def_t,message_data));
+	printf("Size of the connect url length: %i bytes\n",  (int) rosc_static_url_max_size);
+	printf("Size of the user defined part: %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t) - (int) offsetof(rosc_socket_memory_size_def_t,message_data));
 	printf("------------------------------------------\n");
-	printf("Overall size of a single socket:  %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t));
+	printf("Overall size of a single socket: %i bytes\n",(int) sizeof(rosc_socket_memory_size_def_t));
 	printf("\n");
 	printf("Overall size selected %i sockets: %i bytes\n",(int) __SOCKET_MAXIMUM__,(int) sizeof(rosc_static_socket_mem));
 
 	printf("#############################################################\n");
 	printf("\n");
 
-
-
 	printf("Lookup Table Memory \n");
 	printf("#############################################################\n");
-	printf("Maximum Hostname Size: %i bytes\n", __HOSTNAME_MAX_LEN__);
-	printf("Lookup Entry Size: %i bytes\n", sizeof(lookup_table_entry_t));
+	printf("Maximum Hostname Size: %i bytes\n",(int) __HOSTNAME_BUFFER_LEN__);
+	printf("Lookup Entry Size: %i bytes\n",(int) sizeof(lookup_table_entry_t));
 	printf("------------------------------------------\n");
-	printf("Lookup Table Size: (%i entries) %i bytes\n", lookup_table_size ,lookup_table_size * sizeof(lookup_table_entry_t));
-
+	printf("Lookup Table Size: (%i entries) %i bytes\n", (int)lookup_table_size , (int)lookup_table_size * (int)sizeof(lookup_table_entry_t));
 	printf("#############################################################\n");
 	printf("\n");
-
-
 
 
 	rosc_init();
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
 
-	///TESTING STUFF
+
+	//TODO register function
+	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1))->state=IFACE_STATE_DO_REGISTER;
+
+
+	//TESTING STUFF
 
 	char *narf="narf";
 	uint16_t port=99;
@@ -164,6 +196,32 @@ int main()
 	}
 
 	printf("\n----");
+
+	sebs_parser_data_t pdata;
+
+	pdata.handler_init=false;
+	pdata.event=SEBS_PARSE_XML_EVENT_NONE;
+	pdata.function_init=true;
+	socket_connect_data_t data;
+	union
+	{
+	 socket_connect_info_t cdata;
+	 char narf[256];
+	}a;
+
+
+	strcpy(a.cdata.url,"http://localhost:12344");
+
+	data.connect_data=&a.cdata;
+	data.state=SOCKET_CONNECT_STATE_URL_SCHEME;
+
+	pdata.sending=true;
+	pdata.current_parser.parser_function=&socket_connect;
+	pdata.current_parser.parser_data=&data;
+
+	sebs_parser_frame(0,0,&pdata);
+
+	printf("state  %i\n",a.cdata.data_state);
 
 
 

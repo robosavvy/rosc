@@ -74,7 +74,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			&& (fdata->message_length > 0
 					|| fdata->state == SEBS_PARSE_ROSPRC_MESSAGE_LENGTH
 					|| fdata->state == SEBS_PARSE_ROSBINARY_MESSAGE_LENGTH))
-					|| pdata->finish_call)
+					|| pdata->finish_init_call)
 	{
 
 		switch(fdata->state)

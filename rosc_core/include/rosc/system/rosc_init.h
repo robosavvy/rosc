@@ -40,6 +40,10 @@
 #include <rosc/com/xmlrpc.h>
 #include <rosc/system/mem.h>
 
+
+
+extern const iface_t const *iface_rpc_client;
+
 #ifndef  __SYSTEM_HAS_MALLOC__
 
 	/**
@@ -56,7 +60,10 @@
 						ros_handler_data_t ros;\
 			}handler;\
 			union\
-			{
+			{\
+				socket_connect_info_t	connect_info;\
+				char connect_string_reservation[offsetof(socket_connect_info_t,url) + __URI_BUFFER_LENGTH__];
+				//TODO char topic_name_string_reservation[];
 
 	/**
 	 * STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
@@ -80,7 +87,8 @@
 		rosc_socket_memory_size_def_t rosc_static_socket_mem[__SOCKET_MAXIMUM__];\
 		const size_t rosc_static_socket_mem_hdata_offset=offsetof(rosc_socket_memory_size_def_t,handler);\
 		const size_t rosc_static_socket_mem_message_offset=offsetof(rosc_socket_memory_size_def_t,message_data);\
-		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);
+		const size_t rosc_static_socket_additional_data_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data);\
+		const size_t rosc_static_url_max_size=sizeof(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data)-offsetof(socket_connect_info_t,url);
 #endif
 
 /**

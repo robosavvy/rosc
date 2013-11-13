@@ -36,11 +36,10 @@
 //#include <rosc/rosc.h>
 #include <rosc/system/spec.h>
 
-#define HOST_NAME(INITIAL_NAME)\
-	char host_name[__HOSTNAME_MAX_LEN__]=INITIAL_NAME;
-
 #define NODE_NAME(INITIAL_NAME)\
 	char node_name[__NODENAME_MAX_LEN__]=INITIAL_NAME;
+
+
 
 
 #define MASTER_HOST_NAME(INITIAL_NAME)\
@@ -57,7 +56,12 @@
 		#warning __HOSTNAME_MAX_LEN__ undefined, it will be automatically set to 50
 	#endif
 
-    #define __MAX_URI_LENGTH__ 9 /*rosrpc://*/ + __HOSTNAME_MAX_LEN__ + 6 /*:PORTNUMBER*/
+	#define __HOSTNAME_BUFFER_LEN__ __HOSTNAME_MAX_LEN__+1
+
+    #define __URI_BUFFER_LENGTH__ 9 /*rosrpc://*/ + __HOSTNAME_BUFFER_LEN__ + 6 /*:PORTNUMBER*/
+
+
+
 
 	#ifndef __NODENAME_MAX_LEN__
 		#define __NODENAME_MAX_LEN__ 50
