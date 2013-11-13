@@ -301,11 +301,11 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 					case MSG_TYPE_HOSTNAME_OR_IP:
 						if (def->size.mode == MSG_GEN_SIZE_MODE_NONE)
 						{
-							STRING_TO_BUFFER(host_name);
+							STRING_TO_BUFFER(hostname);
 						}
 						else
 						{
-							STRING_SIZE(host_name);
+							STRING_SIZE(hostname);
 						}
 						NEXT_BUILDUP;
 						break;

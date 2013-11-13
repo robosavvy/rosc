@@ -36,9 +36,6 @@
 //#include <rosc/rosc.h>
 #include <rosc/system/spec.h>
 
-#define HOST_NAME(INITIAL_NAME)\
-	char host_name[__HOSTNAME_MAX_LEN__]=INITIAL_NAME;
-
 #define NODE_NAME(INITIAL_NAME)\
 	char node_name[__NODENAME_MAX_LEN__]=INITIAL_NAME;
 

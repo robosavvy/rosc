@@ -47,7 +47,7 @@ typedef __SOCKET_ID_TYPE__ listen_socket_id_t;
 
 typedef uint16_t port_t;
 
-extern char host_name[];
+extern char hostname[];
 extern char node_name[];
 extern port_t xmlrpc_port;
 
@@ -316,5 +316,6 @@ extern socket_id_t abstract_socket_accept(listen_socket_id_t socket_id);
 
 extern const size_t rosc_static_socket_additional_data_size;
 
+extern bool abstract_get_hostname(char * hostname, size_t maxlength);
 
 #endif /* ETH_H_ */

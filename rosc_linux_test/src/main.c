@@ -100,8 +100,7 @@ ROSC_STATIC_LOOKUP_TABLE_END
 
 MASTER_URI_STATIC("http://localhost:11311");
 
-NODE_NAME("/ROSc-Node");
-HOST_NAME("host");
+NODE_NAME("roscnode");
 
 int main()
 {

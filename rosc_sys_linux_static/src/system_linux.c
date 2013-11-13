@@ -80,11 +80,6 @@ listen_socket_id_t abstract_start_listening_on_port(port_t* port)
     return (listenfd);
 }
 
-void abstract_static_initHostname()
-{
-	gethostname(host_name,__HOSTNAME_MAX_LEN__);
-}
-
 bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
 {
 	struct hostent *he;
@@ -195,4 +190,9 @@ int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 			break;
 		}
 	return(n);
+}
+
+bool abstract_get_hostname(char * hostname, size_t maxlength)
+{
+	gethostname(hostname,maxlength);
 }
