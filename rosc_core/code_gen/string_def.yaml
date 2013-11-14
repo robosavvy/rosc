@@ -196,7 +196,8 @@ xmlrpc_http_actions:
     'ACTION'
   stringlist: {
     '':ROOT,
-    'test'
+    'test',
+    'RPC2'
   }
 
  #xml rpc boolean

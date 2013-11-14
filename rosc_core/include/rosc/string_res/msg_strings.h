@@ -281,13 +281,14 @@ extern const char *xmlrpc_url_scheme_string[];
 /**
  * Length of the string array xmlrpc_http_actions
  */
-#define XMLRPC_HTTP_ACTIONS_LEN 	2
+#define XMLRPC_HTTP_ACTIONS_LEN 	3
 
 /**
  * Macro for inserting contains available actions for http requests string numbers into any enum
  */
 #define XMLRPC_HTTP_ACTIONS(ENUM) \
 	 ENUM ## _ACTION_ROOT, \
+	 ENUM ## _ACTION_RPC2, \
 	 ENUM ## _ACTION_TEST
 
 /**

@@ -241,7 +241,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 				DEBUG_PRINT(INT,"CONTENT LENGTH IS: ",hdata->http.numberparse.number);
 				hdata->xml_length = hdata->http.numberparse.number;
-				return (false);
 			}
 			else
 			{
@@ -276,6 +275,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		default:
 			break;
 		}
+		hdata->result_handling=XMLRPC_RESULT_NONE;
 		break;
 	case SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE:
 		DEBUG_PRINT_STR("---FRAME-->SEBS_PARSE_EVENT_MESSAGE_SECURITY_OVER_SIZE");

@@ -171,6 +171,7 @@ const char *xmlrpc_url_scheme_string[] =
 const char *xmlrpc_http_actions[] =
 {
 	"",
+	"RPC2",
 	"test"
 };
 
