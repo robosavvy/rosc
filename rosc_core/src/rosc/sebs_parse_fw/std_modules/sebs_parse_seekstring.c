@@ -80,15 +80,14 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 		//Find the first possibility in remaining strings on current place
 		while (fdata->stringlist_len > 0 && fdata->stringlist_len > newlen)
 		{
-			if ((*fdata->stringlist)[fdata->curChrPos] == curChrBuf
-					|| (*fdata->stringlist)[fdata->curChrPos]
+			if ((fdata->stringlist[newlen])[fdata->curChrPos] == curChrBuf
+					|| (fdata->stringlist[newlen])[fdata->curChrPos]
 							== (curChrBuf + casechange))
 			{
 				found = true;
 				newlen++;
 			}
 			else
-			{
 				if (!found)	//If no suitable string was found before
 				{
 					++fdata->result; //Increase the current array number
@@ -102,9 +101,6 @@ sebs_parse_return_t sebs_parse_seekstring(sebs_parser_data_t* pdata)
 					fdata->stringlist_len = newlen;
 					break;
 				}
-			}
-
-
 		}
 
 		//Check if maxlength is set and reached...

@@ -279,7 +279,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 					fdata->substate = SEBS_PARSE_HTTP_SUBSTATE_CHECK_METHOD;
 					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, fdata->methods,
-							fdata->methods_len, " /\n.", true,0)
+							fdata->methods_len, " /\n.\r", true,0)
 					;
 					break;
 
@@ -288,7 +288,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_REQUEST_HTTP_VER;
 					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, http_header_stdtext,
-							HTTP_HEADER_STDTEXT_LEN, " \n", true,0)
+							HTTP_HEADER_STDTEXT_LEN, " \n\r", true,0)
 					;
 					break;
 
@@ -297,7 +297,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 							SEBS_PARSE_HTTP_SUBSTATE_CHECK_RESPONSE_HTTP_VER;
 					SEBS_PARSE_SEEKSTRING_INIT(pdata,
 							fdata->seekstring, http_header_stdtext,
-							HTTP_HEADER_STDTEXT_LEN, " \n", true,0)
+							HTTP_HEADER_STDTEXT_LEN, " \n\r", true,0)
 					;
 					break;
 
