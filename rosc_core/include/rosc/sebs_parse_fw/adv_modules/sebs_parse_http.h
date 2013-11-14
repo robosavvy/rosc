@@ -72,11 +72,11 @@ typedef enum
 	SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED,       //!< means that the HTTP version is not supported (code: 505)
 	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST,                 //!< means that something is wrong inside the http header
 	SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED,          //!< means that the given method string did not match any of those in the string array
-	SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE,                		 //!< means that a content type was found
-	SEBS_PARSE_HTTP_EVENT_HEADER_END,						 //!< means that the function reached the end
 	SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING,            //!< means that the content encoding is set (which is not supported by a stream parser -> cause of compression...)
 	SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE,                //!< means that something is wrong in the received response
 
+	SEBS_PARSE_HTTP_EVENT_HEADER_END,						 //!< means that the function reached the end
+	SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE,                		 //!< means that a content type was found
 	SEBS_PARSE_HTTP_EVENT_METHOD_PARSED,                     //!< means that the method string of the http header was parsed
 	SEBS_PARSE_HTTP_EVENT_ACTION_PARSED,                     //!< means that the action (url, uri string) was parsed
 

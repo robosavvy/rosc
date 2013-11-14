@@ -40,8 +40,8 @@ typedef struct
 	uint8_t *buffer;
 	size_t buffer_size;
 	msggen_message_type_t type;
-	void **header_data_ptr;
-	void **payload_data_ptr;
+	const void **header_data_ptr;
+	const void **payload_data_ptr;
 	msg_gen_command_t cmds;
 	bool finished;
 }sebs_msggen_t;

@@ -36,6 +36,7 @@
 #include <rosc/system/status.h>
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
 #include <rosc/com/ros_handler.h>
+#include <string.h>
 
 #define RESPOND()\
 hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
@@ -362,6 +363,47 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
+
+			switch(http_event)
+			{
+				case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH_TOO_LONG:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_LENGTH:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_REQUEST:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
+
+				break;
+
+				case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
+
+				break;
+
+				default:
+
+				break;
+			}
+
+
 // ///////////////////////////
 			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;
 			pdata->next_parser.parser_data=(void *)(&hdata->gen);

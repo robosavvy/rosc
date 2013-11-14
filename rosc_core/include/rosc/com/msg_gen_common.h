@@ -162,13 +162,13 @@ typedef struct msg_gen_command_t
 {
 	msg_gen_type_t * header;
 	msg_gen_type_t * payload;
-	void ** header_data;
-	void ** payload_data;
+	const void ** header_data;
+	const void ** payload_data;
 
 	msg_gen_mode_t submode;
 		uint8_t def_state;
 		const msg_gen_type_t *type;
-		void** data;
+		const void** data;
 
 		struct
 		{
@@ -198,7 +198,7 @@ typedef struct msg_gen_command_t
 			msg_gen_size_mode mode;
 			bool payload_size_available;
 			const msg_gen_type_t *type;
-			void **data;
+			const void **data;
 			uint32_t payload_size;
 			uint32_t rosrpc_size;
 			uint32_t *selectedSize;

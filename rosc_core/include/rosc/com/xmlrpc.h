@@ -229,7 +229,7 @@ typedef struct
 		sebs_parse_xml_data_t xml;
 		sebs_msggen_t gen;
 	};
-		void * genPayloadData[5];
+		const void * genPayloadData[5];
 		sebs_parse_url_data_t url;
 
 
