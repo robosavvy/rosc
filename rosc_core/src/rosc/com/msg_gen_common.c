@@ -95,7 +95,9 @@ msg_gen_type_t rosrpc_topic_init[]=
 
 	msg_gen_type_t xmlrpc_hd_response[]=
 	{
-		MSG_TYPE_VAL_HTTP1_0, MSG_TYPE_SPACE, MSG_TYPE_VAL_200_OK,
+		MSG_TYPE_VAL_HTTP1_0,
+		MSG_TYPE_SPACE,
+		MSG_TYPE_VAL_200_OK,
 		MSG_TYPE_DESCRIPTOR_END,
 
 		MSG_TYPE_DESCRIPTOR_SERVER,
@@ -114,6 +116,16 @@ msg_gen_type_t rosrpc_topic_init[]=
 			MSG_TYPE_PAYLOAD_SIZE_STRING,
 		MSG_TYPE_DESCRIPTOR_END,
 		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
+	};
+
+	msg_gen_type_t xmlrpc_msg_http_error[]=
+	{
+		MSG_TYPE_OPEN_TAG_HTML,
+			MSG_TYPE_OPEN_TAG_BODY,
+				MSG_TYPE_STRING, //User readable error message
+			MSG_TYPE_CLOSE_TAG_BODY,
+		MSG_TYPE_CLOSE_TAG_HTML,
+		MSG_TYPE_MESSAGE_END,
 	};
 
 

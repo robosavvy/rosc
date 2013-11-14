@@ -215,6 +215,7 @@ extern msg_gen_type_t xmlrpc_hd_response[];
 extern msg_gen_type_t xmlrpc_msg_request[];
 extern msg_gen_type_t xmlrpc_msg_response[];
 extern msg_gen_type_t xmlrpc_msg_error[];
+extern msg_gen_type_t xmlrpc_msg_http_error[];
 
 
 #define XMLRPC_REQ_CALLERID_ONLY(COMMAND)\
@@ -315,5 +316,9 @@ extern msg_gen_type_t xmlrpc_msg_error[];
 		xmlrpc_msg_response[26]=MSG_TYPE_SKIP_ENTRIES;\
 		xmlrpc_msg_response[33]=MSG_TYPE_SKIP_ENTRIES;\
 		xmlrpc_msg_response[40]=MSG_TYPE_SKIP_ENTRIES;
+
+#define XMLRPC_RESP_HD()\
+		xmlrpc_hd_response[2]=MSG_TYPE_VAL_200_OK;\
+		xmlrpc_hd_response[8]=MSG_TYPE_VAL_TEXT_XML
 
 #endif /* MSG_GEN_COMMON_H_ */

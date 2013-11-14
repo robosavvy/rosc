@@ -1,5 +1,6 @@
 
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
+#include <rosc/debug/debug_out.h>
 
 sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 {
@@ -17,22 +18,22 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		fdata->cmds.payload_data=fdata->payload_data_ptr;
 
 		switch (fdata->type) {
+		case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER:
 		case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER:
+		case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
 				fdata->cmds.header=xmlrpc_hd_request;
 				fdata->cmds.payload=xmlrpc_msg_request;
 				break;
 
 
-			case MSGGEN_TYPE_XMLRPC_ERROR:
-				fdata->cmds.header=xmlrpc_hd_response;
-				fdata->cmds.payload=xmlrpc_msg_error;
-				break;
+		case MSGGEN_TYPE_XMLRPC_ERROR:
 
-			case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
+			break;
 
-				break;
-			default:
-				break;
+		case MSGGEN_TYPE_HTTP_ERROR:
+			fdata->cmds.header=xmlrpc_hd_response;
+			fdata->cmds.payload=xmlrpc_msg_http_error;
+			break;
 		}
 
 		fdata->cmds.type = fdata->cmds.header;
@@ -49,6 +50,7 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		if(!fdata->finished)
 		{
 			fdata->first_run=false;
+			XMLRPC_RESP_HD();
 			XMLRPC_REQ_RESET();
 			XMLRPC_RESP_RESET();
 			switch(fdata->type)
@@ -57,7 +59,21 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
 					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
 					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[42]=MSG_TYPE_NONE;
+
+					break;
+				case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER:
+					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
+					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
+					break;
+
+				case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
+
+					break;
+
+				case MSGGEN_TYPE_HTTP_ERROR:
+					xmlrpc_hd_response[2]=MSG_TYPE_STRING;
+					xmlrpc_hd_response[8]=MSG_TYPE_VAL_TEXT_HTML;
 					break;
 
 				default:

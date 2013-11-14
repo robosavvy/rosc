@@ -258,8 +258,8 @@ void rosc_spin()
 								break;
 							}
 						}
-					}
-					while(s>0);
+					}while(s>0 && con_sock->state!=SOCKET_STATE_INACTIVE);
+
 					if(had_data)
 						printf("\n");
 				}

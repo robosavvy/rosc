@@ -166,19 +166,37 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 
 		case SOCKET_SIG_CONNECTED:
+		{
 			DEBUG_PRINT_STR("CONNECTED");
-			hdata->xmlrpc_state = XMLRPC_STATE_SENDING;
+
+
+			hdata->xmlrpc_state = XMLRPC_STATE_SENDING_REQUEST;
 			hdata->result_handling =XMLRPC_RESULT_REQUEST_SENT;
 
 
-
+			msggen_message_type_t type;
 			switch(hdata->client_type)
 			{
-			case XMLRPC_CLIENT_TYPE_REGISTER:
 			case XMLRPC_CLIENT_TYPE_UNREGISTER:
-				hdata->genPayloadData[0]=((ros_iface_init_t*)idata->iface->init_data)->iface_name; //Topic/Service
-				hdata->genPayloadData[1]=((ros_iface_init_t*)idata->iface->init_data)->type_name; //Message/ServiceType
+			case XMLRPC_CLIENT_TYPE_REGISTER:
+				{
+					hdata->genPayloadData[0]=((ros_iface_init_t*)idata->iface->init_data)->iface_name; //Topic/Service
+					hdata->genPayloadData[1]=((ros_iface_init_t*)idata->iface->init_data)->type_name; //Message/ServiceType
 
+					switch(((ros_iface_init_t*)idata->iface->init_data)->ros_type)
+					{
+						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
+							type = (hdata->client_type == XMLRPC_CLIENT_TYPE_REGISTER) ?
+									MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER :
+									MSGGEN_TYPE_XMLRPC_REQ_UNREGISTER_PUBLISHER;
+							break;
+						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
+							type = (hdata->client_type == XMLRPC_CLIENT_TYPE_REGISTER) ?
+									MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER :
+									MSGGEN_TYPE_XMLRPC_REQ_UNREGISTER_SUBSCRIBER;
+								break;
+					}
+				}
 				break;
 			case XMLRPC_CLIENT_TYPE_REQUEST_TOPIC:
 					//TODO
@@ -186,16 +204,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			}
 
 
-
-			//MESSAGEGEN
-			pdata->next_parser.parser_function =
-					(sebs_parse_function_t) &sebs_msggen;\
-			pdata->next_parser.parser_data = (void *) (&hdata->gen);\
-			hdata->gen.buffer_size = rosc_static_socket_additional_data_size;\
-			hdata->gen.buffer = pdata->additional_storage;\
-			hdata->gen.type = MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER;\
-			hdata->gen.payload_data_ptr = hdata->genPayloadData;
-			return (SEBS_PARSE_RETURN_INIT);
+			SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, type, 0, hdata->genPayloadData);
+		}
 			break;
 
 
@@ -363,6 +373,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
+			hdata->xmlrpc_state = XMLRPC_STATE_ERROR;
+
+			enum
+			{
+				HTTP_HEADER_STDTEXT(HD_TXT)
+			};
 
 			switch(http_event)
 			{
@@ -375,7 +391,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				break;
 
 				case SEBS_PARSE_HTTP_EVENT_ERROR_ACTION_NOT_FOUND:
-
+					hdata->genPayloadData[0]=http_header_stdtext[HD_TXT_VAL_404_NOT_FOUND];
 				break;
 
 				case SEBS_PARSE_HTTP_EVENT_ERROR_VERSION_NOT_SUPPORTED:
@@ -387,7 +403,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				break;
 
 				case SEBS_PARSE_HTTP_EVENT_ERROR_METHOD_NOT_ALLOWED:
-
+					hdata->genPayloadData[0]=http_header_stdtext[HD_TXT_VAL_501_METHOD_NOT_IMPLEMENTED];
 				break;
 
 				case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
@@ -402,19 +418,15 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 				break;
 			}
+			hdata->xmlrpc_state = XMLRPC_STATE_ERROR;
+			SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_HTTP_ERROR, hdata->genPayloadData, hdata->genPayloadData);
 
-
-// ///////////////////////////
-			pdata->next_parser.parser_function=(sebs_parse_function_t) &sebs_msggen;
-			pdata->next_parser.parser_data=(void *)(&hdata->gen);
-			hdata->gen.buffer_size=rosc_static_socket_additional_data_size;
-			hdata->gen.buffer=pdata->additional_storage;
-			hdata->gen.type=MSGGEN_TYPE_XMLRPC_ERROR;
-			return (SEBS_PARSE_RETURN_INIT);
+			break;
 
 			default:
 			break;
 		}
+
 	}
 
 	/* *********************
@@ -742,6 +754,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			default:
 			break;
 		}
+	}
+	else if(hdata->xmlrpc_state == XMLRPC_STATE_ERROR)
+	{
+		DEBUG_PRINT_STR("XMLRPC ERROR CLOSE");
+		pdata->len=0;
+		pdata->out_len=SOCKET_SIG_RELEASE;
 	}
 
 	return (SEBS_PARSE_RETURN_GO_AHEAD);

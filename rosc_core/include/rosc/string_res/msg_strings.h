@@ -40,7 +40,7 @@
 /**
  * Length of the string array http_header_stdtext
  */
-#define HTTP_HEADER_STDTEXT_LEN 	14
+#define HTTP_HEADER_STDTEXT_LEN 	17
 
 /**
  * Macro for inserting some standard values for http headers string numbers into any enum
@@ -50,6 +50,8 @@
 	 ENUM ## _VAL_ZERO, \
 	 ENUM ## _VAL_ONE, \
 	 ENUM ## _VAL_200_OK, \
+	 ENUM ## _VAL_404_NOT_FOUND, \
+	 ENUM ## _VAL_501_METHOD_NOT_IMPLEMENTED, \
 	 ENUM ## _VAL_BASEHTTP_ROSC_NODELIB, \
 	 ENUM ## _VAL_HTTP1_0, \
 	 ENUM ## _VAL_HTTP1_1, \
@@ -58,6 +60,7 @@
 	 ENUM ## _VAL_HTTP_URL_HEAD, \
 	 ENUM ## _VAL_PUBLICATIONS, \
 	 ENUM ## _VAL_SUBSCRIBTIONS, \
+	 ENUM ## _VAL_TEXT_HTML, \
 	 ENUM ## _VAL_ENCODING_PLAIN, \
 	 ENUM ## _VAL_TEXT_XML
 
@@ -130,17 +133,19 @@ extern const char *xmlrpc_http_methods[];
 /**
  * Length of the string array xmlrpc_tag_strings
  */
-#define XMLRPC_TAG_STRINGS_LEN 	18
+#define XMLRPC_TAG_STRINGS_LEN 	22
 
 /**
  * Macro for inserting standard XMLRPC tags string numbers into any enum
  */
 #define XMLRPC_TAG_STRINGS(ENUM) \
 	 ENUM ## _TAG_ARRAY, \
+	 ENUM ## _TAG_BODY, \
 	 ENUM ## _TAG_BOOLEAN, \
 	 ENUM ## _TAG_DATA, \
 	 ENUM ## _TAG_DOUBLE, \
 	 ENUM ## _TAG_FAULT, \
+	 ENUM ## _TAG_HTML, \
 	 ENUM ## _TAG_I4, \
 	 ENUM ## _TAG_INT, \
 	 ENUM ## _TAG_MEMBER, \
@@ -148,10 +153,12 @@ extern const char *xmlrpc_http_methods[];
 	 ENUM ## _TAG_METHODNAME, \
 	 ENUM ## _TAG_METHODRESPONSE, \
 	 ENUM ## _TAG_NAME, \
+	 ENUM ## _TAG_P, \
 	 ENUM ## _TAG_PARAM, \
 	 ENUM ## _TAG_PARAMS, \
 	 ENUM ## _TAG_STRING, \
 	 ENUM ## _TAG_STRUCT, \
+	 ENUM ## _TAG_TITLE_HEAD, \
 	 ENUM ## _TAG_VALUE, \
 	 ENUM ## _TAG_XMLDEF
 

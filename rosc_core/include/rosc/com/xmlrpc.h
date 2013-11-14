@@ -60,7 +60,9 @@ typedef enum
 
 typedef enum
 {
-	XMLRPC_STATE_SENDING,
+	XMLRPC_STATE_SENDING_REQUEST,
+	XMLRPC_STATE_SENDING_RESPONSE,
+	XMLRPC_STATE_ERROR,
 	XMLRPC_STATE_CONNECT,
 	XMLRPC_STATE_SEND_REQUEST,
 	XMLRPC_STATE_HTTP,
@@ -229,6 +231,7 @@ typedef struct
 		sebs_parse_xml_data_t xml;
 		sebs_msggen_t gen;
 	};
+	    const void * genHeaderData[1];
 		const void * genPayloadData[5];
 		sebs_parse_url_data_t url;
 

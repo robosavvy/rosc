@@ -41,6 +41,8 @@ const char *http_header_stdtext[] =
 	"0",
 	"1",
 	"200 OK",
+	"404 Not found",
+	"501 Method Not Implemented",
 	"BaseHTTP/ROSc-NodeLib",
 	"HTTP/1.0",
 	"HTTP/1.1",
@@ -49,6 +51,7 @@ const char *http_header_stdtext[] =
 	"http://",
 	"publications",
 	"subscribtions",
+	"text/html",
 	"text/plain",
 	"text/xml"
 };
@@ -80,10 +83,12 @@ const char *xmlrpc_http_methods[] =
 const char *xmlrpc_tag_strings[] =
 {
 	"array",
+	"body",
 	"boolean",
 	"data",
 	"double",
 	"fault",
+	"html",
 	"i4",
 	"int",
 	"member",
@@ -91,10 +96,12 @@ const char *xmlrpc_tag_strings[] =
 	"methodName",
 	"methodResponse",
 	"name",
+	"p",
 	"param",
 	"params",
 	"string",
 	"struct",
+	"title head",
 	"value",
 	"xml"
 };
