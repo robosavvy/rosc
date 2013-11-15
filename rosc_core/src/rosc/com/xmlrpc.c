@@ -38,6 +38,12 @@
 #include <rosc/com/ros_handler.h>
 #include <string.h>
 
+
+			enum
+			{
+				HTTP_HEADER_STDTEXT(HD_TXT)
+			};
+
 #define RESPOND()\
 hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 
@@ -319,6 +325,14 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 		case SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE:
 			DEBUG_PRINT_STR("---HTTP--->SEBS_PARSE_HTTP_EVENT_CONTENT_TYPE");
+			if(hdata->http.seekstring.result != HTTP_VAL_TEXT_XML)
+			{
+				DEBUG_PRINT_STR("WRONG CONTENT");
+
+				hdata->genPayloadData[0]=http_header_stdtext[HD_TXT_VAL_404_NOT_FOUND];
+				SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_HTTP_ERROR, hdata->genPayloadData, hdata->genPayloadData);
+			}
+
 			break;
 
 		case SEBS_PARSE_HTTP_EVENT_METHOD_PARSED:
@@ -341,6 +355,11 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				SEBS_PARSE_NUMBERPARSE_INIT(pdata, hdata->http.numberparse, 3,
 						false, 10)
 ;				break;
+
+			case XMLRPC_DESCRIPTOR_CONTENT_TYPE:
+				DEBUG_PRINT_STR("CONTENT_TYPE");
+				break;
+
 			}
 			break;
 
@@ -377,10 +396,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
 			hdata->xmlrpc_state = XMLRPC_STATE_ERROR;
 
-			enum
-			{
-				HTTP_HEADER_STDTEXT(HD_TXT)
-			};
+
 
 			switch(http_event)
 			{
@@ -757,7 +773,9 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 		}
 	}
-	else if(hdata->xmlrpc_state == XMLRPC_STATE_ERROR)
+
+
+	if(hdata->xmlrpc_state == XMLRPC_STATE_ERROR)
 	{
 		DEBUG_PRINT_STR("XMLRPC ERROR CLOSE");
 		pdata->len=0;

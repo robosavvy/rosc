@@ -184,7 +184,6 @@ xmlrpc_http_methods:
     'METHOD'
   stringlist: {
     'POST',
-    'GET',
   }
 
 
@@ -196,7 +195,6 @@ xmlrpc_http_actions:
     'ACTION'
   stringlist: {
     '':ROOT,
-    'test',
     'RPC2'
   }
 

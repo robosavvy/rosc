@@ -115,13 +115,12 @@ extern const char *xmlrpc_attribute_strings[];
 /**
  * Length of the string array xmlrpc_http_methods
  */
-#define XMLRPC_HTTP_METHODS_LEN 	2
+#define XMLRPC_HTTP_METHODS_LEN 	1
 
 /**
  * Macro for inserting method strings string numbers into any enum
  */
 #define XMLRPC_HTTP_METHODS(ENUM) \
-	 ENUM ## _METHOD_GET, \
 	 ENUM ## _METHOD_POST
 
 /**
@@ -281,15 +280,14 @@ extern const char *xmlrpc_url_scheme_string[];
 /**
  * Length of the string array xmlrpc_http_actions
  */
-#define XMLRPC_HTTP_ACTIONS_LEN 	3
+#define XMLRPC_HTTP_ACTIONS_LEN 	2
 
 /**
  * Macro for inserting contains available actions for http requests string numbers into any enum
  */
 #define XMLRPC_HTTP_ACTIONS(ENUM) \
 	 ENUM ## _ACTION_ROOT, \
-	 ENUM ## _ACTION_RPC2, \
-	 ENUM ## _ACTION_TEST
+	 ENUM ## _ACTION_RPC2
 
 /**
  * This array contains the strings for contains available actions for http requests

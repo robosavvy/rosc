@@ -76,7 +76,6 @@ const char *xmlrpc_attribute_strings[] =
 
 const char *xmlrpc_http_methods[] =
 {
-	"GET",
 	"POST"
 };
 
@@ -171,8 +170,7 @@ const char *xmlrpc_url_scheme_string[] =
 const char *xmlrpc_http_actions[] =
 {
 	"",
-	"RPC2",
-	"test"
+	"RPC2"
 };
 
 const char *xmlrpc_xml_boolean_strings[] =
