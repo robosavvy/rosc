@@ -246,6 +246,7 @@ sebs_parse_return_t sebs_parse_http(sebs_parser_data_t* pdata)
 				break;
 
 			case '\n':
+			case '\r':
 				switch (fdata->state)
 				{
 				case SEBS_PARSE_HTTP_STATE_FIELD:

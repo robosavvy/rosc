@@ -43,12 +43,12 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 		fdata->byteorder_pos=0;
 	}
 
-	const char *sep=fdata->endChrs;
+
 	int8_t *correct=fdata->byteOrderCorrection;
 	char *buffer_c=fdata->buffer;
 
 #ifdef __DEBUG__PRINTS__
-	if(sep==0 && fdata->max_len==0)
+	if(fdata->endChrs==0 && fdata->max_len==0)
 	{
 		DEBUG_PRINT_STR("ERROR copy2buf -> Will copy an endless amount of chars!!");
 		while(1);
@@ -57,6 +57,7 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 
 	while(*pdata->len > 0)
 	{
+		const char *sep=fdata->endChrs;
 		bool isEndChar=false;
 		if(sep!=0)
 		{

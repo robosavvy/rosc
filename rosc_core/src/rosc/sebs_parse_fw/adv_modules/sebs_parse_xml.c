@@ -36,6 +36,7 @@ sebs_parse_return_t sebs_parse_xml(sebs_parser_data_t* pdata)
 	sebs_parse_xml_data_t *fdata=(sebs_parse_xml_data_t *)pdata->current_parser.parser_data;
 	if(pdata->function_init)
 	{
+		DEBUG_PRINT_STR("XML PARSE INIT");
 		pdata->function_init=false;
 		fdata->depth=0;\
 		fdata->processed_bytes=0;\

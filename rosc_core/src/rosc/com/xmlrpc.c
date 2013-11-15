@@ -82,6 +82,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
 					XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
 					XMLRPC_HTTP_METHODS_LEN);
+			hdata->xmlrpc_state=XMLRPC_STATE_HTTP;
 		}
 		else if (idata->type == XMLRPC_TYPE_CLIENT)
 		{
@@ -170,7 +171,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT_STR("CONNECTED");
 
 
-			hdata->xmlrpc_state = XMLRPC_STATE_SENDING_REQUEST;
+			hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 			hdata->result_handling =XMLRPC_RESULT_REQUEST_SENT;
 
 
@@ -201,6 +202,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case XMLRPC_CLIENT_TYPE_REQUEST_TOPIC:
 					//TODO
 				break;
+
 			}
 
 
