@@ -26,9 +26,12 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 				break;
 
 
-		case MSGGEN_TYPE_XMLRPC_ERROR:
-
+		case MSGGEN_TYPE_XMLRPC_ACK:
+			fdata->cmds.header=xmlrpc_hd_response;
+			fdata->cmds.payload=xmlrpc_msg_response;
 			break;
+
+
 
 		case MSGGEN_TYPE_HTTP_ERROR:
 			fdata->cmds.header=xmlrpc_hd_response;
@@ -50,7 +53,7 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 		if(!fdata->finished)
 		{
 			fdata->first_run=false;
-			XMLRPC_RESP_HD();
+			XMLRPC_RESP_HD_RESET();
 			XMLRPC_REQ_RESET();
 			XMLRPC_RESP_RESET();
 			switch(fdata->type)
@@ -69,8 +72,10 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 					xmlrpc_msg_request[42]=MSG_TYPE_NONE;
 					break;
 
-				case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
+				case MSGGEN_TYPE_XMLRPC_ACK:
+					break;
 
+				case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_ERROR:

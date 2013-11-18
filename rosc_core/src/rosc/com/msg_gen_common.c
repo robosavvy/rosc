@@ -118,6 +118,8 @@ msg_gen_type_t rosrpc_topic_init[]=
 		MSG_TYPE_DESCRIPTOR_HTTP_HEADER_END,
 	};
 
+
+
 	msg_gen_type_t xmlrpc_msg_http_error[]=
 	{
 		MSG_TYPE_OPEN_TAG_HTML,

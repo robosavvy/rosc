@@ -62,7 +62,7 @@ typedef enum
 {
 	XMLRPC_STATE_SENDING_REQUEST,
 	XMLRPC_STATE_SENDING_RESPONSE,
-	XMLRPC_STATE_ERROR,
+	XMLRPC_STATE_CLOSE,
 	XMLRPC_STATE_CONNECT,
 	XMLRPC_STATE_SEND_REQUEST,
 	XMLRPC_STATE_HTTP,
@@ -188,8 +188,7 @@ typedef struct
 {
 
 	xmlrpc_t xmlrpc_type; //!< type (server or client)
-	xmlrpc_client_type_t client_type;
-
+	xmlrpc_client_type_t client_type; //!< stores type for client mode
 
 	xmlrpc_state_t xmlrpc_state;	//!< state of the handler
 	xmlrpc_result_handling_t result_handling; //!< if the handler called a function this must be set to specify handling of the result
@@ -199,26 +198,16 @@ typedef struct
 	xmlrpc_http_methods_t method; //!< the method requested
 	xmlrpc_http_actions_t action; //!< the action requested
 
-
 	//XML variables
 	uint32_t xml_length;	//!< storage for the xml length from the header
-	xmlrpc_tag_state_t tag_state;
-	xmlrpc_type_tag_t type_tag;
+	xmlrpc_tag_state_t tag_state; //!< defines where we are inside a xml document
+	xmlrpc_type_tag_t type_tag; //!< what is the current tag type
 	uint8_t param_no; //!< number of the param tag
-	uint32_t array_level;
-	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING];
-	xmlrpc_array_state_t array_state;
-	xmlrpc_ros_methodname_t rpc_methodname;
-
-
-#ifndef ROSC_NO_CALLERID_EXTRACTION
-#ifdef __SYSTEM_HAS_MALLOC__
-#error there is stuff todo
-#else
-		char caller_id[__NODENAME_MAX_LEN__];
-		sebs_parse_copy2buffer_data_t copy2buffer;
-#endif
-#endif
+	uint32_t array_level; //!< depth inside nested xmlrpc arrays
+	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING]; //!<
+	xmlrpc_array_state_t array_state; //!< stores the current state of the array
+	xmlrpc_ros_methodname_t rpc_methodname; //!< stores the current methodname
+	char caller_id[__NODENAME_MAX_LEN__]; //!< stores the id of the caller
 
 	/**
 	 * This union contains data from the main
@@ -226,14 +215,15 @@ typedef struct
 	 */
 	union
 	{
-		socket_connect_data_t connect;
-		sebs_parse_http_data_t http;
-		sebs_parse_xml_data_t xml;
-		sebs_msggen_t gen;
+		socket_connect_data_t connect; /*!< connection handler state*/
+		sebs_parse_http_data_t http; /*!< http parser state*/
+		sebs_parse_xml_data_t xml; /*!< xml parser state*/
+		sebs_msggen_t gen; /*!< message generation state*/
 	};
-	    const void * genHeaderData[1];
-		const void * genPayloadData[5];
-		sebs_parse_url_data_t url;
+
+	const void * genHeaderData[1];
+	const void * genPayloadData[5]; /*!< pointers to payload data for message generation*/
+	sebs_parse_copy2buffer_data_t copy2buffer; //!< stores state for copying data into buffer
 
 
 }xmlrpc_data_t;

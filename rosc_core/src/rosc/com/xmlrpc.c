@@ -36,6 +36,7 @@
 #include <rosc/system/status.h>
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
 #include <rosc/com/ros_handler.h>
+#include <rosc/system/eth.h>
 #include <string.h>
 
 
@@ -265,19 +266,17 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT(STR,"caller_id",hdata->caller_id);
 			break;
 
-		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
-			DEBUG_PRINT(INT,"Port",hdata->url.port);
-			DEBUG_PRINT(STR,"Scheme",hdata->url.scheme_list[hdata->url.url_scheme]);
-			DEBUG_PRINT(STR,"Hostname",hdata->url.hostname_buf);
-			DEBUG_PRINT(INT,"RESULT",hdata->url.result);
-			break;
-
 		case XMLRPC_RESULT_REQUEST_SENT:
 			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
 					SEBS_PARSE_HTTP_RESPONSE_INIT, xmlrpc_http_descriptors,
 					XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
 					XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
 					XMLRPC_HTTP_METHODS_LEN);
+			break;
+
+		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
+			DEBUG_PRINT_STR("TOPIC NAME:");
+				DEBUG_PRINT_STR((char*)pdata->additional_storage);
 			break;
 
 		default:
@@ -394,7 +393,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case SEBS_PARSE_HTTP_EVENT_ERROR_CONTENT_ENCODING:
 			case SEBS_PARSE_HTTP_EVENT_ERROR_BAD_RESPONSE:
 			DEBUG_PRINT_STR("---HTTP--->ERRORs...");
-			hdata->xmlrpc_state = XMLRPC_STATE_ERROR;
+			hdata->xmlrpc_state = XMLRPC_STATE_CLOSE;
 
 
 
@@ -436,7 +435,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 				break;
 			}
-			hdata->xmlrpc_state = XMLRPC_STATE_ERROR;
+			hdata->xmlrpc_state = XMLRPC_STATE_CLOSE;
 			SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_HTTP_ERROR, hdata->genPayloadData, hdata->genPayloadData);
 
 			break;
@@ -584,6 +583,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 				switch (hdata->xml.tags[hdata->xml.depth])
 				{
+
 					case XMLRPC_TAG_VALUE:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
 							&& hdata->xml.depth == 4)
@@ -636,6 +636,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
 							&& hdata->xml.depth == 1)
 					hdata->tag_state = XMLRPC_TAG_STATE_NONE;
+
+
+					if(hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_METHODCALL)
+					{
+						hdata->xmlrpc_state=XMLRPC_STATE_CLOSE;
+						SEBS_PARSE_MSG_GEN(pdata, hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_ACK,0,0);
+					}
 					break;
 
 					case XMLRPC_TAG_STRING:
@@ -727,6 +734,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							 */
 							case XMLRPC_METHODNAME_PARAMUPDATE:
 							break;
+
+
 							case XMLRPC_METHODNAME_PUBLISHERUPDATE:
 							//Second parameter is topicname
 							if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
@@ -736,7 +745,11 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								if(hdata->type_tag == XMLRPC_TYPE_TAG_NONE
 										|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
 								{
-									DEBUG_PRINT_STR("TOPIC");
+
+									DEBUG_PRINT_STR("TOPIC --- ");
+									//TODO size of callerid
+									SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,64,"<",false,true,0);
+									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
 								}
 								else
 								{
@@ -751,8 +764,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							)
 							{
 								DEBUG_PRINT_STR("A PUBLISHER");
-								hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
-								SEBS_PARSE_URL_INIT(pdata,hdata->url,0,xmlrpc_url_scheme_string,XMLRPC_URL_SCHEME_STRING_LEN);
+
 							}
 							break;
 							case XMLRPC_METHODNAME_REQUESTTOPIC:
@@ -775,9 +787,9 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 	}
 
 
-	if(hdata->xmlrpc_state == XMLRPC_STATE_ERROR)
+	if(hdata->xmlrpc_state == XMLRPC_STATE_CLOSE)
 	{
-		DEBUG_PRINT_STR("XMLRPC ERROR CLOSE");
+		DEBUG_PRINT_STR("XMLRPC CLOSE");
 		pdata->len=0;
 		pdata->out_len=SOCKET_SIG_RELEASE;
 	}
