@@ -135,7 +135,7 @@ void rosc_receive_by_socketid(uint32_t socket_id, uint8_t *buffer, uint32_t len)
 bool iface_list_insert(iface_t *interface)
 {
 	iface_t* cur=interface_list_start;
-	interface->next=0;
+
 
 
 	if(cur)//Does the list already contain elements?
@@ -146,6 +146,7 @@ bool iface_list_insert(iface_t *interface)
 		if(cur != interface)
 		{
 			cur->next=interface;
+			interface->next=0;
 			return(0);
 		}
 		else
