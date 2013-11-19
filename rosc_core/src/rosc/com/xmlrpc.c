@@ -87,17 +87,18 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		if (pdata->init_data == 0)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
+			hdata->xmlrpc_type = XMLRPC_TYPE_SERVER;
+			hdata->xmlrpc_state=XMLRPC_STATE_HTTP;
 			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
 					SEBS_PARSE_HTTP_REQUEST_INIT, xmlrpc_http_descriptors,
 					XMLRPC_HTTP_DESCRIPTORS_LEN, xmlrpc_http_actions,
 					XMLRPC_HTTP_ACTIONS_LEN, xmlrpc_http_methods,
 					XMLRPC_HTTP_METHODS_LEN);
-			hdata->xmlrpc_state=XMLRPC_STATE_HTTP;
 		}
 		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
-
+			hdata->xmlrpc_type = XMLRPC_TYPE_CLIENT;
 
 //			switch(hdata->rpc_methodname)
 //			{
