@@ -40,10 +40,10 @@
 #include <string.h>
 
 
-			enum
-			{
-				HTTP_HEADER_STDTEXT(HD_TXT)
-			};
+enum
+{
+	HTTP_HEADER_STDTEXT(HD_TXT)
+};
 
 #define RESPOND()\
 hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
