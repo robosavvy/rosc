@@ -277,6 +277,24 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
 			DEBUG_PRINT_STR("TOPIC NAME:");
 				DEBUG_PRINT_STR((char*)pdata->additional_storage);
+				hdata->iface=interface_list_start;
+				while(hdata->iface)
+				{
+					if(hdata->iface->handler_function == &ros_handler)
+					{
+						ros_iface_init_t* init=(ros_iface_init_t*) hdata->iface->init_data;
+						if(!strcmp(init->iface_name,pdata->additional_storage))
+						{
+							break;
+						}
+					}
+					hdata->iface=hdata->iface->next;
+				}
+
+				if(hdata->iface)
+				{
+					DEBUG_PRINT_STR("FOUND!");
+				}
 			break;
 
 		default:
@@ -747,9 +765,9 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								{
 
 									DEBUG_PRINT_STR("TOPIC --- ");
-									//TODO size of callerid
-									SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,64,"<",false,true,0);
 									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
+									//TODO size of callerid
+									SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,__URI_MAX_LENGTH__,"<",0,true,0);
 								}
 								else
 								{

@@ -99,7 +99,7 @@ sebs_parse_return_t sebs_parse_copy2buffer(sebs_parser_data_t* pdata)
 			{
 				fdata->result=COPY2BUFFER_MAXLEN;
 			}
-			if(fdata->is_string)buffer_c[fdata->cur_pos+1]='\0';
+			if(fdata->is_string)buffer_c[fdata->cur_pos]='\0';
 
 			return (SEBS_PARSE_RETURN_FINISHED); //Finished!
 		}

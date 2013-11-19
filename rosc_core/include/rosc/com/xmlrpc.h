@@ -207,6 +207,12 @@ typedef struct
 	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING]; //!<
 	xmlrpc_array_state_t array_state; //!< stores the current state of the array
 	xmlrpc_ros_methodname_t rpc_methodname; //!< stores the current methodname
+
+	/**
+	 * Pointer to an interface definition struct, used for storing the currents topic interface
+	 */
+	iface_t* iface;
+
 	char caller_id[__NODENAME_MAX_LEN__]; //!< stores the id of the caller
 
 	/**
