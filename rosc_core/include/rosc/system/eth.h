@@ -34,6 +34,7 @@
 
 #include <rosc/system/setup.h>
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
+#include <rosc/system/spec.h>
 #include <rosc/com/ros_msg_common.h>
 #include <rosc/system/status.h>
 #include <rosc/debug/debug_out.h>
@@ -116,11 +117,28 @@ typedef struct socket_connect_info_t
 	port_t remote_port;		/*!< The port of the remote system*/
 	uint32_t hostname_size;	/*!< The length of the hostname*/
 	char *hostname;	/*!< points to the start of the hostname in connect_string*/
-	char url[];		/*!< storage for urls */
+	char url[__URI_MAX_LENGTH__];		/*!< storage for urls */
 }socket_connect_info_t;
 
+/**
+ * This defines the state of the data parsing
+ */
+typedef enum
+{
+	SOCKET_CONNECT_STATE_URL_SCHEME,       //!< State when processing is at URL scheme
+	SOCKET_CONNECT_STATE_URL_IPV4_HOSTNAME,//!< State when processing got an IP or till the current char it can be a IP address
+	SOCKET_CONNECT_STATE_URI_HOSTNAME,     //!< State when processing found out its a hostname
+	SOCKET_CONNECT_STATE_URL_IPV6,         //!< UNUSED state for IPV6 support ...
+	SOCKET_CONNECT_STATE_URL_PORT,         //!< State when processing the port information
+	SOCKET_CONNECT_STATE_CONNECT,          //!< State when information can be used to connect
+	SOCKET_CONNECT_STATE_ERROR,            //!< State when something was not correct
+}socket_connect_state_t;
 
-
+typedef struct
+{
+	socket_connect_state_t state;
+	socket_connect_info_t* connect_data;
+}socket_connect_data_t;
 
 typedef struct lookup_table_entry_t
 {
@@ -145,6 +163,8 @@ size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_
 typedef struct socket_t
 {
 	socket_state_t state;	/*!< If the this socket is used, this value is set to true*/
+
+	socket_connect_info_t connect_info;
 
 	socket_id_t socket_id;/*!< This stores the socket id of the connection on the target system*/
 	struct iface_t *reserved;/*!< If this is not 0 the socket is reserved for a special interface*/

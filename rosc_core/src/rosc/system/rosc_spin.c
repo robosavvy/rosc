@@ -79,6 +79,7 @@ void rosc_spin()
 						con_sock->pdata.init_data=&init;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=&xmlrpc;
+						con_sock->pdata.connection_interface=con_sock;
 
 						//Init here, because the memory can change later ...
 						//TODO probably unnecessary call when later the init of the rpc points only to current iface
@@ -103,7 +104,7 @@ void rosc_spin()
 					 con_sock->pdata.out_len==SOCKET_SIG_CONNECT)
 			{
 				con_sock->pdata.out_len=SOCKET_SIG_NO_DATA;
-				socket_connect_info_t* connect_data=con_sock->pdata.additional_storage;
+				socket_connect_info_t* connect_data=&con_sock->connect_info; //TODO remove that variable
 				if(connect_data->data_state==CONNECT_DATA_STATE_RESOLVE)
 				{
 					connect_data->hostname[connect_data->hostname_size]=0;
@@ -227,7 +228,7 @@ void rosc_spin()
 							{
 							case SOCKET_SIG_CONNECT:
 								{
-									socket_connect_info_t *connect_to=con_sock->pdata.additional_storage;
+									socket_connect_info_t *connect_to=&con_sock->connect_info;  //TODO remove that variable
 									switch(connect_to->data_state)
 									{
 									case CONNECT_DATA_STATE_IPV4:

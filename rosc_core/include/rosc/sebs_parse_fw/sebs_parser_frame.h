@@ -226,6 +226,11 @@ typedef struct sebs_parser_data_t
 	 */
 	int32_t out_len;
 
+	/**
+	 * connection interface (when used for tcp/ip, this is could be the socket)
+	 */
+	void *connection_interface;
+
 } sebs_parser_data_t;
 
 

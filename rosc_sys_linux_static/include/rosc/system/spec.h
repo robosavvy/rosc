@@ -64,7 +64,7 @@ typedef double float64_t;
 #define __LISTENING_SOCKET_MAXIMUM__ 8
 #define __SOCKET_MAXIMUM__ 8
 #define __SOCKET_ID_TYPE__ int32_t
-
+#define __URI_MAX_LENGTH__ 100
 
 //#define __SYSTEM_HAS_MALLOC__  //UNSUPPORTED YET!!!
 

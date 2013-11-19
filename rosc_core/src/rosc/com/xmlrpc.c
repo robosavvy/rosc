@@ -124,12 +124,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			ros_idata->iface_name;
 
 			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
-			socket_connect_info_t *connectdata=pdata->additional_storage;
+			socket_t *socket=pdata->connection_interface;
 
-			strcpy(connectdata->url,master_uri); //TODO ... check if we replace this by our own implementation
-			connectdata->data_state=CONNECT_DATA_STATE_URL;
+			strcpy(socket->connect_info.url,master_uri); //TODO ... check if we replace this by our own implementation
+			socket->connect_info.data_state=CONNECT_DATA_STATE_URL;
 
-			SOCKET_CONNECT_INIT(pdata,hdata->connect,connectdata);
+			SOCKET_CONNECT_INIT(pdata,hdata->connect,&socket->connect_info);
 		}
 		else
 		{
