@@ -194,5 +194,5 @@ int32_t recv_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size)
 
 bool abstract_get_hostname(char * hostname, size_t maxlength)
 {
-	gethostname(hostname,maxlength);
+	return (gethostname(hostname,maxlength));
 }

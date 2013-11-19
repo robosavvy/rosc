@@ -663,5 +663,8 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 		}
 	}
 
+
+	//never reached
+	return (true);
 }
 

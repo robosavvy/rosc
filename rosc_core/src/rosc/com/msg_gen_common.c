@@ -31,9 +31,6 @@
 
 #include <rosc/com/msg_gen_common.h>
 
-static void *header_storage[5];
-static void *payload_storage[5];
-
 
 
 
