@@ -159,7 +159,7 @@ bool iface_list_insert(iface_t *interface)
 	else
 	{
 		interface_list_start=interface;
-		cur=interface;
+		interface->next=0;
 		return(0);
 	}
 }

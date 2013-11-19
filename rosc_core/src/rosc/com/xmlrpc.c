@@ -51,7 +51,10 @@ hdata->xmlrpc_state = XMLRPC_STATE_RESPOND;
 sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 {
 	xmlrpc_data_t *hdata = pdata->handler_data;
-	xmlrpc_init_data_t *idata = (xmlrpc_init_data_t *) pdata->init_data;
+	iface_t *iface=pdata->init_data;
+
+
+
 
 	/* ***************
 	 * Initialization<- TODO data input for first initialization*
@@ -81,7 +84,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->array_level = 0;
 		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
 
-		if (idata->type == XMLRPC_TYPE_SERVER)
+		if (pdata->init_data == 0)
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_SERVER");
 			SEBS_PARSE_HTTP_INIT(pdata, hdata->http,
@@ -91,36 +94,29 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					XMLRPC_HTTP_METHODS_LEN);
 			hdata->xmlrpc_state=XMLRPC_STATE_HTTP;
 		}
-		else if (idata->type == XMLRPC_TYPE_CLIENT)
+		else
 		{
 			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 
 
-			switch(idata->iface->state)
-			{
-			case IFACE_STATE_DO_REGISTER:
-					hdata->client_type=XMLRPC_CLIENT_TYPE_REGISTER;
-					idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
-				break;
-			case IFACE_STATE_DO_UNREGISTER:
-					hdata->client_type=XMLRPC_CLIENT_TYPE_REGISTER;
-					idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
-				break;
+//			switch(hdata->rpc_methodname)
+//			{
+//			case XMLRPC_METHODNAME_REGISTERPUBLISHER:
+//				break;
+//			case XMLRPC_METHODNAME_UNREGISTERPUBLISHER:
+//				break;
+//			case XMLRPC_METHODNAME_REQUESTTOPIC:
+//				break;
+//
+//				default:
+//					/* No suitable state ? - release this ...*/
+//					ROSC_WARNING("ERROR - interface does not have any state, which is meant for a RPC Client!");
+//					pdata->out_len=SOCKET_SIG_RELEASE;
+//					return (SEBS_PARSE_RETURN_GO_AHEAD);
+//					break;
+//			}
 
-			case IFACE_STATE_REGISTERED:
-					hdata->client_type=XMLRPC_CLIENT_TYPE_REQUEST_TOPIC;
-				break;
-
-				default:
-					/* No suitable state ? - release this ...*/
-					ROSC_WARNING("ERROR - interface does not have any state, which is meant for a RPC Client!");
-					pdata->out_len=SOCKET_SIG_RELEASE;
-					return (SEBS_PARSE_RETURN_GO_AHEAD);
-					break;
-			}
-			idata->iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
-
-			ros_iface_init_t * ros_idata=(idata->iface->init_data);
+			ros_iface_init_t * ros_idata=(iface->init_data);
 			ros_idata->iface_name;
 
 			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
@@ -130,10 +126,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			socket->connect_info.data_state=CONNECT_DATA_STATE_URL;
 
 			SOCKET_CONNECT_INIT(pdata,hdata->connect,&socket->connect_info);
-		}
-		else
-		{
-			ROSC_FATAL("ERROR XMLRPC Handler: Unknown XMLRPC type given in init!!!");
 		}
 	}
 
@@ -188,10 +180,10 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			case XMLRPC_CLIENT_TYPE_UNREGISTER:
 			case XMLRPC_CLIENT_TYPE_REGISTER:
 				{
-					hdata->genPayloadData[0]=((ros_iface_init_t*)idata->iface->init_data)->iface_name; //Topic/Service
-					hdata->genPayloadData[1]=((ros_iface_init_t*)idata->iface->init_data)->type_name; //Message/ServiceType
+					hdata->genPayloadData[0]=((ros_iface_init_t*)iface->init_data)->iface_name; //Topic/Service
+					hdata->genPayloadData[1]=((ros_iface_init_t*)iface->init_data)->type_name; //Message/ServiceType
 
-					switch(((ros_iface_init_t*)idata->iface->init_data)->ros_type)
+					switch(((ros_iface_init_t*)iface->init_data)->ros_type)
 					{
 						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
 							type = (hdata->client_type == XMLRPC_CLIENT_TYPE_REGISTER) ?
@@ -277,21 +269,21 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
 			DEBUG_PRINT_STR("TOPIC NAME:");
 				DEBUG_PRINT_STR((char*)pdata->additional_storage);
-				hdata->iface=interface_list_start;
-				while(hdata->iface)
+				iface=interface_list_start;
+				while(iface)
 				{
-					if(hdata->iface->handler_function == &ros_handler)
+					if(iface->handler_function == &ros_handler)
 					{
-						ros_iface_init_t* init=(ros_iface_init_t*) hdata->iface->init_data;
+						ros_iface_init_t* init=(ros_iface_init_t*) iface->init_data;
 						if(!strcmp(init->iface_name,pdata->additional_storage))
 						{
 							break;
 						}
 					}
-					hdata->iface=hdata->iface->next;
+					iface=iface->next;
 				}
 
-				if(hdata->iface)
+				if(iface)
 				{
 					DEBUG_PRINT_STR("FOUND!");
 				}
@@ -519,13 +511,13 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			switch (hdata->xml.tags[hdata->xml.depth])
 			{
 				case XMLRPC_TAG_METHODCALL:
-				if (idata->type == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
+				if (hdata->xmlrpc_type == XMLRPC_TYPE_SERVER && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
 				break;
 				case XMLRPC_TAG_METHODRESPONSE:
-				if (idata->type == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
+				if (hdata->xmlrpc_type == XMLRPC_TYPE_CLIENT && hdata->xml.depth == 1)
 				{
 					hdata->tag_state = XMLRPC_TAG_STATE_METHODRC;
 				}
@@ -697,7 +689,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							XMLRPC_SLAVE_METHODNAMES_LEN, "<,:>/", true,0);
 				}
 
-				if (idata->type == XMLRPC_TYPE_SERVER)
+				if (hdata->xmlrpc_type == XMLRPC_TYPE_SERVER)
 				{
 					//The first field is always the caller_id in every known methodcall
 					//so lets extract as many chars as possible
@@ -792,7 +784,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						}
 					}
 				}
-				else if (idata->type == XMLRPC_TYPE_CLIENT)
+				else if (hdata->xmlrpc_type == XMLRPC_TYPE_CLIENT)
 				{
 
 				}

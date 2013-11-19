@@ -163,17 +163,6 @@ typedef enum
 }xmlrpc_array_state_t;
 
 
-//TODO possible Improvement - should be able to be removed,
-//Instead of the type only the iface variable will define if it is a server or a client
-//on a client it points to a iface struct
-//on a server it is zero.
-//Not sure if this will work out in the end so I am leaving that for now as it is.
-typedef struct
-{
-	xmlrpc_t type;
-	iface_t *iface;
-}xmlrpc_init_data_t;
-
 
 typedef enum
 {
@@ -207,11 +196,6 @@ typedef struct
 	uint32_t array_value_number[XMLRPC_MAX_ARRAY_NESTING]; //!<
 	xmlrpc_array_state_t array_state; //!< stores the current state of the array
 	xmlrpc_ros_methodname_t rpc_methodname; //!< stores the current methodname
-
-	/**
-	 * Pointer to an interface definition struct, used for storing the currents topic interface
-	 */
-	iface_t* iface;
 
 	char caller_id[__NODENAME_MAX_LEN__]; //!< stores the id of the caller
 

@@ -53,9 +53,10 @@ void rosc_spin()
 			//Check for available interface
 			while(con_sock)
 			{
+				/** \todo port reservation for xmlrpc */
 				if(con_sock->state==SOCKET_STATE_INACTIVE
-				   && ( con_sock->reserved == 0 ||
-						con_sock->reserved == iface_rpc_client))
+				   /*&& ( con_sock->reserved == 0 ||
+						con_sock->reserved == iface_rpc_client) */)
 				{
 					break;
 				}
@@ -71,15 +72,20 @@ void rosc_spin()
 				case IFACE_STATE_DO_UNREGISTER:
 					if(iface->handler_function==&ros_handler)
 					{
-						xmlrpc_init_data_t init;
-						init.iface=(iface_t*)iface;
-						init.type=XMLRPC_TYPE_CLIENT;
+						xmlrpc_data_t *hdata=con_sock->pdata.handler_data;
+						hdata->client_type=(iface->state==IFACE_STATE_DO_REGISTER)?
+								XMLRPC_CLIENT_TYPE_REGISTER:
+								XMLRPC_CLIENT_TYPE_UNREGISTER;
+					    iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
+
 
 						con_sock->state=SOCKET_STATE_NOT_CONNECTED;
-						con_sock->pdata.init_data=&init;
+						con_sock->pdata.init_data=iface;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=&xmlrpc;
 						con_sock->pdata.connection_interface=con_sock;
+
+
 
 						//Init here, because the memory can change later ...
 						//TODO probably unnecessary call when later the init of the rpc points only to current iface
