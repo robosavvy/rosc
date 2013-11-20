@@ -268,6 +268,11 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
+			DEBUG_PRINT_STR("URL:");
+			DEBUG_PRINT_STR((char*)pdata->additional_storage);
+			break;
+
+		case XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC:
 			DEBUG_PRINT_STR("TOPIC NAME:");
 				DEBUG_PRINT_STR((char*)pdata->additional_storage);
 				iface=interface_list_start;
@@ -287,8 +292,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				if(iface)
 				{
 					DEBUG_PRINT_STR("FOUND!");
-
-
 				}
 			break;
 
@@ -760,7 +763,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								{
 
 									DEBUG_PRINT_STR("TOPIC --- ");
-									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
+									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC;
 									//TODO size of callerid
 									SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,__URI_MAX_LENGTH__,"<",0,true,0);
 								}
@@ -776,7 +779,11 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 									&& hdata->array_level == 0
 							)
 							{
-								DEBUG_PRINT_STR("A PUBLISHER");
+								hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
+								DEBUG_PRINT_STR("Publisher Update A PUBLISHER");
+								SEBS_PARSE_COPY2BUFFER_INIT(pdata,
+										hdata->copy2buffer, pdata->additional_storage,
+										__URI_MAX_LENGTH__, "<",0,1,0);
 
 							}
 							break;
