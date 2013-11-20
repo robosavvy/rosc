@@ -1219,6 +1219,8 @@ tr.heading h2 {
 	color: #000000;
     text-shadow: 0px 1px 1px rgba(255, 255, 255, 1.0);
     text-decoration: none;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
 }
 
 .tablist li.current a 
@@ -1240,6 +1242,9 @@ tr.heading h2 {
 	color: #000000;
     text-shadow: 0px 1px 1px rgba(255, 255, 255, 1.0);
     text-decoration: none;
+    
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
 }
 
 #titlearea
@@ -1393,4 +1398,12 @@ h2.groupheader {
     color: rgb(50, 50, 0);
     font-weight: bold;
     text-shadow: 0px 1px 1px;
+}
+
+.tablist li {
+    float: left;
+    display: table-cell;
+    background-image: none;
+    line-height: 36px;
+    list-style: none outside none;
 }
