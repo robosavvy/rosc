@@ -1019,12 +1019,7 @@ dl.section dd {
 	border: 0px none;
 }
  
-#projectname
-{
-	font: 300% Tahoma, Arial,sans-serif;
-	margin: 0px;
-	padding: 2px 0px;
-}
+
     
 #projectbrief
 {
@@ -1339,10 +1334,11 @@ a {
 }
 
 #projectname {
-    font: 200% Tahoma,Arial,sans-serif;
+    font: 300% Helvetica,Tahoma,Arial,sans-serif;
     margin: 0px;
-    padding: 2px 0px;
-    color:yellow;
+    padding: 0px 0px;
+    color: yellow;
+    text-shadow: 0 0 0.2em #FFFFFF, 0 0 0.2em #FFFF00;
 }
 
 div.header {
