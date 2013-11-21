@@ -35,6 +35,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/com/ros_msg_common.h>
+#include <rosc/system/eth.h>
 
 
 
@@ -48,6 +49,8 @@ typedef enum
 
 typedef struct
 {
+	iface_t iface;
+	char api_uri[__URI_MAX_LENGTH__];
 	ros_handler_state hstate;
 	bool md5sum_ok;
 	bool iface_ok;

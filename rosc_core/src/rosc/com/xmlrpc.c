@@ -270,29 +270,68 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_URL:
 			DEBUG_PRINT_STR("URL:");
 			DEBUG_PRINT_STR((char*)pdata->additional_storage);
+			if(hdata->iface)
+			{
+				DEBUG_PRINT_STR("CHECKING FOR EXISTING CONNECTION");
+				socket_t *socket=socket_list_start;
+				socket_t *inactive_socket=0;
+
+				while(socket)
+				{
+					if(socket->state!=SOCKET_STATE_INACTIVE)
+					{
+						if(socket->iface->handler_function==&xmlrpc)
+						{
+
+						}
+						else if(socket->iface->handler_function==&ros_handler)
+						{
+
+						}
+					}
+					else if(inactive_socket==0)
+					{
+						inactive_socket=socket;
+					}
+
+
+					socket=socket->next;
+				}
+
+				if(!socket)
+				{
+					DEBUG_PRINT_STR("NEW PUBLISHER");
+					if(inactive_socket)
+					{
+						DEBUG_PRINT_STR("Creating Subscriber");
+
+					}
+
+				}
+				else
+				{
+					DEBUG_PRINT_STR("ALREADY CONNECTED");
+				}
+			}
 			break;
 
 		case XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC:
 			DEBUG_PRINT_STR("TOPIC NAME:");
 				DEBUG_PRINT_STR((char*)pdata->additional_storage);
-				iface=interface_list_start;
-				while(iface)
+				hdata->iface=interface_list_start;
+				while(hdata->iface)
 				{
-					if(iface->handler_function == &ros_handler)
+					if(hdata->iface->handler_function == &ros_handler)
 					{
-						ros_iface_init_t* init=(ros_iface_init_t*) iface->init_data;
+						ros_iface_init_t* init=(ros_iface_init_t*) hdata->iface->init_data;
 						if(!strcmp(init->iface_name,pdata->additional_storage))
 						{
-							DEBUG_PRINT_STR("FOUND!");
+							DEBUG_PRINT_STR("INTERFACE FOUND");
 							break;
 						}
-					}
-					iface=iface->next;
-				}
 
-				if(iface)
-				{
-					DEBUG_PRINT_STR("FOUND!");
+					}
+					hdata->iface=hdata->iface->next;
 				}
 			break;
 

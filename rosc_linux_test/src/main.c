@@ -71,24 +71,7 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
 }
 
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
-//ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
-ros_iface_init_t rosc_static_subscriber_init_sim2__simpleTopic2={"simpleTopic2",\
-                            rosc_static_msg_topic_type__rosc_linux_test__simple2,\
-                            ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,\
-                            rosc_static_msg_buildup__rosc_linux_test__simple2,\
-                            rosc_static_msg_submessage_size_list__rosc_linux_test__simple2__sim2,\
-                            rosc_static_msg_array_size_list__rosc_linux_test__simple2__sim2,\
-                            rosc_static_msg_memory_offsets__rosc_linux_test__simple2__sim2,\
-                            rosc_static_msg_message_definition__rosc_linux_test__simple2,\
-                            rosc_static_msg_md5sum__rosc_linux_test__simple2,\
-                            0,\
-                            &rosc_static_callback_simpleTopic2,\
-                            };\
-iface_t rosc_static_subscriber_sim2__simpleTopic2={\
-           &ros_handler,\
-           &rosc_static_subscriber_init_sim2__simpleTopic2};\
-
-
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
 
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
@@ -129,6 +112,14 @@ int main()
 	printf("Lookup Table Size: (%i entries) %i bytes\n", (int)lookup_table_size , (int)lookup_table_size * (int)sizeof(lookup_table_entry_t));
 	printf("#############################################################\n");
 	printf("\n");
+
+	int i;
+	for(i=0;i<__SOCKET_MAXIMUM__;i++)
+		printf("%x\n",(int)&rosc_static_socket_mem[i]);
+
+
+
+
 
 
 	rosc_init();

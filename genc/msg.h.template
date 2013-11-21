@@ -223,7 +223,7 @@ void rosc_static_callback_## TOPIC(const void* const __msg)\
 ** Subscriber creation macro            **
 *****************************************/                                
 #define ROSC_STATIC_SUBSCRIBER_INIT__@(rosc_name_pack)(USER_TYPE, TOPIC)\
-ros_iface_init_t rosc_static_subscriber_init_##USER_TYPE##__##TOPIC={#TOPIC,\
+ros_iface_init_t rosc_static_subscriber_init_##USER_TYPE##__##TOPIC={ "/" #TOPIC,\
                             @(rosc_pref)_topic_type__@(rosc_name_pack),\
                             ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,\
                             @(rosc_pref)_buildup__@(rosc_name_pack),\

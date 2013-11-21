@@ -215,7 +215,7 @@ typedef struct
 	const void * genHeaderData[1];
 	const void * genPayloadData[5]; /*!< pointers to payload data for message generation*/
 	sebs_parse_copy2buffer_data_t copy2buffer; //!< stores state for copying data into buffer
-
+	iface_t *iface;
 
 }xmlrpc_data_t;
 
