@@ -85,7 +85,7 @@ void rosc_lists_init()
 	interface_list_start=0;
 }
 
-bool iface_listen( iface_t *iface, port_t port_number)
+bool iface_listen( iface_t *iface, port_t *port_number)
 {
 
 	listen_socket_t *cur=listen_socket_list_start;
@@ -99,7 +99,7 @@ bool iface_listen( iface_t *iface, port_t port_number)
 	if(cur->state!=LISTEN_SOCKET_STATE_ACTIVE)
 	{
 		listen_socket_id_t sock;
-		sock=abstract_start_listening_on_port(&port_number);
+		sock=abstract_start_listening_on_port(port_number);
 
 		if(sock==-1)
 		{
@@ -109,8 +109,8 @@ bool iface_listen( iface_t *iface, port_t port_number)
 
 		cur->id=sock;
 		cur->interface=iface;
-		DEBUG_PRINT(INT,"Port opened",port_number)
-		cur->port=port_number;
+		DEBUG_PRINT(INT,"Port opened",*port_number)
+		cur->port=*port_number;
 		cur->state=LISTEN_SOCKET_STATE_ACTIVE;
 	}
 	else

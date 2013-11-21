@@ -283,6 +283,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						ros_iface_init_t* init=(ros_iface_init_t*) iface->init_data;
 						if(!strcmp(init->iface_name,pdata->additional_storage))
 						{
+							DEBUG_PRINT_STR("FOUND!");
 							break;
 						}
 					}

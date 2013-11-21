@@ -64,5 +64,5 @@ void rosc_init()
 	rosc_lists_init();
 
 	iface_list_insert(&rpc_server);
-	iface_listen(&rpc_server, xmlrpc_port);
+	iface_listen(&rpc_server, &xmlrpc_port);
 }
