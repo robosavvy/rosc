@@ -76,11 +76,13 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
+					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REQUESTTOPIC;
+					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[52]=MSG_TYPE_NONE;
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_ERROR:
-					fdata->cmds.header=xmlrpc_hd_response;
-					fdata->cmds.payload=xmlrpc_msg_error;
+
 					break;
 
 				case MSGGEN_TYPE_HTTP_ERROR:

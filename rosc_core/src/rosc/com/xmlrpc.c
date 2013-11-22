@@ -117,15 +117,21 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 //					break;
 //			}
 
-			ros_iface_init_t * ros_idata=(iface->init_data);
-			ros_idata->iface_name;
 
 			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
 			socket_t *socket=pdata->connection_interface;
 
-			strcpy(socket->connect_info.url,master_uri); //TODO ... check if we replace this by our own implementation
-			socket->connect_info.data_state=CONNECT_DATA_STATE_URL;
+			switch(hdata->client_type)
+			{
+				case XMLRPC_CLIENT_TYPE_REGISTER:
+					strcpy(socket->connect_info.url,master_uri); //TODO ... check if we replace this by our own implementation
+				break;
 
+				default:
+					break;
+			}
+
+			socket->connect_info.data_state=CONNECT_DATA_STATE_URL;
 			SOCKET_CONNECT_INIT(pdata,hdata->connect,&socket->connect_info);
 		}
 	}
@@ -200,7 +206,10 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				}
 				break;
 			case XMLRPC_CLIENT_TYPE_REQUEST_TOPIC:
-					//TODO
+
+				//TODO
+				hdata->genPayloadData[0]=((ros_iface_init_t*)iface->init_data)->iface_name; //Topic/Service
+				type =MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC;
 				break;
 
 			}
@@ -282,31 +291,56 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					{
 						if(socket->iface->handler_function==&xmlrpc)
 						{
+							xmlrpc_data_t *hdata = (xmlrpc_data_t*) socket->pdata.handler_data;
 
+							if(hdata->client_type == XMLRPC_CLIENT_TYPE_REQUEST_TOPIC)
+							{
+								if(!strcmp(socket->connect_info.url,(char*)pdata->additional_storage))
+								{
+									DEBUG_PRINT_STR("FOUND XMLRPC REQUESTING TOPIC");
+									break;
+								}
+							}
 						}
 						else if(socket->iface->handler_function==&ros_handler)
 						{
-
+							ros_handler_data_t *hdata = (ros_handler_data_t *) socket->pdata.handler_data;
+							if(!strcmp(hdata->api_uri,(char*)pdata->additional_storage))
+							{
+								DEBUG_PRINT_STR("FOUND TOPIC SUBSCRIBER");
+								break;
+							}
 						}
 					}
 					else if(inactive_socket==0)
 					{
 						inactive_socket=socket;
 					}
-
-
 					socket=socket->next;
 				}
 
-				if(!socket)
+				if(!socket)//No socket found
 				{
 					DEBUG_PRINT_STR("NEW PUBLISHER");
 					if(inactive_socket)
 					{
 						DEBUG_PRINT_STR("Creating Subscriber");
+						strcpy(inactive_socket->connect_info.url,(char*)pdata->additional_storage);
+						inactive_socket->iface=hdata->iface;
 
+						xmlrpc_data_t *n_hdata=inactive_socket->pdata.handler_data;
+						n_hdata->client_type=XMLRPC_CLIENT_TYPE_REQUEST_TOPIC;
+
+						inactive_socket->state=SOCKET_STATE_NOT_CONNECTED;
+					    inactive_socket->pdata.init_data=hdata->iface;
+					    inactive_socket->pdata.handler_init=true;
+					    inactive_socket->pdata.handler_function=&xmlrpc;
+					    inactive_socket->pdata.connection_interface=inactive_socket;
 					}
-
+					else
+					{
+						DEBUG_PRINT_STR("CAN NOT CREATE SUBSCRIBER - NO FREE SOCKET!");
+					}
 				}
 				else
 				{
