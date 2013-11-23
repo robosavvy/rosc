@@ -33,11 +33,7 @@
 #define XMLRPC_C_
 
 #include <rosc/com/xmlrpc.h>
-#include <rosc/system/status.h>
-#include <rosc/sebs_parse_fw/send_modules/msggen.h>
-#include <rosc/com/ros_handler.h>
-#include <rosc/system/eth.h>
-#include <string.h>
+
 
 
 enum
@@ -82,6 +78,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		hdata->method = XMLRPC_METHOD_UNKNOWN;
 		hdata->array_state = XMLRPC_ARRAY_STATE_NONE;
 		hdata->array_level = 0;
+		hdata->array_value_number[0] = 0;
 		hdata->type_tag = XMLRPC_TYPE_TAG_NONE;
 
 		if (pdata->init_data == 0)
@@ -367,6 +364,14 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					}
 					hdata->iface=hdata->iface->next;
 				}
+			break;
+
+		case XMLRPC_RESULT_REQUEST_TOPIC_PORT:
+			if(hdata->xml.numberparse.result == SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR
+			   && hdata->xml.numberparse.last_byte == '<')
+			{
+				DEBUG_PRINT(INT,"Port: ",hdata->xml.numberparse.number);
+			}
 			break;
 
 		default:
@@ -674,6 +679,10 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				switch (hdata->xml.tags[hdata->xml.depth])
 				{
 
+
+
+
+
 					case XMLRPC_TAG_VALUE:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_VALUE
 							&& hdata->xml.depth == 4)
@@ -871,6 +880,48 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				else if (hdata->xmlrpc_type == XMLRPC_TYPE_CLIENT)
 				{
 
+					if(hdata->client_type==XMLRPC_CLIENT_TYPE_REQUEST_TOPIC)
+						if(hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+								&& hdata->param_no == 1
+								&& hdata->array_state == XMLRPC_ARRAY_STATE_VALUE)
+						{
+							switch(hdata->array_level)
+							{
+							case 0:
+								if(hdata->array_value_number[0]==0
+										&&(hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_VALUE
+										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_INT
+										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_I4
+										))
+								{
+									DEBUG_PRINT_STR("ACKNOWLEDGE?");
+								}
+								break;
+
+							case 1:
+								if(hdata->array_value_number[0]==2)
+								{
+									//Sometimes the port can be given on level zero by just an int value
+									//and sometimes its given inside array with TCPROS and HOSTNAME m(
+
+									if(
+										((hdata->array_level == 1 && hdata->array_value_number[1]==2) || hdata->array_level==0)
+										&&
+										(
+										   hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_VALUE
+										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_INT
+										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_I4
+										)
+									)
+								{
+									hdata->result_handling=XMLRPC_RESULT_REQUEST_TOPIC_PORT;
+									SEBS_PARSE_NUMBERPARSE_INIT(pdata, hdata->xml.numberparse, 5,
+												false, 10);
+								}
+								break;
+								}
+							}
+						}
 				}
 				break;
 			}

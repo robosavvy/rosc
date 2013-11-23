@@ -136,7 +136,7 @@ typedef struct
 
 	union
 	{
-		sebs_parse_numberparse_result_t numberparse;
+		sebs_parse_numberparse_data_t numberparse;
 		sebs_parse_seekstring_data_t seekstring;
 	};
 } sebs_parse_xml_data_t;

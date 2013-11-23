@@ -47,8 +47,9 @@
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_numberparse.h>
 #include <rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.h>
 #include <rosc/sebs_parse_fw/send_modules/msggen.h>
-
-
+#include <rosc/system/status.h>
+#include <rosc/com/ros_handler.h>
+#include <rosc/system/eth.h>
 
 typedef enum
 {
@@ -128,6 +129,7 @@ typedef enum
 	XMLRPC_RESULT_CALLERID,
 	XMLRPC_RESULT_PUBLISHER_UPDATE_URL,
 	XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC,
+	XMLRPC_RESULT_REQUEST_TOPIC_PORT,
 }xmlrpc_result_handling_t;
 
 typedef enum
@@ -191,6 +193,7 @@ typedef struct
 	//XML variables
 	uint32_t xml_length;	//!< storage for the xml length from the header
 	xmlrpc_tag_state_t tag_state; //!< defines where we are inside a xml document
+	uint32_t value_no;
 	xmlrpc_type_tag_t type_tag; //!< what is the current tag type
 	uint8_t param_no; //!< number of the param tag
 	uint32_t array_level; //!< depth inside nested xmlrpc arrays
