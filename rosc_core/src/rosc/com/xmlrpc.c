@@ -150,9 +150,17 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 		case SOCKET_SIG_TIMEOUT:
 			DEBUG_PRINT_STR("XMLRPC Timeout");
+			pdata->out_len=SOCKET_SIG_RELEASE;
+			return(SEBS_PARSE_RETURN_GO_AHEAD);
 			break;
 
 		case SOCKET_SIG_NO_CONNECTION:
+			if(hdata->xmlrpc_state==XMLRPC_STATE_SUBSCRIBER_RECONNECT)
+			{
+				DEBUG_PRINT_STR("XMLRPC reconnected to subscriber interface");
+				pdata->out_len=SOCKET_SIG_CONNECT;
+				break;
+			}
 			DEBUG_PRINT_STR("XMLRPC No Connection");
 			break;
 
@@ -162,17 +170,26 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 
 		case SOCKET_SIG_COULD_NOT_CONNECT:
 			DEBUG_PRINT_STR("XMLRPC could not connect");
-			while(1);
+			pdata->out_len=SOCKET_SIG_RELEASE;
+			return(SEBS_PARSE_RETURN_GO_AHEAD);
 			break;
 
 		case SOCKET_SIG_COULD_NOT_RESOLVE_HOST:
 			DEBUG_PRINT_STR("XMLRPC Resolve Host");
+			pdata->out_len=SOCKET_SIG_RELEASE;
+			return(SEBS_PARSE_RETURN_GO_AHEAD);
 			break;
 
 		case SOCKET_SIG_CONNECTED:
 		{
 			DEBUG_PRINT_STR("CONNECTED");
 
+			if(hdata->xmlrpc_state==XMLRPC_STATE_SUBSCRIBER_RECONNECT)
+			{
+
+				DEBUG_PRINT_STR("RECONNECTED TO PUBLISHER ... ");
+				break;
+			}
 
 			hdata->xmlrpc_state = XMLRPC_STATE_HTTP;
 			hdata->result_handling =XMLRPC_RESULT_REQUEST_SENT;
@@ -371,6 +388,14 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			   && hdata->xml.numberparse.last_byte == '<')
 			{
 				DEBUG_PRINT(INT,"Port: ",hdata->xml.numberparse.number);
+
+				if(hdata->xml.numberparse.number<=0xFFFF)
+				{
+					socket_t * socket=(socket_t *)pdata->connection_interface;
+					socket->connect_info.remote_port=hdata->xml.numberparse.number;
+					hdata->xmlrpc_state=XMLRPC_STATE_SUBSCRIBER_RECONNECT;
+					pdata->out_len=SOCKET_SIG_CLOSE;
+				}
 			}
 			break;
 
