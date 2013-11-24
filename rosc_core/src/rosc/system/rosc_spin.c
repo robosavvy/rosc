@@ -260,7 +260,6 @@ void rosc_spin()
 								//Do nothing
 								break;
 							}
-
 						}
 					}while(s>0 && con_sock->state!=SOCKET_STATE_INACTIVE);
 
