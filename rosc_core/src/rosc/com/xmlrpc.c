@@ -97,24 +97,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			DEBUG_PRINT_STR("INIT_XMLRPC_TYPE_CLIENT");
 			hdata->xmlrpc_type = XMLRPC_TYPE_CLIENT;
 
-//			switch(hdata->rpc_methodname)
-//			{
-//			case XMLRPC_METHODNAME_REGISTERPUBLISHER:
-//				break;
-//			case XMLRPC_METHODNAME_UNREGISTERPUBLISHER:
-//				break;
-//			case XMLRPC_METHODNAME_REQUESTTOPIC:
-//				break;
-//
-//				default:
-//					/* No suitable state ? - release this ...*/
-//					ROSC_WARNING("ERROR - interface does not have any state, which is meant for a RPC Client!");
-//					pdata->out_len=SOCKET_SIG_RELEASE;
-//					return (SEBS_PARSE_RETURN_GO_AHEAD);
-//					break;
-//			}
-
-
 			hdata->xmlrpc_state = XMLRPC_STATE_CONNECT;
 			socket_t *socket=pdata->connection_interface;
 
@@ -188,7 +170,11 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			{
 
 				DEBUG_PRINT_STR("RECONNECTED TO PUBLISHER ... ");
-				break;
+				pdata->handler_init=true;
+				pdata->init_data=((iface_t *)pdata->init_data)->init_data;
+				pdata->len=0;
+				pdata->handler_function=&ros_handler;
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
 			}
 
 			hdata->xmlrpc_state = XMLRPC_STATE_HTTP;

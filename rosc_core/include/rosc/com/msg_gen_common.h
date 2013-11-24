@@ -209,7 +209,7 @@ typedef struct msg_gen_command_t
 
 
 extern msg_gen_type_t rosrpc_hd[];
-extern msg_gen_type_t rosrpc_msg_topic_init[];
+extern msg_gen_type_t rosrpc_topic_init[];
 extern msg_gen_type_t xmlrpc_hd_request[];
 extern msg_gen_type_t xmlrpc_hd_response[];
 extern msg_gen_type_t xmlrpc_msg_request[];

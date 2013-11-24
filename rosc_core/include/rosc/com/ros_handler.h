@@ -35,6 +35,7 @@
 #include <rosc/sebs_parse_fw/sebs_parser_frame.h>
 #include <rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.h>
 #include <rosc/com/ros_msg_common.h>
+#include <rosc/sebs_parse_fw/send_modules/msggen.h>
 #include <rosc/system/eth.h>
 
 
@@ -44,6 +45,7 @@ typedef enum
 	ROS_HANDLER_STATE_NONE,
 	ROS_HANDLER_STATE_CHECK_MD5SUM,
 	ROS_HANDLER_STATE_CHECK_IFACE_NAME,
+	ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND,
 }ros_handler_state;
 
 
@@ -55,7 +57,8 @@ typedef struct
 	bool md5sum_ok;
 	bool iface_ok;
 
-
+	const void *genPayloadData[3];
+	sebs_msggen_t gen;
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;
 

@@ -37,6 +37,13 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 			fdata->cmds.header=xmlrpc_hd_response;
 			fdata->cmds.payload=xmlrpc_msg_http_error;
 			break;
+
+		case MSGGEN_TYPE_ROSMSG_HEADER:
+		fdata->cmds.header=rosrpc_hd;
+		fdata->cmds.payload=rosrpc_topic_init;
+		break;
+
+
 		}
 
 		fdata->cmds.type = fdata->cmds.header;

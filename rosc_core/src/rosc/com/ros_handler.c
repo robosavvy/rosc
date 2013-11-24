@@ -34,6 +34,7 @@
 #include <rosc/debug/debug_out.h>
 #include <rosc/system/status.h>
 
+
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 {
 	ros_handler_data_t *hdata=pdata->handler_data;
@@ -48,12 +49,28 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		pdata->function_init=true;
 		pdata->return_to_handler=false;
 		pdata->overall_len=0;
-		pdata->security_len=1024;
+		//pdata->security_len=1024;
 		hdata->hstate=ROS_HANDLER_STATE_NONE;
 		hdata->iface_ok=false;
 		hdata->md5sum_ok=false;
 		pdata->sending=false;
-		SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
+
+
+
+
+		if(idata->ros_type==ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER)
+		{
+			hdata->genPayloadData[0]=idata->message_definition;
+			hdata->genPayloadData[1]=idata->md5sum;
+			hdata->genPayloadData[2]=idata->iface_name;
+			hdata->hstate=ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND;
+			SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_ROSMSG_HEADER, 0, hdata->genPayloadData);
+		}
+		else
+		{
+			SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
+		}
+
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
@@ -62,6 +79,11 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 
 	switch(hdata->hstate)
 	{
+
+		case ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND:
+			SEBS_PARSE_ROS_INIT_RPC(pdata,hdata->ros);
+			hdata->hstate=ROS_HANDLER_STATE_NONE;
+		break;
 		case ROS_HANDLER_STATE_CHECK_MD5SUM:
 			if (hdata->ros.seekstring.result==0)
 			{
