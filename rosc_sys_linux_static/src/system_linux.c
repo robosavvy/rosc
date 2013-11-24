@@ -32,7 +32,7 @@
 #include <rosc/system/eth.h>
 #include <rosc/system/spec.h>
 #include <rosc/system/spec.h>
-
+#include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -134,7 +134,16 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd < 0)
             return (-1);
-
+        {
+        int flag = 1;
+        int result = setsockopt(sockfd,            /* socket affected */
+                                IPPROTO_TCP,     /* set option at TCP level */
+                                TCP_NODELAY,     /* name of option */
+                                (char *) &flag,  /* the cast is historical cruft */
+                                sizeof(int));    /* length of option value */
+        if (result < 0)
+        	 return (-1);
+        }
 
         if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         {
@@ -142,11 +151,13 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         	return (-1);
         }
         fcntl(sockfd, F_SETFL, O_NONBLOCK);
+        printf("______________________Socket connect %i\n",sockfd);
         return (sockfd);
 }
 
 send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size)
 {
+    printf("______________________Socket send %i\n",socket_id);
 	if(write(socket_id,buffer,size) == size)
 	{
 		return(SEND_RESULT_OK);

@@ -342,9 +342,12 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 								def->data = def->payload_data;
 								def->size.mode = MSG_GEN_SIZE_MODE_PAYLOAD;
 								def->size.payload_size_available = true;
+
 							}
 							else
 							{
+								DEBUG_PRINT(INT,"Payload Size",def->size.payload_size);
+								DEBUG_PRINT("%x","Payload Hex",def->size.payload_size);
 								if (*def->type == MSG_TYPE_PAYLOAD_SIZE_BINARY)
 								{
 									DATA_TO_BUFFER(&def->size.payload_size, 4, 4);
@@ -352,6 +355,7 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 								}
 								else
 								{
+
 									NUMBER_TO_BUFFER(&def->size.payload_size,
 											MSG_GEN_NUMBERTYPE_UINT, 4);
 								}
@@ -490,6 +494,8 @@ bool msg_gen(uint8_t * buffer, uint32_t *buffer_size, msg_gen_command_t *def)
 													MSG_GEN_SIZE_MODE_ROSFIELD;
 										break;
 									case 1: //Write field size
+										DEBUG_PRINT(INT,"Field Size",def->size.rosrpc_size);
+										DEBUG_PRINT("%x","Field Hex",def->size.rosrpc_size);
 										def->def_state = 2;
 										DATA_TO_BUFFER(&def->size.rosrpc_size, 4, 4)
 										;

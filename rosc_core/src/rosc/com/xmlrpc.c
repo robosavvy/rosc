@@ -139,11 +139,12 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 		case SOCKET_SIG_NO_CONNECTION:
 			if(hdata->xmlrpc_state==XMLRPC_STATE_SUBSCRIBER_RECONNECT)
 			{
-				DEBUG_PRINT_STR("XMLRPC reconnected to subscriber interface");
+
+				DEBUG_PRINT_STR("XMLRPC reconnect to subscriber interface");
 				pdata->out_len=SOCKET_SIG_CONNECT;
 				break;
 			}
-			DEBUG_PRINT_STR("XMLRPC No Connection");
+			//DEBUG_PRINT_STR("XMLRPC No Connection");
 			break;
 
         /* ***********/
@@ -381,6 +382,10 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					socket->connect_info.remote_port=hdata->xml.numberparse.number;
 					hdata->xmlrpc_state=XMLRPC_STATE_SUBSCRIBER_RECONNECT;
 					pdata->out_len=SOCKET_SIG_CLOSE;
+				}
+				else
+				{
+					pdata->out_len=SOCKET_SIG_RELEASE;
 				}
 			}
 			break;

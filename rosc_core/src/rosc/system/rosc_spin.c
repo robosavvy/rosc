@@ -37,6 +37,8 @@
 #include <rosc/com/ros_handler.h>
 
 
+#include <unistd.h> //TODO remove
+
 void rosc_spin()
 {
 	int i;
@@ -44,6 +46,9 @@ void rosc_spin()
 
 	while(1)
 	{
+		usleep(10);
+
+
 		//Check for interface tasks
 		iface_t *iface=interface_list_start;
 		socket_t* con_sock=socket_list_start;
@@ -233,15 +238,6 @@ void rosc_spin()
 							switch(con_sock->pdata.out_len)
 							{
 							case SOCKET_SIG_CONNECT:
-								{
-									socket_connect_info_t *connect_to=&con_sock->connect_info;  //TODO remove that variable
-									switch(connect_to->data_state)
-									{
-									case CONNECT_DATA_STATE_IPV4:
-										abstract_connect_socket(connect_to->remote_ip,connect_to->remote_port);
-										break;
-									}
-								}
 								break;
 
 							case SOCKET_SIG_CLOSE:
@@ -264,6 +260,7 @@ void rosc_spin()
 								//Do nothing
 								break;
 							}
+
 						}
 					}while(s>0 && con_sock->state!=SOCKET_STATE_INACTIVE);
 

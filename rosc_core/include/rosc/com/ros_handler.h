@@ -57,7 +57,7 @@ typedef struct
 	bool md5sum_ok;
 	bool iface_ok;
 
-	const void *genPayloadData[3];
+	const void *genPayloadData[4];
 	sebs_msggen_t gen;
 	sebs_parse_ros_data_t ros;
 }ros_handler_data_t;

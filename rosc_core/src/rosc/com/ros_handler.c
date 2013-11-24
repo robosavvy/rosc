@@ -63,6 +63,7 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 			hdata->genPayloadData[0]=idata->message_definition;
 			hdata->genPayloadData[1]=idata->md5sum;
 			hdata->genPayloadData[2]=idata->iface_name;
+			hdata->genPayloadData[3]=idata->type_name;
 			hdata->hstate=ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND;
 			SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_ROSMSG_HEADER, 0, hdata->genPayloadData);
 		}
@@ -74,8 +75,71 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 	}
 
 	sebs_parse_ros_event_t *ros_event=(sebs_parse_ros_event_t *)&pdata->event;
+	switch (pdata->event)
+		{
+		case SEBS_PARSE_EVENT_LEN_EQUAL_SMALLER_ZERO:
+			switch (*pdata->len)
+			{
+
+			case SOCKET_SIG_CLOSE:
+				DEBUG_PRINT_STR("ROSHANDLER Connection close");
+					pdata->out_len = SOCKET_SIG_RELEASE;
+					return (SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+			case SOCKET_SIG_TIMEOUT:
+				DEBUG_PRINT_STR("ROSHANDLER Timeout");
+				pdata->out_len=SOCKET_SIG_RELEASE;
+				return(SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+			case SOCKET_SIG_NO_CONNECTION:
+				DEBUG_PRINT_STR("ROSHANDLER No Connection");
+				pdata->out_len=SOCKET_SIG_RELEASE;
+				return(SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+	        /* ***********/
+			/*Only Client*/
+			/* ***********/
+
+			case SOCKET_SIG_COULD_NOT_CONNECT:
+				DEBUG_PRINT_STR("ROSHANDLER could not connect");
+				pdata->out_len=SOCKET_SIG_RELEASE;
+				return(SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+			case SOCKET_SIG_COULD_NOT_RESOLVE_HOST:
+				DEBUG_PRINT_STR("ROSHANDLER Resolve Host");
+				pdata->out_len=SOCKET_SIG_RELEASE;
+				return(SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+			case SOCKET_SIG_CONNECTED:
+				DEBUG_PRINT_STR("CONNECTED");
+				break;
 
 
+			/* SIGNALS which should not occur here: */
+
+			case SOCKET_SIG_DATA_SENT: /*should be caught by sending function*/
+				DEBUG_PRINT_STR("ROSHANDLER ignoring unexpected signal  Data Sent");
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+			case SOCKET_SIG_RELEASE: /*outgoing*/
+				DEBUG_PRINT_STR("ROSHANDLER ignoring unexpected signal  Release");
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+			case SOCKET_SIG_CONNECT: /*outgoing*/
+				DEBUG_PRINT_STR("ROSHANDLER ignoring unexpected signal  Connect");
+				return (SEBS_PARSE_RETURN_GO_AHEAD);
+				break;
+
+			default:
+				break;
+			}
+			break;
+		}
 
 	switch(hdata->hstate)
 	{
