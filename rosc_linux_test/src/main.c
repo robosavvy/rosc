@@ -92,10 +92,9 @@ ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
 
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
-	ROSC_STATIC_LOOKUP_ENTRY(Computer0,IP(192,168,0,2))
-	ROSC_STATIC_LOOKUP_ENTRY(Computer1,IP(192,168,0,3))
+	ROSC_STATIC_LOOKUP_ENTRY(localhost,IP(127,0,0,1))
+	ROSC_STATIC_LOOKUP_ENTRY(Computer,IP(192,168,0,3))
 ROSC_STATIC_LOOKUP_TABLE_END
-
 
 MASTER_URI_STATIC("http://localhost:11311");
 
@@ -126,7 +125,7 @@ int main()
 	printf("Maximum Hostname Size: %i bytes\n",(int) __HOSTNAME_BUFFER_LEN__);
 	printf("Lookup Entry Size: %i bytes\n",(int) sizeof(lookup_table_entry_t));
 	printf("------------------------------------------\n");
-	printf("Lookup Table Size: (%i entries) %i bytes\n", (int)lookup_table_size , (int)lookup_table_size * (int)sizeof(lookup_table_entry_t));
+	printf("Lookup Table Size: (%i entries) %i bytes\n", (int)rosc_static_lookup_table_size , (int)rosc_static_lookup_table_size  * (int)sizeof(lookup_table_entry_t));
 	printf("#############################################################\n");
 	printf("\n");
 
