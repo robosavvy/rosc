@@ -1,5 +1,5 @@
 /*
- *	Copyright (c) 2013, Synapticon GmbH
+ *  Copyright (c) 2013, Synapticon GmbH
  *	All rights reserved.
  *
  *	Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,10 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  main.c created by Christian Holl
+ *  static_subscriber.c created by Christian Holl
+ *
+ *
+ *
  */
 
 

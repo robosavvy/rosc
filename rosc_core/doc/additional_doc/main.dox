@@ -6,8 +6,15 @@
 This is the documentation of ROSc
 
 
+\page devinfo Development Information
 
-
+ROSc is currently in an alpha state, at the moment only subscribers are supported.
+\nThis will change soon. 
+\n
+\n First of all the publisher will be implemented.
+\n And then the services should come up. 
+\n There is also a plan for a dynamic memory version, 
+\n so the port number of rosc dynamic will not be limited.
 
 
 \page Legal Legal Information
@@ -55,5 +62,8 @@ Fax: +49 (0) 7335 / 186 999 1
 
 Dipl-Ing.(FH) M.Sc. Christian Holl\n
 <choll [AT] synapticon [DOT] com>
+
+\example static_subscriber.c
+This file should give you an overview about how to create a subscriber.
 
 */
