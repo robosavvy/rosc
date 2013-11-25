@@ -257,11 +257,12 @@ extern void abstract_static_initHostname();
 
 /**
  * This function resolves the IP from a hostname
- * @param hostname The hostname terminated with 0
+ * @param hostname The hostname (NOT TERMINATED BY ZERO!)
+ * @param size The hostname length
  * @param ip[o] The storage for the ip address
  * return false if successfull
  */
-extern bool abstract_resolveIP(const char* hostname, ip_address_ptr ip);
+extern bool abstract_resolveIP(const char* hostname, size_t size, ip_address_ptr ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.

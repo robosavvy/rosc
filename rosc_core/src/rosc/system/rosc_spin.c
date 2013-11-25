@@ -118,8 +118,7 @@ void rosc_spin()
 				socket_connect_info_t* connect_data=&con_sock->connect_info; //TODO remove that variable
 				if(connect_data->data_state==CONNECT_DATA_STATE_RESOLVE)
 				{
-					connect_data->hostname[connect_data->hostname_size]=0;
-					if(!abstract_resolveIP(connect_data->hostname, connect_data->remote_ip))
+					if(!abstract_resolveIP(connect_data->hostname,connect_data->hostname_size, connect_data->remote_ip))
 						connect_data->data_state=CONNECT_DATA_STATE_IPV4;
 				}
 
