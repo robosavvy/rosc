@@ -290,6 +290,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				{
 					if(socket->state!=SOCKET_STATE_INACTIVE)
 					{
+
 						if(socket->iface->handler_function==&xmlrpc)
 						{
 							xmlrpc_data_t *hdata = (xmlrpc_data_t*) socket->pdata.handler_data;
@@ -896,7 +897,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 				else if (hdata->xmlrpc_type == XMLRPC_TYPE_CLIENT)
 				{
 
-					if(hdata->client_type==XMLRPC_CLIENT_TYPE_REQUEST_TOPIC)
+
 						if(hdata->tag_state == XMLRPC_TAG_STATE_VALUE
 								&& hdata->param_no == 1
 								&& hdata->array_state == XMLRPC_ARRAY_STATE_VALUE)
@@ -915,25 +916,49 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								break;
 
 							case 1:
-								if(hdata->array_value_number[0]==2)
-								{
-									//Sometimes the port can be given on level zero by just an int value
-									//and sometimes its given inside array with TCPROS and HOSTNAME m(
+							if(hdata->array_value_number[0]==2)
+							{
 
-									if(
+								if(hdata->client_type==XMLRPC_CLIENT_TYPE_REQUEST_TOPIC)
+								if(
+										//Sometimes the port can be given on level zero by just an int value
+										//and sometimes its given inside array with TCPROS and HOSTNAME m(
 										((hdata->array_level == 1 && hdata->array_value_number[1]==2) || hdata->array_level==0)
 										&&
 										(
-										   hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_VALUE
-										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_INT
-										|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_I4
+												hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_VALUE
+												|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_INT
+												|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_I4
 										)
-									)
+								)
 								{
+
 									hdata->result_handling=XMLRPC_RESULT_REQUEST_TOPIC_PORT;
 									SEBS_PARSE_NUMBERPARSE_INIT(pdata, hdata->xml.numberparse, 5,
-												false, 10);
+											false, 10);
 								}
+
+								//Subscriber Registration
+								if(hdata->client_type==XMLRPC_CLIENT_TYPE_REGISTER)
+								if(
+
+											((hdata->array_level == 1))
+											&&
+											(
+													hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_VALUE
+													|| hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_STRING
+											)
+								)
+								{
+									hdata->iface=iface;
+									DEBUG_PRINT_STR("Register Publisher A PUBLISHER");
+									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_URL;
+									SEBS_PARSE_COPY2BUFFER_INIT(pdata,
+											hdata->copy2buffer, pdata->additional_storage,
+											__URI_MAX_LENGTH__, "<",0,1,0);
+								}
+
+
 								break;
 								}
 							}

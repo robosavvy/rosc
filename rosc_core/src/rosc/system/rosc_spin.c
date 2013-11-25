@@ -83,7 +83,7 @@ void rosc_spin()
 								XMLRPC_CLIENT_TYPE_UNREGISTER;
 					    iface->state=IFACE_STATE_STATE_OPERATION_PENDING;
 
-
+					    con_sock->iface=iface;
 						con_sock->state=SOCKET_STATE_NOT_CONNECTED;
 						con_sock->pdata.init_data=iface;
 						con_sock->pdata.handler_init=true;

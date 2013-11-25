@@ -77,6 +77,7 @@ listen_socket_id_t abstract_start_listening_on_port(port_t* port)
 	    perror("getsockname");
 
 	*port=ntohs(serv_addr.sin_port);
+
     return (listenfd);
 }
 
@@ -163,6 +164,8 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         	return (-1);
         }
         fcntl(sockfd, F_SETFL, O_NONBLOCK);
+
+    	printf("-----------------socket: %i \n",sockfd);
         return (sockfd);
 }
 
