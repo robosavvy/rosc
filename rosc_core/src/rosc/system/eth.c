@@ -42,14 +42,16 @@
 	extern const size_t rosc_static_socket_mem_hdata_offset;
 
 
-	extern lookup_table_entry_t* rosc_static_lookup_table;
-	extern size_t lookup_table_size;
-
-
 	//pointers first elements of sockets, listensockets, interfaces lists
 	socket_t* socket_list_start;
 	listen_socket_t* listen_socket_list_start;
 	iface_t* interface_list_start;
+
+	extern size_t rosc_static_lookup_table_size;
+	extern lookup_table_entry_t *rosc_static_lookup_table;
+
+
+
 
 
 
@@ -204,4 +206,42 @@ void iface_list_remove(iface_t *interface)
 	}
 }
 
+bool rosc_hostlist_resolve(const char* hostname, size_t size, ip_address_ptr ip)
+{
+	bool nfound=true;
+	int e;
+	for (e = 0; e < rosc_static_lookup_table_size; ++e)
+	{
+		int c;
+		for ( c = 0; c < size; ++c)
+		{
+			if((rosc_static_lookup_table+e)->hostname[c]!=hostname[c])
+			{
+				break;
+			}
+		}
 
+		if(c==size
+		   && (rosc_static_lookup_table+e)->hostname[c] == '\0')
+		{
+			nfound=false;
+			break;
+		}
+	}
+
+	if(nfound)
+	{
+		nfound=abstract_resolveIP(hostname,  size,  ip);
+	}
+	else
+	{
+		int p;
+
+			for(p=0;p<4;p++)
+			{
+				ip[p]=(rosc_static_lookup_table+e)->ip[p];
+			}
+
+	}
+	return (nfound);
+}

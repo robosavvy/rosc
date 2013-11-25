@@ -77,18 +77,31 @@ listen_socket_id_t abstract_start_listening_on_port(port_t* port)
 	    perror("getsockname");
 
 	*port=ntohs(serv_addr.sin_port);
+
     return (listenfd);
 }
 
-bool abstract_resolveIP(const char* hostname, ip_address_ptr ip)
+bool abstract_resolveIP(const char* hostname, size_t size, ip_address_ptr ip)
 {
 	struct hostent *he;
 	struct in_addr **addr_list;
 	int i;
+	char hn[__HOSTNAME_MAX_LEN__+1];
 
-	if ( (he = gethostbyname( hostname ) ) == NULL)
+
+	if(size>__HOSTNAME_MAX_LEN__)
 	{
-		return(true);
+		return (true);
+	}
+
+	for (i = 0; i < __HOSTNAME_MAX_LEN__ && i<size; ++i) {
+		hn[i]=hostname[i];
+	}
+	hn[i]='\0';
+
+	if ( (he = gethostbyname( hn ) ) == NULL)
+	{
+		return (true);
 	}
 	addr_list = (struct in_addr **) he->h_addr_list;
 
@@ -151,13 +164,13 @@ socket_id_t abstract_connect_socket(ip_address_ptr ip, port_t port)
         	return (-1);
         }
         fcntl(sockfd, F_SETFL, O_NONBLOCK);
-        printf("______________________Socket connect %i\n",sockfd);
+
+    	printf("-----------------socket: %i \n",sockfd);
         return (sockfd);
 }
 
 send_result_t abstract_send_packet(socket_id_t socket_id, uint8_t*  buffer, uint32_t size)
 {
-    printf("______________________Socket send %i\n",socket_id);
 	if(write(socket_id,buffer,size) == size)
 	{
 		return(SEND_RESULT_OK);

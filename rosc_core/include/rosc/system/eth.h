@@ -50,7 +50,6 @@ typedef uint16_t port_t;
 
 extern char hostname[];
 extern char node_name[];
-extern port_t xmlrpc_port;
 
 
 
@@ -152,8 +151,8 @@ lookup_table_entry_t __rosc_static_lookup_table[MIN_SIZE]=\
 
 #define ROSC_STATIC_LOOKUP_TABLE_END \
 };\
-lookup_table_entry_t* rosc_static_lookup_table=(__rosc_static_lookup_table);\
-size_t lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
+lookup_table_entry_t* rosc_static_lookup_table=(&__rosc_static_lookup_table[0]);\
+size_t rosc_static_lookup_table_size=sizeof(__rosc_static_lookup_table)/sizeof(lookup_table_entry_t);
 
 #define ROSC_STATIC_LOOKUP_ENTRY(HOSTNAME, IP)\
 {#HOSTNAME, IP},
@@ -213,11 +212,7 @@ typedef enum
  * Pointer to zero terminated master URI
  */
 extern char * const master_uri;
-
-
-
-
-
+extern port_t xmlrpc_port;
 
 
 
@@ -243,6 +238,16 @@ bool rosc_iface_listen( iface_t *iface, uint16_t port_number);
 void receive_packet(socket_id_t socket_id, uint8_t* buffer, uint32_t size);
 
 
+/**
+ * This function resolves a hostname, to do this it first uses the built in host list
+ * and if the host can not be found there, it uses the abstract resolve command
+ * @param hostname [in] A pointer to the hostname
+ * @param size the size of the hostname
+ * @param ip [out] The ip address output
+ * @return false if the ip could be obtained
+ */
+bool rosc_hostlist_resolve(const char* hostname, size_t size, ip_address_ptr ip);
+
 /* ********************************
  **********************************
  * FUNCTIONS TO BE IMPLEMENTED BY *
@@ -257,11 +262,12 @@ extern void abstract_static_initHostname();
 
 /**
  * This function resolves the IP from a hostname
- * @param hostname The hostname terminated with 0
+ * @param hostname The hostname (NOT TERMINATED BY ZERO!)
+ * @param size The hostname length
  * @param ip[o] The storage for the ip address
  * return false if successfull
  */
-extern bool abstract_resolveIP(const char* hostname, ip_address_ptr ip);
+extern bool abstract_resolveIP(const char* hostname, size_t size, ip_address_ptr ip);
 
 /**
  * rosc uses this function to tell the network device to open a port.
