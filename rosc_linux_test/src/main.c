@@ -67,28 +67,13 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
-	printf("simple2 callback");
+	printf("simple2 callback\n");
 }
 
-//ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1)
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1,"/simple1")
 
-ros_iface_init_t rosc_static_subscriber_init_sim1__simpleTopic1={ "/" "simpleTopic1",\
-                            rosc_static_msg_topic_type__rosc_linux_test__simple1,\
-                            ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,\
-                            rosc_static_msg_buildup__rosc_linux_test__simple1,\
-                            rosc_static_msg_submessage_size_list__rosc_linux_test__simple1__sim1,\
-                            rosc_static_msg_array_size_list__rosc_linux_test__simple1__sim1,\
-                            rosc_static_msg_memory_offsets__rosc_linux_test__simple1__sim1,\
-                            rosc_static_msg_message_definition__rosc_linux_test__simple1,\
-                            rosc_static_msg_md5sum__rosc_linux_test__simple1,\
-                            0,\
-                            &rosc_static_callback_simpleTopic1,\
-                            };\
-iface_t rosc_static_subscriber_sim1__simpleTopic1={\
-           &ros_handler,\
-           &rosc_static_subscriber_init_sim1__simpleTopic1};\
 
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2)
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2,"/simple2")
 
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
