@@ -939,7 +939,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								}
 
 								//Subscriber Registration
-								if(hdata->client_type==XMLRPC_CLIENT_TYPE_REGISTER)
+								if(hdata->client_type==XMLRPC_CLIENT_TYPE_REGISTER
+									&& ((ros_iface_init_t *) iface->init_data)->ros_type==ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER)
 								if(
 
 											((hdata->array_level == 1))
