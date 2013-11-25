@@ -306,7 +306,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 						else if(socket->iface->handler_function==&ros_handler)
 						{
 							ros_handler_data_t *hdata = (ros_handler_data_t *) socket->pdata.handler_data;
-							if(!strcmp(hdata->api_uri,(char*)pdata->additional_storage))
+							if(!strcmp(socket->connect_info.url,(char*)pdata->additional_storage))
 							{
 								DEBUG_PRINT_STR("FOUND TOPIC SUBSCRIBER");
 								break;

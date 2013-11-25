@@ -52,7 +52,6 @@ typedef enum
 typedef struct
 {
 	iface_t iface;
-	char api_uri[__URI_MAX_LENGTH__];
 	ros_handler_state hstate;
 	bool md5sum_ok;
 	bool iface_ok;
