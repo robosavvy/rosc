@@ -66,6 +66,10 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 	int i;
 	printf("simpleTopic1\n");
 	printf("s2 size: %i\n",msg->s2.size);
+	printf("s2 oversize: %i\n",msg->s2.oversize);
+
+	for(i=0;i<msg->s2.size;i++)
+		printf("%i\n",msg->s2.data[i].ThirtyTwo);
 
 }
 

@@ -287,6 +287,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 							}
 							else
 							{
+								fdata->msg_storage=fdata->submessage_state_array[fdata->submessage_depth-1].parent_message_start;
 								if(fdata->submessage_state_array[0].submessages_to_skip>0)
 								{
 									fdata->state=SEBS_PARSE_ROSBINARY_SKIP_BYTES;
@@ -294,7 +295,6 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 								}
 								else
 								{
-									fdata->msg_storage=fdata->submessage_state_array[fdata->submessage_depth-1].parent_message_start;
 									++fdata->buildup_type_current_field;
 								}
 								fdata->submessage_state_array->is_submessage_array=false;
@@ -359,12 +359,16 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				/*  DYNAMIC ARRAY */
 				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 				{
-					*size=fdata->submessage_state_array->submessages_remaining;
+
+					//Pointer for oversize variable
 					bool *oversize=(bool*)(fdata->msg_storage+
 							fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
 							fdata->memory_offset_array[fdata->memory_offset_current_element+3]);/* oversize 2 struct */
+
+
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start+=1;/* add one because of the oversize field */
 
+					//If there are more messages than we have memory
 					if(fdata->submessage_state_array->submessages_remaining>fdata->array_length_array[fdata->array_length_current_element+1])
 					{
 						fdata->submessage_state_array->submessages_to_skip=fdata->submessage_state_array->submessages_remaining-fdata->array_length_array[fdata->array_length_current_element+1];
@@ -374,6 +378,8 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					{
 						fdata->submessage_state_array->submessages_to_skip=0;
 					}
+					*size=fdata->submessage_state_array->submessages_remaining;
+
 					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
 							fdata->memory_offset_array[fdata->memory_offset_current_element+4]);/* data[0] */
 					fdata->memory_offset_current_element+=4;
