@@ -43,6 +43,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 	{
 		pdata->function_init = false;
 
+		//Mode ROSRPC / ROSMSG
 		switch (fdata->mode)
 		{
 		case SEBS_PARSE_ROS_MODE_ROSRPC:
@@ -79,20 +80,20 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 		/* ******
 		 *ROSPRC*
 		 ********/
-		case SEBS_PARSE_ROSPRC_MESSAGE_LENGTH:
+		case SEBS_PARSE_ROSPRC_MESSAGE_LENGTH: //Get RPC message length
 			fdata->state = SEBS_PARSE_ROSRPC_FIELD_LENGTH;
 			SEBS_PARSE_COPY2BUFFER_INIT(pdata, fdata->copy2buffer,
 					&fdata->message_length, 4, 0,
 					g_byte_order_correction_to_system->SIZE_4_B, 0, 0)
 ;			break;
 
-			case SEBS_PARSE_ROSRPC_FIELD_LENGTH:
+			case SEBS_PARSE_ROSRPC_FIELD_LENGTH: //Get RPC field length
 			DEBUG_PRINT(INT,"MSG LEN",fdata->message_length);
 			fdata->state=SEBS_PARSE_ROSRPC_FIELD_ID;
 			SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,&fdata->field_length,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 			break;
 
-			case SEBS_PARSE_ROSRPC_FIELD_ID:
+			case SEBS_PARSE_ROSRPC_FIELD_ID: //Get RPC field id
 			fdata->message_length-=4;
 			fdata->state=SEBS_PARSE_ROSRPC_FIELD_EQUAL;
 			if(fdata->field_length > fdata->message_length)
@@ -104,7 +105,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			SEBS_PARSE_SEEKSTRING_INIT(pdata,fdata->seekstring,ros_field_strings, ROS_FIELD_STRINGS_LEN, "=",true, fdata->field_length);
 			break;
 
-			case SEBS_PARSE_ROSRPC_FIELD_EQUAL:
+			case SEBS_PARSE_ROSRPC_FIELD_EQUAL: //Wait for equal... '='
 			DEBUG_PRINT(INT,"Current Pos",fdata->seekstring.curChrPos);
 			fdata->state=SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT;
 			/* Subtract length */
@@ -126,7 +127,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 			}
 			break;
 
-			case SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT:
+			case SEBS_PARSE_ROSRPC_SKIP_FIELD_CONTENT: //If the handler does not like the content of the field...
 
 			if(fdata->field_length>0)
 			{
@@ -157,7 +158,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 //					mycallback(fdata->submessage_state_array[0].parent_message_start);
 //					else
 //					mycallback(fdata->msg_storage);
-				switch(fdata->buildup_type_array[fdata->buildup_type_current_field])
+			switch(fdata->buildup_type_array[fdata->buildup_type_current_field])
 				{
 					case ROS_MSG_BUILDUP_TYPE_BYTE:
 					case ROS_MSG_BUILDUP_TYPE_BOOL:
@@ -252,14 +253,17 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY:
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL:
+					DEBUG_PRINT_STR("SUBMESSAGE ARRAY");
+
 					fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=true;
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_buildup_start=fdata->buildup_type_current_field+1; /* Message begin; */
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start=fdata->memory_offset_current_element+3;/* point to first variable of struct */
 					fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_byte_size=fdata->submessage_size_array[++fdata->submessage_size_current_element];
-
+					fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY;
 					if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 					{
+						DEBUG_PRINT_STR("-IS-DYNAMIC-> getting size")
 						fdata->submessage_state_array[fdata->submessage_depth].is_dynamic_array=true;
 						SEBS_PARSE_COPY2BUFFER_INIT(pdata,fdata->copy2buffer,(int8_t*)&fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining,4,0,g_byte_order_correction_to_system->SIZE_4_B,0,0);
 					}
@@ -267,7 +271,6 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					{
 						fdata->submessage_state_array[fdata->submessage_depth].is_dynamic_array=false;
 					}
-					fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_SUBMESSAGE_ARRAY;
 					break;
 
 					case ROS_MSG_BUILDUP_TYPE_MESSAGE_END:
@@ -356,6 +359,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 				/*  DYNAMIC ARRAY */
 				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 				{
+					*size=fdata->submessage_state_array->submessages_remaining;
 					bool *oversize=(bool*)(fdata->msg_storage+
 							fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
 							fdata->memory_offset_array[fdata->memory_offset_current_element+3]);/* oversize 2 struct */
@@ -479,10 +483,14 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 			case SEBS_PARSE_ROSBINARY_MESSAGE_BUILTIN_ARRAY:
 			{
+
+				//Setting the pointers to the correct memory location
 				uint32_t *size=(uint32_t*)(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]/*struct base offset*/
 						+fdata->memory_offset_array[fdata->memory_offset_current_element+2]) /*oversize offset*/;
 				bool *oversize=(bool *)(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1] /*struct base offset*/
 						+fdata->memory_offset_array[fdata->memory_offset_current_element+3])/*oversize offset*/;
+
+
 				fdata->array_length_current_element++; /* next array length */
 				fdata->builtin_is_array=true;
 				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)

@@ -185,7 +185,7 @@ void rosc_spin()
 
 
 			//Receive incoming data
-			char buffer[3];
+			char buffer[30000];
 			int size=3;
 			int s;
 

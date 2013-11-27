@@ -53,7 +53,7 @@
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 4);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 2);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
@@ -65,9 +65,8 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 	int i;
 	printf("simpleTopic1\n");
-	printf("EightArray size: %i\n",msg->EightArray.size);
-	for(i=0;i<msg->EightArray.size;i++)
-		printf("EightArray[%i]=%i\n",i, msg->EightArray.data[i]);
+	printf("s2 size: %i\n",msg->s2.size);
+
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
