@@ -147,7 +147,7 @@ typedef struct
 	void *string_array_memory;	    		/**<  stores the location of the memory of the string array */
 
 	const ros_buildup_type_t*  buildup_type_array;		/**< contains the message bildup information*/
-	ros_buildup_type_t buildup_type_current_field;				/**< stores array element number of the current buildup information*/
+	uint32_t buildup_type_current_field;				/**< stores array element number of the current buildup information*/
 
 	const size_t* submessage_size_array;		/**< contains the information for the size of submessages and string array elements*/
 	uint32_t submessage_size_current_element;	/**< contains the number of the current element*/

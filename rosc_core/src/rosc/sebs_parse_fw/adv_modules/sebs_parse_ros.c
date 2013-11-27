@@ -356,6 +356,35 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 
 				int8_t *data;
 
+
+				if(fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining==0)
+				{
+						*size=0;
+						size_t depth=1;
+						DEBUG_PRINT_STR("EMPTY ARRAY...SKIPPING BUILDUP");
+						while(depth)
+						{
+							fdata->buildup_type_current_field++;
+							switch(fdata->buildup_type_array[fdata->buildup_type_current_field])
+							{
+							case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
+							case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY:
+							case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL:
+								depth++;
+								break;
+							case ROS_MSG_BUILDUP_TYPE_MESSAGE_END:
+								depth--;
+								break;
+							default:
+								break;
+							}
+
+						}
+						fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
+						break;
+				}
+
+
 				/*  DYNAMIC ARRAY */
 				if(fdata->buildup_type_array[fdata->buildup_type_current_field]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 				{
@@ -363,7 +392,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					//Pointer for oversize variable
 					bool *oversize=(bool*)(fdata->msg_storage+
 							fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
-							fdata->memory_offset_array[fdata->memory_offset_current_element+3]);/* oversize 2 struct */
+							fdata->memory_offset_array[fdata->memory_offset_current_element+3]);/* oversize */
 
 
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start+=1;/* add one because of the oversize field */
@@ -371,11 +400,13 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					//If there are more messages than we have memory
 					if(fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining>fdata->array_length_array[fdata->array_length_current_element+1])
 					{
+						*oversize=1;
 						fdata->submessage_state_array[fdata->submessage_depth].submessages_to_skip=fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining-fdata->array_length_array[fdata->array_length_current_element+1];
 						fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining=fdata->array_length_array[fdata->array_length_current_element+1];
 					}
 					else
 					{
+						*oversize=0;
 						fdata->submessage_state_array[fdata->submessage_depth].submessages_to_skip=0;
 					}
 					*size=fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining;
@@ -392,9 +423,15 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining=*size;
 					fdata->memory_offset_current_element+=3;
 				}
-				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
+
 				fdata->buildup_type_current_field++;
+				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
 				fdata->submessage_depth++;
+
+
+
+
+
 				break;
 			}
 
