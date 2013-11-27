@@ -114,9 +114,6 @@ int main()
 	printf("#############################################################\n");
 	printf("\n");
 
-	int i;
-	for(i=0;i<__SOCKET_MAXIMUM__;i++)
-		printf("%x\n",(int)&rosc_static_socket_mem[i]);
 
 	rosc_init();
 	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
