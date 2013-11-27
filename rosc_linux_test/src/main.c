@@ -63,7 +63,11 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
-	printf("simple1 callback: %i\n", msg->EightArray.data[0]);
+	int i;
+	printf("simpleTopic1\n");
+	printf("EightArray size: %i\n",msg->EightArray.size);
+	for(i=0;i<msg->EightArray.size;i++)
+		printf("EightArray[%i]=%i\n",i, msg->EightArray.data[i]);
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
