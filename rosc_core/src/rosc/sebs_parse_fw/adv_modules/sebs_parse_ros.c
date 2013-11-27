@@ -242,7 +242,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					break;
 
 					case ROS_MSG_BUILDUP_TYPE_SUBMESSAGE:
-					fdata->submessage_state_array->is_submessage_array=false;
+					fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=false;
 					fdata->submessage_state_array[fdata->submessage_depth].parent_message_start=fdata->msg_storage;
 					fdata->msg_storage=fdata->msg_storage+fdata->memory_offset_array[++fdata->memory_offset_current_element];
 					fdata->submessage_state_array[fdata->submessage_depth].is_submessage_array=false;
@@ -276,10 +276,10 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					case ROS_MSG_BUILDUP_TYPE_MESSAGE_END:
 					if(fdata->submessage_depth > 0)
 					{
-						if(fdata->submessage_state_array->is_submessage_array)
+						if(fdata->submessage_state_array[fdata->submessage_depth-1].is_submessage_array)
 						{
-							fdata->submessage_state_array->submessages_remaining--;
-							if(fdata->submessage_state_array->submessages_remaining>0)
+							fdata->submessage_state_array[fdata->submessage_depth-1].submessages_remaining--;
+							if(fdata->submessage_state_array[fdata->submessage_depth-1].submessages_remaining>0)
 							{
 								fdata->msg_storage+=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_byte_size;
 								fdata->buildup_type_current_field=fdata->submessage_state_array[fdata->submessage_depth-1].submessage_buildup_start;
@@ -297,7 +297,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 								{
 									++fdata->buildup_type_current_field;
 								}
-								fdata->submessage_state_array->is_submessage_array=false;
+								fdata->submessage_state_array[fdata->submessage_depth-1].is_submessage_array=false;
 								fdata->submessage_depth--;
 							}
 						}
@@ -369,16 +369,16 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->submessage_state_array[fdata->submessage_depth].submessage_offset_start+=1;/* add one because of the oversize field */
 
 					//If there are more messages than we have memory
-					if(fdata->submessage_state_array->submessages_remaining>fdata->array_length_array[fdata->array_length_current_element+1])
+					if(fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining>fdata->array_length_array[fdata->array_length_current_element+1])
 					{
-						fdata->submessage_state_array->submessages_to_skip=fdata->submessage_state_array->submessages_remaining-fdata->array_length_array[fdata->array_length_current_element+1];
-						fdata->submessage_state_array->submessages_remaining=fdata->array_length_array[fdata->array_length_current_element+1];
+						fdata->submessage_state_array[fdata->submessage_depth].submessages_to_skip=fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining-fdata->array_length_array[fdata->array_length_current_element+1];
+						fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining=fdata->array_length_array[fdata->array_length_current_element+1];
 					}
 					else
 					{
-						fdata->submessage_state_array->submessages_to_skip=0;
+						fdata->submessage_state_array[fdata->submessage_depth].submessages_to_skip=0;
 					}
-					*size=fdata->submessage_state_array->submessages_remaining;
+					*size=fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining;
 
 					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
 							fdata->memory_offset_array[fdata->memory_offset_current_element+4]);/* data[0] */
@@ -389,7 +389,7 @@ sebs_parse_return_t sebs_parse_ros(sebs_parser_data_t* pdata)
 					fdata->msg_storage=(fdata->msg_storage+fdata->memory_offset_array[fdata->memory_offset_current_element+1]+ /* struct */
 							fdata->memory_offset_array[fdata->memory_offset_current_element+3]);/* data[0] */
 					*size=fdata->array_length_array[++fdata->array_length_current_element];
-					fdata->submessage_state_array->submessages_remaining=*size;
+					fdata->submessage_state_array[fdata->submessage_depth].submessages_remaining=*size;
 					fdata->memory_offset_current_element+=3;
 				}
 				fdata->state=SEBS_PARSE_ROSBINARY_MESSAGE_FIELD;
