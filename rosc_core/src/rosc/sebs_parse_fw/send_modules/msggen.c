@@ -73,7 +73,7 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 
 					break;
 				case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER:
-					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
+					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERPUBLISHER;
 					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
 					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
 					xmlrpc_msg_request[42]=MSG_TYPE_NONE;

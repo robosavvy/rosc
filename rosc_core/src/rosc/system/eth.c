@@ -173,8 +173,8 @@ bool register_interface(iface_t *interface)
 
 	if(cur != interface)
 	{
-		cur->state=IFACE_STATE_DO_REGISTER;
 		cur->next=interface;
+		interface->state=IFACE_STATE_DO_REGISTER;
 		interface->next=0;
 	}
 	else
@@ -185,9 +185,10 @@ bool register_interface(iface_t *interface)
 		}
 		else
 		{
-			cur->state=IFACE_STATE_DO_REGISTER;
+			interface->state=IFACE_STATE_DO_REGISTER;
 		}
 	}
+	return (false);
 }
 
 bool unregister_interface(iface_t *interface)

@@ -56,6 +56,8 @@ ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 2);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 
+
+
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple1(sim1);
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple2(sim2);
@@ -77,9 +79,12 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,sub2)
 	printf("simple2 callback\n");
 }
 
+
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, sub1,"/simple1")
 
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, sub2,"/simple2")
+
+ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple1(sim1, pub1, "/simple1Pub")
 
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
@@ -123,8 +128,9 @@ int main()
 
 	rosc_init();
 
-	register_interface(&sub1);
-	register_interface(&sub2);
+	//register_interface(&sub1);
+	//register_interface(&sub2);
+	register_interface(&pub1);
 
 	rosc_spin();
 }

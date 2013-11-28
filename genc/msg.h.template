@@ -243,4 +243,35 @@ iface_t SUBSCRIBER_VAR={\
            &ros_handler,\
            &rosc_static_subscriber_init__##SUBSCRIBER_VAR};\
 
+
+
+/* ***************************************
+** Publisher creation macro            **
+*****************************************/                                
+#define ROSC_STATIC_PUBLISHER_INIT__@(rosc_name_pack)(USER_TYPE, PUBLISHER_VAR, TOPIC_REG_STR)\
+ros_iface_init_t rosc_static_subscriber_init__##PUBLISHER_VAR={TOPIC_REG_STR,\
+                            @(rosc_pref)_topic_type__@(rosc_name_pack),\
+                            ROS_HANDLER_TYPE_TOPIC_PUBLISHER,\
+                            @(rosc_pref)_buildup__@(rosc_name_pack),\
+                            @(rosc_pref)_submessage_size_list__@(rosc_name_pack)__## USER_TYPE,\
+                            @(rosc_len)__## USER_TYPE,\
+                            @(rosc_pref)_memory_offsets__@(rosc_name_pack)__## USER_TYPE,\
+                            @(rosc_pref)_message_definition__@(rosc_name_pack),\
+                            @(rosc_pref)_md5sum__@(rosc_name_pack),\
+@[ if rosc_gen.get_submessage_depth()>0 ]@
+                            offsetof(@(rosc_usertype_storage),submessage_state),\
+@[else]@
+                            0,\
+@[end if]@
+                            0,\
+                            };\
+iface_t PUBLISHER_VAR={\
+           &ros_handler,\
+           &rosc_static_subscriber_init__##PUBLISHER_VAR};\
+
+
+
+
+
+
 #endif /* @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H */
