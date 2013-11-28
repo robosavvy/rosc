@@ -166,7 +166,31 @@ bool iface_list_insert(iface_t *interface)
 	}
 }
 
-void unregister_interface(iface_t *interface)
+bool register_interface(iface_t *interface)
+{
+	iface_t* cur=interface_list_start;
+	while(cur->next != 0 && cur->next != interface) cur=cur->next;
+
+	if(cur != interface)
+	{
+		cur->state=IFACE_STATE_DO_REGISTER;
+		cur->next=interface;
+		interface->next=0;
+	}
+	else
+	{
+		if(cur->state!=IFACE_STATE_UNREGISTERED)
+		{
+			return (true);
+		}
+		else
+		{
+			cur->state=IFACE_STATE_DO_REGISTER;
+		}
+	}
+}
+
+bool unregister_interface(iface_t *interface)
 {
 	iface_t* cur=interface_list_start;
 	while(cur->next != 0 && cur->next != interface) cur=cur->next;
@@ -174,12 +198,13 @@ void unregister_interface(iface_t *interface)
 	//TODO I guess some additional stuff (states) must be done here ... but currently I leave it like that.
 	if(cur == interface)
 	{
-		cur->state=IFACE_STATE_DO_UNREGISTER;
+		if(cur->state==IFACE_STATE_REGISTERED)
+		{
+			cur->state=IFACE_STATE_DO_UNREGISTER;
+		}
 	}
-	else
-	{
-		ROSC_ERROR("Could not find interface in the interface list!");
-	}
+
+	return (true);
 }
 
 void iface_list_remove(iface_t *interface)

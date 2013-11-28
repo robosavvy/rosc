@@ -80,7 +80,9 @@ typedef struct iface_t
 }iface_t;
 
 bool iface_list_insert(iface_t *interface);
-void unregister_interface(iface_t *interface);
+bool unregister_interface(iface_t *interface);
+bool register_interface(iface_t *interface);
+
 
 typedef enum
 {
