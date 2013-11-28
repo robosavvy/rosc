@@ -62,9 +62,9 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
-ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
+ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,sub1)
 	int i;
-	printf("simpleTopic1\n");
+	printf("sub1\n");
 	printf("s2 size: %i\n",msg->s2.size);
 	printf("s2 oversize: %i\n",msg->s2.oversize);
 
@@ -73,14 +73,13 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
 
 }
 
-ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
+ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,sub2)
 	printf("simple2 callback\n");
 }
 
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1,"/simple1")
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, sub1,"/simple1")
 
-
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2,"/simple2")
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, sub2,"/simple2")
 
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
@@ -124,8 +123,8 @@ int main()
 
 	rosc_init();
 
-	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
-	register_interface(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
+	register_interface(&sub1);
+	register_interface(&sub2);
 
 	rosc_spin();
 }

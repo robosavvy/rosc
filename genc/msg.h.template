@@ -214,16 +214,16 @@ const int8_t  @(rosc_pref)_md5sum__@(rosc_name_pack)[]= "@(genmsg.gentools.compu
 /* **************************************
 ** Callback function head for usertype **
 ****************************************/
-#define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)(USER_TYPE, TOPIC)\
-void rosc_static_callback_## TOPIC(const void* const __msg)\
+#define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)(USER_TYPE, SUBSCRIBER_VAR)\
+void rosc_static_callback_## SUBSCRIBER_VAR(const void* const __msg)\
 {\
     const @(rosc_usertype)* const msg=(const @(rosc_usertype)* const) __msg;\
  
 /* ***************************************
 ** Subscriber creation macro            **
 *****************************************/                                
-#define ROSC_STATIC_SUBSCRIBER_INIT__@(rosc_name_pack)(USER_TYPE, TOPIC, TOPIC_REG_STR)\
-ros_iface_init_t rosc_static_subscriber_init_##USER_TYPE##__##TOPIC={TOPIC_REG_STR,\
+#define ROSC_STATIC_SUBSCRIBER_INIT__@(rosc_name_pack)(USER_TYPE, SUBSCRIBER_VAR, TOPIC_REG_STR)\
+ros_iface_init_t rosc_static_subscriber_init__##SUBSCRIBER_VAR={TOPIC_REG_STR,\
                             @(rosc_pref)_topic_type__@(rosc_name_pack),\
                             ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER,\
                             @(rosc_pref)_buildup__@(rosc_name_pack),\
@@ -237,13 +237,10 @@ ros_iface_init_t rosc_static_subscriber_init_##USER_TYPE##__##TOPIC={TOPIC_REG_S
 @[else]@
                             0,\
 @[end if]@
-                            &rosc_static_callback_## TOPIC,\
+                            &rosc_static_callback_## SUBSCRIBER_VAR,\
                             };\
-iface_t rosc_static_subscriber_##USER_TYPE##__##TOPIC={\
+iface_t SUBSCRIBER_VAR={\
            &ros_handler,\
-           &rosc_static_subscriber_init_##USER_TYPE##__##TOPIC};\
-
-#define ROSC_STATIC_SUBSCRIBER__@(rosc_name_pack)(USER_TYPE, TOPIC)\
-&rosc_static_subscriber_##USER_TYPE##__##TOPIC
+           &rosc_static_subscriber_init__##SUBSCRIBER_VAR};\
 
 #endif /* @(spec.package.upper())_MESSAGE_@(spec.short_name.upper())_H */
