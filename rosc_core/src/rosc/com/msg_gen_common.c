@@ -233,6 +233,7 @@ msg_gen_type_t rosrpc_topic_init[]=
 
 	msg_gen_type_t xmlrpc_msg_response[]=
 	{
+
 			MSG_TYPE_OPEN_TAG_METHODRESPONSE,
 
 			MSG_TYPE_OPEN_TAG_PARAMS,
@@ -286,10 +287,33 @@ msg_gen_type_t rosrpc_topic_init[]=
 											MSG_TYPE_SKIP_ENTRIES, //40
 											MSG_TYPE_OPEN_TAG_VALUE,
 												MSG_TYPE_OPEN_TAG_INT,
-													MSG_TYPE_INT16_STRING,
+													MSG_TYPE_UINT16_STRING,
 												MSG_TYPE_CLOSE_TAG_INT,
 											MSG_TYPE_CLOSE_TAG_VALUE,
 											MSG_TYPE_SKIP_END,
+
+											MSG_TYPE_SKIP_ENTRIES, //47
+											MSG_TYPE_OPEN_TAG_ARRAY,
+												MSG_TYPE_OPEN_TAG_DATA,
+													MSG_TYPE_OPEN_TAG_VALUE,
+														MSG_TYPE_OPEN_TAG_STRING,
+															MSG_TYPE_STDTXT_TCPROS,
+														MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_CLOSE_TAG_VALUE,
+
+													MSG_TYPE_OPEN_TAG_VALUE,
+														MSG_TYPE_OPEN_TAG_STRING,
+															MSG_TYPE_HOSTNAME_OR_IP,
+														MSG_TYPE_OPEN_TAG_STRING,
+													MSG_TYPE_CLOSE_TAG_VALUE,
+
+													MSG_TYPE_OPEN_TAG_VALUE,
+														MSG_TYPE_OPEN_TAG_INT,
+															MSG_TYPE_UINT16_STRING,
+														MSG_TYPE_CLOSE_TAG_INT,
+													MSG_TYPE_CLOSE_TAG_VALUE,
+											MSG_TYPE_SKIP_END,
+
 
 										MSG_TYPE_CLOSE_TAG_DATA,
 									MSG_TYPE_CLOSE_TAG_ARRAY,

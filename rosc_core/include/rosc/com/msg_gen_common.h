@@ -316,7 +316,8 @@ extern msg_gen_type_t xmlrpc_msg_http_error[];
 		xmlrpc_msg_response[19]=MSG_TYPE_SKIP_ENTRIES;\
 		xmlrpc_msg_response[26]=MSG_TYPE_SKIP_ENTRIES;\
 		xmlrpc_msg_response[33]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_response[40]=MSG_TYPE_SKIP_ENTRIES;
+		xmlrpc_msg_response[40]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_response[47]=MSG_TYPE_SKIP_ENTRIES;
 
 #define XMLRPC_RESP_HD_RESET()\
 		xmlrpc_hd_response[2]=MSG_TYPE_VAL_200_OK;\
