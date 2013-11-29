@@ -65,30 +65,32 @@ sebs_parse_return_t sebs_msggen(sebs_parser_data_t* pdata)
 			switch(fdata->type)
 			{
 				case MSGGEN_TYPE_XMLRPC_RESPOND_REQUEST_TOPIC:
-					xmlrpc_msg_response[47]=MSG_TYPE_NONE;
+					xmlrpc_msg_response[27]=MSG_TYPE_NONE;
+					xmlrpc_msg_response[34]=MSG_TYPE_NONE;
+					xmlrpc_msg_response[41]=MSG_TYPE_NONE;
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_SUBSCRIBER:
-					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
-					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[42]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[3]=MSG_TYPE_METHODNAME_REGISTERSUBSCRIBER;
+					xmlrpc_msg_request[12]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[19]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[43]=MSG_TYPE_NONE;
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_REQ_REGISTER_PUBLISHER:
-					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REGISTERPUBLISHER;
-					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[18]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[42]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[3]=MSG_TYPE_METHODNAME_REGISTERPUBLISHER;
+					xmlrpc_msg_request[12]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[19]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[43]=MSG_TYPE_NONE;
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_ACK:
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_REQUEST_TOPIC:
-					xmlrpc_msg_request[2]=MSG_TYPE_METHODNAME_REQUESTTOPIC;
-					xmlrpc_msg_request[11]=MSG_TYPE_NONE;
-					xmlrpc_msg_request[52]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[3]=MSG_TYPE_METHODNAME_REQUESTTOPIC;
+					xmlrpc_msg_request[12]=MSG_TYPE_NONE;
+					xmlrpc_msg_request[53]=MSG_TYPE_NONE;
 					break;
 
 				case MSGGEN_TYPE_XMLRPC_ERROR:

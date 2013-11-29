@@ -792,6 +792,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 										if(cur)
 										{
 											DEBUG_PRINT_STR("Listen socket found!");
+											DEBUG_PRINT(INT, "Port", cur->port);
 											hdata->genPayloadData[0]=&cur->port;
 											SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_RESPOND_REQUEST_TOPIC, 0, hdata->genPayloadData);
 										}
