@@ -194,6 +194,21 @@ socket_id_t abstract_socket_accept(listen_socket_id_t socket_id)
                 (struct sockaddr *) &cli_addr,
                 &clilen);
 
+    //NONBLOCK!!!
+        int flag = 1;
+        int result = setsockopt(newsockfd,            /* socket affected */
+                                IPPROTO_TCP,     /* set option at TCP level */
+                                TCP_NODELAY,     /* name of option */
+                                (char *) &flag,  /* the cast is historical cruft */
+                                sizeof(int));    /* length of option value */
+        if (result < 0)
+        {
+        	close(newsockfd);
+        	 return (-1);
+        }
+
+        fcntl(newsockfd, F_SETFL, O_NONBLOCK);
+
     if(newsockfd<0)
     	return(-1);
     else
