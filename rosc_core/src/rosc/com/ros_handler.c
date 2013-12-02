@@ -227,7 +227,16 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 					{
 
 						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
-							break;
+							DEBUG_PRINT_STR("Publisher: Send header!");
+								fdata->mode=SEBS_PARSE_ROS_MODE_BINARY;
+
+								hdata->genPayloadData[0]=idata->message_definition;
+								hdata->genPayloadData[1]=idata->md5sum;
+								hdata->genPayloadData[2]=idata->iface_name;
+								hdata->genPayloadData[3]="narf";
+								hdata->hstate=ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND;
+								SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_ROSMSG_HEADER, 0, hdata->genPayloadData);
+						break;
 
 						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
 

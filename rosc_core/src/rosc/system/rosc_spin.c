@@ -91,7 +91,6 @@ void rosc_spin()
 						con_sock->pdata.connection_interface=con_sock;
 
 
-
 						//Init here, because the memory can change later ...
 						//TODO probably unnecessary call when later the init of the rpc points only to current iface
 						sebs_parser_frame(0,SOCKET_SIG_NO_CONNECTION,&con_sock->pdata);
@@ -169,11 +168,11 @@ void rosc_spin()
 					{
 						con_sock->socket_id=con_sock_id;
 						con_sock->state=SOCKET_STATE_CONNECTED;
+						con_sock->pdata.out_len=SOCKET_SIG_NO_DATA;
 						con_sock->iface=listen_sock->interface;
 						con_sock->pdata.handler_init=true;
 						con_sock->pdata.handler_function=listen_sock->interface->handler_function;
 						con_sock->pdata.init_data=listen_sock->interface->init_data;
-
 
 						DEBUG_PRINT_STR("New connection ... ");
 					}
