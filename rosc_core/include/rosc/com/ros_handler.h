@@ -61,6 +61,8 @@ typedef struct
 	sebs_msggen_t gen;
 	sebs_parse_ros_data_t ros;
 
+	bool publisher_ready;
+
 }ros_handler_data_t;
 
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata);
