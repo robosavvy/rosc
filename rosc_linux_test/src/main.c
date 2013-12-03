@@ -48,6 +48,7 @@
 
 #include <rosc/com/msg_gen.h>
 #include <rosc/system/eth.h>
+#include <rosc/com/publish.h>
 
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
@@ -96,6 +97,9 @@ MASTER_URI_STATIC("http://localhost:11311");
 
 NODE_NAME("roscnode");
 
+
+extern void publisherfill(iface_t *interface, void *msg, socket_t* cur);
+
 int main()
 {
 	printf("Socket Memory Statistics\n");
@@ -126,11 +130,38 @@ int main()
 	printf("\n");
 
 
-	rosc_init();
+
+	char mem[rosc_static_socket_mem_size];
+	socket_t cur;
+
+	sebs_parser_data_t pdata;
+
+	rosc_static_msg_user_def__rosc_linux_test__simple1__sim1_t msg;
+
+
+
+	cur.pdata.additional_storage=mem;
+	memset(mem,0,rosc_static_socket_mem_size);
+
+
+
+	msg.s2.size=2;
+	msg.s2.oversize=1;
+	msg.s2.data[0].ThirtyTwo=1;
+	msg.s2.data[1].ThirtyTwo=2;
+
+	publisherfill(&pub1, &msg, &cur);
+
+	int i;
+	for(i=0;i<rosc_static_socket_mem_size;i++)
+		mem[i];
+
+
+	//rosc_init();
 
 	//register_interface(&sub1);
 	//register_interface(&sub2);
-	register_interface(&pub1);
+	//register_interface(&pub1);
 
-	rosc_spin();
+	//rosc_spin();
 }
