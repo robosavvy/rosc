@@ -147,8 +147,11 @@ int main()
 
 	msg.s2.size=2;
 	msg.s2.oversize=1;
-	msg.s2.data[0].ThirtyTwo=1;
-	msg.s2.data[1].ThirtyTwo=2;
+	msg.s2.data[0].ThirtyTwo=2222;
+	printf("%x\n", (size_t)&msg.s2.data[0].ThirtyTwo);
+
+	msg.s2.data[1].ThirtyTwo=3333;
+	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
 
 	publisherfill(&pub1, &msg, &cur);
 
