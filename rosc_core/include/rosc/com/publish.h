@@ -13,6 +13,6 @@
 
 
 void publish(iface_t *interface, void *msg);
-void publisherfill(iface_t *interface, void *msg, socket_t* cur);
+uint32_t publisherfill(iface_t *interface, void *msg, socket_t* cur);
 
 #endif /* PUBLISH_H_ */

@@ -4,7 +4,7 @@
 #include <rosc/system/endian.h>
 
 #include <string.h>
-void publisherfill(iface_t *interface, void *msg, socket_t* cur)
+uint32_t publisherfill(iface_t *interface, void *msg, socket_t* cur)
 {
 	ros_iface_init_t* init=interface->init_data;
 	if(interface->handler_function==&ros_handler)
@@ -35,10 +35,18 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 		uint32_t message_size;
 
 
+		uint32_t null=0;
+
+
 		void *current_value_address;
 		uint8_t current_value_byte_size;
 		uint32_t array_size=0;
 		uint32_t amount=0;
+
+		uint32_t array_length_no=0;
+		uint32_t submessage_size_no=0;
+
+
 		bool array_is_dynamic=false;
 
 		bool finish=false;
@@ -55,6 +63,10 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 			 {
 				 submessage_state_array[message_depth].parent_message_start=current_message_start;
 				 submessage_state_array[message_depth].submessage_buildup_start=buildup_no;
+				 submessage_state_array[message_depth].submessage_array_lengths_start=array_length_no;
+				 submessage_state_array[message_depth].submessage_submessage_size_start=submessage_size_no;
+
+
 				 switch(buildup[buildup_no])
 				 {
 				 	 case ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY:
@@ -64,14 +76,14 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				 				*(((char*)current_message_start)
 				 						+memory_offsets[offset_no+0]//Struct
 				 						+memory_offsets[offset_no+1]);//Size
-				 		submessage_state_array[message_depth].submessage_byte_size=*submessage_sizes;
+				 		submessage_state_array[message_depth].submessage_byte_size=submessage_sizes[submessage_size_no];
 
 				 		//Dynamic array?
 				 		if(buildup[buildup_no]==ROS_MSG_BUILDUP_TYPE_SUBMESSAGEARRAY_UL)
 				 		{
-				 			if(submessage_state_array[message_depth].submessages_remaining>*array_lengths)
+				 			if(submessage_state_array[message_depth].submessages_remaining>array_lengths[array_length_no])
 				 			{
-				 				submessage_state_array[message_depth].submessages_remaining=*array_lengths;
+				 				submessage_state_array[message_depth].submessages_remaining=array_lengths[array_length_no];
 				 			}
 				 			current_message_start=(((char*)current_message_start)
 			 						+memory_offsets[offset_no+0]//Struct
@@ -81,9 +93,9 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				 		}
 				 		else
 				 		{
-				 			if(submessage_state_array[message_depth].submessages_remaining!=*array_lengths)
+				 			if(submessage_state_array[message_depth].submessages_remaining!=array_lengths[array_length_no])
 				 			{
-				 				submessage_state_array[message_depth].submessages_remaining=*array_lengths;
+				 				submessage_state_array[message_depth].submessages_remaining=array_lengths[array_length_no];
 				 			}
 				 			current_message_start=(((char*)current_message_start)
 			 						+memory_offsets[offset_no+0]//Struct
@@ -94,8 +106,8 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 
 
-				 		array_lengths++;
-				 		submessage_sizes++;
+				 		array_length_no++;
+				 		submessage_size_no++;
 
 				 		//Insert the array size into the out stream
 				 		current_value_address=&(submessage_state_array[message_depth].submessages_remaining);
@@ -128,17 +140,19 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				 	amount=0;
 				 	if(buildup[buildup_no]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
 					{
-				 		if(array_size>*array_lengths)
-				 			array_size=*array_lengths;
+				 		if(array_size>array_lengths[array_length_no])
+				 			array_size=array_lengths[array_length_no];
 				 		array_is_dynamic=true;
 					}
 					else
 					{
-				 		if(array_size!=*array_lengths)
-				 			array_size=*array_lengths;
+				 		if(array_size!=array_lengths[array_length_no])
+				 			array_size=array_lengths[array_length_no];
 				 		array_is_dynamic=false;
 					}
-				 	array_lengths++;
+				 	array_length_no++;
+				 	if(array_size==0)
+				 		current_value_address=
 				 break;
 
 
@@ -208,6 +222,8 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 						 {
 							 buildup_no=submessage_state_array[message_depth-1].submessage_buildup_start;
 							 offset_no=submessage_state_array[message_depth-1].submessage_offset_start;
+							 array_length_no=submessage_state_array[message_depth].submessage_array_lengths_start;
+							 submessage_size_no=submessage_state_array[message_depth].submessage_submessage_size_start;
 							 current_message_start=(char*)current_message_start+submessage_state_array[message_depth-1].submessage_byte_size;
 						 }
 						 else
@@ -293,8 +309,14 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				{
 					int b;
 					//increase offset to string size
+
 					uint32_t usergiven_size=*((uint32_t*)((char *)current_value_address+memory_offsets[offset_no+1]));
 					uint32_t string_size;
+
+					//Check if the user has entered a to big size ...
+					if(usergiven_size>array_lengths[array_length_no])
+							usergiven_size=array_lengths[array_length_no];
+
 
 					//save the start of the string
 					char *string=((char *)current_value_address+memory_offsets[offset_no+3]);
@@ -319,12 +341,14 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 					//If this is not the last string to insert increase current value address by the string struct size
 					if(i+1<amount)
-						current_value_address=((char*)current_value_address)+*submessage_sizes;
+						current_value_address=((char*)current_value_address)+submessage_sizes[submessage_size_no];
 
 				}
 				if(amount>1)
 				{
-					submessage_sizes++;
+					array_length_no++;
+					offset_no+=4;
+					submessage_size_no++;
 					amount=0;
 				}
 			}
@@ -341,11 +365,10 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 				if(finish)
 				{
-					stream_pos+=message_size;
+					printf("finish!\n");
+					return (stream_pos+message_size);
 				}
-				for(i=0;i<stream_pos;i++)
-					printf(" %x ",((unsigned char*)cur->pdata.additional_storage)[i]);
-				printf("\n");
+
 				amount--;
 			}
 
@@ -360,6 +383,7 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 void publish(iface_t *interface, void *msg)
 {
+	uint32_t overall_size;
 	ros_iface_init_t* init=interface->init_data;
 	if(interface->handler_function==&ros_handler)
 	{
@@ -387,10 +411,10 @@ void publish(iface_t *interface, void *msg)
 	}
 
 
+	//TODO integrate function here
+	overall_size=publisherfill(interface,msg,cur);
 
 
-
-#if 0
 		//Copy data to other subscribers
 		while(cur)
 		{
@@ -402,13 +426,13 @@ void publish(iface_t *interface, void *msg)
 				cur->pdata.out_len=overall_size;
 				for(s=0;s<overall_size;++s)
 				{
-					cur->pdata.additional_storage[s]=first->pdata.additional_storage[s];
+					((char*)cur->pdata.additional_storage)[s]=((char*)first->pdata.additional_storage)[s];
 				}
 				break;
 			}
 			cur=cur->next;
 		}
-#endif
+
 	}
 }
 

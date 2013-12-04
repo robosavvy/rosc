@@ -54,7 +54,7 @@
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 3, 3, 2);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 3, 5, 2);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 
 
@@ -100,7 +100,7 @@ MASTER_URI_STATIC("http://localhost:11311");
 NODE_NAME("roscnode");
 
 
-extern void publisherfill(iface_t *interface, void *msg, socket_t* cur);
+extern uint32_t publisherfill(iface_t *interface, void *msg, socket_t* cur);
 
 int main()
 {
@@ -141,7 +141,7 @@ int main()
 	rosc_static_msg_user_def__rosc_linux_test__simple1__sim1_t msg;
 
 
-
+	int i;
 	cur.pdata.additional_storage=mem;
 	memset(mem,0,rosc_static_socket_mem_size);
 
@@ -165,10 +165,13 @@ int main()
 	msg.str.data[1].str_data[0]='c';
 	msg.str.data[1].str_data[1]='d';
 
-	publisherfill(&pub1, &msg, &cur);
-	printf("here!");
+	uint32_t r=publisherfill(&pub1, &msg, &cur);
 
 
+	for(i=0;i<r;i++)
+		printf("%x ",((unsigned char*)cur.pdata.additional_storage)[i]);
+
+	printf("\n");
 
 
 	//rosc_init();
