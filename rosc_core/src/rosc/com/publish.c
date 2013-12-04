@@ -122,8 +122,9 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 			 case ROS_MSG_BUILDUP_TYPE_ARRAY:
 			 case ROS_MSG_BUILDUP_TYPE_ARRAY_UL:
-				 	array_size=*((uint32_t*)memory_offsets[offset_no]+//struct
-				 	                        memory_offsets[offset_no+1]);//size
+				 	array_size=*((uint32_t*)
+				 			((char*)current_message_start+memory_offsets[offset_no]+//struct
+				 	                                      memory_offsets[offset_no+1]));//size
 				 	amount=0;
 				 	if(buildup[buildup_no]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
 					{
@@ -145,8 +146,8 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 
 			 case ROS_MSG_BUILDUP_TYPE_STRING:
+				 isString=true;
 				 current_value_address=((char *)current_message_start+memory_offsets[offset_no]);
-				 offset_no++;
 				 current_value_byte_size=4;
 				 amount=1;
 				 break;
@@ -290,29 +291,26 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				int i;
 				for(i=0;i<amount;i++)
 				{
+					int b;
 					//increase offset to string size
-					offset_no++;
-					uint32_t usergiven_size=*((uint32_t*)((char *)current_value_address+memory_offsets[offset_no]));
+					uint32_t usergiven_size=*((uint32_t*)((char *)current_value_address+memory_offsets[offset_no+1]));
 					uint32_t string_size;
 
-					//increase offset to string address (skipping oversize field)
-					offset_no+=2;
-
 					//save the start of the string
-					char *string=((char *)current_value_address+memory_offsets[offset_no]);
+					char *string=((char *)current_value_address+memory_offsets[offset_no+3]);
 
 					//copying the string into the output buffer, determining real size if the terminator
 					//comes before the users given size the string will be cut there
 					for(string_size=0;string_size<usergiven_size  && string[string_size] != '\0'; ++string_size)
 					{
-						((unsigned char*)cur->pdata.additional_storage)[stream_pos+ 4 /* skipping the size for setting it later*/ +string_size]=string[string_size];
+						((char*)cur->pdata.additional_storage)[stream_pos+ 4 /* skipping the size for setting it later*/ +string_size]=string[string_size];
 					}
 
 					//Insert the determined size
 					correct_array=g_byte_order_correction_to_network->SIZE_4_B;
-					for(i=0;i<4;i++)
+					for(b=0;b<4;b++)
 					{
-							((unsigned char*)cur->pdata.additional_storage)[stream_pos+correct_array[i]]=((char*)string_size)[i];
+							((char*)cur->pdata.additional_storage)[stream_pos+correct_array[b]]=((char*)&string_size)[b];
 							stream_pos++;
 					}
 

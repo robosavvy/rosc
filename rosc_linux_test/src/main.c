@@ -54,7 +54,7 @@
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 2);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 3, 3, 2);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 
 
@@ -70,6 +70,8 @@ ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,sub1)
 	printf("sub1\n");
 	printf("s2 size: %i\n",msg->s2.size);
 	printf("s2 oversize: %i\n",msg->s2.oversize);
+
+
 
 	for(i=0;i<msg->s2.size;i++)
 		printf("%i\n",msg->s2.data[i].ThirtyTwo);
@@ -153,8 +155,19 @@ int main()
 	msg.s2.data[1].ThirtyTwo=3333;
 	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
 
+
+	msg.str.size=2;
+	msg.str.data[0].size=2;
+	msg.str.data[0].str_data[0]='a';
+	msg.str.data[0].str_data[1]='b';
+
+	msg.str.data[1].size=2;
+	msg.str.data[1].str_data[0]='c';
+	msg.str.data[1].str_data[1]='d';
+
 	publisherfill(&pub1, &msg, &cur);
 	printf("here!");
+
 
 
 
