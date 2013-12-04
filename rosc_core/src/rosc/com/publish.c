@@ -3,7 +3,7 @@
 #include <rosc/com/ros_handler.h>
 #include <rosc/system/endian.h>
 
-
+#include <string.h>
 void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 {
 	ros_iface_init_t* init=interface->init_data;
@@ -39,9 +39,11 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 		uint8_t current_value_byte_size;
 		uint32_t array_size=0;
 		uint32_t amount=0;
-		bool is_dynamic=false;
+		bool array_is_dynamic=false;
 
 		bool finish=false;
+		bool isString=false;
+		uint32_t string_size=0;
 
 		while(!finish)
 		{
@@ -120,19 +122,20 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 			 case ROS_MSG_BUILDUP_TYPE_ARRAY:
 			 case ROS_MSG_BUILDUP_TYPE_ARRAY_UL:
-				 offset_no++; //Go from struct to size
-				 	array_size=*((uint32_t*)memory_offsets[offset_no]);//TODO set
-
+				 	array_size=*((uint32_t*)memory_offsets[offset_no]+//struct
+				 	                        memory_offsets[offset_no+1]);//size
+				 	amount=0;
 				 	if(buildup[buildup_no]==ROS_MSG_BUILDUP_TYPE_ARRAY_UL)
 					{
 				 		if(array_size>*array_lengths)
 				 			array_size=*array_lengths;
-						offset_no++; //Skip oversize;
+				 		array_is_dynamic=true;
 					}
 					else
 					{
 				 		if(array_size!=*array_lengths)
 				 			array_size=*array_lengths;
+				 		array_is_dynamic=false;
 					}
 				 	array_lengths++;
 				 break;
@@ -142,8 +145,11 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 
 
 			 case ROS_MSG_BUILDUP_TYPE_STRING:
-
-
+				 current_value_address=((char *)current_message_start+memory_offsets[offset_no]);
+				 offset_no++;
+				 current_value_byte_size=4;
+				 amount=1;
+				 break;
 
 
 
@@ -230,10 +236,20 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 			}
 			else if(amount)
 			{
-				if(array_size)
+				if(array_size)//Do we have an array?
 				{
 					amount*=array_size;
-					array_size=0;
+					array_size=0;//Set to no array
+					if(array_is_dynamic)
+					{
+						offset_no+=3; //with oversize field
+						current_value_address+=memory_offsets[offset_no];
+					}
+					else
+					{
+						offset_no+=2; //without oversize field
+						current_value_address+=memory_offsets[offset_no];
+					}
 				}
 			}
 			else if(finish)
@@ -245,43 +261,84 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				current_value_byte_size=4;
 			}
 
+			const int8_t *correct_array;
+			const char single=0;
+			switch(current_value_byte_size)
+			{
+			case 1:
+				correct_array=&single;
+				printf("%x \n",(int) *((char *)current_value_address));
+				break;
+			case 2:
+				correct_array=g_byte_order_correction_to_network->SIZE_2_B;
+				printf("%x \n",(int) *((uint16_t *)current_value_address));
+				break;
 
-			while(amount)
+			case 4:
+				correct_array=g_byte_order_correction_to_network->SIZE_4_B;
+				printf("%x \n",(int) *((uint32_t *)current_value_address));
+				break;
+
+			case 8:
+				correct_array=g_byte_order_correction_to_network->SIZE_8_B;
+				printf("%x \n",(int) *((uint64_t *)current_value_address));
+				break;
+			}
+
+			if(isString) //A string
 			{
 				int i;
-				const int8_t *correct_array;
-				const char single=0;
-
-				switch(current_value_byte_size)
+				for(i=0;i<amount;i++)
 				{
-				case 1:
-					correct_array=&single;
-					printf("%x \n",(int) *((char *)current_value_address));
-					break;
-				case 2:
-					correct_array=g_byte_order_correction_to_network->SIZE_2_B;
-					printf("%x \n",(int) *((uint16_t *)current_value_address));
-					break;
+					//increase offset to string size
+					offset_no++;
+					uint32_t usergiven_size=*((uint32_t*)((char *)current_value_address+memory_offsets[offset_no]));
+					uint32_t string_size;
 
-				case 4:
+					//increase offset to string address (skipping oversize field)
+					offset_no+=2;
+
+					//save the start of the string
+					char *string=((char *)current_value_address+memory_offsets[offset_no]);
+
+					//copying the string into the output buffer, determining real size if the terminator
+					//comes before the users given size the string will be cut there
+					for(string_size=0;string_size<usergiven_size  && string[string_size] != '\0'; ++string_size)
+					{
+						((unsigned char*)cur->pdata.additional_storage)[stream_pos+ 4 /* skipping the size for setting it later*/ +string_size]=string[string_size];
+					}
+
+					//Insert the determined size
 					correct_array=g_byte_order_correction_to_network->SIZE_4_B;
-					printf("%x \n",(int) *((uint32_t *)current_value_address));
-					break;
+					for(i=0;i<4;i++)
+					{
+							((unsigned char*)cur->pdata.additional_storage)[stream_pos+correct_array[i]]=((char*)string_size)[i];
+							stream_pos++;
+					}
 
-				case 8:
-					correct_array=g_byte_order_correction_to_network->SIZE_8_B;
-					printf("%x \n",(int) *((uint64_t *)current_value_address));
-					break;
+					//Update the current stream position
+					stream_pos+=string_size;
+
+					//If this is not the last string to insert increase current value address by the string struct size
+					if(i+1<amount)
+						current_value_address=((char*)current_value_address)+*submessage_sizes;
+
 				}
+				if(amount>1)
+				{
+					submessage_sizes++;
+					amount=0;
+				}
+			}
+			else while(amount)
+			{
+				int i;
+
 
 				for(i=0;i<current_value_byte_size;i++)
 				{
-
-
-					((unsigned char*)cur->pdata.additional_storage)[stream_pos+correct_array[i]]=((char*)current_value_address)[i];
-					stream_pos++;
-
-
+						((unsigned char*)cur->pdata.additional_storage)[stream_pos+correct_array[i]]=((char*)current_value_address)[i];
+						stream_pos++;
 				}
 
 				if(finish)
@@ -293,6 +350,8 @@ void publisherfill(iface_t *interface, void *msg, socket_t* cur)
 				printf("\n");
 				amount--;
 			}
+
+			if(isString) isString=false;
 
 
 			buildup_no++;

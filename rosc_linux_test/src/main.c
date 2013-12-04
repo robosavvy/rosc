@@ -154,10 +154,8 @@ int main()
 	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
 
 	publisherfill(&pub1, &msg, &cur);
+	printf("here!");
 
-	int i;
-	for(i=0;i<rosc_static_socket_mem_size;i++)
-		mem[i];
 
 
 	//rosc_init();
