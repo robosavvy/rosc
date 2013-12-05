@@ -58,14 +58,14 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
 
 
-ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple1(sim1, pub1, "/simple1Pub")
+ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple2(sim2, pub1, "/simple1Pub")
 
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,sub1)
-	publish(&pub1,msg);
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,sub2)
+	publish(&pub1,msg);
 	printf("simple2 callback\n");
 }
 
@@ -115,45 +115,45 @@ int main()
 
 
 
-	char mem[rosc_static_socket_mem_size];
-	socket_t cur;
-
-	sebs_parser_data_t pdata;
-
-	rosc_static_msg_user_def__rosc_linux_test__simple1__sim1_t msg;
-
-
-	int i;
-	cur.pdata.additional_storage=mem;
-	memset(mem,0,rosc_static_socket_mem_size);
-
-
-
-	msg.s2.size=2;
-	msg.s2.oversize=1;
-	msg.s2.data[0].ThirtyTwo=2222;
-	printf("%x\n", (size_t)&msg.s2.data[0].ThirtyTwo);
-
-	msg.s2.data[1].ThirtyTwo=3333;
-	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
-
-
-	msg.str.size=2;
-	msg.str.data[0].size=2;
-	msg.str.data[0].str_data[0]='a';
-	msg.str.data[0].str_data[1]='b';
-
-	msg.str.data[1].size=2;
-	msg.str.data[1].str_data[0]='c';
-	msg.str.data[1].str_data[1]='d';
-
-	uint32_t r=publisherfill(&pub1, &msg, &cur);
-
-
-	for(i=0;i<r;i++)
-		printf("%x ",((unsigned char*)cur.pdata.additional_storage)[i]);
-
-	printf("\n");
+//	char mem[rosc_static_socket_mem_size];
+//	socket_t cur;
+//
+//	sebs_parser_data_t pdata;
+//
+//	rosc_static_msg_user_def__rosc_linux_test__simple1__sim1_t msg;
+//
+//
+//	int i;
+//	cur.pdata.additional_storage=mem;
+//	memset(mem,0,rosc_static_socket_mem_size);
+//
+//
+//
+//	msg.s2.size=2;
+//	msg.s2.oversize=1;
+//	msg.s2.data[0].ThirtyTwo=2222;
+//	printf("%x\n", (size_t)&msg.s2.data[0].ThirtyTwo);
+//
+//	msg.s2.data[1].ThirtyTwo=3333;
+//	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
+//
+//
+//	msg.str.size=2;
+//	msg.str.data[0].size=2;
+//	msg.str.data[0].str_data[0]='a';
+//	msg.str.data[0].str_data[1]='b';
+//
+//	msg.str.data[1].size=2;
+//	msg.str.data[1].str_data[0]='c';
+//	msg.str.data[1].str_data[1]='d';
+//
+//	uint32_t r=publisherfill(&pub1, &msg, &cur);
+//
+//
+//	for(i=0;i<r;i++)
+//		printf("%x ",((unsigned char*)cur.pdata.additional_storage)[i]);
+//
+//	printf("\n");
 
 
 	rosc_init();

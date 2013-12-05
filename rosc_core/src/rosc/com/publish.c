@@ -13,8 +13,7 @@ uint32_t publisherfill(iface_t *interface, void const *msg, socket_t* cur)
 		}
 	}
 
-	if (cur) //Was there a available publisher socket?
-	{
+
 		//Marshalling message data into first found ready publisher socket.
 		const ros_buildup_type_t* buildup = init->buildup;
 		char * buf = cur->pdata.additional_storage;
@@ -401,13 +400,17 @@ uint32_t publisherfill(iface_t *interface, void const *msg, socket_t* cur)
 
 			buildup_no++;
 		}
-	}
+
 }
 
 void publish(iface_t *interface, void const *msg)
 {
+
 	uint32_t overall_size;
 	ros_iface_init_t* init = interface->init_data;
+	ros_handler_data_t *cur_handler_data;
+
+	DEBUG_PRINT_STR("PUBLISH!");
 	if (interface->handler_function == &ros_handler)
 	{
 		if (init->ros_type != ROS_HANDLER_TYPE_TOPIC_PUBLISHER)
@@ -423,8 +426,8 @@ void publish(iface_t *interface, void const *msg)
 	{
 		if (cur->iface == interface)
 		{
-			ros_handler_data_t *cur_handler_data = cur->pdata.handler_data;
-			if (!cur_handler_data->publisher_ready)
+			cur_handler_data = cur->pdata.handler_data;
+			if (cur_handler_data->publisher_ready)
 			{
 				first = cur;
 				break;
@@ -433,27 +436,36 @@ void publish(iface_t *interface, void const *msg)
 		cur = cur->next;
 	}
 
-	//TODO integrate function here
-	overall_size = publisherfill(interface, msg, cur);
 
-	//Copy data to other subscribers
-	while (cur)
+	//TODO integrate function here
+	if (cur) //Was there a available publisher socket?
 	{
-		ros_handler_data_t *cur_handler_data = cur->pdata.handler_data;
-		if (cur->iface == interface && cur_handler_data->publisher_ready)
-		{
-			uint32_t s;
-			cur->pdata.out_buf = cur->pdata.additional_storage;
-			cur->pdata.out_len = overall_size;
-			for (s = 0; s < overall_size; ++s)
-			{
-				((char*) cur->pdata.additional_storage)[s] =
-						((char*) first->pdata.additional_storage)[s];
-			}
-			break;
-		}
+		overall_size = publisherfill(interface, msg, cur);
+		cur->pdata.out_len=overall_size;
+		cur_handler_data->publisher_ready=false;
 		cur = cur->next;
+		while (cur)
+		{
+			cur_handler_data = cur->pdata.handler_data;
+			if (cur->iface == interface && cur_handler_data->publisher_ready)
+			{
+				uint32_t s;
+				cur->pdata.out_buf = cur->pdata.additional_storage;
+				cur_handler_data->publisher_ready=false;
+				cur->pdata.out_len = overall_size;
+				for (s = 0; s < overall_size; ++s)
+				{
+					((char*) cur->pdata.additional_storage)[s] =
+							((char*) first->pdata.additional_storage)[s];
+				}
+				break;
+			}
+			cur = cur->next;
+		}
 	}
+
+
+
 
 }
 
