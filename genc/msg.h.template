@@ -215,9 +215,9 @@ const int8_t  @(rosc_pref)_md5sum__@(rosc_name_pack)[]= "@(genmsg.gentools.compu
 ** Callback function head for usertype **
 ****************************************/
 #define ROSC_STATIC_CALLBACK_HEAD__@(rosc_name_pack)(USER_TYPE, SUBSCRIBER_VAR)\
-void rosc_static_callback_## SUBSCRIBER_VAR(const void* const __msg)\
+void rosc_static_callback_## SUBSCRIBER_VAR(void* const __msg)\
 {\
-    const @(rosc_usertype)* const msg=(const @(rosc_usertype)* const) __msg;\
+    @(rosc_usertype)* const msg=(@(rosc_usertype)* const) __msg;\
  
 /* ***************************************
 ** Subscriber creation macro            **

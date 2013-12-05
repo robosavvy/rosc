@@ -49,7 +49,6 @@ typedef enum
 	ROS_HANDLER_STATE_PUBLISHER_HEADER_SEND,
 }ros_handler_state;
 
-
 typedef struct
 {
 	iface_t iface;
@@ -65,6 +64,11 @@ typedef struct
 
 }ros_handler_data_t;
 
+
 sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata);
+
+
+void publish(iface_t *interface, void const *msg);
+uint32_t publisherfill(iface_t *interface, void const *msg, socket_t* cur);
 
 #endif /* ROS_HANDLER_H_ */

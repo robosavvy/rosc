@@ -29,14 +29,6 @@
  *  main.c created by Christian Holl
  */
 
-/* ******************/
-/*     TESTING      */
-/* ******************/
-#include<rosc/sebs_parse_fw/send_modules/socket_connect.h>
-#include<stdio.h>
-#include<string.h>
-
-/* ******************/
 
 
 #include <rosc/rosc.h>
@@ -47,8 +39,7 @@
 #include <rosc/com/ros_handler.h>
 
 #include <rosc/com/msg_gen.h>
-#include <rosc/system/eth.h>
-#include <rosc/com/publish.h>
+
 
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
@@ -65,17 +56,13 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
+
+
+ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple1(sim1, pub1, "/simple1Pub")
+
+
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,sub1)
-	int i;
-	printf("sub1\n");
-	printf("s2 size: %i\n",msg->s2.size);
-	printf("s2 oversize: %i\n",msg->s2.oversize);
-
-
-
-	for(i=0;i<msg->s2.size;i++)
-		printf("%i\n",msg->s2.data[i].ThirtyTwo);
-
+	publish(&pub1,msg);
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,sub2)
@@ -87,8 +74,6 @@ ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, sub1,"/simple1")
 
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, sub2,"/simple2")
 
-ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple1(sim1, pub1, "/simple1Pub")
-
 
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
 	ROSC_STATIC_LOOKUP_ENTRY(localhost,IP(127,0,0,1))
@@ -98,9 +83,6 @@ ROSC_STATIC_LOOKUP_TABLE_END
 MASTER_URI_STATIC("http://localhost:11311");
 
 NODE_NAME("roscnode");
-
-
-extern uint32_t publisherfill(iface_t *interface, void *msg, socket_t* cur);
 
 int main()
 {
@@ -174,11 +156,11 @@ int main()
 	printf("\n");
 
 
-	//rosc_init();
+	rosc_init();
 
-	//register_interface(&sub1);
-	//register_interface(&sub2);
-	//register_interface(&pub1);
+	register_interface(&sub1);
+	register_interface(&sub2);
+	register_interface(&pub1);
 
-	//rosc_spin();
+	rosc_spin();
 }
