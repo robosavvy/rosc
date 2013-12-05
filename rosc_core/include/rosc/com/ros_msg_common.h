@@ -83,7 +83,7 @@ typedef enum
  * callback funktion type
  * @param[in] __msg pointer to the message memory
  */
-typedef void (*ros_callbackFkt_t)(const void* const __msg);
+typedef void (*ros_callbackFkt_t)(void* const __msg);
 
 /**
  * If the message contains a submessage or submessage array, a array of this is used to store the information
@@ -95,6 +95,8 @@ typedef struct
 	bool is_dynamic_array;
 	uint32_t submessage_buildup_start; /**<  the start of the submessage definition of the submessage when inside an array */
 	uint32_t submessage_offset_start;  /**<  the start of the submessage offsets of a submessage */
+	uint32_t submessage_array_lengths_start; /**<  the start of the array lengths of a submessage */
+	uint32_t submessage_submessage_size_start; /**<  the start of the array lengths of a submessage */
 	size_t 	 submessage_byte_size; 	   /**<  stores the message size of a submessage array*/
 	uint32_t submessages_remaining;    /**<  stores the number of remaining submessages when in an array*/
 	uint32_t submessages_to_skip;      /**<  number of submessages which need to be skipped*/

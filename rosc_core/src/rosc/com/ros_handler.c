@@ -53,9 +53,8 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 		hdata->hstate=ROS_HANDLER_STATE_NONE;
 		hdata->iface_ok=false;
 		hdata->md5sum_ok=false;
+		hdata->publisher_ready=false;
 		pdata->sending=false;
-
-
 
 
 		if(idata->ros_type==ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER)
@@ -123,7 +122,13 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 			/* SIGNALS which should not occur here: */
 
 			case SOCKET_SIG_DATA_SENT: /*should be caught by sending function*/
-				DEBUG_PRINT_STR("ROSHANDLER ignoring unexpected signal  Data Sent");
+					if(idata->ros_type==ROS_HANDLER_TYPE_TOPIC_PUBLISHER)
+					{
+						hdata->publisher_ready=true;
+						pdata->out_len=SOCKET_SIG_NO_DATA;
+					}
+					else
+						DEBUG_PRINT_STR("ROSHANDLER ignoring unexpected signal  Data Sent");
 				return (SEBS_PARSE_RETURN_GO_AHEAD);
 				break;
 			case SOCKET_SIG_RELEASE: /*outgoing*/
@@ -227,7 +232,16 @@ sebs_parse_return_t ros_handler(sebs_parser_data_t* pdata)
 					{
 
 						case ROS_HANDLER_TYPE_TOPIC_PUBLISHER:
-							break;
+							DEBUG_PRINT_STR("Publisher: Send header!");
+								fdata->mode=SEBS_PARSE_ROS_MODE_BINARY;
+								hdata->publisher_ready=true;
+								hdata->genPayloadData[0]=idata->message_definition;
+								hdata->genPayloadData[1]=idata->md5sum;
+								hdata->genPayloadData[2]=idata->iface_name;
+								hdata->genPayloadData[3]="narf";
+								hdata->hstate=ROS_HANDLER_STATE_SUBSCRIBER_HEADER_SEND;
+								SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_ROSMSG_HEADER, 0, hdata->genPayloadData);
+						break;
 
 						case ROS_HANDLER_TYPE_TOPIC_SUBSCRIBER:
 

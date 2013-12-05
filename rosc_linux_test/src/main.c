@@ -29,14 +29,6 @@
  *  main.c created by Christian Holl
  */
 
-/* ******************/
-/*     TESTING      */
-/* ******************/
-#include<rosc/sebs_parse_fw/send_modules/socket_connect.h>
-#include<stdio.h>
-#include<string.h>
-
-/* ******************/
 
 
 #include <rosc/rosc.h>
@@ -47,14 +39,16 @@
 #include <rosc/com/ros_handler.h>
 
 #include <rosc/com/msg_gen.h>
-#include <rosc/system/eth.h>
+
 
 
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple1();
 ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 
-ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 2);
+ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 3, 5, 2);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
+
+
 
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY__rosc_linux_test__simple1(sim1);
@@ -62,20 +56,19 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
+
+
+ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple2(sim2, pub1, "/simple1Pub")
+
+
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,sub1)
-	int i;
-	printf("sub1\n");
-	printf("s2 size: %i\n",msg->s2.size);
-	printf("s2 oversize: %i\n",msg->s2.oversize);
-
-	for(i=0;i<msg->s2.size;i++)
-		printf("%i\n",msg->s2.data[i].ThirtyTwo);
-
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,sub2)
+	publish(&pub1,msg);
 	printf("simple2 callback\n");
 }
+
 
 ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, sub1,"/simple1")
 
@@ -121,10 +114,53 @@ int main()
 	printf("\n");
 
 
+
+//	char mem[rosc_static_socket_mem_size];
+//	socket_t cur;
+//
+//	sebs_parser_data_t pdata;
+//
+//	rosc_static_msg_user_def__rosc_linux_test__simple1__sim1_t msg;
+//
+//
+//	int i;
+//	cur.pdata.additional_storage=mem;
+//	memset(mem,0,rosc_static_socket_mem_size);
+//
+//
+//
+//	msg.s2.size=2;
+//	msg.s2.oversize=1;
+//	msg.s2.data[0].ThirtyTwo=2222;
+//	printf("%x\n", (size_t)&msg.s2.data[0].ThirtyTwo);
+//
+//	msg.s2.data[1].ThirtyTwo=3333;
+//	printf("%x\n", (size_t)&msg.s2.data[1].ThirtyTwo);
+//
+//
+//	msg.str.size=2;
+//	msg.str.data[0].size=2;
+//	msg.str.data[0].str_data[0]='a';
+//	msg.str.data[0].str_data[1]='b';
+//
+//	msg.str.data[1].size=2;
+//	msg.str.data[1].str_data[0]='c';
+//	msg.str.data[1].str_data[1]='d';
+//
+//	uint32_t r=publisherfill(&pub1, &msg, &cur);
+//
+//
+//	for(i=0;i<r;i++)
+//		printf("%x ",((unsigned char*)cur.pdata.additional_storage)[i]);
+//
+//	printf("\n");
+
+
 	rosc_init();
 
 	register_interface(&sub1);
 	register_interface(&sub2);
+	register_interface(&pub1);
 
 	rosc_spin();
 }

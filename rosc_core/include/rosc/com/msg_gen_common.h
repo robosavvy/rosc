@@ -304,19 +304,19 @@ extern msg_gen_type_t xmlrpc_msg_http_error[];
 
 
 #define XMLRPC_REQ_RESET()\
-		xmlrpc_msg_request[11]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_request[18]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_request[25]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_request[32]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_request[42]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_request[52]=MSG_TYPE_SKIP_ENTRIES;
+		xmlrpc_msg_request[12]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_request[19]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_request[26]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_request[33]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_request[43]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_request[53]=MSG_TYPE_SKIP_ENTRIES;
 
 #define XMLRPC_RESP_RESET()\
-		xmlrpc_msg_response[8]=MSG_TYPE_VAL_ONE;\
-		xmlrpc_msg_response[19]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_response[26]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_response[33]=MSG_TYPE_SKIP_ENTRIES;\
-		xmlrpc_msg_response[40]=MSG_TYPE_SKIP_ENTRIES;
+		xmlrpc_msg_response[9]=MSG_TYPE_VAL_ONE;\
+		xmlrpc_msg_response[20]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_response[27]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_response[34]=MSG_TYPE_SKIP_ENTRIES;\
+		xmlrpc_msg_response[41]=MSG_TYPE_SKIP_ENTRIES;
 
 #define XMLRPC_RESP_HD_RESET()\
 		xmlrpc_hd_response[2]=MSG_TYPE_VAL_200_OK;\

@@ -351,7 +351,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			}
 			break;
 
-		case XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC:
+		case XMLRPC_RESULT_FIND_TOPIC:
 			DEBUG_PRINT_STR("TOPIC NAME:");
 				DEBUG_PRINT_STR((char*)pdata->additional_storage);
 				hdata->iface=interface_list_start;
@@ -370,6 +370,28 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					hdata->iface=hdata->iface->next;
 				}
 			break;
+
+		case XMLRPC_RESULT_ACKNOWLEDGE:
+				switch(hdata->xml.numberparse.number)
+				{
+				case -1:
+					DEBUG_PRINT_STR("NOT ACK");
+
+					break;
+
+				case 1:
+					DEBUG_PRINT_STR("ACK");
+					if(hdata->client_type==XMLRPC_CLIENT_TYPE_REGISTER
+					&&((ros_iface_init_t *) iface->init_data)->ros_type==ROS_HANDLER_TYPE_TOPIC_PUBLISHER)
+					{
+						port_t port=0;
+						iface_listen(iface,&port);
+						DEBUG_PRINT_STR(((ros_iface_init_t *) iface->init_data)->iface_name);
+					}
+					break;
+				}
+			break;
+
 
 		case XMLRPC_RESULT_REQUEST_TOPIC_PORT:
 			if(hdata->xml.numberparse.result == SEBS_PARSE_NUMBERPARSE_ANOTHER_CHAR
@@ -751,14 +773,43 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					case XMLRPC_TAG_METHODRESPONSE:
 					if (hdata->tag_state == XMLRPC_TAG_STATE_METHODRC
 							&& hdata->xml.depth == 1)
-					hdata->tag_state = XMLRPC_TAG_STATE_NONE;
-
-
-					if(hdata->xml.tags[hdata->xml.depth] == XMLRPC_TAG_METHODCALL)
 					{
+						hdata->tag_state = XMLRPC_TAG_STATE_NONE;
+
+
+
+						switch(hdata->rpc_methodname)
+						{
+							case XMLRPC_METHODNAME_REQUESTTOPIC:
+								{
+
+
+									if(hdata->iface)
+									{
+										listen_socket_t* cur=listen_socket_list_start;
+										while(cur && cur->interface != hdata->iface)
+											cur=cur->next;
+										if(cur)
+										{
+											DEBUG_PRINT_STR("Listen socket found!");
+											DEBUG_PRINT(INT, "Port", cur->port);
+											hdata->genPayloadData[0]=&cur->port;
+											SEBS_PARSE_MSG_GEN(pdata, hdata->gen, pdata->additional_storage, rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_RESPOND_REQUEST_TOPIC, 0, hdata->genPayloadData);
+										}
+									}
+										//TODO correct error
+										SEBS_PARSE_MSG_GEN(pdata, hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_ERROR,0,0);
+								}
+								break;
+							default:
+								SEBS_PARSE_MSG_GEN(pdata, hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_ACK,0,0);
+								break;
+						}
+
 						hdata->xmlrpc_state=XMLRPC_STATE_CLOSE;
-						SEBS_PARSE_MSG_GEN(pdata, hdata->gen,pdata->additional_storage,rosc_static_socket_additional_data_size, MSGGEN_TYPE_XMLRPC_ACK,0,0);
 					}
+
+
 					break;
 
 					case XMLRPC_TAG_STRING:
@@ -768,6 +819,9 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					case XMLRPC_TAG_DOUBLE:
 					hdata->type_tag=XMLRPC_TYPE_TAG_NONE;
 					break;
+
+
+
 
 					default:
 					break;
@@ -800,7 +854,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					//The first field is always the caller_id in every known methodcall
 					//so lets extract as many chars as possible
 					//The caller
-#ifndef ROSC_NO_CALLERID_EXTRACTION
+
 					/*
 					 * I haven't seen a use for the caller-id so far, that's
 					 * why you can disable it here. If it must be used somewhere
@@ -824,7 +878,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							//TODO ERROR: WRONG PARAMETER TYPE GIVEN!
 						}
 					}
-#endif
+
 					else
 					{
 						switch (hdata->rpc_methodname)
@@ -863,7 +917,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 								{
 
 									DEBUG_PRINT_STR("TOPIC --- ");
-									hdata->result_handling=XMLRPC_RESULT_PUBLISHER_UPDATE_TOPIC;
+									hdata->result_handling=XMLRPC_RESULT_FIND_TOPIC;
 									//TODO size of callerid
 									SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,__URI_MAX_LENGTH__,"<",0,true,0);
 								}
@@ -888,6 +942,24 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 							}
 							break;
 							case XMLRPC_METHODNAME_REQUESTTOPIC:
+
+								if(hdata->tag_state == XMLRPC_TAG_STATE_VALUE
+										&& hdata->param_no == 2
+										&& hdata->array_state == XMLRPC_ARRAY_STATE_NONE)
+								{
+									if (hdata->type_tag == XMLRPC_TYPE_TAG_NONE
+											|| hdata->type_tag == XMLRPC_TYPE_TAG_STRING)
+									{
+										DEBUG_PRINT_STR("REQUESTED TOPIC ... ")
+										hdata->result_handling=XMLRPC_RESULT_FIND_TOPIC;
+										//TODO size of callerid
+										SEBS_PARSE_COPY2BUFFER_INIT(pdata,hdata->copy2buffer,pdata->additional_storage,__URI_MAX_LENGTH__,"<",0,true,0);
+
+									}
+								}
+
+
+
 							break;
 							case XMLRPC_METHODNAME_SHUTDOWN:
 							break;
@@ -912,6 +984,8 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 										))
 								{
 									DEBUG_PRINT_STR("ACKNOWLEDGE?");
+									hdata->result_handling=XMLRPC_RESULT_ACKNOWLEDGE;
+									SEBS_PARSE_NUMBERPARSE_INIT(pdata,hdata->xml.numberparse,3,true,10);
 								}
 								break;
 
@@ -958,8 +1032,6 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 											hdata->copy2buffer, pdata->additional_storage,
 											__URI_MAX_LENGTH__, "<",0,1,0);
 								}
-
-
 								break;
 								}
 							}
@@ -972,9 +1044,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			break;
 		}
 	}
-
-
-	if(hdata->xmlrpc_state == XMLRPC_STATE_CLOSE)
+	else if(hdata->xmlrpc_state == XMLRPC_STATE_CLOSE)
 	{
 		DEBUG_PRINT_STR("XMLRPC CLOSE");
 		pdata->len=0;
