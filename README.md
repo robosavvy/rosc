@@ -4,4 +4,4 @@ rosc is a dependency-free ROS client implementation in ANSI C which aims to supp
 Its long-term goal is to become a hardened, efficient and highly portable implementation of the ROS middleware, 
 making it a good choice for use in industrial applications or product development.
 
-rosc currently only supports subscribers, but there is currently an issue with empty dynamic arrays.
+rosc currently only supports subscribers and publishers, but there are currently issues with nested messages, maybe also with dynamic arrays.
