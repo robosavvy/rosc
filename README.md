@@ -5,5 +5,3 @@ Its long-term goal is to become a hardened, efficient and highly portable implem
 making it a good choice for use in industrial applications or product development.
 
 rosc currently only supports subscribers, but there is currently an issue with empty dynamic arrays.
-
-<b>Have a look at the branches!</b>
