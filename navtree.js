@@ -1,7 +1,6 @@
 var NAVTREE =
 [
   [ "ROSc", "index.html", [
-    [ "Development Information", "d1/d1b/devinfo.html", null ],
     [ "Legal Information", "d8/d83/Legal.html", [
       [ "License", "d8/d83/Legal.html#License", null ],
       [ "Company Address", "d8/d83/Legal.html#Address", null ],
@@ -45,10 +44,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/d4d/msg__strings_8h.html#a8a1e871dc11bdebc95ec0c905220725a",
-"d9/d58/structsocket__connect__info__t.html#a83c3c0aca584999dabc74d59e8d25dbc",
-"dc/de6/msg__gen__common_8h.html#ab82a89e3ddbbbdfb028052a01da8460e",
-"df/dec/xmlrpc_8h.html#ad960a39ccb12028150c86aa25987a491"
+"d3/d4d/msg__strings_8h.html#a8ecc1c5451d4feb0e9c68f883ef0b634",
+"d9/d58/structsocket__connect__info__t.html#a8fc8c424d1d8a49737d552871e0397b6",
+"dc/de6/msg__gen__common_8h.html#ab97398c09863729a9beabcdc2f6d49df",
+"df/dec/xmlrpc_8h.html#ad960a39ccb12028150c86aa25987a491af30ea23964a00d5760e8f5167357523b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

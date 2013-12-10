@@ -11,7 +11,6 @@ var searchData=
   ['descriptor',['descriptor',['../db/d79/structsebs__parse__http__data__t.html#add1450d3166378d9eb594bafb8c2ecf2',1,'sebs_parse_http_data_t']]],
   ['descriptors',['descriptors',['../db/d79/structsebs__parse__http__data__t.html#a12cede25f8c548834ff3bff7e4bb70b5',1,'sebs_parse_http_data_t']]],
   ['descriptors_5flen',['descriptors_len',['../db/d79/structsebs__parse__http__data__t.html#a13e2baa72815b31e52691fa4e3efc4c2',1,'sebs_parse_http_data_t']]],
-  ['development_20information',['Development Information',['../d1/d1b/devinfo.html',1,'']]],
   ['digits',['digits',['../dc/ddc/structmsg__gen__command__t.html#aa76fc2ecb43b7f256f3c42fc739cca72',1,'msg_gen_command_t']]],
   ['dot_5fcnt',['dot_cnt',['../d3/d01/structsebs__parse__url__data__t.html#a80f2d3a06234cbabb805b83024b5ad5c',1,'sebs_parse_url_data_t']]]
 ];
