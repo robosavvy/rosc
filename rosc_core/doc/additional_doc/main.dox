@@ -63,7 +63,41 @@ Fax: +49 (0) 7335 / 186 999 1
 Dipl-Ing.(FH) M.Sc. Christian Holl\n
 <choll [AT] synapticon [DOT] com>
 
-\example static_subscriber.c
+\example static_pubsub.c
 This file should give you an overview about how to create a subscriber.
 
+
+\page version Version Information
+
+ROSc Subscribing Submarine (11.12.13)
+
+\section Project State
+
+\warning This is an early alpha release, expect heavy changes.
+
+\section Roadmap
+	
+- Fix bugs inside ROS subscriber/publisher
+- Create test functions for ROS subscriber/publisher
+- Finalize Abstraction Layer
+- Implement Parameters
+- Implement Services
+
+\section Known Errors - Missing Features
+
+\subsection Nested Messages
+There is one or more Bugs in the binary message subscriber (maybe also publisher), when it comes to nested messages or dynamic arrays.
+So you should not use them right now.
+
+\subsection Hardware OS Abstraction Layer
+
+At the moment ROSc is Linux only. The functions have been prepared 
+to be used in a event based system, but the final form
+of this abstraction layer is still missing.
+
+\subsection Services
+Services are not implemented so far.
+
+\subsection Parameter Interface
+Parameter Interface is also not implemented.
 */
