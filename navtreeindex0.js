@@ -197,7 +197,7 @@ var NAVTREEINDEX0 =
 "d2/d5b/xmlrpc_8c.html#a579c37d73fafda23ea7040d914632e8e":[4,0,1,0,0,4,0],
 "d2/d5b/xmlrpc_8c.html#ac76a5b18844da588a4c9ee7c7a3d67ed":[4,0,1,0,0,4,1],
 "d2/d5b/xmlrpc_8c_source.html":[4,0,1,0,0,4],
-"d2/d78/static_pubsub_8c-example.html":[5,0],
+"d2/d78/static_pubsub_8c-example.html":[5,1],
 "d2/dda/structros__handler__data__t.html":[3,0,6],
 "d2/dda/structros__handler__data__t.html#a02da672843ccc05f3713364c0e24e5ff":[3,0,6,6],
 "d2/dda/structros__handler__data__t.html#a144e1ea73dad7829976323971655b255":[3,0,6,2],

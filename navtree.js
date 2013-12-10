@@ -9,11 +9,11 @@ var NAVTREE =
     [ "Version Information", "dc/d08/version.html", [
       [ "State", "dc/d08/version.html#Project", null ],
       [ "Roadmap", "dc/d08/version.html#Roadmap", null ],
-      [ "Errors - Missing Features", "dc/d08/version.html#Known", [
+      [ "Known Errors and Missing Features", "dc/d08/version.html#errata", [
         [ "Messages", "dc/d08/version.html#Nested", null ],
-        [ "OS Abstraction Layer", "dc/d08/version.html#Hardware", null ],
+        [ "Hardware OS Abstraction Layer", "dc/d08/version.html#abstraction", null ],
         [ "Services", "dc/d08/version.html#Services", null ],
-        [ "Interface", "dc/d08/version.html#Parameter", null ]
+        [ "Parameter Interface", "dc/d08/version.html#Parameter", null ]
       ] ]
     ] ],
     [ "Todo List", "dd/da0/todo.html", null ],
@@ -47,7 +47,7 @@ var NAVTREEINDEX =
 "d3/d4d/msg__strings_8h.html#a8ecc1c5451d4feb0e9c68f883ef0b634",
 "d9/d58/structsocket__connect__info__t.html#a8fc8c424d1d8a49737d552871e0397b6",
 "dc/de6/msg__gen__common_8h.html#ab97398c09863729a9beabcdc2f6d49df",
-"df/dec/xmlrpc_8h.html#ad960a39ccb12028150c86aa25987a491af30ea23964a00d5760e8f5167357523b"
+"df/dec/xmlrpc_8h.html#ad960a39ccb12028150c86aa25987a491"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
