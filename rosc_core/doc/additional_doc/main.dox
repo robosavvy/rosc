@@ -5,18 +5,6 @@
 
 This is the documentation of ROSc
 
-
-\page devinfo Development Information
-
-ROSc is currently in an alpha state, at the moment only subscribers are supported.
-\nThis will change soon. 
-\n
-\n First of all the publisher will be implemented.
-\n And then the services should come up. 
-\n There is also a plan for a dynamic memory version, 
-\n so the port number of rosc dynamic will not be limited.
-
-
 \page Legal Legal Information
 
 \section License
