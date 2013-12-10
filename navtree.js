@@ -7,6 +7,16 @@ var NAVTREE =
       [ "Company Address", "d8/d83/Legal.html#Address", null ],
       [ "Development Contact", "d8/d83/Legal.html#Development", null ]
     ] ],
+    [ "Version Information", "dc/d08/version.html", [
+      [ "State", "dc/d08/version.html#Project", null ],
+      [ "Roadmap", "dc/d08/version.html#Roadmap", null ],
+      [ "Errors - Missing Features", "dc/d08/version.html#Known", [
+        [ "Messages", "dc/d08/version.html#Nested", null ],
+        [ "OS Abstraction Layer", "dc/d08/version.html#Hardware", null ],
+        [ "Services", "dc/d08/version.html#Services", null ],
+        [ "Interface", "dc/d08/version.html#Parameter", null ]
+      ] ]
+    ] ],
     [ "Todo List", "dd/da0/todo.html", null ],
     [ "Data Structures", null, [
       [ "Data Structures", "annotated.html", "annotated" ],
@@ -35,10 +45,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/d4d/msg__strings_8h.html#a8ecc1c5451d4feb0e9c68f883ef0b634",
+"d3/d4d/msg__strings_8h.html#a8a1e871dc11bdebc95ec0c905220725a",
 "d9/d58/structsocket__connect__info__t.html#a83c3c0aca584999dabc74d59e8d25dbc",
-"dc/de6/msg__gen__common_8h.html#acfa35012b6d1185393eabd5b08ee1ee2",
-"df/dec/xmlrpc_8h.html#af667b1cd175d3642ee97e16128996a35a8c1d58ffd83aaa271a097ce57bce6996"
+"dc/de6/msg__gen__common_8h.html#ab82a89e3ddbbbdfb028052a01da8460e",
+"df/dec/xmlrpc_8h.html#ad960a39ccb12028150c86aa25987a491"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

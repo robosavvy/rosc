@@ -164,7 +164,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The output buffer of all XMLRPC and ROSRPC services is in total as big as the biggest message size if more performance is required, it might be an option to increase the buffer size (if there is unused memory left) Additionally must be mentioned, that the memory size can even if it's set to 100, can still be a bit larger because of padding bytes of the created structs. Those bytes will be used as output buffer as well. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d3/d69/static_subscriber_8c-example.html#a1">static_subscriber.c</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d2/d78/static_pubsub_8c-example.html#a1">static_pubsub.c</a>.</dd>
 </dl>
 <p>Definition at line <a class="el" href="../../d9/d40/rosc__init_8h_source.html#l00099">99</a> of file <a class="el" href="../../d9/d40/rosc__init_8h_source.html">rosc_init.h</a>.</p>
 
@@ -191,7 +191,7 @@ Functions</h2></td></tr>
 <div class="line"><a class="code" href="../../d9/d58/structsocket__connect__info__t.html">				socket_connect_info_t</a>       connect_info;\</div>
 <div class="line">                                char connect_string_reservation[offsetof(<a class="code" href="../../d9/d58/structsocket__connect__info__t.html">socket_connect_info_t</a>,url) + <a class="code" href="../../d7/df7/setup_8h.html#a2669d28ed4243f50e9b6c09b1d3ce9cc">__URI_BUFFER_LENGTH__</a>];</div>
 </div><!-- fragment --><p>STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN defines the begin of the list which must contain all port types on static systems </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d3/d69/static_subscriber_8c-example.html#a0">static_subscriber.c</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d2/d78/static_pubsub_8c-example.html#a0">static_pubsub.c</a>.</dd>
 </dl>
 <p>Definition at line <a class="el" href="../../d9/d40/rosc__init_8h_source.html#l00053">53</a> of file <a class="el" href="../../d9/d40/rosc__init_8h_source.html">rosc_init.h</a>.</p>
 
@@ -217,7 +217,7 @@ Functions</h2></td></tr>
 <div class="line">                const <span class="keywordtype">size_t</span> rosc_static_url_max_size=<span class="keyword">sizeof</span>(rosc_socket_memory_size_def_t)-offsetof(rosc_socket_memory_size_def_t,message_data)-offsetof(<a class="code" href="../../d9/d58/structsocket__connect__info__t.html">socket_connect_info_t</a>,url);</div>
 </div><!-- fragment --><p>STATIC_SYSTEM_MESSAGE_TYPE_LIST_END defines the end of the list which must contain all port types on static systems, it also sets up the necessary external variables for the memory size of all port buffers</p>
 <p>Additional information (rosc developers only): We need the type and array size variables here because the port memory size type is not known to rosc functions because it would force the user to have a separate setup header file which needs to be included by all rosc stuff requiring this information. To get arround this, the information is passed by "external" variables, these are setup here. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d3/d69/static_subscriber_8c-example.html#a2">static_subscriber.c</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d2/d78/static_pubsub_8c-example.html#a2">static_pubsub.c</a>.</dd>
 </dl>
 <p>Definition at line <a class="el" href="../../d9/d40/rosc__init_8h_source.html#l00081">81</a> of file <a class="el" href="../../d9/d40/rosc__init_8h_source.html">rosc_init.h</a>.</p>
 
@@ -237,7 +237,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>This function initializes a rosc client </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d3/d69/static_subscriber_8c-example.html#a9">static_subscriber.c</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="../../d2/d78/static_pubsub_8c-example.html#a10">static_pubsub.c</a>.</dd>
 </dl>
 <p>Definition at line <a class="el" href="../../d1/d54/rosc__init_8c_source.html#l00055">55</a> of file <a class="el" href="../../d1/d54/rosc__init_8c_source.html">rosc_init.c</a>.</p>
 
