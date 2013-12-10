@@ -52,12 +52,15 @@ Dipl-Ing.(FH) M.Sc. Christian Holl\n
 <choll [AT] synapticon [DOT] com>
 
 \example static_pubsub.c
-This file should give you an overview about how to create a subscriber.
+This file should give you an overview about how to create a publishers and subscribers.
+
+\example CMakeLists.txt
+This file should give you an example of how to setup your CMakeLists.
 
 
 \page version Version Information
 
-ROSc Subscribing Submarine (11.12.13)
+ROSc Subscribing Submarine (released 11.12.13)
 
 \section Project State
 
@@ -71,21 +74,21 @@ ROSc Subscribing Submarine (11.12.13)
 - Implement Parameters
 - Implement Services
 
-\section Known Errors - Missing Features
+\section errata Known Errors and Missing Features
 
 \subsection Nested Messages
 There is one or more Bugs in the binary message subscriber (maybe also publisher), when it comes to nested messages or dynamic arrays.
 So you should not use them right now.
 
-\subsection Hardware OS Abstraction Layer
+\subsection abstraction Hardware OS Abstraction Layer
 
 At the moment ROSc is Linux only. The functions have been prepared 
 to be used in a event based system, but the final form
 of this abstraction layer is still missing.
 
-\subsection Services
+\subsection Services Services
 Services are not implemented so far.
 
-\subsection Parameter Interface
+\subsection Parameter Parameter Interface
 Parameter Interface is also not implemented.
 */
