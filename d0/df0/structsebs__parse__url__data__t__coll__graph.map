@@ -1,0 +1,6 @@
+<map id="sebs_parse_url_data_t" name="sebs_parse_url_data_t">
+<area shape="rect" id="node2" href="$de/d1c/structsebs__parser__call__t.html" title="{sebs_parser_call_t\n|+ parser_data\l|}" alt="" coords="136,75,267,160"/>
+<area shape="rect" id="node4" href="$dc/d39/structsebs__parser__data__t.html" title="{sebs_parser_data_t\n|+ handler_init\l+ init_data\l+ function_init\l+ sending\l+ always_call_on_finish\l+ finish_init_call\l+ event\l+ return_to_handler\l+ handler_data\l+ security_len\land 8 more...\l|}" alt="" coords="5,312,165,571"/>
+<area shape="rect" id="node8" href="$d8/d66/structsebs__parse__seekstring__data__t.html" title="{sebs_parse_seekstring\l_data_t\n|+ stringlist\l+ case_sensitive\l+ endchrs\l+ stringlist_len\l+ curChrPos\l+ max_length\l+ result\l|}" alt="" coords="331,14,485,221"/>
+<area shape="rect" id="node10" href="$d3/d0f/structsebs__parse__numberparse__data__t.html" title="{sebs_parse_numberparse\l_data_t\n|+ base\l+ negative_allowed\l+ negative\l+ cur_place\l+ figure_max\l+ number\l+ last_byte\l+ result\l|}" alt="" coords="509,5,680,229"/>
+</map>

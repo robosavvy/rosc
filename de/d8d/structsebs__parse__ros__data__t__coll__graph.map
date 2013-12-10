@@ -1,0 +1,6 @@
+<map id="sebs_parse_ros_data_t" name="sebs_parse_ros_data_t">
+<area shape="rect" id="node2" href="$d6/de8/structrosc__msg__submessage__state__t.html" title="{rosc_msg_submessage\l_state_t\n|+ is_submessage_array\l+ is_dynamic_array\l+ submessage_buildup\l_start\l+ submessage_offset_start\l+ submessage_array_lengths\l_start\l+ submessage_submessage\l_size_start\l+ submessage_byte_size\l+ submessages_remaining\l+ submessages_to_skip\l+ parent_message_start\l|}" alt="" coords="5,6,197,317"/>
+<area shape="rect" id="node4" href="$d8/d13/structsebs__parse__skip__data__t.html" title="{sebs_parse_skip_data_t\n|+ len\l+ curPos\l|}" alt="" coords="221,110,384,213"/>
+<area shape="rect" id="node6" href="$dc/dd4/structsebs__parse__copy2buffer__data__t.html" title="{sebs_parse_copy2buffer\l_data_t\n|+ buffer\l+ cur_pos\l+ byteorder_pos\l+ repeats\l+ max_len\l+ endChrs\l+ byteOrderCorrection\l+ result\l+ is_string\l|}" alt="" coords="408,41,571,282"/>
+<area shape="rect" id="node8" href="$d8/d66/structsebs__parse__seekstring__data__t.html" title="{sebs_parse_seekstring\l_data_t\n|+ stringlist\l+ case_sensitive\l+ endchrs\l+ stringlist_len\l+ curChrPos\l+ max_length\l+ result\l|}" alt="" coords="595,58,749,265"/>
+</map>

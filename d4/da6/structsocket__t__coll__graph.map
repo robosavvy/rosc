@@ -1,0 +1,6 @@
+<map id="socket_t" name="socket_t">
+<area shape="rect" id="node2" href="$d9/d58/structsocket__connect__info__t.html" title="{socket_connect_info_t\n|+ data_state\l+ remote_ip\l+ remote_port\l+ hostname_size\l+ hostname\l+ url\l|}" alt="" coords="5,347,157,519"/>
+<area shape="rect" id="node5" href="$dc/d39/structsebs__parser__data__t.html" title="{sebs_parser_data_t\n|+ handler_init\l+ init_data\l+ function_init\l+ sending\l+ always_call_on_finish\l+ finish_init_call\l+ event\l+ return_to_handler\l+ handler_data\l+ security_len\land 8 more...\l|}" alt="" coords="235,5,395,264"/>
+<area shape="rect" id="node7" href="$de/d1c/structsebs__parser__call__t.html" title="{sebs_parser_call_t\n|+ parser_data\l|}" alt="" coords="284,391,415,476"/>
+<area shape="rect" id="node11" href="$d5/d64/structiface__t.html" title="{iface_t\n|+ init_data\l+ state\l|}" alt="" coords="457,382,540,485"/>
+</map>

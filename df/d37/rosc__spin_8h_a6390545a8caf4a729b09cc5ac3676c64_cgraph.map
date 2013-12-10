@@ -1,0 +1,14 @@
+<map id="rosc_spin" name="rosc_spin">
+<area shape="rect" id="node3" href="$d1/dd9/eth_8h.html#a80889780391cc3945b076e60f5b2ae18" title="abstract_close_socket" alt="" coords="141,5,293,35"/>
+<area shape="rect" id="node5" href="$d1/dd9/eth_8h.html#a6d820b0aea6791b4ae0c8328d5896c68" title="abstract_connect_socket" alt="" coords="133,59,301,88"/>
+<area shape="rect" id="node7" href="$d1/dd9/eth_8h.html#a279cbc360cac41a5914fd4f4933cb733" title="abstract_send_packet" alt="" coords="143,112,292,141"/>
+<area shape="rect" id="node9" href="$d1/dd9/eth_8h.html#a5d75d10ca655704c98e45211755a79be" title="abstract_socket_accept" alt="" coords="137,165,297,195"/>
+<area shape="rect" id="node11" href="$d1/dd9/eth_8h.html#a6027f1c2107a57f8a73512981266f68e" title="recv_packet" alt="" coords="171,219,264,248"/>
+<area shape="rect" id="node13" href="$de/d76/ros__handler_8h.html#a7c002acf3fea966268b547351cb892f4" title="ros_handler" alt="" coords="371,363,459,392"/>
+<area shape="rect" id="node15" href="$d1/dd9/eth_8h.html#adf5f2e2b0dd0850c2785ebdff633251e" title="rosc_hostlist_resolve" alt="" coords="145,272,289,301"/>
+<area shape="rect" id="node19" href="$dc/d8f/sebs__parser__frame_8h.html#ae611cefdf6f3f1d268667e1feccf455e" title="sebs_parser_frame" alt="" coords="151,376,284,405"/>
+<area shape="rect" id="node21" href="$df/dec/xmlrpc_8h.html#a1c12dd5ead92bb15beb921cf643b5dbb" title="xmlrpc" alt="" coords="187,453,248,483"/>
+<area shape="rect" id="node17" href="$d1/dd9/eth_8h.html#acbef8563fe3872478d56891d6cab7822" title="abstract_resolveIP" alt="" coords="349,272,480,301"/>
+<area shape="rect" id="node23" href="$da/ded/eth_8c.html#a68acd33c7644e07f36febd192f97254d" title="iface_listen" alt="" coords="371,453,459,483"/>
+<area shape="rect" id="node25" href="$d1/dd9/eth_8h.html#aec437fec89ef83b1008c579ed387a292" title="abstract_start_listening\l_on_port" alt="" coords="528,445,685,491"/>
+</map>

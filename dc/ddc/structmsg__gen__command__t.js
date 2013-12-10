@@ -1,0 +1,26 @@
+var structmsg__gen__command__t =
+[
+    [ "correct", "dc/ddc/structmsg__gen__command__t.html#a564ca78226e0bdfb1e4f0d80bedc4fac", null ],
+    [ "curPos", "dc/ddc/structmsg__gen__command__t.html#ad81eb595499333a0072df97711d229c6", null ],
+    [ "data", "dc/ddc/structmsg__gen__command__t.html#a2c2ca0aa71330322f4d04fd83fcbf282", null ],
+    [ "data", "dc/ddc/structmsg__gen__command__t.html#ad907a81e612d3697f6e347160c34b2bc", null ],
+    [ "def_state", "dc/ddc/structmsg__gen__command__t.html#a2094cbfe2613d959b1426abe90471760", null ],
+    [ "digits", "dc/ddc/structmsg__gen__command__t.html#aa76fc2ecb43b7f256f3c42fc739cca72", null ],
+    [ "header", "dc/ddc/structmsg__gen__command__t.html#a3cefcc5f959dbfa8ac9e35ef06fe6622", null ],
+    [ "header_data", "dc/ddc/structmsg__gen__command__t.html#a6d053c9f5f9b21f1e8d2d8f350560ac6", null ],
+    [ "int_number", "dc/ddc/structmsg__gen__command__t.html#a073bd42c115cb2e93b3a4bc5c6acc0fd", null ],
+    [ "mode", "dc/ddc/structmsg__gen__command__t.html#ae8cb769558468755a8aae3539a9d4812", null ],
+    [ "ntype", "dc/ddc/structmsg__gen__command__t.html#a060bd4f8891369a384bf96997f2a6a9c", null ],
+    [ "out", "dc/ddc/structmsg__gen__command__t.html#a704a406b67736b3319f64fdb519e932c", null ],
+    [ "payload", "dc/ddc/structmsg__gen__command__t.html#a62743d291e4b72acb8d8a0f200521321", null ],
+    [ "payload_data", "dc/ddc/structmsg__gen__command__t.html#a2c382e20934f623c04e391f8e7040610", null ],
+    [ "payload_size", "dc/ddc/structmsg__gen__command__t.html#af8b0ebf9ad9ea41f8b58a018beb7f198", null ],
+    [ "payload_size_available", "dc/ddc/structmsg__gen__command__t.html#aba52babf073cd97bad343fb692455f32", null ],
+    [ "rosrpc_size", "dc/ddc/structmsg__gen__command__t.html#a8d42000ae537f9cdfccdbb31e43fbf68", null ],
+    [ "selectedSize", "dc/ddc/structmsg__gen__command__t.html#a97fdac61ec2f3f4cc0eaf4ea08c01561", null ],
+    [ "single_chr", "dc/ddc/structmsg__gen__command__t.html#a4ba7abda67547aa4c8bccbf33dbe1363", null ],
+    [ "size", "dc/ddc/structmsg__gen__command__t.html#ab46bde1e2ea9f29309a075fb312f8cff", null ],
+    [ "size", "dc/ddc/structmsg__gen__command__t.html#a820c46afab60f9de47ac98718d8f07a4", null ],
+    [ "submode", "dc/ddc/structmsg__gen__command__t.html#a686491eb9ff78bf32f93ffa311293fe5", null ],
+    [ "type", "dc/ddc/structmsg__gen__command__t.html#a2ea369ae3c6befec787f3b18da49918a", null ]
+];

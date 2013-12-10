@@ -1,0 +1,26 @@
+<map id="src/rosc/system/rosc_init.c" name="src/rosc/system/rosc_init.c">
+<area shape="rect" id="node3" href="$d9/d40/rosc__init_8h.html" title="rosc/system/rosc_init.h" alt="" coords="1963,101,2120,131"/>
+<area shape="rect" id="node7" href="$d1/dd9/eth_8h.html" title="rosc/system/eth.h" alt="" coords="1936,559,2061,588"/>
+<area shape="rect" id="node9" href="$d7/df7/setup_8h.html" title="rosc/system/setup.h" alt="" coords="1717,663,1859,692"/>
+<area shape="rect" id="node24" href="$de/d76/ros__handler_8h.html" title="rosc/com/ros_handler.h" alt="" coords="1647,256,1804,285"/>
+<area shape="rect" id="node29" href="$d1/d84/endian_8h.html" title="endian.h" alt="" coords="2187,559,2256,588"/>
+<area shape="rect" id="node68" href="$df/dec/xmlrpc_8h.html" title="rosc/com/xmlrpc.h" alt="" coords="849,179,980,208"/>
+<area shape="rect" id="node12" href="$dc/d8f/sebs__parser__frame_8h.html" title="rosc/sebs_parse_fw\l/sebs_parser_frame.h" alt="" coords="849,654,996,701"/>
+<area shape="rect" id="node105" href="$d9/d9a/mem_8h.html" title="rosc/system/mem.h" alt="" coords="2221,256,2360,285"/>
+<area shape="rect" id="node16" href="$d0/df1/ros__msg__common_8h.html" title="rosc/com/ros_msg_common.h" alt="" coords="1883,663,2080,692"/>
+<area shape="rect" id="node19" href="$d1/d13/status_8h.html" title="rosc/system/status.h" alt="" coords="2155,663,2299,692"/>
+<area shape="rect" id="node21" href="$df/db6/debug__out_8h.html" title="rosc/debug/debug_out.h" alt="" coords="1483,663,1643,692"/>
+<area shape="rect" id="node27" href="$dc/dd0/sebs__parse__ros_8h.html" title="rosc/sebs_parse_fw\l/adv_modules/sebs_parse_ros.h" alt="" coords="1417,438,1628,485"/>
+<area shape="rect" id="node52" href="$d3/de5/msggen_8h.html" title="rosc/sebs_parse_fw\l/send_modules/msggen.h" alt="" coords="1035,334,1205,381"/>
+<area shape="rect" id="node34" href="$d8/ddc/sebs__parse__skip_8h.html" title="rosc/sebs_parse_fw\l/std_modules/sebs_parse\l_skip.h" alt="" coords="1437,541,1608,605"/>
+<area shape="rect" id="node39" href="$dc/daa/sebs__parse__copy2buffer_8h.html" title="rosc/sebs_parse_fw\l/std_modules/sebs_parse\l_copy2buffer.h" alt="" coords="664,541,835,605"/>
+<area shape="rect" id="node43" href="$d7/db8/sebs__parse__seekstring_8h.html" title="rosc/sebs_parse_fw\l/std_modules/sebs_parse\l_seekstring.h" alt="" coords="419,541,589,605"/>
+<area shape="rect" id="node48" href="$d3/d4d/msg__strings_8h.html" title="rosc/string_res/msg\l_strings.h" alt="" coords="439,654,575,701"/>
+<area shape="rect" id="node54" href="$d5/d6a/msg__gen_8h.html" title="rosc/com/msg_gen.h" alt="" coords="1675,447,1819,476"/>
+<area shape="rect" id="node56" href="$dc/de6/msg__gen__common_8h.html" title="rosc/com/msg_gen_common.h" alt="" coords="1213,559,1413,588"/>
+<area shape="rect" id="node71" href="$de/da3/socket__connect_8h.html" title="rosc/sebs_parse_fw\l/send_modules/socket\l_connect.h" alt="" coords="1061,429,1213,493"/>
+<area shape="rect" id="node76" href="$dd/da8/sebs__parse__http_8h.html" title="rosc/sebs_parse_fw\l/adv_modules/sebs_parse\l_http.h" alt="" coords="5,429,179,493"/>
+<area shape="rect" id="node81" href="$d8/d29/sebs__parse__numberparse_8h.html" title="rosc/sebs_parse_fw\l/std_modules/sebs_parse\l_numberparse.h" alt="" coords="123,541,293,605"/>
+<area shape="rect" id="node86" href="$d6/d7d/sebs__parse__xml_8h.html" title="rosc/sebs_parse_fw\l/adv_modules/sebs_parse_xml.h" alt="" coords="275,438,488,485"/>
+<area shape="rect" id="node93" href="$d5/d13/sebs__parse__parseurl_8h.html" title="rosc/sebs_parse_fw\l/std_modules/sebs_parse\l_parseurl.h" alt="" coords="600,429,771,493"/>
+</map>

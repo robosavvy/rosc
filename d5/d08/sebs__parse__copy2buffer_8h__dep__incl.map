@@ -1,0 +1,16 @@
+<map id="include/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h" name="include/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.h">
+<area shape="rect" id="node3" href="$df/dec/xmlrpc_8h.html" title="include/rosc/com/xmlrpc.h" alt="" coords="133,341,307,371"/>
+<area shape="rect" id="node17" href="$dc/dd0/sebs__parse__ros_8h.html" title="include/rosc/sebs_parse\l_fw/adv_modules/sebs_parse_ros.h" alt="" coords="283,126,512,173"/>
+<area shape="rect" id="node31" href="$d5/d13/sebs__parse__parseurl_8h.html" title="include/rosc/sebs_parse\l_fw/std_modules/sebs_parse\l_parseurl.h" alt="" coords="16,117,208,181"/>
+<area shape="rect" id="node36" href="$d6/dd7/sebs__parse__copy2buffer_8c.html" title="src/rosc/sebs_parse\l_fw/std_modules/sebs\l_parse_copy2buffer.c" alt="" coords="536,117,688,181"/>
+<area shape="rect" id="node5" href="$d9/d40/rosc__init_8h.html" title="include/rosc/system\l/rosc_init.h" alt="" coords="411,419,549,466"/>
+<area shape="rect" id="node9" href="$d1/d54/rosc__init_8c.html" title="src/rosc/system/rosc\l_init.c" alt="" coords="247,515,391,562"/>
+<area shape="rect" id="node11" href="$d0/dcc/rosc__spin_8c.html" title="src/rosc/system/rosc\l_spin.c" alt="" coords="569,515,713,562"/>
+<area shape="rect" id="node13" href="$d2/d5b/xmlrpc_8c.html" title="src/rosc/com/xmlrpc.c" alt="" coords="104,428,256,457"/>
+<area shape="rect" id="node7" href="$df/d03/rosc_8h.html" title="include/rosc/rosc.h" alt="" coords="415,524,545,553"/>
+<area shape="rect" id="node19" href="$de/d76/ros__handler_8h.html" title="include/rosc/com/ros\l_handler.h" alt="" coords="480,238,621,285"/>
+<area shape="rect" id="node29" href="$d0/d3f/sebs__parse__ros_8c.html" title="src/rosc/sebs_parse\l_fw/adv_modules/sebs\l_parse_ros.c" alt="" coords="301,229,456,293"/>
+<area shape="rect" id="node23" href="$d1/d49/publish_8c.html" title="src/rosc/com/publish.c" alt="" coords="381,341,536,371"/>
+<area shape="rect" id="node25" href="$d6/d8a/ros__handler_8c.html" title="src/rosc/com/ros_handler.c" alt="" coords="560,341,739,371"/>
+<area shape="rect" id="node34" href="$da/d98/sebs__parse__parseurl_8c.html" title="src/rosc/sebs_parse\l_fw/std_modules/sebs\l_parse_parseurl.c" alt="" coords="5,229,157,293"/>
+</map>

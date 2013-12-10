@@ -1,0 +1,8 @@
+<map id="include/rosc/sebs_parse_fw/send_modules/socket_connect.h" name="include/rosc/sebs_parse_fw/send_modules/socket_connect.h">
+<area shape="rect" id="node3" href="$d1/dd9/eth_8h.html" title="rosc/system/eth.h" alt="" coords="292,117,417,147"/>
+<area shape="rect" id="node9" href="$dc/d8f/sebs__parser__frame_8h.html" title="rosc/sebs_parse_fw\l/sebs_parser_frame.h" alt="" coords="5,195,152,242"/>
+<area shape="rect" id="node5" href="$d7/df7/setup_8h.html" title="rosc/system/setup.h" alt="" coords="176,204,317,233"/>
+<area shape="rect" id="node13" href="$d0/df1/ros__msg__common_8h.html" title="rosc/com/ros_msg_common.h" alt="" coords="392,204,589,233"/>
+<area shape="rect" id="node16" href="$d1/d13/status_8h.html" title="rosc/system/status.h" alt="" coords="613,204,757,233"/>
+<area shape="rect" id="node18" href="$df/db6/debug__out_8h.html" title="rosc/debug/debug_out.h" alt="" coords="781,204,941,233"/>
+</map>

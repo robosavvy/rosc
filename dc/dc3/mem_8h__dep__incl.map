@@ -1,0 +1,6 @@
+<map id="include/rosc/system/mem.h" name="include/rosc/system/mem.h">
+<area shape="rect" id="node3" href="$df/d03/rosc_8h.html" title="include/rosc/rosc.h" alt="" coords="5,207,136,236"/>
+<area shape="rect" id="node5" href="$d9/d40/rosc__init_8h.html" title="include/rosc/system\l/rosc_init.h" alt="" coords="148,102,287,149"/>
+<area shape="rect" id="node8" href="$d1/d54/rosc__init_8c.html" title="src/rosc/system/rosc\l_init.c" alt="" coords="160,198,304,245"/>
+<area shape="rect" id="node10" href="$d0/dcc/rosc__spin_8c.html" title="src/rosc/system/rosc\l_spin.c" alt="" coords="328,198,472,245"/>
+</map>
