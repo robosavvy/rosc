@@ -33,7 +33,7 @@
 #define XMLRPC_C_
 
 #include <rosc/com/xmlrpc.h>
-
+#include <rosc/system/byte_handling.h>
 
 
 enum
@@ -103,7 +103,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 			switch(hdata->client_type)
 			{
 				case XMLRPC_CLIENT_TYPE_REGISTER:
-					strcpy(socket->connect_info.url,master_uri); //TODO ... check if we replace this by our own implementation
+					ROSC_STRCPY(socket->connect_info.url,master_uri); //TODO ... check if we replace this by our own implementation
 				break;
 
 				default:
@@ -327,7 +327,7 @@ sebs_parse_return_t xmlrpc(sebs_parser_data_t* pdata)
 					if(inactive_socket)
 					{
 						DEBUG_PRINT_STR("Creating Subscriber");
-						strcpy(inactive_socket->connect_info.url,(char*)pdata->additional_storage);
+						ROSC_STRCPY(inactive_socket->connect_info.url,(char*)pdata->additional_storage);
 						inactive_socket->iface=hdata->iface;
 
 						xmlrpc_data_t *n_hdata=inactive_socket->pdata.handler_data;

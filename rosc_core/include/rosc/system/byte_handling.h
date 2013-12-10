@@ -11,11 +11,13 @@
 #define ROSC_STRCPY(DST,SRC)\
 {\
 	char *rosc_strcpy_src=SRC;\
-	int rosc_strcpy_pos=0;\
-	while(rosc_strcpy_src)\
-	{	\
-		DST[rosc_strcpy_pos]=rosc_strcpy_src[rosc_strcpy_pos];\
-		rosc_strcpy_pos++;\
+	char *rosc_strcpy_dst=DST;\
+	do\
+	{\
+		*rosc_strcpy_dst=*rosc_strcpy_src;\
+		rosc_strcpy_dst++;\
+		rosc_strcpy_src++;\
 	}\
+	while(*rosc_strcpy_src);\
 }
 #endif /* BYTE_HANDLING_H_ */
