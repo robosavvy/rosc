@@ -26,10 +26,13 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  static_subscriber.c created by Christian Holl
+ *  static_pubsub.c created by Christian Holl
  *
  *
- *
+ *  IMPORTANT NOTE:
+ *  This is a usage example, it's copied from rosc_linux_test from one state of the project.
+ *  rosc_linux_test is used for developing so it is highly possible that this example will NOT
+ *  compile at all because the messages changed.
  */
 
 
@@ -61,6 +64,7 @@ ROSC_STATIC_MSG_BUILDUP__rosc_linux_test__simple2();
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple1(sim1, 4);
 ROSC_STATIC_MSG_USER_DEF__rosc_linux_test__simple2(sim2);
 
+
 /*
  * This is the message list, it generates the reserved memory for each
  * socket.
@@ -81,31 +85,48 @@ ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_BEGIN
 	ROSC_SIZE_LIST_ENTRY_MIN_XMLRPC_OUTPUT_BUFFER(100);
 ROSC_STATIC_SYSTEM_MESSAGE_TYPE_LIST_END
 
+
+/*
+ * If you want to use a publisher inside a callback function, it needs to be defined before it
+ */
+ ROSC_STATIC_PUBLISHER_INIT__rosc_linux_test__simple2(sim2, pub1, "/simple1Pub");
+
+
 /*
  * This is the callback function for your first topic
  * it generates the header for your callback function for you.
  * ROSC_STATIC_CALLBACK_HEAD__PACKAGENAME__MESSAGETYPE(USER_TYPE, TOPIC_REFERENCE)
  */
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple1(sim1,simpleTopic1)
+	/*The message can be accessed with msg*/
 	printf("simple1 callback: %i\n", msg->EightArray.data[0]);
+
+	/*Publishing a message*/
+
 }
 
 ROSC_STATIC_CALLBACK_HEAD__rosc_linux_test__simple2(sim2,simpleTopic2)
 	printf("simple2 callback\n");
+	/* Publishing a topic
+	 * Not using the wrong message type or publisher variable will NOT result into a compiling error!
+	 * It will lead also to unpredictable behavior (crashes)!
+	 * Other words this code has no brain(++), use your own (it's C not C++)
+	 */
+	publish(&pub1,msg);
 }
 
 
 /*
  * This macro creates the data structure of the subscriber itself.
- * ROSC_STATIC_SUBSCRIBER_INIT__PACKAGENAME__MESSAGETYPE(USER_TYPE, TOPIC_REFERENCE, TOPIC_STRING)
+ * ROSC_STATIC_SUBSCRIBER_INIT__PACKAGENAME__MESSAGETYPE(USER_TYPE, SUBSCRIBER, TOPIC_STRING)
  */
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, simpleTopic1,"/simple1")
-ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, simpleTopic2,"/simple2")
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple1(sim1, sub1, "/simple1")
+ROSC_STATIC_SUBSCRIBER_INIT__rosc_linux_test__simple2(sim2, sub2, "/simple2")
 
 /*
  * This is a internal list for various hostnames and their IP adresses.
  * This is required, if you do not need that, you can leave it empty.
- * But this is mandatory!
+ * But the HEAD and END macro are mandatory!
  */
 ROSC_STATIC_LOOKUP_TABLE_HEAD()
 	ROSC_STATIC_LOOKUP_ENTRY(localhost,IP(127,0,0,1))
@@ -129,14 +150,15 @@ int main()
 	 */
 	rosc_init();
 
+	/*
+	 * The register interface function makes a interface register at the master
+	 */
+	register_interface(&sub1);
+	register_interface(&sub2);
+	register_interface(&pub1);
 
-	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
-	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
-
-
-	//register function still missing
-	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1))->state=IFACE_STATE_DO_REGISTER;
-	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2))->state=IFACE_STATE_DO_REGISTER;
-
+	/*
+	 * The rosc_spin function starts with port handling
+	 */
 	rosc_spin();
 }

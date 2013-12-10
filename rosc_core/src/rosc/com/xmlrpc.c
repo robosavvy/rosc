@@ -26,7 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  xmlrpc_server.c created by Christian Holl
+ *  xmlrpc.c created by Christian Holl
  */
 
 #ifndef XMLRPC_C_
