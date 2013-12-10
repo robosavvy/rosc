@@ -26,9 +26,7 @@
  *	of the authors and should not be interpreted as representing official policies, 
  *	either expressed or implied, of the FreeBSD Project.
  *
- *  static_subscriber.c created by Christian Holl
- *
- *
+ *  static_pubsub.c created by Christian Holl
  *
  */
 
@@ -130,13 +128,15 @@ int main()
 	rosc_init();
 
 
-	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1));
-	iface_list_insert(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2));
+	/*
+	 * The register interface function makes a interface register at the master
+	 */
+	register_interface(&sub1);
+	register_interface(&sub2);
+	register_interface(&pub1);
 
-
-	//register function still missing
-	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple1(sim1, simpleTopic1))->state=IFACE_STATE_DO_REGISTER;
-	(ROSC_STATIC_SUBSCRIBER__rosc_linux_test__simple2(sim2, simpleTopic2))->state=IFACE_STATE_DO_REGISTER;
-
+	/*
+	 * The rosc_spin function starts with port handling
+	 */
 	rosc_spin();
 }
