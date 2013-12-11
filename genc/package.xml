@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>genc</name>
+  <version>0.0.1</version>
+  <description>ROSc message and service generators.</description>
+  <maintainer email="choll@synapticon.com">Christian Holl</maintainer>
+  <license>BSD</license>
+
+  <author>Christian Holl</author>
+  <author>Josh Faust</author>
+  <author>Troy Straszheim</author>
+  <author>Morgen Kjaergaard</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>genmsg</build_depend>
+
+  <run_depend>genmsg</run_depend>
+
+  <export>
+    <message_generator>c</message_generator>
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
+</package>

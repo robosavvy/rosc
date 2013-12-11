@@ -1,0 +1,245 @@
+#This file is used to generate the msg_strings.h and msg_strings.c
+#The generation is down by the strHCgen.py python script.
+#The first entry is also considered as example:
+
+#  Copyright (c) 2013, Synapticon GmbH
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions are met:
+#
+#  1. Redistributions of source code must retain the above copyright notice, this
+#     list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+#  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+#  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+#  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+#  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+#  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+#  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#  The views and conclusions contained in the software and documentation are those
+#  of the authors and should not be interpreted as representing official policies,
+#  either expressed or implied, of the FreeBSD Project.
+#
+#  strHCgen.py created by Christian Holl
+
+xmlrpc_tag_strings: # <- This is the variable name for the 
+                     # created string variable 
+                     # and the defines for the enum
+                     # DO ONLY USE C CONFORM WRITINGS FOR VARIABLES!!!
+  comment: #Comment what strings the array contains here 
+           #Resulting comment starts with: This array contains the strings for .... 
+    'standard XMLRPC tags'
+  defineShort: #This specifies the short definition infront of the enum values
+    'TAG'
+  stringlist: {   #Strings inside the variable 
+                  #If the string contains special chars like ?, write it in ''
+                  #If the string can't be used as enum declaration in C, you 
+                  #can specifiy a replacement for it after a : like 
+                  #shown in the next variable definition                  
+                  'xml':XMLDEF,
+                  body,
+                  p,
+                  title
+                  head,
+                  html,
+                  boolean,
+                  data,
+                  fault,
+                  name,
+                  int,
+                  member,
+                  methodCall,
+                  methodName,
+                  methodResponse,
+                  param,
+                  params,
+                  string,
+                  struct,
+                  value,
+                  array,
+                  double,
+                  i4,
+              }
+
+
+#Known Attributes strings XML
+xmlrpc_attribute_strings:
+  comment: 
+    'standard attributes for XMLRPC'
+  defineShort:
+    'ATTRIBUTE'
+  stringlist: {
+    version
+  }
+
+#Standard strings for XMLRPC
+#TODO maybe move strings of master API to another array, requires generator update
+xmlrpc_stdtext:
+  comment:
+    'standard XMLRPC text pieces'
+  defineShort:
+    'STDTXT'
+  stringlist: {
+      '<?xml version=\"1.0\"?>': XML_DEF,
+      Error code, 
+      '/tcp_keepalive': TCP_KEEPALIVE,
+      'http://': HTTP_URL_HEAD,
+      faultCode,
+      faultString,
+      TCPROS,
+      ROS,
+      'rosrpc://': ROSRPC_URL_HEAD,
+  }
+
+#Method names for RPC
+xmlrpc_slave_methodnames:
+  comment:
+    'Strings for known methods of the slave api'
+  defineShort:
+    'METHODNAME'
+  stringlist: {
+      getBusStats,
+      getBusInfo,
+      getMasterUri,
+      shutdown,
+      getPid,
+      getSubscriptions,
+      getPublications,
+      paramUpdate,
+      publisherUpdate,
+      requestTopic,
+      registerPublisher,
+      registerSubscriber,
+      unregisterPublisher,
+      unregisterSubscriber,
+      registerService,
+      unregisterService,
+      hasParam,
+      subscribeParam,
+      getParamNames,
+      unsubscribeParam,
+      searchParam,
+      setParam,
+      deleteParam,
+      requestTopic,
+  }
+
+#Standard descriptors for headers
+xmlrpc_http_descriptors:
+  comment:
+    'standard http header descriptors'
+  defineShort:
+    'DESCRIPTOR'
+  stringlist: {
+        Server,
+        User-Agent: USER_AGENT,
+        Date,
+        Host,
+        Content-Type,
+        Content-length,
+        Content-Encoding,
+        Accept-Encoding
+  }
+  
+#Standard Strings for header generator
+http_header_stdtext:
+  comment:
+    'some standard values for http headers'
+  defineShort:
+    'VAL'
+  stringlist: {
+    '0': ZERO,
+    '1': ONE,
+    '-1': MINUS_ONE,
+    'POST / HTTP/1.1':METHOD_POST,
+    'subscribtions',
+    'publications',
+    'HTTP/1.0':HTTP1_0,
+    'HTTP/1.1':HTTP1_1,
+    'XMLRPC ROSc-NodeLib',
+    'BaseHTTP/ROSc-NodeLib',
+    'text/xml',
+    'text/html',
+    'http://':HTTP_URL_HEAD,
+    '200 OK',
+    '404 Not found',
+    '501 Method Not Implemented',
+    'text/plain': ENCODING_PLAIN
+  }
+
+#Method strings
+xmlrpc_http_methods:
+  comment:
+    'method strings'
+  defineShort:
+    'METHOD'
+  stringlist: {
+    'POST',
+  }
+
+
+#Available actions
+xmlrpc_http_actions:
+  comment:
+    'contains available actions for http requests'
+  defineShort:
+    'ACTION'
+  stringlist: {
+    '':ROOT,
+    'RPC2'
+  }
+
+ #xml rpc boolean
+xmlrpc_xml_boolean_strings:
+  comment:
+    'possible strings for representing boolean in xml rpc'
+  defineShort:
+    'BOOLEAN'
+  stringlist: {
+    '1': ONE,
+    '0': ZERO,
+    'true': 'TRUE',
+    'false': 'FALSE',
+  }
+ 
+#ros protocol field ids
+ros_field_strings:
+  comment:
+    'field id strings for the ros protocol'
+  defineShort:
+    'ROS_FIELD'
+  stringlist: {
+    message_definition,
+    callerid,
+    topic,
+    md5sum,
+    type,
+    service,
+    tcp_nodelay,
+    latching,
+    persistent,
+    error,
+    probe,
+    request_type,
+    response_type,
+  }
+ 
+ #Strings for url schemes
+xmlrpc_url_scheme_string:
+  comment:
+      'strings for xmlrpc url schemes'
+  defineShort:
+      'URL_SCHEMES'
+  stringlist: {
+    http,
+    rosrpc
+  }  

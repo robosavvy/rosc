@@ -10,6 +10,7 @@
 *.so
 *.so.*
 *.dylib
+*.d
 
 # Executables
 *.exe
@@ -18,3 +19,35 @@
 
 #Linux TXT Editor Backup
 *.*~
+
+#Python binaries
+*.pyc
+
+#Eclipse workspace data folder
+.metadata
+
+#Eclipse binary folder for debug
+*/Debug/*
+
+#Eclipse binary folder for release
+*/Release/*
+
+#NoBuild Config Folders
+*/NoBuild/*
+
+#XMOS xe files
+*.xe
+
+/gtest/
+/catkin/
+/catkin_generated/
+/CATKIN_IGNORE
+/CMakeCache.txt
+/CMakeFiles/
+/cmake_install.cmake
+/.cproject
+/devel/
+/Makefile
+/.project
+/test_results
+*/doc/gen
