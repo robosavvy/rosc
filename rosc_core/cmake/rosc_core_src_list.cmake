@@ -8,6 +8,7 @@ src/rosc/sebs_parse_fw/sebs_parser_frame.c
 src/rosc/sebs_parse_fw/adv_modules/sebs_parse_http.c
 src/rosc/sebs_parse_fw/adv_modules/sebs_parse_ros.c
 src/rosc/sebs_parse_fw/adv_modules/sebs_parse_xml.c
+src/rosc/sebs_parse_fw/adv_modules/parse_ros_bin.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_seekstring.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_parseurl.c
 src/rosc/sebs_parse_fw/std_modules/sebs_parse_copy2buffer.c
