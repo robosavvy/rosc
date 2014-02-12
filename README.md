@@ -4,7 +4,7 @@ rosc is a dependency-free ROS client implementation in ANSI C which aims to supp
 Its long-term goal is to become a hardened, efficient and highly portable implementation of the ROS middleware, 
 making it a good choice for use in industrial applications or product development.
 
-rosc currently only supports subscribers and publishers, but there are currently issues with nested messages, maybe also with dynamic arrays.
+rosc alpha supports subscribers and publishers, with some known issues with nested messages currently remaining, maybe also with dynamic arrays.
 
-See Doxygen Documentation on:
+See Doxygen Documentation at:
 http://synapticon.github.io/rosc/
