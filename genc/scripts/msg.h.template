@@ -51,13 +51,11 @@
 #Import python modules used for building the template
 import genmsg.msgs 
 import gencpp
-import genmsg.msg_loader
-import genmsg.gentools
-import genc.generator
+import genc
 
 
 msg_definition = gencpp.escape_message_definition(msg_definition)
-rosc_gen = genc.generator.msg_static(spec, search_path)
+rosc_gen = genc.msg_static(spec, search_path)
 }@
 
 /* *********************

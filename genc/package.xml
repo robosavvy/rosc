@@ -2,7 +2,7 @@
 <package>
   <name>genc</name>
   <version>0.0.1</version>
-  <description>ROSc message and service generators.</description>
+  <description>C ROS message and service generators.</description>
   <maintainer email="choll@synapticon.com">Christian Holl</maintainer>
   <license>BSD</license>
 
@@ -11,7 +11,7 @@
   <author>Troy Straszheim</author>
   <author>Morgen Kjaergaard</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend version_gte="0.5.78">catkin</buildtool_depend>
 
   <build_depend>genmsg</build_depend>
 
@@ -20,5 +20,6 @@
   <export>
     <message_generator>c</message_generator>
     <rosdoc config="rosdoc.yaml"/>
+    <architecture_independent/>
   </export>
 </package>
