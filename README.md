@@ -14,26 +14,17 @@ How to try it.
 ===
 Currently it is still an alpha. To try it out you have to do the following:
 
-  mkdir ~/rosc_ws
-  
-  cd ~/rosc_ws 
-  
-  git clone git@github.com:synapticon/rosc.git
-  
-  cd rosc
-  
-  rm CMakeLists.txt
-  
+  mkdir -p ~/rosc_ws/src
+  cd ~/rosc_ws/src
   catkin_init_workspace
+  git clone git@github.com:robosavvy/rosc.git
+  cd ..
+  catkin_make
   
+  
+  # Creates a new language on genmsg
+  # should be done by a cmake script
   cd /opt/ros/indigo/etc/ros/genmsg
-  
   sudo touch genc
-  
   cd /opt/ros/indigo/lib
-  
-  sudo ln -s ~/rosc_ws/rosc/genc
-  
-  cd ~/rosc_ws
-  
-  catkin_make --source rosc
+  sudo ln -s ~/rosc_ws/src/rosc/genc
