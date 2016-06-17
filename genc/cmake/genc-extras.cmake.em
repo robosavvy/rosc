@@ -17,7 +17,7 @@ macro(_generate_msg_c ARG_PKG ARG_MSG ARG_IFLAGS ARG_MSG_DEPS ARG_GEN_OUTPUT_DIR
   get_filename_component(MSG_NAME ${ARG_MSG} NAME)
   get_filename_component(MSG_SHORT_NAME ${ARG_MSG} NAME_WE)
 
-  set(MSG_GENERATED_NAME ${MSG_SHORT_NAME}_c.h)
+  set(MSG_GENERATED_NAME ${MSG_SHORT_NAME}.h)
   set(GEN_OUTPUT_FILE ${ARG_GEN_OUTPUT_DIR}/${MSG_GENERATED_NAME})
 
   assert(CATKIN_ENV)
@@ -44,7 +44,7 @@ macro(_generate_module_c)
   # the macros, they do nothing
 endmacro()
 
-set(genc_INSTALL_DIR include)
+set(genc_INSTALL_DIR include/rosc/msg)
 
 macro(genc_append_include_dirs)
   if(NOT genc_APPENDED_INCLUDE_DIRS)
